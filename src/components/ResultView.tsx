@@ -7,20 +7,35 @@ import { getGameMode } from "@/domain/modes/registry";
 import { metricsFromResult } from "@/domain/session/runner";
 import { requireTextFilter } from "@/domain/text-filter";
 import type { SessionResult } from "@/domain/types";
-import { getRepository } from "@/infra/repository";
+import { getRepository, isPersistent } from "@/infra/repository";
+import { getLastSession } from "@/lib/last-session";
 import { formatDuration, formatNumber, formatPercent, formatWpm } from "@/lib/format";
 import { editionLabel, nextSegmentAfter, sessionHref } from "@/lib/session-flow";
 
 export function ResultView({ id }: { id: string }) {
   const [result, setResult] = useState<SessionResult | null | undefined>(undefined);
+  const [unsaved, setUnsaved] = useState(false);
 
   useEffect(() => {
     let alive = true;
+    const fallback = () => {
+      const cached = getLastSession(id);
+      if (!alive) return;
+      setResult(cached);
+      setUnsaved(cached !== null);
+    };
     getRepository()
       .getSession(id)
       .then((r) => {
-        if (alive) setResult(r);
-      });
+        if (!alive) return;
+        if (r) {
+          setResult(r);
+          setUnsaved(!isPersistent());
+        } else {
+          fallback();
+        }
+      })
+      .catch(fallback);
     return () => {
       alive = false;
     };
@@ -68,6 +83,17 @@ export function ResultView({ id }: { id: string }) {
           ? ` · ${requireTextFilter(result.textFilterId).displayName}`
           : ""}
       </p>
+      {unsaved && (
+        <p
+          className="mb-8 -mt-6 rounded border border-rule bg-accent-soft px-4 py-3 text-sm"
+          role="status"
+          data-testid="unsaved-notice"
+        >
+          Denne økten ble ikke lagret. Tallene under er riktige, men de er borte
+          når du forlater siden. Nettleseren tillater ikke lokal lagring her, for
+          eksempel i et privat vindu.
+        </p>
+      )}
       {requireTextFilter(result.textFilterId).altersText && (
         <p className="mb-8 -mt-6 text-sm text-ink-muted">
           Skrevet med tekstformen «{requireTextFilter(result.textFilterId).displayName}».

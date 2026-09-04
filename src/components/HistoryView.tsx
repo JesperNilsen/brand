@@ -7,7 +7,7 @@ import { getGameMode } from "@/domain/modes/registry";
 import { metricsFromResult } from "@/domain/session/runner";
 import { requireTextFilter } from "@/domain/text-filter";
 import type { SessionResult } from "@/domain/types";
-import { getRepository } from "@/infra/repository";
+import { getRepository, isPersistent } from "@/infra/repository";
 import { formatDate, formatDuration, formatPercent, formatWpm } from "@/lib/format";
 import { editionLabel } from "@/lib/session-flow";
 
@@ -31,7 +31,17 @@ export function HistoryView() {
   return (
     <div>
       <p className="label mb-2">Historikk</p>
-      <h1 className="mb-8 text-2xl">Tidligere økter</h1>
+      <h1 className="mb-4 text-2xl">Tidligere økter</h1>
+      {!isPersistent() && (
+        <p
+          className="prose-measure mb-8 rounded border border-rule bg-accent-soft px-4 py-3 text-sm"
+          role="status"
+          data-testid="no-storage-notice"
+        >
+          Nettleseren tillater ikke lokal lagring her, så ingen økter blir tatt
+          vare på. Historikken er tom hver gang du kommer tilbake.
+        </p>
+      )}
       {sessions.length === 0 ? (
         <p className="prose-measure text-ink-muted">
           Ingen økter ennå.{" "}

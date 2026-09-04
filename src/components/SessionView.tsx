@@ -19,6 +19,7 @@ import {
 import type { ReadingProgress, TextEdition, UserPreferences, Work } from "@/domain/types";
 import { requireTextFilter } from "@/domain/text-filter";
 import { getRepository } from "@/infra/repository";
+import { rememberLastSession } from "@/lib/last-session";
 import { useTypingSession } from "@/hooks/useTypingSession";
 import {
   buildPlan,
@@ -116,8 +117,17 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
       setSaving(true);
       const id = newId("s");
       const result = toSessionResult(state, Date.now(), id);
-      await getRepository().addSession(result);
-      await saveProgress(state);
+      // Hold the result in memory before attempting to store it. If the write
+      // fails the result page still has the numbers to show, instead of
+      // telling the user their finished session does not exist.
+      rememberLastSession(result);
+      try {
+        await getRepository().addSession(result);
+        await saveProgress(state);
+      } catch {
+        // Reported on the result page; losing the numbers would be worse than
+        // losing the record.
+      }
       router.push(`/resultat/${id}`);
     },
     [router, saveProgress],
