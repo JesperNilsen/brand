@@ -77,16 +77,16 @@ test.describe("Passage flow", () => {
 test.describe("Nonstop", () => {
   test("resumes at the right segment after a reload", async ({ page }) => {
     await page.goto("/skriv?mode=nonstop&work=ibsen-brand");
-    await expect(page.getByText(/1 av \d+/)).toBeVisible();
+    await expect(page.getByTestId("session-meta")).toContainText(/1 av \d+/);
     await typeTarget(page, first.text);
-    await expect(page.getByText(/2 av \d+/)).toBeVisible();
+    await expect(page.getByTestId("session-meta")).toContainText(/2 av \d+/);
     await page.keyboard.type(training.segments[1].text.slice(0, 4));
 
     await page.goto("/velg/nonstop?work=ibsen-brand");
     await expect(page.getByText(/Du har skrevet 1 av/)).toBeVisible();
     await page.getByRole("link", { name: "Fortsett" }).click();
-    await expect(page.getByText(/2 av \d+/)).toBeVisible();
-    await expect(page.getByText(training.segments[1].label!)).toBeVisible();
+    await expect(page.getByTestId("session-meta")).toContainText(/2 av \d+/);
+    await expect(page.getByTestId("session-meta")).toContainText(training.segments[1].label!);
 
     await page.getByTestId("stop-button").click();
     await expect(page).toHaveURL(/\/resultat\//);

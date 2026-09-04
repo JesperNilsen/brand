@@ -115,12 +115,25 @@ export function TypingSurface({
         : "is-done";
 
   return (
-    <div
-      className={`typing-surface ${statusClass}`}
-      onClick={() => inputRef.current?.focus()}
-      data-testid="typing-surface"
-      style={{ ["--visible-lines" as string]: String(VISIBLE_LINES) }}
-    >
+    <>
+      {/*
+        The rendered text is one span per character so it can be coloured per
+        character, which a screen reader would read out letter by letter. This
+        plain copy is what assistive technology actually reads: the textarea
+        points at it, so focusing the writing area announces the passage as
+        prose. It sits outside the surface so it never becomes part of the
+        surface's own text content.
+      */}
+      <p id={describedById} className="sr-only">
+        {label ? `${label}. ` : ""}
+        Skriv denne teksten: {engine.targetText}
+      </p>
+      <div
+        className={`typing-surface ${statusClass}`}
+        onClick={() => inputRef.current?.focus()}
+        data-testid="typing-surface"
+        style={{ ["--visible-lines" as string]: String(VISIBLE_LINES) }}
+      >
       <div className="typing-viewport">
         <div
           ref={linesRef}
@@ -157,18 +170,6 @@ export function TypingSurface({
           )}
         </div>
       </div>
-      {/*
-        The rendered text is one span per character so it can be coloured per
-        character, which a screen reader would read out letter by letter. This
-        plain copy is what assistive technology actually reads: the textarea
-        points at it, so focusing the writing area announces the passage as
-        prose. Without it the target text is unreachable and the core task
-        cannot be done at all.
-      */}
-      <p id={describedById} className="sr-only">
-        {label ? `${label}. ` : ""}
-        Skriv denne teksten: {engine.targetText}
-      </p>
       <textarea
         ref={inputRef}
         className="typing-input"
@@ -181,6 +182,7 @@ export function TypingSurface({
         disabled={disabled}
         data-testid="typing-input"
       />
-    </div>
+      </div>
+    </>
   );
 }

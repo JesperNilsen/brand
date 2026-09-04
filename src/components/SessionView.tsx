@@ -168,7 +168,7 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
           <p className="label">
             {mode?.displayName} · {work.author}, <i>{work.title}</i>
           </p>
-          <p className="text-sm text-ink-muted">
+          <p className="text-sm text-ink-muted" data-testid="session-meta">
             {segment.label ?? `Segment ${segmentNumber}`}
             {plan.gameModeId === "nonstop" ? ` · ${segmentNumber} av ${segmentTotal}` : ""}
             {" · "}
