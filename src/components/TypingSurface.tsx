@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { deriveCharStates } from "@/domain/engine/render";
 import type { TypingSessionState } from "@/domain/engine/engine";
 import type { TypingSessionHandlers } from "@/hooks/useTypingSession";
@@ -8,30 +8,36 @@ import type { TypingSessionHandlers } from "@/hooks/useTypingSession";
 type Props = {
   engine: TypingSessionState;
   handlers: TypingSessionHandlers;
-  /** Shown faintly below the active text in continuous modes. */
+  /** Shown faintly after the active text in continuous modes. */
   preview?: string;
   autoFocus?: boolean;
   disabled?: boolean;
 };
 
+/** Lines of context kept above the active line. */
+const LINES_ABOVE = 1;
+/** Total lines visible in the viewport. */
+const VISIBLE_LINES = 3;
+
 /**
  * The reading surface: target text rendered character by character with
- * pending/correct/incorrect states and a quiet caret. Keystrokes go to a
- * visually hidden textarea overlaying the text.
+ * pending/correct/incorrect states and a quiet caret.
+ *
+ * The text scrolls under a steady active line rather than the line moving down
+ * the page, so the eye stays in one place through a long passage. Keystrokes go
+ * to a visually hidden textarea overlaying the text.
  */
 export function TypingSurface({ engine, handlers, preview, autoFocus, disabled }: Props) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
+  const linesRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
   const chars = deriveCharStates(engine);
   const cursor = engine.typedText.length;
 
   useEffect(() => {
     if (autoFocus && !disabled) inputRef.current?.focus();
   }, [autoFocus, disabled, engine.targetText]);
-
-  useEffect(() => {
-    cursorRef.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
-  }, [cursor]);
 
   // Native listeners: React's synthetic onBeforeInput lacks `inputType`.
   useEffect(() => {
@@ -52,6 +58,25 @@ export function TypingSurface({ engine, handlers, preview, autoFocus, disabled }
     };
   }, [handlers]);
 
+  /** Scroll the text so the caret's line sits at a fixed height. */
+  const align = useCallback(() => {
+    const caret = cursorRef.current;
+    const lines = linesRef.current;
+    if (!caret || !lines) return;
+    const lineHeight = parseFloat(getComputedStyle(lines).lineHeight);
+    if (!Number.isFinite(lineHeight) || lineHeight <= 0) return;
+    const caretTop = caret.offsetTop - lines.offsetTop;
+    const next = Math.max(0, caretTop - LINES_ABOVE * lineHeight);
+    setOffset(next);
+  }, []);
+
+  useLayoutEffect(align, [align, cursor, engine.targetText]);
+
+  useEffect(() => {
+    window.addEventListener("resize", align);
+    return () => window.removeEventListener("resize", align);
+  }, [align]);
+
   const statusClass =
     engine.status === "active"
       ? "is-active"
@@ -61,38 +86,47 @@ export function TypingSurface({ engine, handlers, preview, autoFocus, disabled }
 
   return (
     <div
-      className={`typing-surface prose-measure ${statusClass}`}
+      className={`typing-surface ${statusClass}`}
       onClick={() => inputRef.current?.focus()}
       data-testid="typing-surface"
+      style={{ ["--visible-lines" as string]: String(VISIBLE_LINES) }}
     >
-      <p className="m-0" aria-hidden="true">
-        {chars.map((c) => {
-          const isCursor = c.index === cursor;
-          const isNewline = c.char === "\n";
-          const cls = [
-            `ch-${c.state}`,
-            isCursor ? "ch-cursor" : "",
-            isNewline ? "ch-newline" : "",
-          ]
-            .filter(Boolean)
-            .join(" ");
-          return (
-            <span key={c.index} className={cls} ref={isCursor ? cursorRef : undefined}>
-              {isNewline ? "\n" : c.char}
-            </span>
-          );
-        })}
-        {cursor >= chars.length && (
-          <span className="ch-cursor" ref={cursorRef}>
-            {"​"}
-          </span>
-        )}
-      </p>
-      {preview && (
-        <p className="m-0 mt-8 text-ink-faint" aria-hidden="true">
-          {preview}
-        </p>
-      )}
+      <div className="typing-viewport">
+        <div
+          ref={linesRef}
+          className="typing-lines"
+          style={{ transform: `translateY(${-offset}px)` }}
+        >
+          <p className="m-0" aria-hidden="true">
+            {chars.map((c) => {
+              const isCursor = c.index === cursor;
+              const isNewline = c.char === "\n";
+              const cls = [
+                `ch-${c.state}`,
+                isCursor ? "ch-cursor" : "",
+                isNewline ? "ch-newline" : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
+              return (
+                <span key={c.index} className={cls} ref={isCursor ? cursorRef : undefined}>
+                  {isNewline ? "\n" : c.char}
+                </span>
+              );
+            })}
+            {cursor >= chars.length && (
+              <span className="ch-cursor" ref={cursorRef}>
+                {"​"}
+              </span>
+            )}
+          </p>
+          {preview && (
+            <p className="m-0 mt-6 text-ink-faint" aria-hidden="true">
+              {preview}
+            </p>
+          )}
+        </div>
+      </div>
       <textarea
         ref={inputRef}
         className="typing-input"

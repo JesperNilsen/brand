@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <header className="border-b border-rule">
+          <header className="recedes border-b border-rule">
             <div className="mx-auto flex w-full max-w-4xl items-baseline justify-between gap-6 px-5 py-4">
               <Link
                 href="/"
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <main className="mx-auto w-full max-w-4xl flex-1 px-5 py-10">
             {children}
           </main>
-          <footer className="mx-auto w-full max-w-4xl px-5 py-6 text-xs text-ink-faint">
+          <footer className="recedes mx-auto w-full max-w-4xl px-5 py-6 text-xs text-ink-faint">
             Lokal lagring i nettleseren. Ingen konto, ingen sky.
           </footer>
         </ThemeProvider>

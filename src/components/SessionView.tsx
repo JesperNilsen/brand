@@ -128,6 +128,17 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
     onSegmentComplete: saveProgress,
   });
 
+  // Focus mode: the surrounding interface recedes while typing is in progress.
+  const typing = state?.status === "active";
+  useEffect(() => {
+    const root = document.documentElement;
+    if (typing) root.dataset.typing = "on";
+    else delete root.dataset.typing;
+    return () => {
+      delete root.dataset.typing;
+    };
+  }, [typing]);
+
   if (!state) return null;
   const segment = currentSegment(state);
   const upcoming = nextSegment(state);
@@ -141,8 +152,8 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
   const segmentTotal = editionOrder.length;
 
   return (
-    <div>
-      <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
+    <div className="flex min-h-[70vh] flex-col justify-center">
+      <div className="recedes mb-10 flex flex-wrap items-baseline justify-between gap-4">
         <div>
           <p className="label">
             {mode?.displayName} · {work.author}, <i>{work.title}</i>
@@ -174,7 +185,7 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
         }
       />
 
-      <div className="mt-10 flex flex-wrap items-center gap-4 text-sm text-ink-muted">
+      <div className="recedes mt-12 flex flex-wrap items-center gap-4 text-sm text-ink-muted">
         {!finished && (
           <button type="button" className="btn" onClick={stop} data-testid="stop-button">
             {plan.endRule.kind === "all-segments" ? "Avbryt" : "Avslutt økten"}

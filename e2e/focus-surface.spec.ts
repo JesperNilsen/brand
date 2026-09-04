@@ -1,0 +1,70 @@
+import { expect, test } from "@playwright/test";
+import training from "../content/ibsen-brand/training-edition.v1.json";
+
+/** A segment long enough to wrap past the visible line window. */
+const long = [...training.segments].sort((a, b) => b.text.length - a.text.length)[0];
+
+test.describe("Writing surface focus", () => {
+  test("the caret stays inside the line window as the text scrolls under it", async ({ page }) => {
+    await page.goto(
+      `/skriv?mode=passage&work=ibsen-brand&segment=${long.id}&filter=words-only`,
+    );
+    const input = page.getByTestId("typing-input");
+    await input.focus();
+
+    const caretInsideWindow = async () =>
+      page.evaluate(() => {
+        const caret = document.querySelector(".ch-cursor");
+        const vp = document.querySelector(".typing-viewport");
+        if (!caret || !vp) return null;
+        const c = caret.getBoundingClientRect();
+        const v = vp.getBoundingClientRect();
+        return { inside: c.top >= v.top - 2 && c.bottom <= v.bottom + 2, delta: Math.round(c.top - v.top) };
+      });
+
+    expect((await caretInsideWindow())?.inside).toBe(true);
+
+    // Type well past the visible window; the caret must never leave it.
+    const target = (await page.getByTestId("typing-surface").innerText()).trim();
+    for (let i = 0; i < Math.min(target.length, 320); i += 1) {
+      await page.keyboard.type(target[i]);
+      if (i % 40 === 0) {
+        const state = await caretInsideWindow();
+        expect(state, `caret left the window after ${i} characters`).not.toBeNull();
+        expect(state!.inside, `caret ${state!.delta}px from window top after ${i} chars`).toBe(true);
+      }
+    }
+    const end = await caretInsideWindow();
+    expect(end!.inside).toBe(true);
+  });
+
+  test("the surrounding interface recedes while typing and returns when it stops", async ({ page }) => {
+    await page.goto(
+      `/skriv?mode=passage&work=ibsen-brand&segment=${long.id}&filter=words-only`,
+    );
+    const header = page.locator("header");
+    await expect(header).toHaveCSS("opacity", "1");
+
+    await page.getByTestId("typing-input").focus();
+    await page.keyboard.type("oppe i sneen");
+    await expect(page.locator("html")).toHaveAttribute("data-typing", "on");
+    await expect(header).not.toHaveCSS("opacity", "1");
+
+    // Ending the session brings the interface back.
+    await page.getByTestId("stop-button").click();
+    await expect(page).toHaveURL(/\/resultat\//);
+    await expect(page.locator("header")).toHaveCSS("opacity", "1");
+  });
+
+  test("the prose is horizontally centred in the viewport", async ({ page }) => {
+    await page.goto(
+      `/skriv?mode=passage&work=ibsen-brand&segment=${long.id}&filter=as-printed`,
+    );
+    const box = await page.getByTestId("typing-surface").boundingBox();
+    const width = page.viewportSize()!.width;
+    expect(box).not.toBeNull();
+    const leftGap = box!.x;
+    const rightGap = width - (box!.x + box!.width);
+    expect(Math.abs(leftGap - rightGap)).toBeLessThan(24);
+  });
+});

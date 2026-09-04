@@ -210,12 +210,37 @@ a:hover {
   hyphens: manual;
   cursor: text;
   position: relative;
+  max-width: var(--measure);
+  margin-inline: auto;
 }
 @media (max-width: 640px) {
   .typing-surface {
     font-size: 1.12rem;
     line-height: 1.8;
   }
+}
+
+/* The text scrolls under a steady active line instead of the line marching
+   down the page. The viewport shows a fixed number of lines; the block inside
+   is translated so the caret's line always sits at the same height. */
+.typing-viewport {
+  height: calc(var(--visible-lines, 3) * 1.85em);
+  overflow: hidden;
+  position: relative;
+}
+.typing-lines {
+  transition: transform 140ms ease-out;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .typing-lines {
+    transition: none;
+  }
+}
+/* A short passage should not sit against the top edge of the viewport. */
+.typing-surface.is-idle .typing-viewport {
+  height: auto;
+  max-height: calc(var(--visible-lines, 3) * 1.85em);
 }
 
 .ch-pending {
@@ -283,4 +308,26 @@ a:hover {
   outline: 2px solid var(--focus);
   outline-offset: 10px;
   border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Focus mode. While a session is active the surrounding interface recedes so
+   only the prose is prominent; it returns the moment typing stops. Nothing is
+   removed from the layout, so nothing shifts.
+   ------------------------------------------------------------------------ */
+[data-typing="on"] .recedes {
+  opacity: 0.22;
+}
+.recedes {
+  opacity: 1;
+  transition: opacity 500ms ease;
+}
+[data-typing="on"] .recedes:hover,
+[data-typing="on"] .recedes:focus-within {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .recedes {
+    transition: none;
+  }
 }
