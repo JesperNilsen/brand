@@ -65,7 +65,7 @@
     {
       "id": "akt1-08",
       "order": 8,
-      "text": "BONDEN.\nJa, det var lenge før ifjor; -\nda hendte der så mangt et under;\ndet går ei slik til nuomstunder.\nBRAND.\nFar hjem. Dit liv er dødens vei.\nDu vet ei Gud og Gud ei deg.\nBONDEN.\nHu, du er hård!",
+      "text": "BONDEN.\nJa, det var lenge før ifjor; -\nda hendte der så mangt et under;\ndet går ei slik til nuomstunder.\nBRAND.\nFar hjem. Ditt liv er dødens vei.\nDu vet ei Gud og Gud ei deg.\nBONDEN.\nHu, du er hård!",
       "label": "Første akt, 8 — Nuomstunder",
       "wordCount": 41,
       "difficulty": 3
@@ -97,7 +97,7 @@
     {
       "id": "akt1-12",
       "order": 12,
-      "text": "BRAND (kommer til syne høyere oppe og lytter ut mot den kant, hvor BONDEN gikk).\nDe famler hjem. Du slappe trell,\nsprang i dit bryst en viljes vell,\nvar ikkun evnen det, som skorted,\njeg skulle veiens møye kortet;\npå dødstrett rygg, med foten såret,\njeg skulle glad og let deg båret; -\nmen hjelp er gavnløs for en mann,\nsom ikke vil, hva ei han kan.\n(går lengre frem.)\nHm; livet, livet; det er svært,\nhvor livet er de godtfolk kjært!\nHver skrelling legger slik en makt\npå livet, som om verdens frelse,\nal menneskenes sjelehelse,\nvar på hans skrale skuldre lagt.",
+      "text": "BRAND (kommer til syne høyere oppe og lytter ut mot den kant, hvor BONDEN gikk).\nDe famler hjem. Du slappe trell,\nsprang i ditt bryst en viljes vell,\nvar ikkun evnen det, som skorted,\njeg skulle veiens møye kortet;\npå dødstrett rygg, med foten såret,\njeg skulle glad og lett deg båret; -\nmen hjelp er gavnløs for en mann,\nsom ikke vil, hva ei han kan.\n(går lengre frem.)\nHm; livet, livet; det er svært,\nhvor livet er de godtfolk kjært!\nHver skrelling legger slik en makt\npå livet, som om verdens frelse,\nall menneskenes sjelehelse,\nvar på hans skrale skuldre lagt.",
       "label": "Første akt, 12 — De famler hjem",
       "wordCount": 102,
       "difficulty": 4
@@ -109,6 +109,7 @@
     "Regelsettet ligger i content/ibsen-brand/rules.json og kjøres av scripts/import/build-training-edition.ts. Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert.",
     "Ortografi: «af» → «av» (3)",
     "Ortografi: «afsted» → «avsted» (1)",
+    "Ortografi: «al» → «all» (1)",
     "Ortografi: «bæk» → «bekk» (1)",
     "Ortografi: «bag» → «bak» (1)",
     "Ortografi: «bagefter» → «bakefter» (1)",
@@ -120,6 +121,7 @@
     "Ortografi: «brydes» → «brytes» (1)",
     "Ortografi: «bunder» → «bunner» (1)",
     "Ortografi: «dig» → «deg» (7)",
+    "Ortografi: «dit» → «ditt» (2)",
     "Ortografi: «dødstræt» → «dødstrett» (1)",
     "Ortografi: «dyb» → «dyp» (1)",
     "Ortografi: «efter» → «etter» (1)",
@@ -164,6 +166,7 @@
     "Ortografi: «længe» → «lenge» (1)",
     "Ortografi: «længer» → «lenger» (1)",
     "Ortografi: «længere» → «lengre» (1)",
+    "Ortografi: «let» → «lett» (1)",
     "Ortografi: «måde» → «måte» (1)",
     "Ortografi: «magt» → «makt» (1)",
     "Ortografi: «mand» → «mann» (3)",
