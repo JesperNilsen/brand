@@ -156,6 +156,20 @@ a:hover {
   cursor: default;
 }
 
+/* Segmented choice (text form, time limit): a label wrapping a visually hidden
+   radio. The checked state is defined here rather than with a Tailwind
+   `has-[:checked]:` utility, because the unlayered `.btn` rule above outranks
+   every layered utility in the cascade and would silently win. */
+.btn:has(input:checked) {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.btn:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
 .card {
   display: block;
   border: 1px solid var(--rule);

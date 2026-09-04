@@ -98,3 +98,20 @@ test.describe("Text filter", () => {
     await expect(page.getByTestId("result")).not.toContainText("kan ikke sammenlignes");
   });
 });
+
+test("the selected choice is visually distinguishable from the others", async ({ page }) => {
+  await page.goto("/velg/timed?work=ibsen-brand");
+  const label = (name: string) =>
+    page.locator("label").filter({ hasText: new RegExp(`^${name}$`) });
+  const colorOf = (name: string) =>
+    label(name).evaluate((el) => getComputedStyle(el).borderColor);
+
+  await label("Bare ord").click();
+  const selected = await colorOf("Bare ord");
+  const unselected = await colorOf("Som trykt");
+  expect(selected).not.toBe(unselected);
+
+  // The same segmented-choice styling must work for the time limit too.
+  await label("2:00").click();
+  expect(await colorOf("2:00")).not.toBe(await colorOf("1:00"));
+});

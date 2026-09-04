@@ -21,7 +21,7 @@ export function TextFilterChooser({ value, onChange }: Props) {
         {listTextFilters().map((f) => (
           <label
             key={f.id}
-            className="btn cursor-pointer has-[:checked]:border-accent has-[:checked]:text-accent"
+            className="btn cursor-pointer"
           >
             <input
               type="radio"

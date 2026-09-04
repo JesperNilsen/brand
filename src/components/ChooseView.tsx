@@ -188,7 +188,7 @@ export function ChooseView({ modeId }: Props) {
             <legend className="label mb-3">Tidsgrense</legend>
             <div className="flex flex-wrap gap-3">
               {TIMED_LIMIT_OPTIONS_MS.map((ms) => (
-                <label key={ms} className="btn cursor-pointer has-[:checked]:border-accent">
+                <label key={ms} className="btn cursor-pointer">
                   <input
                     type="radio"
                     name="limit"
