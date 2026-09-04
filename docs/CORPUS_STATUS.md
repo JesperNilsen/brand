@@ -54,17 +54,33 @@ Etablert før denne runden; uendret. Se `content/ibsen-brand/rules.json` for det
 | Ordtall / segmenter | 851 ord totalt, 13 segmenter (7 fra «Haabet er lysegrønt», 6 fra «Visne Blade») |
 | Inkludert | Åpningen av hver novelle: «Haabet er lysegrønt» fra «Du støver!» til vognforbikjøringen; «Visne Blade» fra galleribetraktningen til beskrivelsen av det engelske maleriet. |
 
-Ett verk (`kielland-noveletter`), to noveller, fordi Wikikilden ikke har noen bekreftet fri kilde for spesifikasjonens prioriterte tekst («Ballstemning», se under). Segmentetiketter er prefikset med novelletittelen («Haabet er lysegrønt, 1» … «Visne Blade, 1» …) slik oppgaven ba om.
+Ett verk (`kielland-noveletter`), to noveller i denne omgang. Segmentetiketter er prefikset med novelletittelen («Haabet er lysegrønt, 1» … «Visne Blade, 1» …). **Spesifikasjonens prioriterte tekst «Ballstemning» finnes på Wikikilden**, korrekturlest, i samme bind — under 1907-utgavens stavemåte **«Balstemning» med én L** (`https://no.wikisource.org/wiki/Balstemning`, ~2 100 ord). Se «Rettet 2026-09-04» under.
 
 ---
 
 ## Mangler / avgrensninger
 
-- **«Ballstemning» (Kielland, fra *Noveletter*) mangler.** Dette er spesifikasjonens uttrykte prioritet for `kielland-noveletter`-pakken, men det finnes ingen bekreftet fri digital kilde:
-  - Wikikilden fulltekstsøk på tittelen: **0 treff** (`https://no.wikisource.org/w/api.php?action=query&list=search&srsearch=Ballstemning&format=json`).
-  - Project Gutenberg: bare oversettelser av andre Kielland-verk, ikke «Ballstemning» i original.
-  - runeberg.org katalogsøk: `https://runeberg.org/kinovel/` og `https://runeberg.org/kielsaml/` svarer begge **HTTP 404** (ingen slik samling/katalogside).
-  - «Visne Blade» er brukt i stedet, som er den andre novellen i samme samling (*Noveletter*, 1879) med bekreftet Wikikilden-kilde. Hvis en verifisert fri kilde for «Ballstemning» dukker opp senere (f.eks. et bibliotek eller NB digital med klar rettighetsstatus), bør den erstatte eller supplere «Visne Blade»-segmentene.
+- **RETTET 2026-09-04: «Ballstemning» finnes likevel — stavemåten var feilen, ikke kilden.**
+  Den opprinnelige konklusjonen i denne filen («ingen bekreftet fri digital kilde») var
+  gal. Alle søkene brukte den moderne stavemåten med to L-er; 1907-utgaven i *Samlede
+  Værker* staver tittelen **«Balstemning» med én L**, og under den stavemåten er teksten
+  fullt transkribert og korrekturlest på Wikikilden.
+  - Kilde: `https://no.wikisource.org/wiki/Balstemning` — transkludert fra
+    `Kielland - Samlede Værker 1.djvu`, sidene 27–32, korrekturkvalitet 4 (validert).
+  - Trykt utgave: *Samlede Værker*, Første Bind. Kristiania: Gyldendalske Boghandel
+    Nordisk Forlag, 1907. Samme bind som «Haabet er lysegrønt» og «Visne Blade».
+  - Omfang: ~2 100 ord.
+  - Rettighetsgrunnlag: uendret fra resten av pakken (Kielland d. 1906; Wikikildens
+    transkripsjon CC BY-SA 4.0).
+  - Lærdom for senere kildesøk: et negativt søkeresultat gjelder søkestrengen, ikke
+    verket. Søk alltid på den stavemåten den aktuelle *utgaven* bruker, og kryssjekk mot
+    bindets innholdsfortegnelse (`Indeks:`-siden på Wikikilden) før en tekst erklæres
+    utilgjengelig.
+- **Resten av *Noveletter* er også tilgjengelig i samme bind**, alle korrekturlest på
+  Wikikilden: «Erotik og Idyl» (~4 700 ord), «En Middag» (~2 100), «To Venner» (~6 700),
+  «Slaget ved Waterloo» (~8 300). Sammen med de to allerede importerte og «Balstemning»
+  utgjør det hele samlingen fra 1879, ~26 000 ord, gjennom samme importer og samme
+  regelsett. Ikke importert ennå; se CEO-planen for rekkefølge.
 - **Corpuset er utdrag, ikke hele verk.** Alle fire pakker inneholder bare åpningen av det aktuelle kapittelet/den aktuelle novellen (i tråd med `docs/spec/CORPUS.md`s V1-avgrensning), ikke hele *Markens Grøde*, *Gift* eller de fullstendige novellene.
 - **Alle treningsutgaver er agent-utkast (`verificationStatus: "agent-drafted"`).** Ingen av dem er lest av en menneskelig redaktør ennå. `docs/spec/LANGUAGE_PROFILE.md` krever at «en redaktør [skal] kontrollere at tekstens setningsmelodi og litterære særpreg er beholdt» før en pakke regnes som kontrollert — det gjenstår for alle fire pakker (ibsen-brand inkludert, som var ferdig fra før). Se hver pakkes `rules.json`-felt `retained` for ord som bevisst er latt urørt fordi riktig moderne form var usikker, og selve sluttrapporten for denne runden for en kortere liste over de mest tvilsomme enkeltvalgene.
 - **Én dokumentert transkripsjonsrettelse.** I `kielland-gift` er «Abrabam» (åpenbar bokstavfeil på Wikikilden, mot 10+ korrekte forekomster av «Abraham» ellers i samme kapittel) rettet til «Abraham» i treningsutgaven, i tråd med `docs/spec/LANGUAGE_PROFILE.md`s adgang til å rette dokumenterte transkripsjonsfeil. Originalteksten beholder «Abrabam» uendret (verbatim mot kilden).
