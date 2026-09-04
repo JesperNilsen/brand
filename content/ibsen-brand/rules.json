@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "languageProfileId": "brand-riksmaal",
   "notes": [
-    "Brand Training Edition av Ibsens Brand (1903-ortografien). Bare ortografi er modernisert til moderne-konservativt riksmål: af→av, ej→ei, hvad→hva, vej→vei, æ→e i ord som i dag skrives med e, bløte konsonanter (b/d/g) → harde (p/t/k) der moderne riksmål har det, mig/dig/sig → meg/deg/seg, nu → nå (profilens foretrukne form). Verselinjer, ordvalg, syntaks, rytme og rim er uendret.",
+    "Brand Training Edition av Ibsens Brand (1903-ortografien). Bare ortografi er modernisert til moderne-konservativt riksmål: af→av, ej→ei, hvad→hva, vej→vei, æ→e i ord som i dag skrives med e, bløte konsonanter (b/d/g) → harde (p/t/k) der moderne riksmål har det, mig/dig/sig → meg/deg/seg, nu → nå og efter → etter (profilens foretrukne former), end → enn, os → oss, vor → vår. Verselinjer, ordvalg, syntaks, rytme og rim er uendret.",
     "Ordformer som ville brutt meter eller rim, eller som er karakterbærende (Faer, moer, grædende, sagde, give, ikkun, skorted, nuomstunder), er bevart; se «Beholdt»-notatene.",
     "Regelsettet ligger i content/ibsen-brand/rules.json og kjøres av scripts/import/build-training-edition.ts. Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert."
   ],
@@ -107,7 +107,35 @@
     "endnu": "ennu",
     "ud": "ut",
     "højere": "høyere",
-    "møje": "møye"
+    "møje": "møye",
+    "efter": "etter",
+    "hej": "hei",
+    "sortklædt": "sortkledt",
+    "fjeldvidderne": "fjellvidderne",
+    "slig": "slik",
+    "bedst": "best",
+    "end": "enn",
+    "gik": "gikk",
+    "fik": "fikk",
+    "sad": "satt",
+    "sidder": "sitter",
+    "inde": "inne",
+    "indover": "innover",
+    "mod": "mot",
+    "sandt": "sant",
+    "ryg": "rygg",
+    "kalder": "kaller",
+    "lad": "la",
+    "os": "oss",
+    "trækker": "trekker",
+    "trækkes": "trekkes",
+    "næste": "neste",
+    "længere": "lengre",
+    "vor": "vår",
+    "foden": "foten",
+    "klog": "klok",
+    "søn": "sønn",
+    "sag": "sak"
   },
   "retained": {
     "sprød": "rimer på «død» (Kend; - her er grunden hul og sprød / Det gælder liv og død); moderne «sprø» ville brutt rimet.",
@@ -118,6 +146,9 @@
     "moer": "rimer på «før ifjor»; Ibsens egen form.",
     "råber": "sceneanvisning; «roper» endrer vokal, ikke bare konsonant. Beholdt for konsekvens med resten av sceneanvisningene.",
     "gnider": "«gnir» er en annen bøyningsform; beholdt.",
-    "ikkun, skorted, nuomstunder, gavnløs, vene": "eldre ordformer som bærer tonen; ingen rent ortografisk motsvarighet."
+    "ikkun, skorted, nuomstunder, gavnløs, vene": "eldre ordformer som bærer tonen; ingen rent ortografisk motsvarighet.",
+    "noget": "«noe» er en annen ordform; beholdt.",
+    "Vorherres": "fast uttrykk (Vorherre); beholdt selv om «vor» ellers blir «vår».",
+    "saligt, ugjørligt": "intetkjønns-t på adjektiv/adverb beholdes (grammatisk særpreg)."
   }
 }
