@@ -68,3 +68,22 @@ test.describe("Writing surface focus", () => {
     expect(Math.abs(leftGap - rightGap)).toBeLessThan(24);
   });
 });
+
+test("the prose itself shows whether the writing area has focus", async ({ page }) => {
+  await page.goto("/skriv?mode=passage&work=ibsen-brand&segment=akt1-01&filter=as-printed");
+  const surface = page.getByTestId("typing-surface");
+  const lines = page.locator(".typing-lines");
+  const opacity = async () => Number(await lines.evaluate((el) => getComputedStyle(el).opacity));
+
+  // No box around the prose in either state — a literary page, not a form field.
+  await expect(surface).toHaveCSS("outline-style", "none");
+
+  await page.getByTestId("typing-input").blur();
+  const resting = await opacity();
+
+  await surface.click();
+  await expect(page.getByTestId("typing-input")).toBeFocused();
+  await expect(surface).toHaveCSS("outline-style", "none");
+  await expect.poll(opacity).toBe(1);
+  expect(resting).toBeLessThan(1);
+});

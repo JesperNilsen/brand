@@ -229,7 +229,6 @@ a:hover {
   position: relative;
 }
 .typing-lines {
-  transition: transform 140ms ease-out;
   will-change: transform;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -304,10 +303,25 @@ a:hover {
 .typing-input:focus {
   outline: none;
 }
-.typing-surface:focus-within {
-  outline: 2px solid var(--focus);
-  outline-offset: 10px;
-  border-radius: 2px;
+/* Focus is shown by the prose itself rather than by a box around it: an
+   outline would make a literary page read like a form field, and a text caret
+   is an accepted focus indicator for a text input. Unfocused, the text rests
+   at lower contrast and the caret stops blinking; focused, it comes up to full
+   contrast with the caret alive. The change is large enough to be unmissable
+   without any chrome. (`:focus-visible` cannot help here: it always matches on
+   elements that expect text input, so it fires on a plain mouse click too.) */
+.typing-lines {
+  opacity: 1;
+  transition:
+    transform 140ms ease-out,
+    opacity 300ms ease;
+}
+.typing-surface:not(:focus-within) .typing-lines {
+  opacity: 0.55;
+}
+.typing-surface:not(:focus-within) .ch-cursor {
+  animation: none;
+  box-shadow: none;
 }
 
 /* ---------------------------------------------------------------------------
