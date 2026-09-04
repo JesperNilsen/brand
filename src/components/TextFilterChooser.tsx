@@ -6,13 +6,15 @@ import type { TextFilterId } from "@/domain/types";
 type Props = {
   value: TextFilterId;
   onChange: (value: TextFilterId) => void;
+  /** True until stored preferences have loaded, so a choice cannot be undone. */
+  disabled?: boolean;
 };
 
 /**
  * Practice-form chooser. Presented as a quiet fieldset rather than a toggle
  * row: the three levels are a reading choice, not a game setting.
  */
-export function TextFilterChooser({ value, onChange }: Props) {
+export function TextFilterChooser({ value, onChange, disabled }: Props) {
   const active = listTextFilters().find((f) => f.id === value);
   return (
     <fieldset className="mb-8">
@@ -29,6 +31,7 @@ export function TextFilterChooser({ value, onChange }: Props) {
               value={f.id}
               checked={value === f.id}
               onChange={() => onChange(f.id)}
+              disabled={disabled}
               className="sr-only"
             />
             {f.displayName}

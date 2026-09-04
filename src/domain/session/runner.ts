@@ -256,7 +256,7 @@ export function toSessionResult(
     .map((s) => s.id);
   return {
     id,
-    schemaVersion: 1,
+    schemaVersion: 2,
     startedAt: new Date(startedAt).toISOString(),
     completedAt: new Date(endedAt).toISOString(),
     status,

@@ -7,6 +7,8 @@
  *    source text (provenance)
  *  - training editions whose segment ids, line counts or word counts
  *    (±10 %) differ from the original (guards against rewriting)
+ *  - segments that any practice-form filter would empty (a vanished segment
+ *    would push Nonstop progress past text the reader never typed)
  *  - unknown language profile ids
  *
  *   pnpm validate:content
@@ -14,6 +16,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { countWords } from "./lib/text";
+import { listTextFilters } from "../src/domain/text-filter";
 
 const KNOWN_PROFILES = new Set(["brand-riksmaal"]);
 const contentRoot = path.resolve(process.cwd(), "content");
@@ -56,6 +59,14 @@ function checkSegments(pack: string, editionId: string, segments: Segment[]) {
     }
     if (s.difficulty !== undefined && ![1, 2, 3, 4, 5].includes(s.difficulty)) {
       fail(pack, `${where}: difficulty out of range`);
+    }
+    // Every practice form must leave something to type. A segment emptied by a
+    // filter cannot be dropped from a session plan without corrupting saved
+    // reading progress, so it is a content error rather than a runtime case.
+    for (const filter of listTextFilters()) {
+      if (countWords(filter.apply(s.text)) === 0) {
+        fail(pack, `${where}: empty under the «${filter.displayName}» filter`);
+      }
     }
   });
 }

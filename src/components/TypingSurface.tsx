@@ -72,9 +72,29 @@ export function TypingSurface({ engine, handlers, preview, autoFocus, disabled }
 
   useLayoutEffect(align, [align, cursor, engine.targetText]);
 
+  // Wrapping decides where the caret's line is, and wrapping changes for
+  // reasons a window resize never reports: a containing layout changing width,
+  // a font arriving after first paint, browser zoom. Any of those would leave
+  // the text translated to obsolete line positions, with the caret drifting
+  // out of the visible window.
   useEffect(() => {
+    const lines = linesRef.current;
+    if (!lines) return;
+    const observer = new ResizeObserver(() => align());
+    observer.observe(lines);
+    const viewport = lines.parentElement;
+    if (viewport) observer.observe(viewport);
     window.addEventListener("resize", align);
-    return () => window.removeEventListener("resize", align);
+    let cancelled = false;
+    const fonts = (document as Document & { fonts?: FontFaceSet }).fonts;
+    void fonts?.ready.then(() => {
+      if (!cancelled) align();
+    });
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      window.removeEventListener("resize", align);
+    };
   }, [align]);
 
   const statusClass =

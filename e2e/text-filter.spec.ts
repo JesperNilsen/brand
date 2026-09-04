@@ -1,20 +1,34 @@
 import { expect, test, type Page } from "@playwright/test";
 import training from "../content/ibsen-brand/training-edition.v1.json";
 
-const shortSegment = [...training.segments].sort(
-  (a, b) => a.text.length - b.text.length,
-)[0];
+/**
+ * A golden fixture, not a second implementation of the transform.
+ *
+ * An earlier version of this file recomputed the words-only transform in the
+ * test and compared that to the app. That passes whenever both sides share a
+ * misunderstanding, and it fails whenever the transform is corrected, which is
+ * exactly backwards. The expected strings below are literal: if the transform
+ * changes, this test fails and a human decides whether the new output is right.
+ * Exhaustive transform behaviour is unit-tested in tests/domain/text-filter.test.ts.
+ */
+const FIXTURE_SEGMENT_ID = "akt1-08";
+const EXPECTED = {
+  "as-printed":
+    "BONDEN.\nJa, det var lenge før ifjor; -\nda hendte der så mangt et under;\ndet går ei slik til nuomstunder.\nBRAND.\nFar hjem. Ditt liv er dødens vei.\nDu vet ei Gud og Gud ei deg.\nBONDEN.\nHu, du er hård!",
+  "no-punctuation":
+    "BONDEN\nJa det var lenge før ifjor\nda hendte der så mangt et under\ndet går ei slik til nuomstunder\nBRAND\nFar hjem Ditt liv er dødens vei\nDu vet ei Gud og Gud ei deg\nBONDEN\nHu du er hård",
+  "words-only":
+    "bonden ja det var lenge før ifjor da hendte der så mangt et under det går ei slik til nuomstunder brand far hjem ditt liv er dødens vei du vet ei gud og gud ei deg bonden hu du er hård",
+} as const;
 
-/** The same transform the app applies for "Bare ord". */
-function wordsOnly(text: string): string {
-  return text
-    .replace(/\n/g, " ")
-    .replace(/[^\p{L}\p{N}\s'’-]/gu, "")
-    .replace(/(^|\s)[-'’]+(?=\s|$)/gu, "$1")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-}
+const fixture = training.segments.find((s) => s.id === FIXTURE_SEGMENT_ID)!;
+
+test.beforeAll(() => {
+  // Guards the fixture: an edition edit that changes this segment must fail
+  // loudly here rather than silently weakening every assertion below.
+  expect(fixture, `segment ${FIXTURE_SEGMENT_ID} missing from the edition`).toBeTruthy();
+  expect(fixture.text).toBe(EXPECTED["as-printed"]);
+});
 
 async function typeText(page: Page, text: string) {
   await page.getByTestId("typing-input").focus();
@@ -25,7 +39,7 @@ async function typeText(page: Page, text: string) {
 }
 
 test.describe("Text filter", () => {
-  test("choosing 'Bare ord' strips capitals, punctuation and line breaks, and the choice survives a reload", async ({
+  test("choosing 'Bare ord' renders the expected text and the choice survives a reload", async ({
     page,
   }) => {
     await page.goto("/velg/passage?work=ibsen-brand");
@@ -39,27 +53,30 @@ test.describe("Text filter", () => {
       page.getByText("Små bokstaver, ingen tegnsetting, linjeskift blir mellomrom."),
     ).toBeVisible();
 
-    // The stored preference survives a reload of the chooser.
     await page.reload();
     await expect(page.getByRole("radio", { name: "Bare ord" })).toBeChecked();
 
-    await page.getByRole("link", { name: new RegExp(shortSegment.label!) }).click();
+    await page.getByRole("link", { name: new RegExp(fixture.label!) }).click();
     await expect(page).toHaveURL(/filter=words-only/);
 
     const rendered = (await page.getByTestId("typing-surface").innerText()).trim();
-    expect(rendered).toBe(wordsOnly(shortSegment.text));
-    expect(rendered).not.toMatch(/[A-ZÆØÅ]/);
-    expect(rendered).not.toMatch(/[.,;:!?]/);
-    expect(rendered).not.toContain("\n");
+    expect(rendered).toBe(EXPECTED["words-only"]);
     await expect(page.getByText("Bare ord")).toBeVisible();
+  });
+
+  test("'Uten tegnsetting' keeps capitals and verse lines", async ({ page }) => {
+    await page.goto(
+      `/skriv?mode=passage&work=ibsen-brand&segment=${FIXTURE_SEGMENT_ID}&filter=no-punctuation`,
+    );
+    const rendered = (await page.getByTestId("typing-surface").innerText()).trim();
+    expect(rendered).toBe(EXPECTED["no-punctuation"]);
   });
 
   test("a filtered session is typed, stored and marked as not comparable", async ({ page }) => {
     await page.goto(
-      `/skriv?mode=passage&work=ibsen-brand&segment=${shortSegment.id}&filter=words-only`,
+      `/skriv?mode=passage&work=ibsen-brand&segment=${FIXTURE_SEGMENT_ID}&filter=words-only`,
     );
-    const target = wordsOnly(shortSegment.text);
-    await typeText(page, target);
+    await typeText(page, EXPECTED["words-only"]);
 
     await expect(page).toHaveURL(/\/resultat\//);
     const result = page.getByTestId("result");
@@ -76,26 +93,34 @@ test.describe("Text filter", () => {
   test("the filter group is operable with the keyboard alone", async ({ page }) => {
     await page.goto("/velg/passage?work=ibsen-brand");
     const asPrinted = page.getByRole("radio", { name: "Som trykt" });
+    await expect(asPrinted).toBeEnabled();
     await asPrinted.focus();
     await expect(asPrinted).toBeFocused();
     await page.keyboard.press("ArrowRight");
     await expect(page.getByRole("radio", { name: "Uten tegnsetting" })).toBeChecked();
     await page.keyboard.press("ArrowRight");
     await expect(page.getByRole("radio", { name: "Bare ord" })).toBeChecked();
-    await expect(
-      page.getByText("Små bokstaver, ingen tegnsetting, linjeskift blir mellomrom."),
-    ).toBeVisible();
   });
 
   test("'Som trykt' leaves the edition text untouched and is not marked", async ({ page }) => {
     await page.goto(
-      `/skriv?mode=passage&work=ibsen-brand&segment=${shortSegment.id}&filter=as-printed`,
+      `/skriv?mode=passage&work=ibsen-brand&segment=${FIXTURE_SEGMENT_ID}&filter=as-printed`,
     );
     const rendered = (await page.getByTestId("typing-surface").innerText()).trim();
-    expect(rendered).toBe(shortSegment.text.trim());
-    await typeText(page, shortSegment.text);
+    expect(rendered).toBe(EXPECTED["as-printed"]);
+    await typeText(page, EXPECTED["as-printed"]);
     await expect(page).toHaveURL(/\/resultat\//);
     await expect(page.getByTestId("result")).not.toContainText("kan ikke sammenlignes");
+  });
+
+  test("a choice made before preferences load is not undone by them", async ({ page }) => {
+    await page.goto("/velg/passage?work=ibsen-brand");
+    await page.getByText("Bare ord", { exact: true }).click();
+    // The stored read resolves asynchronously; the user's newer choice wins.
+    await page.waitForTimeout(300);
+    await expect(page.getByRole("radio", { name: "Bare ord" })).toBeChecked();
+    await page.reload();
+    await expect(page.getByRole("radio", { name: "Bare ord" })).toBeChecked();
   });
 });
 

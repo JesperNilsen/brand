@@ -156,7 +156,8 @@ export type SessionStatus = "completed" | "abandoned";
 
 export type SessionResult = {
   id: string;
-  schemaVersion: 1;
+  /** 1 = before text filters existed; 2 adds the required textFilterId. */
+  schemaVersion: 2;
   /** ISO timestamp. */
   startedAt: string;
   completedAt?: string;

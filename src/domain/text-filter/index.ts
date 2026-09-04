@@ -26,8 +26,20 @@ export type TextFilter = {
   apply(text: string): string;
 };
 
-/** Characters that may stay when they join two letters (is-tjern, Paris’s). */
-const JOINERS = new Set(["-", "‐", "’", "'"]);
+/**
+ * Characters that may stay when they join two letters (is-tjern, Paris’s).
+ * Every Unicode hyphen and apostrophe variant that appears in the printed
+ * editions belongs here; anything omitted would silently glue two words
+ * together instead of separating them.
+ */
+const JOINERS = new Set([
+  "-", // hyphen-minus
+  "‐", // hyphen
+  "‑", // non-breaking hyphen
+  "’", // right single quotation mark
+  "'", // apostrophe
+  "ʼ", // modifier letter apostrophe
+]);
 
 function isLetterOrNumber(ch: string | undefined): boolean {
   return ch !== undefined && /[\p{L}\p{N}]/u.test(ch);
@@ -36,6 +48,12 @@ function isLetterOrNumber(ch: string | undefined): boolean {
 /**
  * Remove punctuation, keeping hyphens and apostrophes that sit inside a word.
  * Letter case and line breaks are untouched.
+ *
+ * Separating punctuation becomes a SPACE rather than nothing. Deleting it
+ * would fuse the words on either side: the printed editions set em dashes
+ * tight against the words they separate, so «ord—ord» must become «ord ord»
+ * and never «ordord». Line-end hyphenation is not reconstructed; the archived
+ * source texts join wrapped lines, so it does not reach this function.
  */
 export function stripPunctuation(text: string): string {
   const chars = Array.from(text);
@@ -52,7 +70,9 @@ export function stripPunctuation(text: string): string {
       isLetterOrNumber(chars[i + 1])
     ) {
       out += ch;
+      continue;
     }
+    out += " ";
   }
   return out;
 }
@@ -114,9 +134,14 @@ export function countWords(text: string): number {
 }
 
 /**
- * Apply a filter to a list of segments, recomputing word counts. Segments
- * whose text becomes empty are dropped; the caller must handle an empty
- * result (no plan can be built from it).
+ * Apply a filter to a list of segments, recomputing word counts.
+ *
+ * The mapping is strictly 1:1. A segment that a filter emptied must never
+ * disappear from the plan: Nonstop stores its position as a segment id, so a
+ * vanished segment would push saved progress past text the reader never typed,
+ * and switching back to another practice form would skip it silently.
+ * `pnpm validate:content` forbids content that any filter can empty, so the
+ * fallback below should never fire; it keeps the mapping total if it ever does.
  */
 export function applyTextFilter(
   segments: TextSegment[],
@@ -124,10 +149,10 @@ export function applyTextFilter(
 ): TextSegment[] {
   const filter = requireTextFilter(filterId);
   if (!filter.altersText) return segments;
-  return segments
-    .map((s) => {
-      const text = filter.apply(s.text);
-      return { ...s, text, wordCount: countWords(text) };
-    })
-    .filter((s) => s.text.length > 0);
+  return segments.map((s) => {
+    const text = filter.apply(s.text);
+    const wordCount = countWords(text);
+    if (wordCount === 0) return s;
+    return { ...s, text, wordCount };
+  });
 }

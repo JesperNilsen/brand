@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   defaultEdition,
   estimateMinutes,
@@ -44,6 +44,11 @@ export function ChooseView({ modeId }: Props) {
   const [limitMs, setLimitMs] = useState<number>(clampTimedLimit(undefined));
   const [textFilterId, setTextFilterId] =
     useState<TextFilterId>(DEFAULT_TEXT_FILTER_ID);
+  const [prefsLoaded, setPrefsLoaded] = useState(false);
+  /** Set as soon as the user touches a control, so the late read cannot win. */
+  const chosenRef = useRef(false);
+  /** Serialises preference writes so two quick choices cannot settle out of order. */
+  const writeQueueRef = useRef<Promise<unknown>>(Promise.resolve());
 
   useEffect(() => {
     let alive = true;
@@ -52,6 +57,10 @@ export function ChooseView({ modeId }: Props) {
       .then((p) => {
         if (!alive) return;
         setPrefs(p);
+        setPrefsLoaded(true);
+        // A choice made while this read was in flight is newer than the stored
+        // value; adopting the stored value here would silently undo it.
+        if (chosenRef.current) return;
         setLimitMs(clampTimedLimit(p.lastTimedLimitMs));
         setTextFilterId(p.textFilterId ?? DEFAULT_TEXT_FILTER_ID);
       });
@@ -75,11 +84,22 @@ export function ChooseView({ modeId }: Props) {
   }, [work, prefs, mode.id]);
 
   const chooseFilter = (next: TextFilterId) => {
+    chosenRef.current = true;
     setTextFilterId(next);
     const repo = getRepository();
-    void repo
-      .getPreferences()
-      .then((p) => repo.savePreferences({ ...p, textFilterId: next }));
+    // Chain the read-modify-write onto the previous one: two quick choices
+    // would otherwise race and the older value could land last.
+    writeQueueRef.current = writeQueueRef.current
+      .then(() => repo.getPreferences())
+      .then((p) => repo.savePreferences({ ...p, textFilterId: next }))
+      .catch(() => {
+        // Preferences are a convenience; a failed write must not break the page.
+      });
+  };
+
+  const chooseLimit = (next: number) => {
+    chosenRef.current = true;
+    setLimitMs(next);
   };
 
   if (!work) {
@@ -141,7 +161,11 @@ export function ChooseView({ modeId }: Props) {
         </Link>
       </p>
 
-      <TextFilterChooser value={textFilterId} onChange={chooseFilter} />
+      <TextFilterChooser
+        value={textFilterId}
+        onChange={chooseFilter}
+        disabled={!prefsLoaded}
+      />
 
       {mode.id === "passage" && (
         <ul className="grid gap-2">
@@ -194,7 +218,7 @@ export function ChooseView({ modeId }: Props) {
                     name="limit"
                     value={ms}
                     checked={limitMs === ms}
-                    onChange={() => setLimitMs(ms)}
+                    onChange={() => chooseLimit(ms)}
                     className="sr-only"
                   />
                   {formatClock(ms)}

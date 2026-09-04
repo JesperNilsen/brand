@@ -21,7 +21,6 @@ import {
   applyTextFilter,
   DEFAULT_TEXT_FILTER_ID,
   isTextFilterId,
-  requireTextFilter,
 } from "@/domain/text-filter";
 import {
   progressKey,
@@ -131,13 +130,10 @@ export function buildPlan(
   });
   // The game mode picks WHICH segments; the filter transforms their text. The
   // engine only ever sees the finished text, so it stays free of language and
-  // practice-form rules.
+  // practice-form rules. The mapping is 1:1, so the filter can never change
+  // which segments a plan covers, and saved progress stays meaningful across
+  // a change of practice form.
   const segments = applyTextFilter(plan.segments, textFilterId);
-  if (segments.length === 0) {
-    throw new Error(
-      `Filteret «${requireTextFilter(textFilterId).displayName}» gir ingen tekst å skrive.`,
-    );
-  }
   return { ...plan, textFilterId, segments };
 }
 
