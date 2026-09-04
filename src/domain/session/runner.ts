@@ -267,6 +267,7 @@ export function toSessionResult(
     editionId: state.plan.editionId,
     segmentIds: touchedSegmentIds,
     errorMode: state.plan.errorMode,
+    textFilterId: state.plan.textFilterId,
     durationMs: metrics.durationMs,
     targetCharacterCount: metrics.targetCharacterCount,
     typedCharacterCount: metrics.typedCharacterCount,

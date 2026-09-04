@@ -30,6 +30,7 @@ function plan(overrides: Partial<SessionPlan>): SessionPlan {
     workId: "work",
     editionId: "edition",
     errorMode: "flow",
+    textFilterId: "as-printed",
     segments: [seg("a", "nå", 1)],
     endRule: { kind: "all-segments" },
     ...overrides,

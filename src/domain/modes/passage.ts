@@ -27,6 +27,7 @@ export const passageMode: GameModeDefinition = {
       workId: input.work.id,
       editionId: edition.id,
       errorMode: input.errorMode,
+      textFilterId: input.textFilterId,
       segments: [segment],
       endRule: { kind: "all-segments" },
     };

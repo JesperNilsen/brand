@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getEditionById, getWork } from "@/domain/content/registry";
 import { getGameMode } from "@/domain/modes/registry";
 import { metricsFromResult } from "@/domain/session/runner";
+import { requireTextFilter } from "@/domain/text-filter";
 import type { SessionResult } from "@/domain/types";
 import { getRepository } from "@/infra/repository";
 import { formatDuration, formatNumber, formatPercent, formatWpm } from "@/lib/format";
@@ -63,7 +64,16 @@ export function ResultView({ id }: { id: string }) {
       </h1>
       <p className="mb-8 text-sm text-ink-muted">
         {mode?.displayName ?? result.gameModeId} · {edition ? editionLabel(edition) : result.editionId}
+        {requireTextFilter(result.textFilterId).altersText
+          ? ` · ${requireTextFilter(result.textFilterId).displayName}`
+          : ""}
       </p>
+      {requireTextFilter(result.textFilterId).altersText && (
+        <p className="mb-8 -mt-6 text-sm text-ink-muted">
+          Skrevet med tekstformen «{requireTextFilter(result.textFilterId).displayName}».
+          Tall herfra kan ikke sammenlignes direkte med økter skrevet som trykt.
+        </p>
+      )}
 
       <dl className="mb-10 grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3">
         <Stat label="Netto WPM" value={formatWpm(metrics)} big testId="net-wpm" />
@@ -82,20 +92,37 @@ export function ResultView({ id }: { id: string }) {
       <div className="flex flex-wrap gap-3">
         {next && (
           <Link
-            href={sessionHref({ mode: "passage", workId: result.workId, segmentId: next.id })}
+            href={sessionHref({
+              mode: "passage",
+              workId: result.workId,
+              segmentId: next.id,
+              textFilterId: result.textFilterId,
+            })}
             className="btn btn-primary"
           >
             Neste passasje
           </Link>
         )}
         {result.gameModeId === "nonstop" && (
-          <Link href={sessionHref({ mode: "nonstop", workId: result.workId })} className="btn btn-primary">
+          <Link
+            href={sessionHref({
+              mode: "nonstop",
+              workId: result.workId,
+              textFilterId: result.textFilterId,
+            })}
+            className="btn btn-primary"
+          >
             Fortsett
           </Link>
         )}
         {result.gameModeId === "timed" && (
           <Link
-            href={sessionHref({ mode: "timed", workId: result.workId, limitMs: result.durationMs })}
+            href={sessionHref({
+              mode: "timed",
+              workId: result.workId,
+              limitMs: result.durationMs,
+              textFilterId: result.textFilterId,
+            })}
             className="btn btn-primary"
           >
             En gang til
@@ -103,7 +130,12 @@ export function ResultView({ id }: { id: string }) {
         )}
         {result.gameModeId === "passage" && lastSegmentId && (
           <Link
-            href={sessionHref({ mode: "passage", workId: result.workId, segmentId: lastSegmentId })}
+            href={sessionHref({
+              mode: "passage",
+              workId: result.workId,
+              segmentId: lastSegmentId,
+              textFilterId: result.textFilterId,
+            })}
             className="btn"
           >
             Skriv samme utdrag igjen

@@ -18,9 +18,16 @@ import {
   type RunnerState,
 } from "@/domain/session/runner";
 import {
+  applyTextFilter,
+  DEFAULT_TEXT_FILTER_ID,
+  isTextFilterId,
+  requireTextFilter,
+} from "@/domain/text-filter";
+import {
   progressKey,
   type ReadingProgress,
   type TextEdition,
+  type TextFilterId,
   type UserPreferences,
   type Work,
 } from "@/domain/types";
@@ -31,6 +38,8 @@ export type SessionParams = {
   editionId?: string;
   segmentId?: string;
   limitMs?: number;
+  /** Overrides the stored preference for this session only. */
+  textFilterId?: TextFilterId;
 };
 
 export function parseSessionParams(
@@ -41,12 +50,14 @@ export function parseSessionParams(
   if (!mode || !workId) return null;
   const limitRaw = get("limit");
   const limitMs = limitRaw ? Number(limitRaw) : undefined;
+  const filterRaw = get("filter");
   return {
     mode,
     workId,
     editionId: get("edition") ?? undefined,
     segmentId: get("segment") ?? undefined,
     limitMs: limitMs && Number.isFinite(limitMs) && limitMs > 0 ? limitMs : undefined,
+    textFilterId: isTextFilterId(filterRaw) ? filterRaw : undefined,
   };
 }
 
@@ -55,6 +66,7 @@ export function sessionHref(p: SessionParams): string {
   if (p.editionId) q.set("edition", p.editionId);
   if (p.segmentId) q.set("segment", p.segmentId);
   if (p.limitMs) q.set("limit", String(p.limitMs));
+  if (p.textFilterId) q.set("filter", p.textFilterId);
   return `/skriv?${q.toString()}`;
 }
 
@@ -100,13 +112,16 @@ export function buildPlan(
   const resolved = resolveWorkAndEdition(params, prefs.languageProfileId);
   if (!resolved) throw new Error(`Unknown work: ${params.workId}`);
   const { work, edition } = resolved;
-  return mode.buildPlan({
+  const textFilterId =
+    params.textFilterId ?? prefs.textFilterId ?? DEFAULT_TEXT_FILTER_ID;
+  const plan = mode.buildPlan({
     planId: newId("p"),
     work,
     edition,
     contentPackId: work.contentPackId,
     languageProfileId: prefs.languageProfileId,
     errorMode: prefs.defaultErrorMode,
+    textFilterId,
     selection: {
       segmentId: params.segmentId,
       startSegmentId: progress?.nextSegmentId,
@@ -114,6 +129,16 @@ export function buildPlan(
         mode.id === "timed" ? clampTimedLimit(params.limitMs, prefs.lastTimedLimitMs) : undefined,
     },
   });
+  // The game mode picks WHICH segments; the filter transforms their text. The
+  // engine only ever sees the finished text, so it stays free of language and
+  // practice-form rules.
+  const segments = applyTextFilter(plan.segments, textFilterId);
+  if (segments.length === 0) {
+    throw new Error(
+      `Filteret «${requireTextFilter(textFilterId).displayName}» gir ingen tekst å skrive.`,
+    );
+  }
+  return { ...plan, textFilterId, segments };
 }
 
 /** Progress record after a nonstop runner state change; null when the work is finished. */
@@ -156,6 +181,7 @@ export function rememberChoice(
     lastWorkId: plan.workId,
     lastTimedLimitMs:
       plan.endRule.kind === "time" ? plan.endRule.limitMs : prefs.lastTimedLimitMs,
+    textFilterId: plan.textFilterId,
   };
 }
 
@@ -165,12 +191,17 @@ export function continueHref(prefs: UserPreferences): string | null {
   if (!getWork(prefs.lastWorkId)) return null;
   switch (prefs.lastModeId) {
     case "nonstop":
-      return sessionHref({ mode: "nonstop", workId: prefs.lastWorkId });
+      return sessionHref({
+        mode: "nonstop",
+        workId: prefs.lastWorkId,
+        textFilterId: prefs.textFilterId,
+      });
     case "timed":
       return sessionHref({
         mode: "timed",
         workId: prefs.lastWorkId,
         limitMs: clampTimedLimit(prefs.lastTimedLimitMs),
+        textFilterId: prefs.textFilterId,
       });
     case "passage":
       return `/velg/passage?work=${encodeURIComponent(prefs.lastWorkId)}`;

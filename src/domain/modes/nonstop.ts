@@ -30,6 +30,7 @@ export const nonstopMode: GameModeDefinition = {
       workId: input.work.id,
       editionId: edition.id,
       errorMode: input.errorMode,
+      textFilterId: input.textFilterId,
       segments,
       endRule: { kind: "user-stop" },
     };

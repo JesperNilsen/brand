@@ -46,6 +46,7 @@ function input(selection: PlanInput["selection"]): PlanInput {
     contentPackId: "p",
     languageProfileId: "brand-riksmaal",
     errorMode: "flow",
+    textFilterId: "as-printed",
     selection,
   };
 }

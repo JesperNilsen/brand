@@ -29,6 +29,9 @@ export function applySessionQuery(
   let out = sessions;
   if (query.gameModeId) out = out.filter((s) => s.gameModeId === query.gameModeId);
   if (query.workId) out = out.filter((s) => s.workId === query.workId);
+  if (query.textFilterId) {
+    out = out.filter((s) => s.textFilterId === query.textFilterId);
+  }
   const newestFirst = query.newestFirst ?? true;
   out = [...out].sort((a, b) =>
     newestFirst

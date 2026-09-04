@@ -42,7 +42,7 @@
     },
     {
       "id": "akt1-02",
-      "label": "Første akt, 2 — Bræen",
+      "label": "Første akt, 2 — Breen",
       "start": "Stands, mand! Guds bittre -! Her er bræen",
       "end": "Frem må jeg, som jeg før har sagt.",
       "difficulty": 4
@@ -91,7 +91,7 @@
     },
     {
       "id": "akt1-09",
-      "label": "Første akt, 9 — Dødens vej",
+      "label": "Første akt, 9 — Dødens vei",
       "start": "Kom så afsted!",
       "end": "Kom så!",
       "difficulty": 4
@@ -105,7 +105,7 @@
     },
     {
       "id": "akt1-11",
-      "label": "Første akt, 11 — Den brede vej",
+      "label": "Første akt, 11 — Den brede vei",
       "start": "Han gik indover hejen.",
       "end": "(han og SØNNEN går østover igen.)",
       "difficulty": 3

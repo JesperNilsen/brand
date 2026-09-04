@@ -26,6 +26,7 @@ function session(id: string, startedAt: string, extra: Partial<SessionResult> = 
     editionId: "ibsen-brand.training.v1",
     segmentIds: ["a"],
     errorMode: "flow",
+    textFilterId: "as-printed",
     durationMs: 10_000,
     targetCharacterCount: 100,
     typedCharacterCount: 100,

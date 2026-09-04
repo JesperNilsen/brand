@@ -14,6 +14,9 @@ export type ErrorMode = "flow" | "stop-on-error";
 
 export type ThemePreference = "system" | "light" | "dark";
 
+/** Practice-form transform applied to the target text; see domain/text-filter. */
+export type TextFilterId = "as-printed" | "no-punctuation" | "words-only";
+
 // ---------------------------------------------------------------------------
 // LanguageProfile
 // ---------------------------------------------------------------------------
@@ -129,6 +132,7 @@ export type UserPreferences = {
   theme: ThemePreference;
   languageProfileId: string;
   defaultErrorMode: ErrorMode;
+  textFilterId: TextFilterId;
   lastModeId?: string;
   lastContentPackId?: string;
   lastWorkId?: string;
@@ -164,6 +168,8 @@ export type SessionResult = {
   editionId: string;
   segmentIds: string[];
   errorMode: ErrorMode;
+  /** Which practice-form transform the target text was typed under. */
+  textFilterId: TextFilterId;
   durationMs: number;
   targetCharacterCount: number;
   typedCharacterCount: number;
@@ -179,6 +185,7 @@ export type SessionResult = {
 export type SessionQuery = {
   gameModeId?: string;
   workId?: string;
+  textFilterId?: TextFilterId;
   /** Newest first when true (default). */
   newestFirst?: boolean;
   limit?: number;

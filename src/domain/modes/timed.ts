@@ -88,6 +88,7 @@ export const timedMode: GameModeDefinition = {
       workId: input.work.id,
       editionId: edition.id,
       errorMode: input.errorMode,
+      textFilterId: input.textFilterId,
       segments,
       endRule: { kind: "time", limitMs },
     };

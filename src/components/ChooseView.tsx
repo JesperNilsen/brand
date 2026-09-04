@@ -14,7 +14,13 @@ import {
 } from "@/domain/content/registry";
 import { requireGameMode } from "@/domain/modes/registry";
 import { TIMED_LIMIT_OPTIONS_MS } from "@/domain/modes/timed";
-import type { ReadingProgress, UserPreferences, Work } from "@/domain/types";
+import { DEFAULT_TEXT_FILTER_ID } from "@/domain/text-filter";
+import type {
+  ReadingProgress,
+  TextFilterId,
+  UserPreferences,
+  Work,
+} from "@/domain/types";
 import { getRepository } from "@/infra/repository";
 import { formatClock } from "@/lib/format";
 import {
@@ -23,6 +29,7 @@ import {
   nonstopProgressKey,
   sessionHref,
 } from "@/lib/session-flow";
+import { TextFilterChooser } from "./TextFilterChooser";
 
 type Props = { modeId: string };
 
@@ -35,6 +42,8 @@ export function ChooseView({ modeId }: Props) {
   const [prefs, setPrefs] = useState<UserPreferences | null>(null);
   const [progress, setProgress] = useState<ReadingProgress | null>(null);
   const [limitMs, setLimitMs] = useState<number>(clampTimedLimit(undefined));
+  const [textFilterId, setTextFilterId] =
+    useState<TextFilterId>(DEFAULT_TEXT_FILTER_ID);
 
   useEffect(() => {
     let alive = true;
@@ -44,6 +53,7 @@ export function ChooseView({ modeId }: Props) {
         if (!alive) return;
         setPrefs(p);
         setLimitMs(clampTimedLimit(p.lastTimedLimitMs));
+        setTextFilterId(p.textFilterId ?? DEFAULT_TEXT_FILTER_ID);
       });
     return () => {
       alive = false;
@@ -63,6 +73,14 @@ export function ChooseView({ modeId }: Props) {
       alive = false;
     };
   }, [work, prefs, mode.id]);
+
+  const chooseFilter = (next: TextFilterId) => {
+    setTextFilterId(next);
+    const repo = getRepository();
+    void repo
+      .getPreferences()
+      .then((p) => repo.savePreferences({ ...p, textFilterId: next }));
+  };
 
   if (!work) {
     return (
@@ -123,12 +141,19 @@ export function ChooseView({ modeId }: Props) {
         </Link>
       </p>
 
+      <TextFilterChooser value={textFilterId} onChange={chooseFilter} />
+
       {mode.id === "passage" && (
         <ul className="grid gap-2">
           {segments.map((s, i) => (
             <li key={s.id}>
               <Link
-                href={sessionHref({ mode: "passage", workId: work.id, segmentId: s.id })}
+                href={sessionHref({
+                  mode: "passage",
+                  workId: work.id,
+                  segmentId: s.id,
+                  textFilterId,
+                })}
                 className="card flex items-baseline justify-between gap-4"
               >
                 <span>{s.label ?? `Utdrag ${i + 1}`}</span>
@@ -142,14 +167,21 @@ export function ChooseView({ modeId }: Props) {
       )}
 
       {mode.id === "nonstop" && (
-        <NonstopStart work={work} progress={progress} totalSegments={segments.length} />
+        <NonstopStart
+          work={work}
+          progress={progress}
+          totalSegments={segments.length}
+          textFilterId={textFilterId}
+        />
       )}
 
       {mode.id === "timed" && (
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            router.push(sessionHref({ mode: "timed", workId: work.id, limitMs }));
+            router.push(
+              sessionHref({ mode: "timed", workId: work.id, limitMs, textFilterId }),
+            );
           }}
         >
           <fieldset className="mb-6">
@@ -183,10 +215,12 @@ function NonstopStart({
   work,
   progress,
   totalSegments,
+  textFilterId,
 }: {
   work: Work;
   progress: ReadingProgress | null;
   totalSegments: number;
+  textFilterId: TextFilterId;
 }) {
   const done = progress?.completedSegmentIds.length ?? 0;
   return (
@@ -200,7 +234,10 @@ function NonstopStart({
           {totalSegments} segmenter i rekkefølge. Fremdriften lagres etter hvert segment.
         </p>
       )}
-      <Link href={sessionHref({ mode: "nonstop", workId: work.id })} className="btn btn-primary">
+      <Link
+        href={sessionHref({ mode: "nonstop", workId: work.id, textFilterId })}
+        className="btn btn-primary"
+      >
         {progress ? "Fortsett" : "Begynn"}
       </Link>
     </div>

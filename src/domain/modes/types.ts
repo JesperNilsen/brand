@@ -2,6 +2,7 @@ import type {
   ErrorMode,
   GameMode,
   TextEdition,
+  TextFilterId,
   TextSegment,
   Work,
 } from "../types";
@@ -25,6 +26,8 @@ export type SessionPlan = {
   workId: string;
   editionId: string;
   errorMode: ErrorMode;
+  /** Practice-form transform already applied to `segments`. */
+  textFilterId: TextFilterId;
   segments: TextSegment[];
   endRule: EndRule;
 };
@@ -47,6 +50,8 @@ export type PlanInput = {
   contentPackId: string;
   languageProfileId: string;
   errorMode: ErrorMode;
+  /** Recorded on the plan; the transform itself is applied after buildPlan. */
+  textFilterId: TextFilterId;
   selection: PlanSelection;
 };
 

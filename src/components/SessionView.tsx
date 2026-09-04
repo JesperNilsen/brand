@@ -17,6 +17,7 @@ import {
   type RunnerState,
 } from "@/domain/session/runner";
 import type { ReadingProgress, TextEdition, UserPreferences, Work } from "@/domain/types";
+import { requireTextFilter } from "@/domain/text-filter";
 import { getRepository } from "@/infra/repository";
 import { useTypingSession } from "@/hooks/useTypingSession";
 import {
@@ -153,6 +154,9 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
             <Link href="/om" className="hover:text-accent">
               {editionLabel(edition)}
             </Link>
+            {requireTextFilter(plan.textFilterId).altersText
+              ? ` · ${requireTextFilter(plan.textFilterId).displayName}`
+              : ""}
           </p>
         </div>
         <LiveMeter metrics={metrics} remainingMs={remaining} elapsedMs={elapsed} />

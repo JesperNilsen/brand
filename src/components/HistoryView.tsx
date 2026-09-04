@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getEditionById, getWork } from "@/domain/content/registry";
 import { getGameMode } from "@/domain/modes/registry";
 import { metricsFromResult } from "@/domain/session/runner";
+import { requireTextFilter } from "@/domain/text-filter";
 import type { SessionResult } from "@/domain/types";
 import { getRepository } from "@/infra/repository";
 import { formatDate, formatDuration, formatPercent, formatWpm } from "@/lib/format";
@@ -47,6 +48,7 @@ export function HistoryView() {
                 <th className="label py-2 pr-4 font-normal">Modus</th>
                 <th className="label py-2 pr-4 font-normal">Verk</th>
                 <th className="label py-2 pr-4 font-normal">Utgave</th>
+                <th className="label py-2 pr-4 font-normal">Tekstform</th>
                 <th className="label py-2 pr-4 text-right font-normal">Netto WPM</th>
                 <th className="label py-2 pr-4 text-right font-normal">Nøyaktighet</th>
                 <th className="label py-2 pr-4 text-right font-normal">Varighet</th>
@@ -76,6 +78,9 @@ export function HistoryView() {
                     </td>
                     <td className="py-2 pr-4 text-ink-muted">
                       {edition ? editionLabel(edition) : s.editionId}
+                    </td>
+                    <td className="py-2 pr-4 text-ink-muted">
+                      {requireTextFilter(s.textFilterId).displayName}
                     </td>
                     <td className="py-2 pr-4 text-right tabular-nums">{formatWpm(metricsFromResult(s))}</td>
                     <td className="py-2 pr-4 text-right tabular-nums">{formatPercent(s.accuracy)}</td>
