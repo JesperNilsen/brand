@@ -1,0 +1,121 @@
+{
+  "sourceFile": "source/runeberg-brand-0003-0014.txt",
+  "speakerLinePattern": "^(?!FØRSTE AKT)[A-ZÆØÅ][A-ZÆØÅ ]*( \\(.*\\))?\\.$",
+  "work": {
+    "id": "ibsen-brand",
+    "contentPackId": "ibsen-brand",
+    "author": "Henrik Ibsen",
+    "title": "Brand",
+    "publishedYear": 1866,
+    "source": {
+      "author": "Henrik Ibsen",
+      "title": "Brand. Et dramatisk digt",
+      "publishedYear": 1866,
+      "language": "da-NO",
+      "sourceUrl": "https://runeberg.org/brand/",
+      "archiveId": "runeberg:brand",
+      "retrievedAt": "2026-09-04",
+      "provider": "Project Runeberg",
+      "license": "Public domain (Ibsen d. 1906; edition printed 1903). Transcription proofread at least once on Project Runeberg.",
+      "digitalEdition": "Brand. Et dramatisk digt. Femtende oplag. København: Gyldendalske Boghandels Forlag (F. Hegel & Søn), 1903. Pages 7–14 (første akt, åpningen).",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Transkripsjonen følger Runeberg-teksten ord for ord. Trykkets halvlinje-innrykk (verselinjer delt mellom replikker) er ikke gjengitt; hver replikkdel står på egen linje uten innrykk.",
+        "Sidemarkører og blanke linjer fra skanningen er fjernet. Ingen språklige inngrep."
+      ]
+    }
+  },
+  "edition": {
+    "id": "ibsen-brand.original",
+    "version": "1.0.0",
+    "editorialNotes": [
+      "Originaltekst etter Gyldendals femtende oplag (1903), Ibsens egen ortografi. Bevart uendret; se work.source for transkripsjonskonvensjoner."
+    ]
+  },
+  "segments": [
+    {
+      "id": "akt1-01",
+      "label": "Første akt, 1 — Oppe i sneen",
+      "start": "(Oppe i sneen på fjeldvidderne. Tågen ligger tæt",
+      "end": "Og hvert et vejspor har vi tabt.",
+      "difficulty": 3
+    },
+    {
+      "id": "akt1-02",
+      "label": "Første akt, 2 — Bræen",
+      "start": "Stands, mand! Guds bittre -! Her er bræen",
+      "end": "Frem må jeg, som jeg før har sagt.",
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-03",
+      "label": "Første akt, 3 — Liv og død",
+      "start": "Det evner ingen mandemagt.",
+      "end": "Prest.",
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-04",
+      "label": "Første akt, 4 — Tollekniv",
+      "start": "Kanhænde det; men jeg véd bedst,",
+      "end": "kan skæres med en tollekniv.",
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-05",
+      "label": "Første akt, 5 — Is-tjern",
+      "start": "Står skodden tyk, en lokkes ej",
+      "end": "Farvel! (vil gå.)",
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-06",
+      "label": "Første akt, 6 — Datteren ved fjorden",
+      "start": "Du sætter livet til!",
+      "end": "Nej.",
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-07",
+      "label": "Første akt, 7 — Hundred daler",
+      "start": "Så kom!",
+      "end": "Han, som du nævnte, havde moer.",
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-08",
+      "label": "Første akt, 8 — Nuomstunder",
+      "start": "Ja, det var længe før ifjor; -",
+      "end": "Hu, du er hård!",
+      "difficulty": 3
+    },
+    {
+      "id": "akt1-09",
+      "label": "Første akt, 9 — Dødens vej",
+      "start": "Kom så afsted!",
+      "end": "Kom så!",
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-10",
+      "label": "Første akt, 10 — Skredet",
+      "start": "Farvel!",
+      "end": "Hej, prest!",
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-11",
+      "label": "Første akt, 11 — Den brede vej",
+      "start": "Han gik indover hejen.",
+      "end": "(han og SØNNEN går østover igen.)",
+      "difficulty": 3
+    },
+    {
+      "id": "akt1-12",
+      "label": "Første akt, 12 — De famler hjem",
+      "start": "De famler hjem. Du slappe træl,",
+      "end": "var på hans skrale skuldre lagt.",
+      "difficulty": 4
+    }
+  ]
+}

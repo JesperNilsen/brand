@@ -1,0 +1,28 @@
+{
+  "id": "ibsen-brand",
+  "title": "Henrik Ibsen: Brand",
+  "description": "Produktets navngivende kjernetekst. Et dramatisk dikt i fem akter (1866); V1 rommer åpningsscenen i første akt.",
+  "languageProfileIds": ["brand-riksmaal"],
+  "workIds": ["ibsen-brand"],
+  "tags": ["drama", "vers", "1800-tallet"],
+  "status": "active",
+  "sourceAttribution": [
+    {
+      "author": "Henrik Ibsen",
+      "title": "Brand. Et dramatisk digt",
+      "publishedYear": 1866,
+      "language": "da-NO",
+      "sourceUrl": "https://runeberg.org/brand/",
+      "archiveId": "runeberg:brand",
+      "retrievedAt": "2026-09-04",
+      "provider": "Project Runeberg",
+      "license": "Public domain (Ibsen d. 1906; edition printed 1903). Transcription proofread at least once on Project Runeberg.",
+      "digitalEdition": "Brand. Et dramatisk digt. Femtende oplag. København: Gyldendalske Boghandels Forlag (F. Hegel & Søn), 1903. Scanned and OCR-transcribed by Project Runeberg.",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Pages 3–14 archived under source/runeberg/; extracted text in source/runeberg-brand-0003-0014.txt.",
+        "Cross-reference: Henrik Ibsens skrifter (ibsen.uio.no, CC BY-NC 4.0) for the 1866 first-edition text."
+      ]
+    }
+  ]
+}
