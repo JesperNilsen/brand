@@ -188,6 +188,7 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
         handlers={handlers}
         autoFocus
         disabled={finished}
+        label={segment.label ?? `Segment ${segmentNumber}`}
         preview={
           plan.endRule.kind !== "all-segments" && upcoming
             ? upcoming.text.split("\n").slice(0, 3).join("\n")
@@ -208,6 +209,16 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
             : state.status === "idle"
               ? "Begynn å skrive når du er klar. Klokken starter ved første tegn."
               : ""}
+        </span>
+        {/*
+          Coarse progress only. Announcing per keystroke would make the page
+          unusable with a screen reader; a segment boundary is the moment the
+          text under the cursor actually changes.
+        */}
+        <span className="sr-only" aria-live="polite" data-testid="progress-announcement">
+          {finished
+            ? "Økten er ferdig."
+            : `${segment.label ?? `Segment ${segmentNumber}`}, ${segmentNumber} av ${segmentTotal}.`}
         </span>
       </div>
     </div>

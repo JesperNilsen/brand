@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { deriveCharStates } from "@/domain/engine/render";
 import type { TypingSessionState } from "@/domain/engine/engine";
 import type { TypingSessionHandlers } from "@/hooks/useTypingSession";
@@ -12,6 +12,8 @@ type Props = {
   preview?: string;
   autoFocus?: boolean;
   disabled?: boolean;
+  /** Announced with the text, e.g. "Første akt, 1 — Oppe i sneen". */
+  label?: string;
 };
 
 /** Lines of context kept above the active line. */
@@ -27,7 +29,15 @@ const VISIBLE_LINES = 3;
  * the page, so the eye stays in one place through a long passage. Keystrokes go
  * to a visually hidden textarea overlaying the text.
  */
-export function TypingSurface({ engine, handlers, preview, autoFocus, disabled }: Props) {
+export function TypingSurface({
+  engine,
+  handlers,
+  preview,
+  autoFocus,
+  disabled,
+  label,
+}: Props) {
+  const describedById = useId();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
   const linesRef = useRef<HTMLDivElement>(null);
@@ -147,10 +157,23 @@ export function TypingSurface({ engine, handlers, preview, autoFocus, disabled }
           )}
         </div>
       </div>
+      {/*
+        The rendered text is one span per character so it can be coloured per
+        character, which a screen reader would read out letter by letter. This
+        plain copy is what assistive technology actually reads: the textarea
+        points at it, so focusing the writing area announces the passage as
+        prose. Without it the target text is unreachable and the core task
+        cannot be done at all.
+      */}
+      <p id={describedById} className="sr-only">
+        {label ? `${label}. ` : ""}
+        Skriv denne teksten: {engine.targetText}
+      </p>
       <textarea
         ref={inputRef}
         className="typing-input"
-        aria-label="Skrivefelt. Skriv teksten som vises."
+        aria-label="Skrivefelt"
+        aria-describedby={describedById}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
