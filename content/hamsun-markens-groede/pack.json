@@ -1,0 +1,27 @@
+{
+  "id": "hamsun-markens-groede",
+  "title": "Knut Hamsun: Markens grøde",
+  "description": "Langform, naturprosa og vedvarende rytme. V1 rommer åpningen av første del, kapittel I (1917).",
+  "languageProfileIds": ["brand-riksmaal"],
+  "workIds": ["hamsun-markens-groede"],
+  "tags": ["prosa", "roman", "1900-tallet"],
+  "status": "active",
+  "sourceAttribution": [
+    {
+      "author": "Knut Hamsun",
+      "title": "Markens Grøde",
+      "publishedYear": 1917,
+      "language": "da-NO",
+      "sourceUrl": "https://no.wikisource.org/wiki/Markens_Gr%C3%B8de/1/01",
+      "archiveId": "wikikilden:Markens_Grøde/1/01",
+      "retrievedAt": "2026-09-04",
+      "provider": "Wikikilden (no.wikisource.org)",
+      "license": "Public domain i Norge (Hamsun d. 1952; verkets vernetid utløp 2023-01-01, life+70) og i USA (utgitt 1917, før 1928-grensen). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "digitalEdition": "Markens Grøde. Kristiania: Gyldendal, 1917. Første del, kapittel I (transkribert etter Internet Archive-skanningen markensgrde01hams).",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Rå HTML arkivert under source/wikikilden/markens-groede-1-01.html; ekstrahert tekst i source/markens-groede-1-01.txt."
+      ]
+    }
+  ]
+}

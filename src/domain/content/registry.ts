@@ -15,6 +15,18 @@ import ibsenBrandPack from "../../../content/ibsen-brand/pack.json";
 import ibsenBrandOriginal from "../../../content/ibsen-brand/original.json";
 import ibsenBrandTraining from "../../../content/ibsen-brand/training-edition.v1.json";
 
+import hamsunMarkensGroedePack from "../../../content/hamsun-markens-groede/pack.json";
+import hamsunMarkensGroedeOriginal from "../../../content/hamsun-markens-groede/original.json";
+import hamsunMarkensGroedeTraining from "../../../content/hamsun-markens-groede/training-edition.v1.json";
+
+import kiellandNoveletterPack from "../../../content/kielland-noveletter/pack.json";
+import kiellandNoveletterOriginal from "../../../content/kielland-noveletter/original.json";
+import kiellandNoveletterTraining from "../../../content/kielland-noveletter/training-edition.v1.json";
+
+import kiellandGiftPack from "../../../content/kielland-gift/pack.json";
+import kiellandGiftOriginal from "../../../content/kielland-gift/original.json";
+import kiellandGiftTraining from "../../../content/kielland-gift/training-edition.v1.json";
+
 type OriginalFile = {
   work: Omit<Work, "editions">;
   edition: TextEdition;
@@ -32,6 +44,33 @@ const PACK_FILES: PackFiles[] = [
       {
         original: ibsenBrandOriginal as OriginalFile,
         training: ibsenBrandTraining as TextEdition,
+      },
+    ],
+  },
+  {
+    pack: hamsunMarkensGroedePack as ContentPack,
+    works: [
+      {
+        original: hamsunMarkensGroedeOriginal as OriginalFile,
+        training: hamsunMarkensGroedeTraining as TextEdition,
+      },
+    ],
+  },
+  {
+    pack: kiellandNoveletterPack as ContentPack,
+    works: [
+      {
+        original: kiellandNoveletterOriginal as OriginalFile,
+        training: kiellandNoveletterTraining as TextEdition,
+      },
+    ],
+  },
+  {
+    pack: kiellandGiftPack as ContentPack,
+    works: [
+      {
+        original: kiellandGiftOriginal as OriginalFile,
+        training: kiellandGiftTraining as TextEdition,
       },
     ],
   },

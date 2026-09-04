@@ -15,8 +15,23 @@
  *   "notes": ["free-text editorial notes"],
  *   "patterns": [{ "from": "aa", "to": "å", "flags": "g", "note": "..." }],
  *   "replacements": { "af": "av", "hvad": "hva" },
+ *   "lowercaseNouns": { "properNames": ["Isak", "Gud", "Kristiania"] },
  *   "retained": { "sprød": "rim med død" }
  * }
+ *
+ * `lowercaseNouns` (optional): 18th/19th-century Dano-Norwegian orthography
+ * capitalises common nouns (German-style). This is purely an orthographic
+ * convention, not a word choice, so it is a legal "tillatt inngrep" under
+ * docs/spec/LANGUAGE_PROFILE.md. The rule lowercases the first letter of any
+ * word that starts with a capital letter, UNLESS: (a) the word is listed in
+ * `properNames` (proper names, deity references, place names — never
+ * lowercased), or (b) the word is sentence-initial, defined narrowly as: the
+ * first word of the segment, or a word immediately preceded (skipping only
+ * whitespace/quote characters) by one of `. ! ? … —` or by an opening quote
+ * mark (the run of characters between it and the previous word contains one
+ * of those). Kept deliberately simple: it does not parse abbreviations or
+ * disambiguate a mid-sentence parenthetical dash from a true sentence break
+ * — see the code comment below.
  */
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -29,8 +44,40 @@ type Rules = {
   notes?: string[];
   patterns?: { from: string; to: string; flags?: string; note?: string }[];
   replacements?: Record<string, string>;
+  lowercaseNouns?: { properNames: string[] };
   retained?: Record<string, string>;
 };
+
+// Characters that end a sentence, or a dialogue dash that starts one.
+const SENTENCE_BOUNDARY = /[.!?…—]/;
+// Opening quote marks used in the source texts (Danish-style „…“, guillemets, straight quotes).
+const OPENING_QUOTE = /[„«"'‘“]/;
+
+/** True if the word token at `tokens[i]` starts a sentence (see header comment). */
+function isSentenceInitial(tokens: string[], i: number): boolean {
+  if (i === 0) return true;
+  const between = tokens[i - 1];
+  return SENTENCE_BOUNDARY.test(between) || OPENING_QUOTE.test(between);
+}
+
+export function applyLowercaseNouns(
+  text: string,
+  properNames: ReadonlySet<string>,
+  usage: Map<string, number>,
+): string {
+  const tokens = tokenize(text);
+  return tokens
+    .map((tok, i) => {
+      if (!isWordToken(tok)) return tok;
+      const first = tok[0];
+      if (!first || first === first.toLowerCase()) return tok; // doesn't start with an uppercase letter
+      if (properNames.has(tok)) return tok;
+      if (isSentenceInitial(tokens, i)) return tok;
+      usage.set(`lowercase:${tok}`, (usage.get(`lowercase:${tok}`) ?? 0) + 1);
+      return first.toLowerCase() + tok.slice(1);
+    })
+    .join("");
+}
 
 function arg(name: string): string {
   const i = process.argv.indexOf(`--${name}`);
@@ -68,9 +115,11 @@ async function main() {
   const rules = JSON.parse(await readFile(path.join(dir, "rules.json"), "utf8")) as Rules;
   const usage = new Map<string, number>();
 
+  const properNames = new Set(rules.lowercaseNouns?.properNames ?? []);
   const segments = original.edition.segments.map(
     (s: { id: string; order: number; text: string; label?: string; difficulty?: number }) => {
-      const text = applyRules(s.text, rules, usage);
+      let text = applyRules(s.text, rules, usage);
+      if (rules.lowercaseNouns) text = applyLowercaseNouns(text, properNames, usage);
       return { ...s, text, wordCount: countWords(text) };
     },
   );
@@ -83,8 +132,14 @@ async function main() {
       (p) => `Mønster: /${p.from}/ → «${p.to}» (${usage.get(`pattern:${p.from}`) ?? 0} forekomster)${p.note ? ` — ${p.note}` : ""}`,
     ),
     ...applied
-      .filter(([k]) => !k.startsWith("pattern:"))
+      .filter(([k]) => !k.startsWith("pattern:") && !k.startsWith("lowercase:"))
       .map(([k, n]) => `Ortografi: «${k}» → «${dict[k]}» (${n})`),
+    ...applied
+      .filter(([k]) => k.startsWith("lowercase:"))
+      .map(([k, n]) => {
+        const word = k.slice("lowercase:".length);
+        return `Substantiv (stor → liten forbokstav): «${word}» → «${word[0].toLowerCase()}${word.slice(1)}» (${n})`;
+      }),
     ...Object.entries(rules.retained ?? {}).map(([k, why]) => `Beholdt: «${k}» — ${why}`),
   ];
   const unused = Object.keys(dict).filter((k) => !usage.has(k));

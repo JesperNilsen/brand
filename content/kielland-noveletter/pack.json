@@ -1,0 +1,44 @@
+{
+  "id": "kielland-noveletter",
+  "title": "Alexander Kielland: Noveletter",
+  "description": "Korte, selvstendige økter. V1 rommer åpningen av to noveller fra samlingen Noveletter (1879): «Haabet er lysegrønt» og «Visne Blade».",
+  "languageProfileIds": ["brand-riksmaal"],
+  "workIds": ["kielland-noveletter"],
+  "tags": ["prosa", "novelle", "1800-tallet"],
+  "status": "active",
+  "sourceAttribution": [
+    {
+      "author": "Alexander L. Kielland",
+      "title": "Haabet er lysegrønt",
+      "publishedYear": 1879,
+      "language": "da-NO",
+      "sourceUrl": "https://no.wikisource.org/wiki/Haabet_er_lysegr%C3%B8nt",
+      "archiveId": "wikikilden:Haabet_er_lysegrønt",
+      "retrievedAt": "2026-09-04",
+      "provider": "Wikikilden (no.wikisource.org)",
+      "license": "Public domain (Kielland d. 1906; verkets vernetid er utløpt, life+70). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "digitalEdition": "Samlede Værker, Første Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. «Haabet er lysegrønt» (trykte sider 7–13).",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Rå HTML arkivert under source/wikikilden/haabet-er-lysegroent.html."
+      ]
+    },
+    {
+      "author": "Alexander L. Kielland",
+      "title": "Visne Blade",
+      "publishedYear": 1879,
+      "language": "da-NO",
+      "sourceUrl": "https://no.wikisource.org/wiki/Visne_Blade",
+      "archiveId": "wikikilden:Visne_Blade",
+      "retrievedAt": "2026-09-04",
+      "provider": "Wikikilden (no.wikisource.org)",
+      "license": "Public domain (Kielland d. 1906; verkets vernetid er utløpt, life+70). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "digitalEdition": "Samlede Værker, Første Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. «Visne Blade» (trykte sider 13–16).",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Rå HTML arkivert under source/wikikilden/visne-blade.html.",
+        "Novellesamlingens prioriterte tekst, «Ballstemning», har ingen bekreftet fri digital kilde funnet; se docs/CORPUS_STATUS.md."
+      ]
+    }
+  ]
+}

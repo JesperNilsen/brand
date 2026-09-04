@@ -1,0 +1,27 @@
+{
+  "id": "kielland-gift",
+  "title": "Alexander Kielland: Gift",
+  "description": "Samfunnskritisk roman med variert dialog og fortellende prosa. V1 rommer åpningen av kapittel I (1883/1907-teksten).",
+  "languageProfileIds": ["brand-riksmaal"],
+  "workIds": ["kielland-gift"],
+  "tags": ["prosa", "roman", "1800-tallet", "dialog"],
+  "status": "active",
+  "sourceAttribution": [
+    {
+      "author": "Alexander L. Kielland",
+      "title": "Gift",
+      "publishedYear": 1883,
+      "language": "da-NO",
+      "sourceUrl": "https://no.wikisource.org/wiki/Gift/1",
+      "archiveId": "wikikilden:Gift/1",
+      "retrievedAt": "2026-09-04",
+      "provider": "Wikikilden (no.wikisource.org)",
+      "license": "Public domain (Kielland d. 1906; verkets vernetid er utløpt, life+70). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, kapittel I (trykte sider 165–171).",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Rå HTML arkivert under source/wikikilden/gift-1.html; ekstrahert tekst i source/gift-1.txt."
+      ]
+    }
+  ]
+}

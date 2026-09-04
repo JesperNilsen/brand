@@ -1,0 +1,101 @@
+{
+  "work": {
+    "id": "hamsun-markens-groede",
+    "contentPackId": "hamsun-markens-groede",
+    "author": "Knut Hamsun",
+    "title": "Markens grøde",
+    "publishedYear": 1917,
+    "source": {
+      "author": "Knut Hamsun",
+      "title": "Markens Grøde",
+      "publishedYear": 1917,
+      "language": "da-NO",
+      "sourceUrl": "https://no.wikisource.org/wiki/Markens_Gr%C3%B8de/1/01",
+      "archiveId": "wikikilden:Markens_Grøde/1/01",
+      "retrievedAt": "2026-09-04",
+      "provider": "Wikikilden (no.wikisource.org)",
+      "license": "Public domain i Norge (Hamsun d. 1952; verkets vernetid utløp 2023-01-01, life+70) og i USA (utgitt 1917, før 1928-grensen). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "digitalEdition": "Markens Grøde. Kristiania: Gyldendal, 1917. Første del, kapittel I (transkribert etter Internet Archive-skanningen markensgrde01hams; Wikikilden-siden Markens_Grøde/1/01 transkluderer sidene 5–15 i skannet bok / trykte sider 11–21).",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Rå HTML arkivert under source/wikikilden/markens-groede-1-01.html; ekstrahert tekst i source/markens-groede-1-01.txt.",
+        "Kapitteloverskriften «I» er ikke tatt med som segment; utdraget starter på kapitlets første prosalinje («Den lange, lange Sti …»)."
+      ]
+    }
+  },
+  "edition": {
+    "id": "hamsun-markens-groede.original",
+    "workId": "hamsun-markens-groede",
+    "kind": "original",
+    "version": "1.0.0",
+    "segments": [
+      {
+        "id": "del1-kap1-01",
+        "order": 1,
+        "text": "Den lange, lange Sti over Myrene og ind i Skogene, hvem har trakket op den? Manden, Mennesket, den første som var her. Det var ingen Sti før ham. Siden fulgte et og andet Dyr de svake Spor over Moer og Myrer og gjorde dem tydeligere, og siden igjen begyndte en og anden Lap at snuse Stien op og gaa den naar han skulde fra Fjæld til Fjæld og se til sin Ren. Slik blev Stien til gjennem den store Almenning som ingen eiet, det herreløse Land.",
+        "label": "Første del, kapittel I, 1",
+        "wordCount": 86,
+        "difficulty": 3
+      },
+      {
+        "id": "del1-kap1-02",
+        "order": 2,
+        "text": "Manden kommer gaaende mot Nord. Han bærer en Sæk, den første Sæk, den indeholder Niste og nogen Redskaper. Manden er stærk og grov, han har rødt Jærnskjæg og smaa Ar i Ansigtet og paa Hænderne — disse Saartomter, har han faat dem i Arbeide eller i Strid? Han er kanske kommet fra Straf og vil skjule sig, han er kanske Filosof og søker Fred, men ialfald saa kommer han der, et Menneske midt i denne uhyre Ensomhet. Han gaar og gaar, det er stilt for Fugler og Dyr omkring ham, stundom taler han et eller andet Ord med sig selv: Aaja Herregud! sier han. Naar han kommer over Myrene og til venlige Steder med en aapen Slette i Skogen sætter han Sækken ned og begynder at vandre omkring og undersøke Forholdene, efter en Stund kommer han tilbake, tar Sækken paa Ryggen og gaar igjen. Det varer hele Dagen, han ser paa Solen hvad det lider, det blir Nat og han kaster sig paa sin Arm i Lyngen.",
+        "label": "Første del, kapittel I, 2",
+        "wordCount": 166,
+        "difficulty": 4
+      },
+      {
+        "id": "del1-kap1-03",
+        "order": 3,
+        "text": "Om nogen Timer gaar han igjen, aaja Herregud! gaar igjen ret mot Nord, ser paa Solen hvad det lider, holder Maaltid paa en Leiv Fiatbrød og Gjeitost, drikker Vand i en Bæk og fortsætter sin Gang. Ogsaa denne Dag gaar med til hans Vandring, for han maa undersøke saa mange venlige Steder i Skogen. Hvad gaar han efter? Efter Land, efter Jord? Han er kanske en Utvandrer fra Bygderne, han har Øinene med sig og speider, stundom stiger han op paa en Haug og speider. Nu synker Solen igjen.",
+        "label": "Første del, kapittel I, 3",
+        "wordCount": 89,
+        "difficulty": 3
+      },
+      {
+        "id": "del1-kap1-04",
+        "order": 4,
+        "text": "Han gaar paa Vestsiden af et Dalføre med blandet Skog, her er ogsaa Løvskog og Græsbund, det rækker i Timer, det skumrer, men han hører et lite Sus av en Elv, og dette lille Sus opliver ham som noget levende. Da han kommer op paa Høiden ser han Dalen i Halvmørke nedover og længst ute Himlen mot Sør. Han lægger sig.",
+        "label": "Første del, kapittel I, 4",
+        "wordCount": 61,
+        "difficulty": 2
+      },
+      {
+        "id": "del1-kap1-05",
+        "order": 5,
+        "text": "Om Morgningen staar han foran et Landskap av Skog og Beitesmark, han stiger ned, her er en grøn Li, han ser et Skimt av Elven langt nede og en Hare som sætter over den i et Sprang. Manden nikker som om det just høver at Elven ikke er bredere end et Sprang. En rugende Rype slaar pludselig op ved hans Føtter og hvæser vildt imot ham, og Manden nikker igjen at her paa Stedet er Dyr og Fugler, det høver atter! Han vandrer i Blaabærlyng og Tyttebærlyng, i den syvtakkede Skogstjærne og i Smaabregner; naar han stanser hist og her og graver med et Jærn i Jorden finder han her Muldjord og der Myr, gjødslet av flere Tusen Aars Løvfald og rotten Kvist. Manden nikker at her slaar han sig ned, jo det gjør han, slaar sig ned. I to Dager vedblir han at streife om i Omegnen, men vender om Kvældene tilbake til Lien. Han sover om Nætterne paa et Barleie, han er blit saa hjemme her, han har alt et Barleie under en Berghammer.",
+        "label": "Første del, kapittel I, 5",
+        "wordCount": 176,
+        "difficulty": 4
+      },
+      {
+        "id": "del1-kap1-06",
+        "order": 6,
+        "text": "Det værste hadde været at finde Stedet, dette ingens Sted, men hans; nu blev Dagene optat av Arbeide. Han begyndte straks at løipe Næver i de fjærnere Skoger nu mens Sevjen var i Trærne, han la Næveren i Pres og tørket den, naar han hadde en stor Bør bar han den alle Milene tilbake til Bygden og solgte den til Bygningsbruk. Og hjem til Lien bar han atter nye Sækker av Matvarer og Værktøi, Mel, Flæsk, en Gryte, en Spade, gik Stien frem og tilbake og bar og bar. En født Bærer, en Pram gjennem Skogene, aa det var som han elsket sit Kald at gaa meget og bære meget, som om det ikke at ha en Bør paa Ryggen var en lat Tilværelse og ikke noget for ham.",
+        "label": "Første del, kapittel I, 6",
+        "wordCount": 129,
+        "difficulty": 4
+      },
+      {
+        "id": "del1-kap1-07",
+        "order": 7,
+        "text": "Han kom en Dag med sin tunge Bør og desuten leiende to Gjeiter og en Ungbuk i Baand. Han var lykkelig for sine Gjeiter som om de hadde været Kjyr og var god mot dem. Det første fremmede Menneske kom forbi, en vandrende Lap, han saa Gjeiterne og forstod at han var kommet til en Mand som hadde slaat sig ned her, han sa:",
+        "label": "Første del, kapittel I, 7",
+        "wordCount": 64,
+        "difficulty": 2
+      },
+      {
+        "id": "del1-kap1-08",
+        "order": 8,
+        "text": "Skal du bo her for godt? — Ja, svarte Manden. — Hvad du heter? — Isak. Du vet ikke av en Kvindfolkhjælp til mig? — Nei. Men jeg skal orde det der jeg farer. — Gjør saa! At jeg har Dyr og ingen til at passe dem.",
+        "label": "Første del, kapittel I, 8",
+        "wordCount": 42,
+        "difficulty": 2
+      }
+    ],
+    "editorialNotes": [
+      "Originaltekst etter Gyldendals førsteutgave (1917), Hamsuns egen ortografi (bl.a. store forbokstaver i vanlige substantiv, «aa» for å). Bevart uendret; se work.source for transkripsjonskonvensjoner."
+    ]
+  }
+}
