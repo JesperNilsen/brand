@@ -1,26 +1,266 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Design tokens. Light is the base; dark is applied by explicit choice
+   ([data-theme="dark"]) or by system preference when no explicit light
+   choice is stored. Everything visual reads from these variables.
+   ------------------------------------------------------------------------ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --paper: #f7f3ec;
+  --surface: #fffdf8;
+  --ink: #221f1b;
+  --ink-muted: #625c53;
+  --ink-faint: #9a938a;
+  --rule: #e3dcd0;
+  --accent: #7a2f2f;
+  --accent-soft: #f0e3e0;
+  --error: #a63a3a;
+  --error-soft: #f3dcdc;
+  --focus: #3b5f8a;
+  --cursor: #7a2f2f;
+
+  --font-serif:
+    "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Charter,
+    "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --measure: 34rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #171614;
+  --surface: #1f1d1a;
+  --ink: #e9e3d8;
+  --ink-muted: #a8a094;
+  --ink-faint: #6f695f;
+  --rule: #302d28;
+  --accent: #d19a8a;
+  --accent-soft: #3a2a27;
+  --error: #e08a84;
+  --error-soft: #472a2a;
+  --focus: #9fbfe6;
+  --cursor: #d19a8a;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #171614;
+    --surface: #1f1d1a;
+    --ink: #e9e3d8;
+    --ink-muted: #a8a094;
+    --ink-faint: #6f695f;
+    --rule: #302d28;
+    --accent: #d19a8a;
+    --accent-soft: #3a2a27;
+    --error: #e08a84;
+    --error-soft: #472a2a;
+    --focus: #9fbfe6;
+    --cursor: #d19a8a;
   }
 }
 
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-error: var(--error);
+  --color-error-soft: var(--error-soft);
+  --color-focus: var(--focus);
+  --font-serif: var(--font-serif);
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100%;
+  line-height: 1.6;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* Visible, consistent focus for keyboard users. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--ink-faint);
+  text-underline-offset: 0.18em;
+}
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* Small-caps style labels used sparingly for meta information. */
+.label {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.prose-measure {
+  max-width: var(--measure);
+}
+
+/* Buttons and links styled as quiet, classic controls. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.55rem 1.05rem;
+  border-radius: 4px;
+  font: inherit;
+  line-height: 1.3;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover {
+  border-color: var(--ink-faint);
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+  border-color: var(--accent);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.card {
+  display: block;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  text-decoration: none;
+}
+a.card:hover,
+button.card:hover {
+  border-color: var(--ink-faint);
+}
+
+select.control,
+input.control {
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.35rem 0.6rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Typing surface
+   ------------------------------------------------------------------------ */
+.typing-surface {
+  font-size: 1.32rem;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  hyphens: manual;
+  cursor: text;
+  position: relative;
+}
+@media (max-width: 640px) {
+  .typing-surface {
+    font-size: 1.12rem;
+    line-height: 1.8;
+  }
+}
+
+.ch-pending {
+  color: var(--ink-muted);
+}
+.ch-correct {
+  color: var(--ink);
+}
+.ch-incorrect {
+  color: var(--error);
+  background: var(--error-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--error);
+  text-underline-offset: 0.15em;
+  border-radius: 2px;
+}
+.ch-cursor {
+  box-shadow: inset 2px 0 0 var(--cursor);
+}
+.typing-surface.is-idle .ch-cursor,
+.typing-surface.is-active .ch-cursor {
+  animation: caret 1.1s steps(1) infinite;
+}
+@keyframes caret {
+  50% {
+    box-shadow: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .typing-surface .ch-cursor {
+    animation: none;
+  }
+}
+
+/* Newline glyph shown at line ends so the user knows to press Enter. */
+.ch-newline::before {
+  content: "↵";
+  color: var(--ink-faint);
+  font-size: 0.8em;
+}
+.ch-newline.ch-incorrect::before {
+  color: var(--error);
+}
+
+/* Hidden input that receives keystrokes. It stays focusable and screen-reader
+   accessible but is visually collapsed. */
+.typing-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  color: transparent;
+  background: transparent;
+  caret-color: transparent;
+  border: 0;
+  resize: none;
+  font: inherit;
+  cursor: text;
+}
+.typing-input:focus {
+  outline: none;
+}
+.typing-surface:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: 10px;
+  border-radius: 2px;
 }
