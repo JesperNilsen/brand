@@ -154,7 +154,7 @@ export function ChooseView({ modeId }: Props) {
                   segmentId: s.id,
                   textFilterId,
                 })}
-                className="card flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1"
+                className="card flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
               >
                 <span>{s.label ?? `Utdrag ${i + 1}`}</span>
                 <span className="shrink-0 text-sm text-ink-muted">

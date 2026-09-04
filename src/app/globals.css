@@ -112,85 +112,91 @@ a:hover {
   text-decoration-color: var(--accent);
 }
 
-/* Small-caps style labels used sparingly for meta information. */
-.label {
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
+/* Component classes live in Tailwind's `components` layer on purpose. An
+   unlayered rule beats every layered utility regardless of specificity, so
+   writing these outside a layer would silently defeat utilities like `flex`
+   or `border-accent` wherever they are combined with `.btn` or `.card`. */
+@layer components {
+  /* Small-caps style labels used sparingly for meta information. */
+  .label {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
 
-.prose-measure {
-  max-width: var(--measure);
-}
+  .prose-measure {
+    max-width: var(--measure);
+  }
 
-/* Buttons and links styled as quiet, classic controls. */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  color: var(--ink);
-  padding: 0.55rem 1.05rem;
-  border-radius: 4px;
-  font: inherit;
-  line-height: 1.3;
-  cursor: pointer;
-  text-decoration: none;
-}
-.btn:hover {
-  border-color: var(--ink-faint);
-}
-.btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--paper);
-}
-.btn-primary:hover {
-  filter: brightness(1.08);
-  border-color: var(--accent);
-}
-.btn:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
+  /* Buttons and links styled as quiet, classic controls. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    color: var(--ink);
+    padding: 0.55rem 1.05rem;
+    border-radius: 4px;
+    font: inherit;
+    line-height: 1.3;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn:hover {
+    border-color: var(--ink-faint);
+  }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    border-color: var(--accent);
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 
-/* Segmented choice (text form, time limit): a label wrapping a visually hidden
-   radio. The checked state is defined here rather than with a Tailwind
-   `has-[:checked]:` utility, because the unlayered `.btn` rule above outranks
-   every layered utility in the cascade and would silently win. */
-.btn:has(input:checked) {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-soft);
-}
-.btn:has(input:focus-visible) {
-  outline: 2px solid var(--focus);
-  outline-offset: 3px;
-}
+  /* Segmented choice (text form, time limit): a label wrapping a visually hidden
+     radio. The checked state is defined here rather than with a Tailwind
+     `has-[:checked]:` utility, because the unlayered `.btn` rule above outranks
+     every layered utility in the cascade and would silently win. */
+  .btn:has(input:checked) {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .btn:has(input:focus-visible) {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
 
-.card {
-  display: block;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  border-radius: 6px;
-  padding: 1rem 1.15rem;
-  text-decoration: none;
-}
-a.card:hover,
-button.card:hover {
-  border-color: var(--ink-faint);
-}
+  .card {
+    display: block;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 1rem 1.15rem;
+    text-decoration: none;
+  }
+  a.card:hover,
+  button.card:hover {
+    border-color: var(--ink-faint);
+  }
 
-select.control,
-input.control {
-  font: inherit;
-  color: var(--ink);
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  padding: 0.35rem 0.6rem;
+  select.control,
+  input.control {
+    font: inherit;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.35rem 0.6rem;
+  }
 }
 
 /* ---------------------------------------------------------------------------
