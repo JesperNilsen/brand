@@ -37,6 +37,44 @@ pnpm build
 `check:all` er den påkrevde sjekken på `main`. Én sjekk, ikke seks, fordi én er
 vanskeligere å uthule.
 
+## Utrulling
+
+Netlify, koblet til dette GitHub-repoet: `main` er produksjon, og hver pull
+request får sin egen forhåndsvisning. Ingen manuell opplasting — `check:all` er
+den påkrevde sjekken før merge, og merge er det som ruller ut.
+
+`netlify.toml` er hele konfigurasjonen:
+
+| | |
+| --- | --- |
+| Byggekommando | `pnpm build` |
+| Publiseringsmappe | `.next` (ikke statisk eksport: `/resultat/[id]` har ingen ferdige parametre å prerendre) |
+| Node | 24, samme som CI |
+| Tillegg | `@netlify/plugin-nextjs`, låst i `devDependencies` slik at en ny utgivelse ikke kan endre bygget uten en commit |
+
+Appen leser ingen tredjeparter og har ingen hemmeligheter, så det finnes ingen
+miljøvariabler å sette. Alt brukeren eier ligger i hennes egen nettleser.
+
+Utgavefilene under `public/content/editions/` serveres `immutable` i ett år.
+Headeren er satt to steder med vilje: `next.config.ts` dekker det Next-kjøretiden
+serverer, `netlify.toml` dekker CDN-et, og CDN-et ser ikke det første.
+
+**Førstegangsoppsett (bare et menneske kan gjøre dette).** Å koble et repo til
+Netlify krever innlogging og OAuth-godkjenning i nettleseren:
+
+1. Netlify → «Add new site» → «Import an existing project» → GitHub →
+   `JesperNilsen/brand`.
+2. Ikke overstyr noe i skjemaet. Byggekommando, publiseringsmappe og Node-versjon
+   leses fra `netlify.toml`; verdier skrevet inn i nettsidens felter vinner over
+   filen og blir en innstilling som ikke finnes i repoet.
+3. Etter første vellykkede bygg: velg et sidenavn, og skru på «Deploy previews»
+   for pull requests.
+
+**Verdt å vite før første bygg.** Siste utgivelse av `@netlify/plugin-nextjs`
+(5.15.13, juli 2026) er eldre enn Next-versjonen her (16.3.4). Det er ikke en
+kjent inkompatibilitet, men det er heller ikke prøvd: første bygg er stedet det
+eventuelt viser seg, ikke produksjon senere.
+
 ## Struktur
 
 ```
