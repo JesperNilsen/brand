@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { getEdition, listContentPacks, listWorks } from "@/domain/content/registry";
+// A server component, so the notes are rendered to HTML here and never reach
+// the reader as JavaScript. See `editorial-notes.generated.ts`.
+import { EDITORIAL_NOTES } from "@/domain/content/editorial-notes.generated";
 import { brandRiksmaal } from "@/domain/language/brand-riksmaal";
 
 export const metadata: Metadata = { title: "Om BRAND" };
@@ -72,7 +75,7 @@ export default function AboutPage() {
                     Redaksjonsnotater for Brand Training Edition {training.version}
                   </summary>
                   <ul className="mt-2 list-disc pl-5 text-ink-muted">
-                    {training.editorialNotes?.map((n) => (
+                    {EDITORIAL_NOTES[training.id]?.map((n) => (
                       <li key={n} className="mb-1">
                         {n}
                       </li>

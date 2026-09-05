@@ -10,6 +10,8 @@ import {
   getWork,
   listContentPacks,
   listWorks,
+  loadedEdition,
+  loadEditionText,
   orderedSegments,
 } from "@/domain/content/registry";
 import { requireGameMode } from "@/domain/modes/registry";
@@ -17,6 +19,7 @@ import { TIMED_LIMIT_OPTIONS_MS } from "@/domain/modes/timed";
 import { DEFAULT_TEXT_FILTER_ID } from "@/domain/text-filter";
 import type {
   ReadingProgress,
+  TextEdition,
   TextFilterId,
   UserPreferences,
   Work,
@@ -45,6 +48,10 @@ export function ChooseView({ modeId }: Props) {
   const [textFilterId, setTextFilterId] =
     useState<TextFilterId>(DEFAULT_TEXT_FILTER_ID);
   const [prefsLoaded, setPrefsLoaded] = useState(false);
+  /** Only Passage lists individual segments, so only Passage needs the text. */
+  const [fetchedText, setFetchedText] = useState<TextEdition | null>(null);
+  const [textFailed, setTextFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   /** Set as soon as the user touches a control, so the late read cannot win. */
   const chosenRef = useRef(false);
   /** Serialises preference writes so two quick choices cannot settle out of order. */
@@ -82,6 +89,26 @@ export function ChooseView({ modeId }: Props) {
       alive = false;
     };
   }, [work, prefs, mode.id]);
+
+  useEffect(() => {
+    if (!work || !prefs || mode.id !== "passage") return;
+    const meta = defaultEdition(work, prefs.languageProfileId);
+    // Already in memory: the render below reads the cache directly, so there is
+    // nothing to wait for and nothing to set.
+    if (loadedEdition(meta)) return;
+    let alive = true;
+    loadEditionText(meta)
+      .then((e) => {
+        if (alive) setFetchedText(e);
+      })
+      .catch(() => {
+        // A work whose text will not load must not be offered as startable.
+        if (alive) setTextFailed(true);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [work, prefs, mode.id, attempt]);
 
   const chooseFilter = (next: TextFilterId) => {
     chosenRef.current = true;
@@ -139,7 +166,8 @@ export function ChooseView({ modeId }: Props) {
 
   const profileId = prefs?.languageProfileId ?? "brand-riksmaal";
   const edition = defaultEdition(work, profileId);
-  const segments = orderedSegments(edition);
+  const text = loadedEdition(edition) ?? fetchedText;
+  const segments = text ? orderedSegments(text) : null;
   const pack = getContentPack(work.contentPackId);
 
   return (
@@ -167,7 +195,24 @@ export function ChooseView({ modeId }: Props) {
         disabled={!prefsLoaded}
       />
 
-      {mode.id === "passage" && (
+      {mode.id === "passage" && textFailed && (
+        <div data-testid="choose-error">
+          <p className="mb-4">Teksten kunne ikke lastes. Sjekk nettforbindelsen.</p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              setTextFailed(false);
+              setAttempt((n) => n + 1);
+            }}
+            data-testid="retry-button"
+          >
+            Prøv igjen
+          </button>
+        </div>
+      )}
+
+      {mode.id === "passage" && segments && (
         <ul className="grid gap-2">
           {segments.map((s, i) => (
             <li key={s.id}>
@@ -194,7 +239,7 @@ export function ChooseView({ modeId }: Props) {
         <NonstopStart
           work={work}
           progress={progress}
-          totalSegments={segments.length}
+          totalSegments={edition.segmentCount}
           textFilterId={textFilterId}
         />
       )}

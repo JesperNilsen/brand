@@ -14,8 +14,10 @@
     "validate:content": "tsx scripts/validate-content.ts",
     "check:css": "tsx scripts/check-css-layers.ts",
     "check:fast": "pnpm lint && pnpm typecheck && pnpm test && pnpm validate:content && pnpm check:css",
-    "check:all": "pnpm check:fast && pnpm build && pnpm test:e2e",
-    "check": "pnpm check:all"
+    "check:all": "pnpm check:fast && pnpm build && pnpm check:bundle && pnpm test:e2e",
+    "check": "pnpm check:all",
+    "build:content": "tsx scripts/build-content-assets.ts",
+    "check:bundle": "tsx scripts/check-client-bundle.ts"
   },
   "dependencies": {
     "idb": "^8.0.3",

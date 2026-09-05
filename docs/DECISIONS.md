@@ -108,3 +108,38 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   resten. En enkelt ødelagt rad skal ikke koste leseren de andre fire hundre.
 - **`listProgress()`** måtte inn i repository-kontrakten: ingenting annet
   enumererer fremdriftsrader, så uten den kunne eksporten ikke se dem.
+
+## Korpus som statiske assets (fase 3)
+
+- **Katalogen er bundlet, teksten hentes.** `catalog.generated.ts` bærer pakker,
+  verk og utgavehoder — navn, versjon, hash, segmenttall, ordtall og filsti — og
+  ingen tekst. Den vokser med antall verk, ikke med lengden på dem. Alternativet,
+  en `manifest.json` som også hentes, ville lagt en rundtur foran hver side for
+  en fleksibilitet denne utrullingen ikke bruker: innholdet ligger i repoet og
+  følger appen uansett.
+- **Redaksjonsnotatene er ikke katalogen.** En treningsutgave loggfører én regel
+  per endring, så notatene alene var 60 kB — fire ganger resten av katalogen. De
+  ligger i `editorial-notes.generated.ts` og leses bare av Om-siden, som er en
+  serverkomponent. De blir HTML, aldri JavaScript hos leseren.
+- **Filnavnet er innholdshashen.** `<editionId>.<hash12>.json`, servert
+  `immutable` i ett år. Trygt fordi en tekst som endrer seg får et nytt navn i
+  stedet for en ny kopi under det gamle. Hashen fantes allerede (D7); en egen
+  cache-nøkkel ville vært en identitet til å holde i takt.
+- **Alle utgaver emitteres, ikke bare den nyeste.** En økt lagret mot v1 må
+  fortsatt kunne slås opp etter at v2 finnes.
+- **Teksten kontrolleres mot hashen i nettleseren.** Filen bærer sin egen id og
+  hash, og hashen regnes om fra segmentene med WebCrypto før noe kan skrives.
+  Bygget kontrollerer de samme bytene, men bygget er ikke det som serverer dem.
+  Mangler `crypto.subtle` er kontrollen utelatt, aldri feilet: en manglende
+  kontroll er ikke en feilet kontroll.
+- **En feilet henting er en feilet økt.** Skriveflaten monteres ikke før teksten
+  finnes, så et fokusert felt uten tekst å måle mot kan ikke oppstå. Feilen sier
+  hva som skjedde og tilbyr «Prøv igjen»; et verk som ikke kan lastes vises
+  aldri som startbart på velgesiden. Resultatsiden er unntaket: tallene venter
+  aldri på nettet, det er bare lenken til neste utdrag som uteblir.
+- **To porter, begge negativt testet.** `check:bundle` leter etter selve teksten
+  i de bygde klientchunkene i stedet for å stole på importgrafen — en `import`
+  av en innholdsfil fra en klientkomponent ble fanget. `validate:content`
+  genererer katalog og assets på nytt og sammenligner byte for byte, og felte
+  både en håndredigert assetfil, en foreldet katalog og en foreldreløs fil som
+  ingen utgave peker på.
