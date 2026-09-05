@@ -14,6 +14,8 @@ export interface BrandRepository {
   getPreferences(): Promise<UserPreferences>;
   savePreferences(value: UserPreferences): Promise<void>;
   getProgress(key: string): Promise<ReadingProgress | null>;
+  /** Every stored progress record. Needed to export; nothing else enumerates them. */
+  listProgress(): Promise<ReadingProgress[]>;
   saveProgress(value: ReadingProgress): Promise<void>;
   deleteProgress(key: string): Promise<void>;
   addSession(value: SessionResult): Promise<void>;

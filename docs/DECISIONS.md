@@ -96,3 +96,15 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   sammenligner en utgave med seg selv; bare denne oppdager at en generert fil er
   håndredigert. Negativt testet: ett endret tegn, en tuklet hash og en slettet
   regelfil gir alle exit 1.
+
+## Eksport og import (fase 2)
+
+- **Formatet er de lagrede radene ordrett**, med egen `formatVersion`, så en fil
+  skrevet i dag kan leses etter at øktskjemaet har flyttet seg: import kjører
+  hver rad gjennom de samme migrasjonene som repositoryet bruker ved lesing.
+- **Import er additiv.** Økter skrives på id, så samme fil to ganger gir én
+  kopi av hver, og en gammel fil ved siden av nyere økter beholder begge.
+- **En uleselig rad telles og hoppes over**, aldri gjettet på, og stopper aldri
+  resten. En enkelt ødelagt rad skal ikke koste leseren de andre fire hundre.
+- **`listProgress()`** måtte inn i repository-kontrakten: ingenting annet
+  enumererer fremdriftsrader, så uten den kunne eksporten ikke se dem.

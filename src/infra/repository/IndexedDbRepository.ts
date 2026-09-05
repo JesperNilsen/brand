@@ -67,6 +67,11 @@ export class IndexedDbRepository implements BrandRepository {
     return (await db.get("progress", key)) ?? null;
   }
 
+  async listProgress(): Promise<ReadingProgress[]> {
+    const db = await this.db();
+    return db.getAll("progress");
+  }
+
   async saveProgress(value: ReadingProgress): Promise<void> {
     const db = await this.db();
     await db.put("progress", value);
