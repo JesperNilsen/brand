@@ -189,3 +189,53 @@ describe("stop-on-error strategy", () => {
     expect(s.incorrectInsertCount).toBe(0);
   });
 });
+
+describe("cursorIndex", () => {
+  /**
+   * `cursorIndex` equals `typedText.length` in every state the engine can
+   * currently reach, so it looks redundant and reads like a field to delete.
+   * docs/spec/TYPING_ENGINE.md keeps it on purpose: selection and IME
+   * composition will move the caret away from the end of the typed text, and
+   * at that point every caller that reached for `typedText.length` instead is
+   * wrong in a way that renders fine and mis-measures.
+   *
+   * This test pins the invariant rather than the equality. If a future change
+   * makes them differ, it fails here first, which is where the decision
+   * belongs.
+   */
+  const target = "Hvor er du?";
+
+  it("tracks the caret through insert, backspace and completion", () => {
+    let s = createSession({ targetText: target });
+    expect(s.cursorIndex).toBe(0);
+    expect(s.cursorIndex).toBe(s.typedText.length);
+
+    s = insertText(s, "Hvor", 1_000);
+    expect(s.cursorIndex).toBe(4);
+    expect(s.cursorIndex).toBe(s.typedText.length);
+
+    s = backspace(s, 1_100);
+    expect(s.cursorIndex).toBe(3);
+    expect(s.cursorIndex).toBe(s.typedText.length);
+
+    s = insertText(s, "r er du?", 1_200);
+    expect(s.status).toBe("completed");
+    expect(s.cursorIndex).toBe(target.length);
+    expect(s.cursorIndex).toBe(s.typedText.length);
+  });
+
+  it("is unchanged by a rejected paste, which touches no text", () => {
+    let s = insertText(createSession({ targetText: target }), "Hvor", 1_000);
+    const before = s.cursorIndex;
+    s = rejectPaste(s, 1_100);
+    expect(s.cursorIndex).toBe(before);
+    expect(s.typedText).toBe("Hvor");
+  });
+
+  it("never runs past the target text", () => {
+    let s = createSession({ targetText: target });
+    s = insertText(s, target + "og mere til", 1_000);
+    expect(s.cursorIndex).toBe(target.length);
+    expect(s.cursorIndex).toBe(s.typedText.length);
+  });
+});

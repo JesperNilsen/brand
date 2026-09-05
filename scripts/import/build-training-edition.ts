@@ -30,82 +30,19 @@
  * whitespace/quote characters) by one of `. ! ? … —` or by an opening quote
  * mark (the run of characters between it and the previous word contains one
  * of those). Kept deliberately simple: it does not parse abbreviations or
- * disambiguate a mid-sentence parenthetical dash from a true sentence break
- * — see the code comment below.
+ * disambiguate a mid-sentence parenthetical dash from a true sentence break.
+ * The transforms themselves live in scripts/lib/rules.ts, where they are unit
+ * tested; this module is the CLI around them.
  */
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { countWords, isWordToken, matchCase, tokenize } from "../lib/text";
-
-type Rules = {
-  editionId: string;
-  version: string;
-  languageProfileId: string;
-  notes?: string[];
-  patterns?: { from: string; to: string; flags?: string; note?: string }[];
-  replacements?: Record<string, string>;
-  lowercaseNouns?: { properNames: string[] };
-  retained?: Record<string, string>;
-};
-
-// Characters that end a sentence, or a dialogue dash that starts one.
-const SENTENCE_BOUNDARY = /[.!?…—]/;
-// Opening quote marks used in the source texts (Danish-style „…“, guillemets, straight quotes).
-const OPENING_QUOTE = /[„«"'‘“]/;
-
-/** True if the word token at `tokens[i]` starts a sentence (see header comment). */
-function isSentenceInitial(tokens: string[], i: number): boolean {
-  if (i === 0) return true;
-  const between = tokens[i - 1];
-  return SENTENCE_BOUNDARY.test(between) || OPENING_QUOTE.test(between);
-}
-
-export function applyLowercaseNouns(
-  text: string,
-  properNames: ReadonlySet<string>,
-  usage: Map<string, number>,
-): string {
-  const tokens = tokenize(text);
-  return tokens
-    .map((tok, i) => {
-      if (!isWordToken(tok)) return tok;
-      const first = tok[0];
-      if (!first || first === first.toLowerCase()) return tok; // doesn't start with an uppercase letter
-      if (properNames.has(tok)) return tok;
-      if (isSentenceInitial(tokens, i)) return tok;
-      usage.set(`lowercase:${tok}`, (usage.get(`lowercase:${tok}`) ?? 0) + 1);
-      return first.toLowerCase() + tok.slice(1);
-    })
-    .join("");
-}
+import { countWords } from "../lib/text";
+import { applyLowercaseNouns, applyRules, type Rules } from "../lib/rules";
 
 function arg(name: string): string {
   const i = process.argv.indexOf(`--${name}`);
   if (i === -1 || !process.argv[i + 1]) throw new Error(`Missing --${name}`);
   return process.argv[i + 1];
-}
-
-export function applyRules(text: string, rules: Rules, usage: Map<string, number>): string {
-  let out = text;
-  for (const p of rules.patterns ?? []) {
-    const re = new RegExp(p.from, p.flags ?? "g");
-    out = out.replace(re, () => {
-      usage.set(`pattern:${p.from}`, (usage.get(`pattern:${p.from}`) ?? 0) + 1);
-      return p.to;
-    });
-  }
-  const dict = rules.replacements ?? {};
-  out = tokenize(out)
-    .map((tok) => {
-      if (!isWordToken(tok)) return tok;
-      const key = tok.toLowerCase();
-      const rep = dict[key];
-      if (rep === undefined) return tok;
-      usage.set(key, (usage.get(key) ?? 0) + 1);
-      return matchCase(tok, rep);
-    })
-    .join("");
-  return out;
 }
 
 async function main() {

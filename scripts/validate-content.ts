@@ -11,6 +11,13 @@
  *    would push Nonstop progress past text the reader never typed)
  *  - unknown language profile ids
  *
+ * Warns (exit 0) on:
+ *  - training-edition passages outside the 35-120 word range that
+ *    docs/spec/CORPUS.md recommends for Passage, unless the segment is a
+ *    registered known deviation
+ *  - a registered known deviation that is now inside the range, so the list
+ *    cannot quietly rot into a permanent exemption
+ *
  *   pnpm validate:content
  */
 import { readdir, readFile, stat } from "node:fs/promises";
@@ -20,6 +27,26 @@ import { listTextFilters } from "../src/domain/text-filter";
 
 const KNOWN_PROFILES = new Set(["brand-riksmaal"]);
 const contentRoot = path.resolve(process.cwd(), "content");
+
+/** docs/spec/CORPUS.md: recommended V1 passage size for `Passage`. */
+const PASSAGE_MIN_WORDS = 35;
+const PASSAGE_MAX_WORDS = 120;
+
+/**
+ * Segments knowingly outside the range, keyed `<pack>/<segmentId>`.
+ *
+ * A warning rather than a failure, because the texts are already in use and
+ * resegmenting them is Phase 7 work with editorial consequences. Phase 7 then
+ * raises this to a hard gate and empties this map. Each entry has to say why,
+ * so that an exemption is a decision someone wrote down rather than a line
+ * nobody dares delete.
+ */
+const KNOWN_LENGTH_DEVIATIONS = new Map<string, string>([
+  ["hamsun-markens-groede/del1-kap1-02", "166 ord; resegmenteres i fase 7"],
+  ["hamsun-markens-groede/del1-kap1-05", "176 ord; resegmenteres i fase 7"],
+  ["hamsun-markens-groede/del1-kap1-06", "129 ord; resegmenteres i fase 7"],
+]);
+const seenDeviations = new Set<string>();
 
 type Segment = {
   id: string;
@@ -33,6 +60,30 @@ type Segment = {
 const problems: string[] = [];
 function fail(pack: string, msg: string) {
   problems.push(`[${pack}] ${msg}`);
+}
+
+const warnings: string[] = [];
+function warn(pack: string, msg: string) {
+  warnings.push(`[${pack}] ${msg}`);
+}
+
+/** Passage length is advisory in this phase: warn, never fail. */
+function checkPassageLength(pack: string, editionId: string, segments: Segment[]) {
+  for (const s of segments) {
+    const key = `${pack}/${s.id}`;
+    const outside = s.wordCount < PASSAGE_MIN_WORDS || s.wordCount > PASSAGE_MAX_WORDS;
+    const known = KNOWN_LENGTH_DEVIATIONS.get(key);
+    if (known) seenDeviations.add(key);
+    if (outside && !known) {
+      warn(
+        pack,
+        `${editionId}/${s.id}: ${s.wordCount} ord, utenfor ${PASSAGE_MIN_WORDS}-${PASSAGE_MAX_WORDS} (CORPUS.md)`,
+      );
+    }
+    if (!outside && known) {
+      warn(pack, `${editionId}/${s.id}: ${s.wordCount} ord er innenfor rekkevidden nå — fjern unntaket «${known}»`);
+    }
+  }
 }
 
 async function readJson(file: string): Promise<unknown> {
@@ -145,6 +196,7 @@ async function validatePack(pack: string) {
     }
     if (!t.editorialNotes || t.editorialNotes.length === 0) fail(pack, `${f}: editorialNotes missing`);
     checkSegments(pack, t.id, t.segments);
+    checkPassageLength(pack, t.id, t.segments);
     if (t.segments.length !== original.edition.segments.length) {
       fail(pack, `${f}: segment count differs from original`);
     }
@@ -178,10 +230,20 @@ async function main() {
       fail(p, `unreadable: ${(err as Error).message}`);
     }
   }
+  for (const [key, why] of KNOWN_LENGTH_DEVIATIONS) {
+    if (!seenDeviations.has(key)) {
+      warn(key.split("/")[0], `kjent lengdeavvik ${key} finnes ikke lenger — fjern unntaket «${why}»`);
+    }
+  }
+
   if (problems.length) {
     console.error(problems.join("\n"));
     console.error(`\n${problems.length} problem(s)`);
     process.exit(1);
+  }
+  if (warnings.length) {
+    console.warn(warnings.join("\n"));
+    console.warn(`\n${warnings.length} advarsel/advarsler (ikke blokkerende)`);
   }
   console.log(`content ok: ${packs.join(", ")}`);
 }
