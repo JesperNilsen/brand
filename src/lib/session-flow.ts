@@ -26,6 +26,7 @@ import {
   progressKey,
   type ReadingProgress,
   type TextEdition,
+  type TextEditionMeta,
   type TextFilterId,
   type UserPreferences,
   type Work,
@@ -72,7 +73,7 @@ export function sessionHref(p: SessionParams): string {
 export function resolveWorkAndEdition(
   params: Pick<SessionParams, "workId" | "editionId">,
   languageProfileId: string,
-): { work: Work; edition: TextEdition } | null {
+): { work: Work; edition: TextEditionMeta } | null {
   const work = getWork(params.workId);
   if (!work) return null;
   const edition =
@@ -82,7 +83,7 @@ export function resolveWorkAndEdition(
 }
 
 export function nonstopProgressKey(
-  edition: TextEdition,
+  edition: TextEditionMeta,
   work: Work,
   languageProfileId: string,
 ): string {
@@ -101,16 +102,20 @@ export function clampTimedLimit(limitMs: number | undefined, fallback?: number):
     : DEFAULT_TIMED_LIMIT_MS;
 }
 
-/** Build the SessionPlan for a set of params, preferences and (nonstop) progress. */
+/**
+ * Build the SessionPlan for a set of params, preferences and (nonstop)
+ * progress. Takes the loaded edition rather than resolving it: the text is
+ * fetched, so deciding which edition to type and having its text are two
+ * separate steps, and only the second can fail slowly.
+ */
 export function buildPlan(
   params: SessionParams,
   prefs: UserPreferences,
   progress: ReadingProgress | null,
+  content: { work: Work; edition: TextEdition },
 ): SessionPlan {
   const mode = requireGameMode(params.mode);
-  const resolved = resolveWorkAndEdition(params, prefs.languageProfileId);
-  if (!resolved) throw new Error(`Unknown work: ${params.workId}`);
-  const { work, edition } = resolved;
+  const { work, edition } = content;
   const textFilterId =
     params.textFilterId ?? prefs.textFilterId ?? DEFAULT_TEXT_FILTER_ID;
   const plan = mode.buildPlan({
@@ -140,7 +145,7 @@ export function buildPlan(
 /** Progress record after a nonstop runner state change; null when the work is finished. */
 export function progressFromRunner(
   state: RunnerState,
-  edition: TextEdition,
+  edition: TextEditionMeta,
   previous: ReadingProgress | null,
   nowIso: string,
 ): ReadingProgress | null {
@@ -213,7 +218,7 @@ export function nextSegmentAfter(edition: TextEdition, segmentId: string) {
   return i === -1 ? firstSegment(edition) : ordered[i + 1];
 }
 
-export function editionLabel(edition: TextEdition): string {
+export function editionLabel(edition: TextEditionMeta): string {
   return edition.kind === "training-edition"
     ? `Brand Training Edition ${edition.version}`
     : "Originaltekst";

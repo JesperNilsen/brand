@@ -1,97 +1,30 @@
 /**
- * Content registry: assembles ContentPacks and Works from the static JSON
- * files under content/. Adding a pack = adding a folder there and one line
- * in PACK_FILES below.
+ * Content registry: packs, works and edition headers, from the generated
+ * catalog. Adding a pack = adding a folder under content/ and running
+ * `pnpm build:content`; there is no list to maintain here any more.
+ *
+ * The registry knows about every edition but holds no text. Text is fetched
+ * per edition by `edition-loader.ts`, so the bundle does not grow with the
+ * corpus. Anything here that takes a `TextEdition` needs the text; anything
+ * that takes a `TextEditionMeta` does not.
  */
 import type {
   ContentPack,
   TextEdition,
   TextEditionKind,
+  TextEditionMeta,
   TextSegment,
   Work,
 } from "../types";
+import { CONTENT_PACKS, WORKS } from "./catalog.generated";
 
-import ibsenBrandPack from "../../../content/ibsen-brand/pack.json";
-import ibsenBrandOriginal from "../../../content/ibsen-brand/original.json";
-import ibsenBrandTraining from "../../../content/ibsen-brand/training-edition.v1.json";
-
-import hamsunMarkensGroedePack from "../../../content/hamsun-markens-groede/pack.json";
-import hamsunMarkensGroedeOriginal from "../../../content/hamsun-markens-groede/original.json";
-import hamsunMarkensGroedeTraining from "../../../content/hamsun-markens-groede/training-edition.v1.json";
-
-import kiellandNoveletterPack from "../../../content/kielland-noveletter/pack.json";
-import kiellandNoveletterOriginal from "../../../content/kielland-noveletter/original.json";
-import kiellandNoveletterTraining from "../../../content/kielland-noveletter/training-edition.v1.json";
-
-import kiellandGiftPack from "../../../content/kielland-gift/pack.json";
-import kiellandGiftOriginal from "../../../content/kielland-gift/original.json";
-import kiellandGiftTraining from "../../../content/kielland-gift/training-edition.v1.json";
-
-type OriginalFile = {
-  work: Omit<Work, "editions">;
-  edition: TextEdition;
-};
-
-type PackFiles = {
-  pack: ContentPack;
-  works: { original: OriginalFile; training: TextEdition }[];
-};
-
-const PACK_FILES: PackFiles[] = [
-  {
-    pack: ibsenBrandPack as ContentPack,
-    works: [
-      {
-        original: ibsenBrandOriginal as OriginalFile,
-        training: ibsenBrandTraining as TextEdition,
-      },
-    ],
-  },
-  {
-    pack: hamsunMarkensGroedePack as ContentPack,
-    works: [
-      {
-        original: hamsunMarkensGroedeOriginal as OriginalFile,
-        training: hamsunMarkensGroedeTraining as TextEdition,
-      },
-    ],
-  },
-  {
-    pack: kiellandNoveletterPack as ContentPack,
-    works: [
-      {
-        original: kiellandNoveletterOriginal as OriginalFile,
-        training: kiellandNoveletterTraining as TextEdition,
-      },
-    ],
-  },
-  {
-    pack: kiellandGiftPack as ContentPack,
-    works: [
-      {
-        original: kiellandGiftOriginal as OriginalFile,
-        training: kiellandGiftTraining as TextEdition,
-      },
-    ],
-  },
-];
-
-const packs: ContentPack[] = [];
-const works = new Map<string, Work>();
+const packs: ContentPack[] = CONTENT_PACKS;
+const works = new Map<string, Work>(WORKS.map((w) => [w.id, w]));
 const packWorks = new Map<string, Work[]>();
-
-for (const entry of PACK_FILES) {
-  packs.push(entry.pack);
-  const list: Work[] = [];
-  for (const w of entry.works) {
-    const work: Work = {
-      ...w.original.work,
-      editions: [w.original.edition, w.training],
-    };
-    works.set(work.id, work);
-    list.push(work);
-  }
-  packWorks.set(entry.pack.id, list);
+for (const work of WORKS) {
+  const list = packWorks.get(work.contentPackId) ?? [];
+  list.push(work);
+  packWorks.set(work.contentPackId, list);
 }
 
 export function listContentPacks(): ContentPack[] {
@@ -116,16 +49,16 @@ export function requireWork(id: string): Work {
   return w;
 }
 
-export function getEdition(work: Work, kind: TextEditionKind): TextEdition | undefined {
+export function getEdition(work: Work, kind: TextEditionKind): TextEditionMeta | undefined {
   return work.editions.find((e) => e.kind === kind);
 }
 
-export function getEditionById(work: Work, id: string): TextEdition | undefined {
+export function getEditionById(work: Work, id: string): TextEditionMeta | undefined {
   return work.editions.find((e) => e.id === id);
 }
 
 /** The edition the user normally types: the training edition for the profile, else the original. */
-export function defaultEdition(work: Work, languageProfileId: string): TextEdition {
+export function defaultEdition(work: Work, languageProfileId: string): TextEditionMeta {
   const training = work.editions.find(
     (e) => e.kind === "training-edition" && e.languageProfileId === languageProfileId,
   );
@@ -152,3 +85,5 @@ export function orderedSegments(edition: TextEdition): TextSegment[] {
 export function estimateMinutes(wordCount: number): number {
   return Math.max(1, Math.round(wordCount / 35));
 }
+
+export { loadEditionText, loadedEdition, EditionLoadError } from "./edition-loader";

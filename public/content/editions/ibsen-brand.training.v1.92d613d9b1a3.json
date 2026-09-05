@@ -1,0 +1,102 @@
+{
+  "id": "ibsen-brand.training.v1",
+  "contentHash": "sha256:92d613d9b1a385454935b2ce614de39fe1159a77a1569f67393a3cd18e3170e9",
+  "segments": [
+    {
+      "id": "akt1-01",
+      "order": 1,
+      "text": "(Oppe i sneen på fjellvidderne. Tåken ligger tett\nog tung; det er regnvær og halvmørkt.)\n(BRAND, sortkledt, med stav og skreppe, kravler seg frem vestover.\nEN BONDE og hans halvvoksne SØNN, som har slået følge med, er noget\nbakefter.)\nBONDEN (råber etter BRAND).\nHei, fremmedkarl, far ei så fort!\nHvor er du?\nBRAND.\nHer!\nBONDEN.\nDu går deg bort!\nNå tykner skodden slik, at knapt\nen ser så langt, som staven rekker -\nSØNNEN.\nFaer, her er spriker!\nBONDEN.\nHer er sprekker!\nBRAND.\nOg hvert et veispor har vi tapt.",
+      "label": "Første akt, 1 — Oppe i sneen",
+      "wordCount": 89,
+      "difficulty": 3
+    },
+    {
+      "id": "akt1-02",
+      "order": 2,
+      "text": "BONDEN (skriger).\nStans, mann! Guds bittre -! Her er breen\nskral som en skorpe! Tramp ei sneen!\nBRAND (lyttende).\nJeg hører duren av en foss.\nBONDEN.\nEn bekk har hulet seg innunder;\nher er et dyp, som ingen bunner; -\ndet sluger både deg og oss!\nBRAND.\nFrem må jeg, som jeg før har sagt.",
+      "label": "Første akt, 2 — Breen",
+      "wordCount": 53,
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-03",
+      "order": 3,
+      "text": "BONDEN.\nDet evner ingen mannemakt.\nKjenn; - her er grunnen hul og sprød -\nStans, mann! Det gjelder liv og død!\nBRAND.\nJeg må; jeg går en stormanns bud.\nBONDEN.\nHva heter han?\nBRAND.\nHan heter Gud.\nBONDEN.\nOg hva er du for noget?\nBRAND.\nPrest.",
+      "label": "Første akt, 3 — Liv og død",
+      "wordCount": 44,
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-04",
+      "order": 4,
+      "text": "BONDEN.\nKanhende det; men jeg vet best,\nat om du så var prost og bisp,\nså ligger du i dødsens gisp\nfør dagen gryr, hvis du vil frem\npå breens undergravne brem.\n(nærmer seg varsomt og overtalende.)\nHør, prest; om en er klok og lært,\nhan kan ei det, som er for svært.\nVend om; vær ei så strid og stiv!\nEn har jo kun det ene liv; -\ngår det, hva har en så igjen?\nDer er en mil til neste grend,\nog skodden står så tykk, at den\nkan skjæres med en tollekniv.",
+      "label": "Første akt, 4 — Tollekniv",
+      "wordCount": 94,
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-05",
+      "order": 5,
+      "text": "BRAND.\nStår skodden tykk, en lokkes ei\nav blålysblink på villsporsvei.\nBONDEN.\nMen her er is-tjern rundt omkring,\nog slike tjern er stygge ting.\nBRAND.\nDem går vi over.\nBONDEN.\nGå på vann?\nDu holder mindre enn du lover.\nBRAND.\nÉn har dog vist, - er troen sann,\nså slipper karlen tørrskodd over.\nBONDEN.\nJa, før i tiden; men i vår\nhan går til bunns med hud og hår.\nBRAND.\nFarvel! (vil gå.)",
+      "label": "Første akt, 5 — Is-tjern",
+      "wordCount": 72,
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-06",
+      "order": 6,
+      "text": "BONDEN.\nDu setter livet til!\nBRAND.\nHvis Herren for min død har bruk, -\nvelkommen flom og foss og sluk!\nBONDEN (sagte).\nNei, han er både gal og vill!\nSØNNEN (halvt grædende).\nFaer, la oss vende! Der er tegn\ntil verre styggevær og regn!\nBRAND (stanser og nærmer seg igjen).\nHør, bondemann; du sagde før,\nat datter din, som bor ved fjorden,\nhar skikket bud, at snart hun dør;\nmen ei med saligt håp hun tør, -\nhvis ei hun ser deg, - gå fra jorden?\nBONDEN.\nGud bedre meg så sant og visst!\nBRAND.\nOg til i dag hun gav deg frist?\nBONDEN.\nJa.\nBRAND.\nIkke lenger?\nBONDEN.\nNei.",
+      "label": "Første akt, 6 — Datteren ved fjorden",
+      "wordCount": 107,
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-07",
+      "order": 7,
+      "text": "BRAND.\nSå kom!\nBONDEN.\nDet er ugjørligt verk. Vend om!\nBRAND (ser fast på ham).\nHør? Gad du hundred daler give,\nifall hun kunne saligt dø?\nBONDEN.\nJa, prest!\nBRAND.\nTo hundred?\nBONDEN.\nHus og bø\njeg skulle gjerne fra meg skrive,\nifall hun slukne fikk i fred!\nBRAND.\nMen gad du give livet med?\nBONDEN.\nHva? Livet? Kjære, vene -!\nBRAND.\nNå?\nBONDEN (klør seg bak øret).\nNei, men der er da måte på -!\nI Jesu navn, du får ei glemme,\nat jeg har barn og kone hjemme.\nBRAND.\nHan, som du nevnte, hadde moer.",
+      "label": "Første akt, 7 — Hundred daler",
+      "wordCount": 95,
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-08",
+      "order": 8,
+      "text": "BONDEN.\nJa, det var lenge før ifjor; -\nda hendte der så mangt et under;\ndet går ei slik til nuomstunder.\nBRAND.\nFar hjem. Ditt liv er dødens vei.\nDu vet ei Gud og Gud ei deg.\nBONDEN.\nHu, du er hård!",
+      "label": "Første akt, 8 — Nuomstunder",
+      "wordCount": 41,
+      "difficulty": 3
+    },
+    {
+      "id": "akt1-09",
+      "order": 9,
+      "text": "SØNNEN (trekker i ham).\nKom så avsted!\nBONDEN.\nJa vel; men han skal følge med!\nBRAND.\nSkal jeg?\nBONDEN.\nJa, blir du borte her\ni dette Herrens vonde vær,\nog rygtes, hva en ei kan dølge,\nat vi gikk hjemmefra i følge,\nså trekkes jeg til tings en dag, -\nog drukner du i myr og tjern,\nså dømmes jeg i bolt og jern -\nBRAND.\nDa lider du for Herrens sak.\nBONDEN.\nMeg rager ikke hans og dine;\njeg har alt mer enn nok med mine.\nKom så!",
+      "label": "Første akt, 9 — Dødens vei",
+      "wordCount": 87,
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-10",
+      "order": 10,
+      "text": "BRAND.\nFarvel!\n(hult bulder høres langt borte.)\nSØNNEN (skrigende).\nDer går en skred!\nBRAND (til bonden, som har grepet ham i kraven).\nSlip taket!\nBONDEN.\nNei!\nBRAND.\nSlip straks!\nSØNNEN.\nKom med!\nBONDEN (brytes med BRAND).\nNei, fanden nappe meg -!\nBRAND (river seg løs og kaster ham i sneen).\nJa visst;\ndet kan du tro han gjør til sist!\n(går.)\nBONDEN (sitter og gnider armen).\nAu, au; den karl er stiv og sterk.\nSlikt kaller han Vorherres verk!\n(råber, idet han reiser seg.)\nHei, prest!",
+      "label": "Første akt, 10 — Skredet",
+      "wordCount": 85,
+      "difficulty": 4
+    },
+    {
+      "id": "akt1-11",
+      "order": 11,
+      "text": "SØNNEN.\nHan gikk innover heien.\nBONDEN.\nJa, men jeg skimter ham ennu.\n(råber igjen.)\nHør, seg meg - kan du mindes, du,\nhvor var det vi kom ut av veien?\nBRAND (inne i tåken).\nEi trenges veiløps kors for deg; -\ndu er alt på den brede vei.\nBONDEN.\nGud give, at det var så vel,\nså satt jeg godt og varmt ikveld.\n(han og SØNNEN går østover igjen.)",
+      "label": "Første akt, 11 — Den brede vei",
+      "wordCount": 67,
+      "difficulty": 3
+    },
+    {
+      "id": "akt1-12",
+      "order": 12,
+      "text": "BRAND (kommer til syne høyere oppe og lytter ut mot den kant, hvor BONDEN gikk).\nDe famler hjem. Du slappe trell,\nsprang i ditt bryst en viljes vell,\nvar ikkun evnen det, som skorted,\njeg skulle veiens møye kortet;\npå dødstrett rygg, med foten såret,\njeg skulle glad og lett deg båret; -\nmen hjelp er gavnløs for en mann,\nsom ikke vil, hva ei han kan.\n(går lengre frem.)\nHm; livet, livet; det er svært,\nhvor livet er de godtfolk kjært!\nHver skrelling legger slik en makt\npå livet, som om verdens frelse,\nall menneskenes sjelehelse,\nvar på hans skrale skuldre lagt.",
+      "label": "Første akt, 12 — De famler hjem",
+      "wordCount": 102,
+      "difficulty": 4
+    }
+  ]
+}

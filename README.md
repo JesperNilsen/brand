@@ -17,7 +17,7 @@ pnpm dev          # http://localhost:3000
 
 ```bash
 pnpm check:fast       # lint + typecheck + vitest + validate:content + check:css
-pnpm check:all        # check:fast + build + playwright   (det CI krever)
+pnpm check:all        # check:fast + build + check:bundle + playwright  (det CI krever)
 ```
 
 Enkeltdelene:
@@ -26,7 +26,9 @@ Enkeltdelene:
 pnpm lint
 pnpm typecheck        # kjører next typegen først; .next/types er gitignorert
 pnpm test             # vitest: motor, moduser, runner, repository-kontrakt
-pnpm validate:content # proveniens + treningsutgave-invarianter
+pnpm validate:content # proveniens + treningsutgave-invarianter + genererte filer
+pnpm build:content    # katalog + tekstfiler under public/ (generert, sjekkes inn)
+pnpm check:bundle     # korpusteksten skal ikke finnes i noen klientbundle
 pnpm check:css        # klasseselektorer utenfor @layer er en stum feil
 pnpm test:e2e         # playwright (bygger og starter egen server på :3199)
 pnpm build
@@ -65,7 +67,13 @@ tests/, e2e/     vitest og playwright
    fordi en lagret økt navngir utgaven den ble skrevet mot og den teksten må
    fortsatt finnes. Ved flere segmenter i samme verk: behold `editionId`, hev
    `version` og hashen. En ny `editionId` ville nullstilt all Nonstop-fremdrift.
-5. Registrer pakken i `src/domain/content/registry.ts` og kjør `pnpm validate:content`.
+5. `pnpm build:content` og `pnpm validate:content`.
+
+   Ingen liste å vedlikeholde: `build:content` leser alt under `content/` og
+   skriver katalogen (`src/domain/content/catalog.generated.ts`, uten tekst) og
+   én tekstfil per utgave under `public/content/editions/`. Begge er generert og
+   sjekket inn; `validate:content` bygger dem på nytt og sammenligner byte for
+   byte, så en håndredigert eller foreldet fil stopper CI.
 
 ## Innhold, kilder og attribusjon
 

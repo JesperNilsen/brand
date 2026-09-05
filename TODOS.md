@@ -135,4 +135,7 @@ utgaveversjon, og gjør `loadEdition(id)` lat. Fase 3 punkt 4 fikser den
 funksjonelle siden (skriveflaten får ikke fokus før teksten finnes), men måler
 ikke ventetiden. Besluttet utsatt i plan-design-review D8, 2026-09-05.
 
-**Avhenger av:** fase 3 punkt 1 og 2.
+**Avhenger av:** fase 3 punkt 1 og 2 — **landet 2026-09-05**, så porten er nå
+ulåst. `e2e/content-loading.spec.ts` dekker at teksten faktisk hentes, at det
+skjer én gang, og at feilveien stopper økten; det som gjenstår er selve
+tidsmålingen under strupet nett.

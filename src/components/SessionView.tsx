@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { orderedSegments } from "@/domain/content/registry";
+import { EditionLoadError, loadEditionText, orderedSegments } from "@/domain/content/registry";
 import { newId } from "@/domain/ids";
 import { getGameMode } from "@/domain/modes/registry";
 import type { SessionPlan } from "@/domain/modes/types";
@@ -41,10 +41,14 @@ type Loaded = {
   progress: ReadingProgress | null;
 };
 
+type Failure = { message: string; retryable: boolean };
+
 export function SessionView() {
   const params = useSearchParams();
   const [loaded, setLoaded] = useState<Loaded | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [failure, setFailure] = useState<Failure | null>(null);
+  /** Bumped by «Prøv igjen»; re-runs the effect without touching the URL. */
+  const [attempt, setAttempt] = useState(0);
   const paramString = params.toString();
 
   useEffect(() => {
@@ -58,31 +62,61 @@ export function SessionView() {
         const prefs = await repo.getPreferences();
         const resolved = resolveWorkAndEdition(parsed, prefs.languageProfileId);
         if (!resolved) throw new Error("Fant ikke verket.");
+        // The text is fetched, so this is the one step that can fail for a
+        // reason the reader can do something about. Nothing is rendered until
+        // it succeeds: a writing surface with no text to type against would
+        // take focus and record keystrokes against nothing.
+        const edition = await loadEditionText(resolved.edition);
         const progress =
           parsed.mode === "nonstop"
             ? await repo.getProgress(
-                nonstopProgressKey(resolved.edition, resolved.work, prefs.languageProfileId),
+                nonstopProgressKey(edition, resolved.work, prefs.languageProfileId),
               )
             : null;
-        const plan = buildPlan(parsed, prefs, progress);
+        const plan = buildPlan(parsed, prefs, progress, { work: resolved.work, edition });
         await repo.savePreferences(rememberChoice(prefs, plan));
-        if (alive) setLoaded({ plan, ...resolved, prefs, progress });
+        if (!alive) return;
+        setFailure(null);
+        setLoaded({ plan, work: resolved.work, edition, prefs, progress });
       } catch (e) {
-        if (alive) setError((e as Error).message);
+        if (!alive) return;
+        setFailure(
+          e instanceof EditionLoadError
+            ? {
+                message: "Teksten kunne ikke lastes. Sjekk nettforbindelsen.",
+                retryable: true,
+              }
+            : { message: (e as Error).message, retryable: false },
+        );
       }
     })();
     return () => {
       alive = false;
     };
-  }, [paramString]);
+  }, [paramString, attempt]);
 
-  if (error) {
+  if (failure) {
     return (
-      <div className="prose-measure">
-        <p className="mb-4">{error}</p>
-        <Link href="/" className="btn">
-          Til forsiden
-        </Link>
+      <div className="prose-measure" data-testid="session-error">
+        <p className="mb-4">{failure.message}</p>
+        <div className="flex flex-wrap gap-3">
+          {failure.retryable && (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                setFailure(null);
+                setAttempt((n) => n + 1);
+              }}
+              data-testid="retry-button"
+            >
+              Prøv igjen
+            </button>
+          )}
+          <Link href="/" className="btn">
+            Til forsiden
+          </Link>
+        </div>
       </div>
     );
   }

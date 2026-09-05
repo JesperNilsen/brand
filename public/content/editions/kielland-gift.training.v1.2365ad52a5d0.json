@@ -1,0 +1,110 @@
+{
+  "id": "kielland-gift.training.v1",
+  "contentHash": "sha256:2365ad52a5d090f7c8460276810c68ba65f08329f84b3835bd7ae6d6e057772a",
+  "segments": [
+    {
+      "id": "kap1-01",
+      "order": 1,
+      "text": "Lille Marius sad så pent og stille på benken. Hans altfor store markebrune øyne gav det lille blege ansikt et forskremt uttrykk; og når han uformodet fik et spørsmål, ble han ildrød i hodet og stammede.\nLille Marius sad på nestnederste benk lidt krum i ryggen; for der var ikke rygstød, og det var strengt forbudt at lene seg tilbage mod den neste pult.",
+      "label": "Kapittel I, 1",
+      "wordCount": 64,
+      "difficulty": 2
+    },
+    {
+      "id": "kap1-02",
+      "order": 2,
+      "text": "Det var geografi fra elleve til tolv en varm augustdag etter ferierne. Solen skinnede over rektorens have og på de fire store epler på hans lille epletre. De blå gardiner vare trukne for det øverste vindu; men i det neste hadde Abraham innrettet seg en sindrig solskive med blekkstreker i vinduskarmen. Han telegraferede just omkring til spørgere i klassen, at klokken var over halv.",
+      "label": "Kapittel I, 2",
+      "wordCount": 64,
+      "difficulty": 2
+    },
+    {
+      "id": "kap1-03",
+      "order": 3,
+      "text": "„Flere byer —“ sagde adjunkten oppe fra kathederet og blæste i en fjerpen. Det var hans specialitet at spidse fjerpenne; og rundt i alle de klasser, hvor han leste, lå der en liten sirlig samling av fjerpenne, som ingen brukte undtagen rektor.\nAlligevel hadde adjunkt Borring møie med at holde dem i orden. Thi det hendte meget ofte, at en vanartig disippel samlede pennene i frikvarteret, stak dem ned i et blekkhus og rodede så lenge om med dem, til spidserne strittede til alle kanter, og penneposerne vare fulde av blekk.",
+      "label": "Kapittel I, 3",
+      "wordCount": 90,
+      "difficulty": 3
+    },
+    {
+      "id": "kap1-04",
+      "order": 4,
+      "text": "Når da neste gang Borring kom i klassen og skreg: „Nei men du store Gud! hvem har ødelagt mine penne? —“ så svaredes der sikkert og enstemmigt fra hele klassen: „Aalbom!“\nThi det var bekjent, at adjunkterne Borring og Aalbom inderligen hatet hinanden.\nAdjunkten skrabede penneposerne og blæste de fine hvide og blekkede spiraler udover kathederet.",
+      "label": "Kapittel I, 4",
+      "wordCount": 55,
+      "difficulty": 3
+    },
+    {
+      "id": "kap1-05",
+      "order": 5,
+      "text": "„Flere byer —“ derpå mumlede han en liten velsignelse over Aalbom, „flere byer, flere byer!“\nEllers var der ingen lyd i klassen; thi det var nederste benk, som skulle høres idag, og derfra svaredes aldrig. Dette var også vitterligt for alle; men for en ordens skyld ble de hørt en gang om måneden, forat de kunne få sit firtal i karakterbogen.",
+      "label": "Kapittel I, 5",
+      "wordCount": 60,
+      "difficulty": 2
+    },
+    {
+      "id": "kap1-06",
+      "order": 6,
+      "text": "Og de fire, fem karle dernede så heller ikke ut, som om de brød seg stort om enten der svaredes eller ikke, og derfor var der ingen på de øvre benke, der gad utsette seg for fare ved at hviske nedover til dem.\nKun han, som netop ble hørt, sad urolig og pillede ved landkartet, som lå lukket på bordet foran ham. Thi under examinationen måtte både den, som ble spurgt, og de nærmeste, lukke sine karter.",
+      "label": "Kapittel I, 6",
+      "wordCount": 77,
+      "difficulty": 3
+    },
+    {
+      "id": "kap1-07",
+      "order": 7,
+      "text": "„Geografi er ingen kunst på kartet,“ sagde Borring.\nMod sedvane hadde han lest lidt idag — den lange Tolleiv; det var byer i Belgien; han hadde lest to gange over hjemme og en gang på skolen.",
+      "label": "Kapittel I, 7",
+      "wordCount": 35,
+      "difficulty": 3
+    },
+    {
+      "id": "kap1-08",
+      "order": 8,
+      "text": "Men denne stilhed mellem hver gang adjunkten sagde: „flere byer“, de meget usikre erindringer om disse belgiske byer, når Bryssel var nevnt, og det usedvanlige for ham i at svare, — alt dette lukkede munden på ham, skjønt han vidste med bestemthet ialfald en by til, — han sad og sagde navnet inde i seg; men han turde ikke åbne munden; kanske var det alligevel splittergalt og som sedvanligt til almindelig latter; det var bedst at tie.",
+      "label": "Kapittel I, 8",
+      "wordCount": 75,
+      "difficulty": 4
+    },
+    {
+      "id": "kap1-09",
+      "order": 9,
+      "text": "De andre på nederste benk afventede i rolig trods sin skjebne. Det var de største og sterkeste gutter i klassen; de tenkte på at gå til sjøs og de brød seg fanden om karakterbogen. Kun en av dem tog geografien under bordet og leste lidt om belgiens byer og det, som kom efterpå.",
+      "label": "Kapittel I, 9",
+      "wordCount": 53,
+      "difficulty": 3
+    },
+    {
+      "id": "kap1-10",
+      "order": 10,
+      "text": "Lille Marius sad så pent på sin benk, hans store øyne fulgte oppmerksomt læreren, mens han puslede med noget under bordet, somom han knyttede knuder på noget og trak dem stramt til av al magt.",
+      "label": "Kapittel I, 10",
+      "wordCount": 35,
+      "difficulty": 2
+    },
+    {
+      "id": "kap1-11",
+      "order": 11,
+      "text": "Hele klassen summede så småt i den varme middagstime; hver beskjeftiget med sit. Nogle gjorde ingenting, men sad med henderne i lommen og glodde ut i luften; en skrev latinske gloser bag et bjerg av bøger; en anden hadde lagt sit hoved ned på armene og sov stille; ved vinduet sad en og stirrede på rektorens fire epler, mens han fantaserede over, hvor mange der vel kunne være på den anden side av treet, som han ikke kunne se, samt over, hvorvidt det skulle kunne lade seg gjøre at klatre over muren en aftenstund, når det ble mørkere.",
+      "label": "Kapittel I, 11",
+      "wordCount": 98,
+      "difficulty": 4
+    },
+    {
+      "id": "kap1-12",
+      "order": 12,
+      "text": "To hadde slået seg sammen over et stort evropakart, hvorpå de seilede med skibe av fliser, som de skar under bordet. Der stod en satans sydvest opad Kanalen, så både Freya og Familiens Håb måtte gå nordenom Skotland. Men nede ved Gibraltar lå den anden på lur med en lang halvdel av en blyant, som han hadde dyppet i blekkhuset; det skulle være en algirisk sjørøver.",
+      "label": "Kapittel I, 12",
+      "wordCount": 66,
+      "difficulty": 3
+    },
+    {
+      "id": "kap1-13",
+      "order": 13,
+      "text": "„Flere byer, — flere byer!“\n„Namur“ — sagde Tolleiv pludselig.\nHalve klassen vendte seg forbauset, og en på nestnederste benk var endog så udelikat, at han stak hodet helt ind under Tolleivs bord, for at se, om han ikke hadde geografien på knæerne,\n„Namür — ikke Namur,“ sagde adjunkten tvert og så i boken foran seg, „nei den kommer ikke ennu. Der er — lad mig se, — der er tre byer, før den kommer, som du nevnte; hva er det for tre byer? — nå! hva er det for tre byer?“",
+      "label": "Kapittel I, 13",
+      "wordCount": 86,
+      "difficulty": 4
+    }
+  ]
+}

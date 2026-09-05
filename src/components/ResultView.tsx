@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getEditionById, getWork } from "@/domain/content/registry";
+import {
+  getEditionById,
+  getWork,
+  loadedEdition,
+  loadEditionText,
+} from "@/domain/content/registry";
 import { getGameMode } from "@/domain/modes/registry";
 import { metricsFromResult } from "@/domain/session/runner";
 import { requireTextFilter } from "@/domain/text-filter";
-import type { SessionResult } from "@/domain/types";
+import type { SessionResult, TextEdition } from "@/domain/types";
 import { getRepository, isPersistent } from "@/infra/repository";
 import { getLastSession } from "@/lib/last-session";
 import { formatDuration, formatNumber, formatPercent, formatWpm } from "@/lib/format";
@@ -15,6 +20,8 @@ import { editionLabel, nextSegmentAfter, sessionHref } from "@/lib/session-flow"
 export function ResultView({ id }: { id: string }) {
   const [result, setResult] = useState<SessionResult | null | undefined>(undefined);
   const [unsaved, setUnsaved] = useState(false);
+  /** Only needed to name the next passage; the numbers never wait on it. */
+  const [fetchedText, setFetchedText] = useState<TextEdition | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -41,6 +48,26 @@ export function ResultView({ id }: { id: string }) {
     };
   }, [id]);
 
+  useEffect(() => {
+    if (!result || result.gameModeId !== "passage") return;
+    const work = getWork(result.workId);
+    const meta = work ? getEditionById(work, result.editionId) : undefined;
+    if (!meta) return;
+    // Normally already in memory: the reader just typed it, and the render
+    // below reads that cache. Fetched only when an old result is opened cold,
+    // and a failure there just means no link.
+    if (loadedEdition(meta)) return;
+    let alive = true;
+    loadEditionText(meta)
+      .then((e) => {
+        if (alive) setFetchedText(e);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [result]);
+
   if (result === undefined) return null;
   if (result === null) {
     return (
@@ -57,10 +84,11 @@ export function ResultView({ id }: { id: string }) {
   const edition = work ? getEditionById(work, result.editionId) : undefined;
   const mode = getGameMode(result.gameModeId);
   const metrics = metricsFromResult(result);
+  const text = (edition ? loadedEdition(edition) : undefined) ?? fetchedText;
   const lastSegmentId = result.segmentIds.at(-1);
   const next =
-    result.gameModeId === "passage" && edition && lastSegmentId
-      ? nextSegmentAfter(edition, lastSegmentId)
+    result.gameModeId === "passage" && text && lastSegmentId
+      ? nextSegmentAfter(text, lastSegmentId)
       : undefined;
 
   return (

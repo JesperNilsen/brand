@@ -17,6 +17,9 @@ const edition: TextEdition = {
   version: "1",
   contentHash: "sha256:test",
   languageProfileId: "brand-riksmaal",
+  segmentCount: 3,
+  wordCount: 3,
+  file: "/content/editions/w.training.v1.test.json",
   segments: [seg("s3", "tre", 3), seg("s1", "en", 1), seg("s2", "to", 2)],
 };
 

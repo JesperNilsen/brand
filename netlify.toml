@@ -22,3 +22,12 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "no-referrer"
     X-Frame-Options = "DENY"
+
+# Edition texts carry their contentHash in the filename, so a cached copy is
+# always the text its name claims. Set at the edge as well as in next.config.ts:
+# the CDN serves these files, and a header only the app knows about would not
+# reach it.
+[[headers]]
+  for = "/content/editions/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

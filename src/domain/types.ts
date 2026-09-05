@@ -88,7 +88,12 @@ export type TextSegment = {
 
 export type TextEditionKind = "original" | "training-edition";
 
-export type TextEdition = {
+/**
+ * An edition without its text: everything the app needs to name, list and
+ * attribute a text, and to fetch the text itself. Small enough to ship in the
+ * bundle however far the corpus grows.
+ */
+export type TextEditionMeta = {
   id: string;
   workId: string;
   kind: TextEditionKind;
@@ -98,7 +103,8 @@ export type TextEdition = {
    * SHA-256 over the ordered segments (id, order, text) and nothing else, so
    * it moves when the text the reader types moves and stays put when an
    * editorial note is reworded. Computed by the builders, verified by
-   * `pnpm validate:content`.
+   * `pnpm validate:content`, and re-verified in the browser against the
+   * fetched text.
    */
   contentHash: string;
   languageProfileId?: string;
@@ -106,8 +112,21 @@ export type TextEdition = {
   basedOnEditionId?: string;
   /** The original's contentHash at build time, so drift underneath is visible. */
   basedOnContentHash?: string;
-  segments: TextSegment[];
   editorialNotes?: string[];
+  /** Number of segments in the edition, so a list can be sized without the text. */
+  segmentCount: number;
+  /** Words across all segments, for the reading-time estimate. */
+  wordCount: number;
+  /**
+   * Path under `public/`, content-hashed so it can be cached forever: a text
+   * that changes gets a new name rather than a new copy under an old one.
+   */
+  file: string;
+};
+
+/** An edition with its text loaded. */
+export type TextEdition = TextEditionMeta & {
+  segments: TextSegment[];
 };
 
 export type Work = {
@@ -116,7 +135,7 @@ export type Work = {
   author: string;
   title: string;
   publishedYear?: number;
-  editions: TextEdition[];
+  editions: TextEditionMeta[];
   source: SourceAttribution;
 };
 

@@ -14,6 +14,8 @@
  *    produces from original.json (a hand-edited generated file)
  *  - a training edition with no matching rules.vN.json
  *  - unknown language profile ids
+ *  - a generated catalog or edition asset that is not what `pnpm build:content`
+ *    produces from content/ right now, or an asset file nothing points at
  *
  * Warns (exit 0) on:
  *  - training-edition passages outside the 35-120 word range that
@@ -31,6 +33,7 @@ import { editionContentHash } from "./lib/hash";
 import { buildTrainingEdition, serializeEdition, type OriginalFile } from "./lib/build-edition";
 import type { Rules } from "./lib/rules";
 import { listTextFilters } from "../src/domain/text-filter";
+import { buildContentAssets } from "./build-content-assets";
 
 const KNOWN_PROFILES = new Set(["brand-riksmaal"]);
 const contentRoot = path.resolve(process.cwd(), "content");
@@ -278,6 +281,72 @@ async function validatePack(pack: string) {
   }
 }
 
+/**
+ * The generated catalog and the files under public/ are derived, and derived
+ * files rot. Regenerate them in memory and compare byte for byte — the same
+ * check D8 applies to training editions, for the same reason: every other
+ * check here compares a file with itself.
+ */
+async function checkGeneratedAssets() {
+  const where = "generated";
+  let built;
+  try {
+    built = await buildContentAssets();
+  } catch (e) {
+    fail(where, `pnpm build:content would fail: ${(e as Error).message}`);
+    return;
+  }
+
+  const generatedRoot = path.resolve(process.cwd(), "src", "domain", "content");
+  for (const [file, expected] of [
+    [path.join(generatedRoot, "catalog.generated.ts"), built.catalog],
+    [path.join(generatedRoot, "editorial-notes.generated.ts"), built.notes],
+  ] as const) {
+    let actual: string;
+    try {
+      actual = await readFile(file, "utf8");
+    } catch {
+      fail(where, `${path.basename(file)} is missing — run pnpm build:content`);
+      continue;
+    }
+    if (actual !== expected) {
+      fail(
+        where,
+        `${path.basename(file)} is not what content/ produces — run pnpm build:content ` +
+          `(first difference: ${firstDifference(actual, expected)})`,
+      );
+    }
+  }
+
+  const assetDir = path.resolve(process.cwd(), "public", "content", "editions");
+  let onDisk: string[] = [];
+  try {
+    onDisk = (await readdir(assetDir)).filter((f) => f.endsWith(".json")).sort();
+  } catch {
+    fail(where, `public/content/editions/ is missing — run pnpm build:content`);
+    return;
+  }
+  for (const asset of built.assets) {
+    let actual: string;
+    try {
+      actual = await readFile(path.join(assetDir, asset.file), "utf8");
+    } catch {
+      fail(where, `${asset.file} is missing — run pnpm build:content`);
+      continue;
+    }
+    if (actual !== asset.contents) {
+      fail(where, `${asset.file} has been edited by hand — it is generated`);
+    }
+  }
+  // An orphan is a text nothing can reach but a stale cache still can.
+  const expectedNames = new Set(built.assets.map((a) => a.file));
+  for (const f of onDisk) {
+    if (!expectedNames.has(f)) {
+      fail(where, `${f} is in public/content/editions/ but no edition points at it`);
+    }
+  }
+}
+
 async function main() {
   const entries = await readdir(contentRoot);
   const packs: string[] = [];
@@ -293,6 +362,8 @@ async function main() {
       fail(p, `unreadable: ${(err as Error).message}`);
     }
   }
+  await checkGeneratedAssets();
+
   for (const [key, why] of KNOWN_LENGTH_DEVIATIONS) {
     if (!seenDeviations.has(key)) {
       warn(key.split("/")[0], `kjent lengdeavvik ${key} finnes ikke lenger — fjern unntaket «${why}»`);
