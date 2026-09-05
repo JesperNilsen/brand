@@ -1,8 +1,11 @@
 name: CI
 
+# Pushes to main (which now only happen through a merge) and every pull
+# request. Running on both `push: ["**"]` and `pull_request` fired the whole
+# suite twice for every PR branch.
 on:
   push:
-    branches: ["**"]
+    branches: [main]
   pull_request:
 
 # A newer push to the same branch cancels the older run. The suite ends in a
