@@ -12,7 +12,10 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "validate:content": "tsx scripts/validate-content.ts",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm validate:content && pnpm build"
+    "check:css": "tsx scripts/check-css-layers.ts",
+    "check:fast": "pnpm lint && pnpm typecheck && pnpm test && pnpm validate:content && pnpm check:css",
+    "check:all": "pnpm check:fast && pnpm build && pnpm test:e2e",
+    "check": "pnpm check:all"
   },
   "dependencies": {
     "idb": "^8.0.3",

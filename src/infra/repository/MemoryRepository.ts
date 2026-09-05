@@ -5,7 +5,7 @@ import type {
   UserPreferences,
 } from "@/domain/types";
 import { applySessionQuery, type BrandRepository } from "./BrandRepository";
-import { defaultPreferences } from "./migrations";
+import { defaultPreferences, migrateSession } from "./migrations";
 
 /** In-memory adapter for tests and server-side rendering fallbacks. */
 export class MemoryRepository implements BrandRepository {
@@ -32,10 +32,17 @@ export class MemoryRepository implements BrandRepository {
   async addSession(value: SessionResult): Promise<void> {
     this.sessions.set(value.id, { ...value });
   }
+  // Migrating on read is part of the repository contract, not an IndexedDB
+  // detail: a caller must never have to ask which adapter it is talking to
+  // before trusting a record's shape. Tested in tests/infra/repository-contract.ts.
   async getSession(id: string): Promise<SessionResult | null> {
-    return this.sessions.get(id) ?? null;
+    const raw = this.sessions.get(id);
+    return raw ? migrateSession(raw) : null;
   }
   async listSessions(query?: SessionQuery): Promise<SessionResult[]> {
-    return applySessionQuery([...this.sessions.values()], query);
+    const valid = [...this.sessions.values()]
+      .map((s) => migrateSession(s))
+      .filter((s): s is SessionResult => s !== null);
+    return applySessionQuery(valid, query);
   }
 }

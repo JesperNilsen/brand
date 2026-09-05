@@ -1,0 +1,24 @@
+# Netlify build for BRAND.
+#
+# Not a static export: /resultat/[id] is keyed on a session id generated at
+# runtime, so there is no set of params to pre-render. The Next.js runtime
+# plugin serves the app instead. Everything the user owns still lives in their
+# own browser; nothing is stored server-side.
+[build]
+  command = "pnpm build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# The app is local-first and reads no third-party resources. Say so at the edge
+# rather than leaving the defaults open.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-Frame-Options = "DENY"
