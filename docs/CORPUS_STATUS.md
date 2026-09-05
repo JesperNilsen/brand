@@ -1,8 +1,8 @@
 # BRAND — corpusstatus
 
-Status per verk i `content/`. Se `docs/spec/CORPUS.md` og `docs/spec/LANGUAGE_PROFILE.md` for kontrakten disse pakkene følger, og hver pakkes egen `rules.json` for den fulle, maskinlesbare regellisten bak treningsutgaven.
+Status per verk i `content/`. Se `docs/spec/CORPUS.md` og `docs/spec/LANGUAGE_PROFILE.md` for kontrakten disse pakkene følger, og hver pakkes egen `rules.v1.json` for den fulle, maskinlesbare regellisten bak treningsutgaven.
 
-Alle fire pakker er bygd med samme pipeline: kildetekst arkiveres verbatim under `content/<pack>/source/`, `original.json` bygges med `scripts/import/build-original.ts` (kopierer tekst ord-for-ord fra det arkiverte kildeutdraget), og `training-edition.v1.json` bygges med `scripts/import/build-training-edition.ts` ut fra den enkelte pakkens `rules.json`. `pnpm validate:content` kontrollerer at alt henger sammen (segmentgrenser, provenance mot kildefilen, ordtelling ±10 % mellom original og treningsutgave).
+Alle fire pakker er bygd med samme pipeline: kildetekst arkiveres verbatim under `content/<pack>/source/`, `original.json` bygges med `scripts/import/build-original.ts` (kopierer tekst ord-for-ord fra det arkiverte kildeutdraget), og `training-edition.v1.json` bygges med `scripts/import/build-training-edition.ts` ut fra den enkelte pakkens `rules.v1.json`. `pnpm validate:content` kontrollerer at alt henger sammen (segmentgrenser, provenance mot kildefilen, ordtelling ±10 % mellom original og treningsutgave).
 
 ## ibsen-brand — Henrik Ibsen, *Brand* (1866)
 
@@ -16,7 +16,7 @@ Alle fire pakker er bygd med samme pipeline: kildetekst arkiveres verbatim under
 | Ordtall / segmenter | 931 ord, 12 segmenter |
 | Inkludert | Åpningsscenen i første akt (fjellvidde-scenen mellom Brand, Bonden og Sønnen). |
 
-Etablert før denne runden; uendret. Se `content/ibsen-brand/rules.json` for det fulle regelsettet (af→av, ej→ei, hvad→hva m.fl.).
+Etablert før denne runden; uendret. Se `content/ibsen-brand/rules.v1.json` for det fulle regelsettet (af→av, ej→ei, hvad→hva m.fl.).
 
 ## hamsun-markens-groede — Knut Hamsun, *Markens Grøde* (1917)
 
@@ -82,5 +82,5 @@ Ett verk (`kielland-noveletter`), to noveller i denne omgang. Segmentetiketter e
   utgjør det hele samlingen fra 1879, ~26 000 ord, gjennom samme importer og samme
   regelsett. Ikke importert ennå; se CEO-planen for rekkefølge.
 - **Corpuset er utdrag, ikke hele verk.** Alle fire pakker inneholder bare åpningen av det aktuelle kapittelet/den aktuelle novellen (i tråd med `docs/spec/CORPUS.md`s V1-avgrensning), ikke hele *Markens Grøde*, *Gift* eller de fullstendige novellene.
-- **Alle treningsutgaver er agent-utkast (`verificationStatus: "agent-drafted"`).** Ingen av dem er lest av en menneskelig redaktør ennå. `docs/spec/LANGUAGE_PROFILE.md` krever at «en redaktør [skal] kontrollere at tekstens setningsmelodi og litterære særpreg er beholdt» før en pakke regnes som kontrollert — det gjenstår for alle fire pakker (ibsen-brand inkludert, som var ferdig fra før). Se hver pakkes `rules.json`-felt `retained` for ord som bevisst er latt urørt fordi riktig moderne form var usikker, og selve sluttrapporten for denne runden for en kortere liste over de mest tvilsomme enkeltvalgene.
+- **Alle treningsutgaver er agent-utkast (`verificationStatus: "agent-drafted"`).** Ingen av dem er lest av en menneskelig redaktør ennå. `docs/spec/LANGUAGE_PROFILE.md` krever at «en redaktør [skal] kontrollere at tekstens setningsmelodi og litterære særpreg er beholdt» før en pakke regnes som kontrollert — det gjenstår for alle fire pakker (ibsen-brand inkludert, som var ferdig fra før). Se hver pakkes `rules.v1.json`-felt `retained` for ord som bevisst er latt urørt fordi riktig moderne form var usikker, og selve sluttrapporten for denne runden for en kortere liste over de mest tvilsomme enkeltvalgene.
 - **Én dokumentert transkripsjonsrettelse.** I `kielland-gift` er «Abrabam» (åpenbar bokstavfeil på Wikikilden, mot 10+ korrekte forekomster av «Abraham» ellers i samme kapittel) rettet til «Abraham» i treningsutgaven, i tråd med `docs/spec/LANGUAGE_PROFILE.md`s adgang til å rette dokumenterte transkripsjonsfeil. Originalteksten beholder «Abrabam» uendret (verbatim mot kilden).

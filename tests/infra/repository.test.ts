@@ -35,7 +35,7 @@ describe("migrations", () => {
     expect(migrateSession(s)).toEqual(s);
   });
 
-  it("migrates a genuine pre-filter v1 record to v2 as printed", () => {
+  it("migrates a genuine pre-filter v1 record forward, as printed", () => {
     // Exactly what the app wrote before text filters existed: schemaVersion 1
     // and no textFilterId field at all.
     const v1: Record<string, unknown> = {
@@ -64,16 +64,40 @@ describe("migrations", () => {
 
     const migrated = migrateSession(v1);
     expect(migrated).not.toBeNull();
-    expect(migrated!.schemaVersion).toBe(2);
+    expect(migrated!.schemaVersion).toBe(3);
     expect(migrated!.textFilterId).toBe("as-printed");
     expect(migrated!.netWpm).toBe(49.5);
+    // The edition it was typed against cannot be recovered, so it is named
+    // as unknown rather than assumed to be whatever is current today.
+    expect(migrated!.editionVersion).toBe("unknown");
+    expect(migrated!.editionContentHash).toBe("unknown");
 
     // Idempotent: migrating the result again changes nothing.
     expect(migrateSession(migrated)).toEqual(migrated);
   });
 
-  it("repairs a v2 record whose filter field is missing or unknown", () => {
+  it("repairs a record whose filter field is missing or unknown", () => {
     const broken = { ...makeSession("b", "2026-09-04T00:00:00.000Z"), textFilterId: "shouting" };
     expect(migrateSession(broken)?.textFilterId).toBe("as-printed");
+  });
+
+  it("returns the very same object when nothing needs changing", () => {
+    // Idempotence by identity, not just by equality: every later migration
+    // runs on the output of this one, on every read, for every listed session.
+    const current = makeSession("same", "2026-09-04T00:00:00.000Z");
+    expect(migrateSession(current)).toBe(current);
+  });
+
+  it("refuses a v2 record that is missing the edition fields only by filling them", () => {
+    const v2 = {
+      ...makeSession("v2", "2026-09-04T00:00:00.000Z"),
+      schemaVersion: 2,
+    } as Record<string, unknown>;
+    delete v2.editionVersion;
+    delete v2.editionContentHash;
+    const out = migrateSession(v2);
+    expect(out!.schemaVersion).toBe(3);
+    expect(out!.editionVersion).toBe("unknown");
+    expect(migrateSession(out)).toEqual(out);
   });
 });

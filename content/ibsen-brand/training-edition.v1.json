@@ -3,8 +3,10 @@
   "workId": "ibsen-brand",
   "kind": "training-edition",
   "version": "1.0.0",
+  "contentHash": "sha256:92d613d9b1a385454935b2ce614de39fe1159a77a1569f67393a3cd18e3170e9",
   "languageProfileId": "brand-riksmaal",
   "basedOnEditionId": "ibsen-brand.original",
+  "basedOnContentHash": "sha256:dcca48d310d6dd50dddb91848ffaa169acb4f530d595f017e7198b7db953ac37",
   "segments": [
     {
       "id": "akt1-01",
@@ -106,7 +108,7 @@
   "editorialNotes": [
     "Brand Training Edition av Ibsens Brand (1903-ortografien). Bare ortografi er modernisert til moderne-konservativt riksmål: af→av, ej→ei, hvad→hva, vej→vei, æ→e i ord som i dag skrives med e, bløte konsonanter (b/d/g) → harde (p/t/k) der moderne riksmål har det, mig/dig/sig → meg/deg/seg, nu → nå og efter → etter (profilens foretrukne former), end → enn, os → oss, vor → vår. Verselinjer, ordvalg, syntaks, rytme og rim er uendret.",
     "Ordformer som ville brutt meter eller rim, eller som er karakterbærende (Faer, moer, grædende, sagde, give, ikkun, skorted, nuomstunder), er bevart; se «Beholdt»-notatene.",
-    "Regelsettet ligger i content/ibsen-brand/rules.json og kjøres av scripts/import/build-training-edition.ts. Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert.",
+    "Regelsettet ligger i content/ibsen-brand/rules.v1.json og kjøres av scripts/import/build-training-edition.ts. Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert.",
     "Ortografi: «af» → «av» (3)",
     "Ortografi: «afsted» → «avsted» (1)",
     "Ortografi: «al» → «all» (1)",

@@ -28,6 +28,7 @@
     "workId": "kielland-noveletter",
     "kind": "original",
     "version": "1.0.0",
+    "contentHash": "sha256:b7d0ef61833c3045e4a5f36a5f46e89e5b867e2ecfe3a672b24d14c6d96a97b7",
     "segments": [
       {
         "id": "haabet-01",

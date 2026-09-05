@@ -28,6 +28,7 @@
     "workId": "ibsen-brand",
     "kind": "original",
     "version": "1.0.0",
+    "contentHash": "sha256:dcca48d310d6dd50dddb91848ffaa169acb4f530d595f017e7198b7db953ac37",
     "segments": [
       {
         "id": "akt1-01",

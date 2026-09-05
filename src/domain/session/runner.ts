@@ -256,7 +256,7 @@ export function toSessionResult(
     .map((s) => s.id);
   return {
     id,
-    schemaVersion: 2,
+    schemaVersion: 3,
     startedAt: new Date(startedAt).toISOString(),
     completedAt: new Date(endedAt).toISOString(),
     status,
@@ -265,6 +265,8 @@ export function toSessionResult(
     contentPackId: state.plan.contentPackId,
     workId: state.plan.workId,
     editionId: state.plan.editionId,
+    editionVersion: state.plan.editionVersion,
+    editionContentHash: state.plan.editionContentHash,
     segmentIds: touchedSegmentIds,
     errorMode: state.plan.errorMode,
     textFilterId: state.plan.textFilterId,

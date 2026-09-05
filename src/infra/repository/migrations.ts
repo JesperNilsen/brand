@@ -6,7 +6,14 @@ import {
 import type { SessionResult, UserPreferences } from "@/domain/types";
 
 export const PREFERENCES_SCHEMA_VERSION = 1 as const;
-export const SESSION_SCHEMA_VERSION = 2 as const;
+export const SESSION_SCHEMA_VERSION = 3 as const;
+
+/**
+ * Stamped on records written before editions carried a version and a hash.
+ * Never a guess: the text those sessions were typed against cannot be
+ * identified now, and inventing provenance is worse than admitting its absence.
+ */
+export const UNKNOWN_EDITION = "unknown" as const;
 
 export function defaultPreferences(): UserPreferences {
   return {
@@ -55,30 +62,53 @@ export function migratePreferences(raw: unknown): UserPreferences {
  * Returns null when a stored session cannot be understood.
  *
  * Version 1 predates text filters: every session recorded then was typed
- * against the edition as printed, so those records migrate by taking that
- * filter and being stamped as version 2. The version has to move, or one
- * number would denote two different serialized shapes and later migrations
- * could not tell them apart.
+ * against the edition as printed, so those records take that filter.
+ * Version 2 predates edition versioning: those records name an edition id but
+ * not which version of it, and since editions are immutable from version 3
+ * onward there is no way to recover it after the fact. Both migrate forward to
+ * the current version. The version number has to move each time, or one number
+ * would denote two different serialized shapes and a later migration could not
+ * tell them apart.
+ *
+ * The fields are required when writing and tolerated when reading, which is
+ * why the repair below fills rather than rejects.
  */
 export function migrateSession(raw: unknown): SessionResult | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as Record<string, unknown>;
   if (typeof r.id !== "string" || typeof r.startedAt !== "string") return null;
+  if (r.schemaVersion !== 1 && r.schemaVersion !== 2 && r.schemaVersion !== 3) {
+    // Written by a newer build, or not a session at all.
+    return null;
+  }
 
-  if (r.schemaVersion === 1) {
-    return {
-      ...(raw as Omit<SessionResult, "schemaVersion" | "textFilterId">),
-      schemaVersion: SESSION_SCHEMA_VERSION,
-      textFilterId: isTextFilterId(r.textFilterId)
-        ? r.textFilterId
-        : DEFAULT_TEXT_FILTER_ID,
-    };
-  }
-  if (r.schemaVersion === SESSION_SCHEMA_VERSION) {
-    return isTextFilterId(r.textFilterId)
-      ? (raw as SessionResult)
-      : { ...(raw as SessionResult), textFilterId: DEFAULT_TEXT_FILTER_ID };
-  }
-  // Anything else was written by a newer build and is not readable here.
-  return null;
+  const textFilterId = isTextFilterId(r.textFilterId)
+    ? r.textFilterId
+    : DEFAULT_TEXT_FILTER_ID;
+  const editionVersion =
+    typeof r.editionVersion === "string" && r.editionVersion.length > 0
+      ? r.editionVersion
+      : UNKNOWN_EDITION;
+  const editionContentHash =
+    typeof r.editionContentHash === "string" && r.editionContentHash.length > 0
+      ? r.editionContentHash
+      : UNKNOWN_EDITION;
+
+  const migrated: SessionResult = {
+    ...(raw as SessionResult),
+    schemaVersion: SESSION_SCHEMA_VERSION,
+    textFilterId,
+    editionVersion,
+    editionContentHash,
+  };
+
+  // Idempotence is the property every later migration relies on, so return the
+  // input untouched when nothing needed changing rather than a fresh object
+  // that merely compares equal.
+  const unchanged =
+    r.schemaVersion === SESSION_SCHEMA_VERSION &&
+    r.textFilterId === textFilterId &&
+    r.editionVersion === editionVersion &&
+    r.editionContentHash === editionContentHash;
+  return unchanged ? (raw as SessionResult) : migrated;
 }

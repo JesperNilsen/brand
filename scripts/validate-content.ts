@@ -9,6 +9,10 @@
  *    (±10 %) differ from the original (guards against rewriting)
  *  - segments that any practice-form filter would empty (a vanished segment
  *    would push Nonstop progress past text the reader never typed)
+ *  - an edition whose contentHash does not match its own segments
+ *  - a training edition that is not byte-for-byte what its rules.vN.json
+ *    produces from original.json (a hand-edited generated file)
+ *  - a training edition with no matching rules.vN.json
  *  - unknown language profile ids
  *
  * Warns (exit 0) on:
@@ -23,6 +27,9 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { countWords } from "./lib/text";
+import { editionContentHash } from "./lib/hash";
+import { buildTrainingEdition, serializeEdition, type OriginalFile } from "./lib/build-edition";
+import type { Rules } from "./lib/rules";
 import { listTextFilters } from "../src/domain/text-filter";
 
 const KNOWN_PROFILES = new Set(["brand-riksmaal"]);
@@ -122,6 +129,35 @@ function checkSegments(pack: string, editionId: string, segments: Segment[]) {
   });
 }
 
+/** The hash has to be checked, or it is decoration that drifts silently. */
+function checkContentHash(
+  pack: string,
+  where: string,
+  edition: { contentHash?: string; segments: Segment[] },
+) {
+  if (!edition.contentHash) {
+    fail(pack, `${where}: contentHash missing`);
+    return;
+  }
+  const computed = editionContentHash(edition.segments);
+  if (edition.contentHash !== computed) {
+    fail(pack, `${where}: contentHash ${edition.contentHash.slice(0, 20)}… != computed ${computed.slice(0, 20)}…`);
+  }
+}
+
+/** First index at which two strings differ, with a little context each side. */
+function firstDifference(a: string, b: string): string {
+  const n = Math.min(a.length, b.length);
+  let i = 0;
+  while (i < n && a[i] === b[i]) i += 1;
+  const from = Math.max(0, i - 40);
+  return [
+    `first difference at byte ${i}`,
+    `  committed: …${JSON.stringify(a.slice(from, i + 40))}`,
+    `  rebuilt  : …${JSON.stringify(b.slice(from, i + 40))}`,
+  ].join("\n");
+}
+
 async function validatePack(pack: string) {
   const dir = path.join(contentRoot, pack);
   const packJson = (await readJson(path.join(dir, "pack.json"))) as Record<string, unknown>;
@@ -149,6 +185,7 @@ async function validatePack(pack: string) {
     if (!source || !source[key]) fail(pack, `work.source.${key} missing`);
   }
   checkSegments(pack, original.edition.id, original.edition.segments);
+  checkContentHash(pack, original.edition.id, original.edition as unknown as { contentHash?: string; segments: Segment[] });
 
   // Provenance: every original line must exist verbatim in an archived source text.
   const sourceDir = path.join(dir, "source");
@@ -178,12 +215,33 @@ async function validatePack(pack: string) {
   const files = (await readdir(dir)).filter((f) => /^training-edition\.v\d+\.json$/.test(f));
   if (files.length === 0) fail(pack, `no training edition`);
   for (const f of files) {
+    const version = /^training-edition\.v(\d+)\.json$/.exec(f)![1];
+    const rulesFile = path.join(dir, `rules.v${version}.json`);
+
+    // Rebuild from the frozen inputs and demand the exact bytes back. Every
+    // other check here compares an edition against itself; only this one can
+    // tell that a generated file was edited by hand.
+    const committed = await readFile(path.join(dir, f), "utf8");
+    try {
+      const rules = JSON.parse(await readFile(rulesFile, "utf8")) as Rules;
+      const rebuilt = serializeEdition(
+        buildTrainingEdition(original as unknown as OriginalFile, rules).edition,
+      );
+      if (rebuilt !== committed) {
+        fail(pack, `${f}: not reproducible from rules.v${version}.json\n${firstDifference(committed, rebuilt)}`);
+      }
+    } catch (err) {
+      fail(pack, `${f}: cannot rebuild from rules.v${version}.json: ${(err as Error).message}`);
+    }
+
     const t = (await readJson(path.join(dir, f))) as {
       id: string;
       workId: string;
       kind: string;
       languageProfileId?: string;
       basedOnEditionId?: string;
+      contentHash?: string;
+      basedOnContentHash?: string;
       segments: Segment[];
       editorialNotes?: string[];
     };
@@ -196,6 +254,11 @@ async function validatePack(pack: string) {
     }
     if (!t.editorialNotes || t.editorialNotes.length === 0) fail(pack, `${f}: editorialNotes missing`);
     checkSegments(pack, t.id, t.segments);
+    checkContentHash(pack, f, t);
+    const originalHash = (original.edition as unknown as { contentHash?: string }).contentHash;
+    if (t.basedOnContentHash !== originalHash) {
+      fail(pack, `${f}: basedOnContentHash does not match the original it derives from`);
+    }
     checkPassageLength(pack, t.id, t.segments);
     if (t.segments.length !== original.edition.segments.length) {
       fail(pack, `${f}: segment count differs from original`);

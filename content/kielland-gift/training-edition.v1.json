@@ -3,8 +3,10 @@
   "workId": "kielland-gift",
   "kind": "training-edition",
   "version": "1.0.0",
+  "contentHash": "sha256:2365ad52a5d090f7c8460276810c68ba65f08329f84b3835bd7ae6d6e057772a",
   "languageProfileId": "brand-riksmaal",
   "basedOnEditionId": "kielland-gift.original",
+  "basedOnContentHash": "sha256:2dff6f05866e1f32ef3c4403a73bd9f268d580f90263c022607f294c2374bfa9",
   "segments": [
     {
       "id": "kap1-01",
@@ -115,7 +117,7 @@
     "Brand Training Edition av åpningen av Kiellands Gift (1883/1907-teksten). Bare ortografi er modernisert: aa→å, af→av, hvad→hva, efter→etter, nu→nå, mig/dig/sig→meg/deg/seg, kunde/skulde/vilde→kunne/skulle/ville, havde→hadde, blev→ble, ud→ut, æ→e der moderne rettskriving har e, kort-vokal-konsonantfordobling der moderne rettskriving har det (bænk→benk, blæk→blekk, udtryk→uttrykk, ind-→inn-), soft→hard konsonant der moderne rettskriving har det (ansigt→ansikt, brugte→brukte), øi→øy, samt store forbokstaver i vanlige substantiv → små (lowercaseNouns-regelen). Setningsstruktur, ordvalg, rytme og tegnsetting er uendret.",
     "Ett dokumentert transkripsjonsavvik er rettet: «Abrabam» (i avsnittet som starter «Det var Geografi …») er retter til «Abraham», i tråd med at karakteren staves «Abraham» konsekvent ti+ ganger ellers i samme kapittel på Wikikilden. Dette er en åpenbar enkeltbokstav-transkripsjonsfeil, ikke en original stavevariant.",
     "Personnavn og fiktive egennavn er ikke rørt (Marius, Borring, Tolleiv, Reinert, Abraham, Achilles, Morten Bagstræver, «Aalbom» er unntatt aa→å-mønsteret siden det er et etternavn). Se «Beholdt»-notatene for gjennomgående grammatiske trekk (gammel flertallsbøying av verb: vare/bleve) som bevisst ikke er rørt, siden dette er syntaks/grammatikk og ikke rettskriving.",
-    "Regelsettet ligger i content/kielland-gift/rules.json og kjøres av scripts/import/build-training-edition.ts. Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert.",
+    "Regelsettet ligger i content/kielland-gift/rules.v1.json og kjøres av scripts/import/build-training-edition.ts. Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert.",
     "Mønster: /Aa(?!lbom)/ → «Å» (0 forekomster) — Store forbokstaver: 'Aa' → 'Å', unntatt i etternavnet «Aalbom» (egennavn, ikke rørt jf. 'Marius/names stay').",
     "Mønster: /aa/ → «å» (54 forekomster) — 1907-ortografiens 'aa' er alltid 'å' i denne teksten (paa, saa, blaa, Kartaal osv.).",
     "Ortografi: «abrabam» → «abraham» (1)",
@@ -295,7 +297,7 @@
     "Beholdt: «Kathederet» — usikker på fullt moderne skriveform (kateter/katheder); for å unngå å gjette feil er hele ordet beholdt uendret.",
     "Beholdt: «Knæerne» — usikker på om moderne form er «knærne» (kun bortfall av e, ikke æ→e) eller noe annet; for å unngå å gjette feil er hele ordet beholdt uendret.",
     "Beholdt: «undtagen» — moderne form «unntatt» har en annen endelse, ikke bare en lydrett fornorskning; beholdt.",
-    "Beholdt: «Penneposerne / Hænderne m.fl. på -erne» — æ→e er utført der det gjelder, men den dansk-pregede bestemte flertallsendelsen «-erne» er beholdt fremfor moderne «-ene», jf. samme vurdering i hamsun-markens-groede/rules.json.",
+    "Beholdt: «Penneposerne / Hænderne m.fl. på -erne» — æ→e er utført der det gjelder, men den dansk-pregede bestemte flertallsendelsen «-erne» er beholdt fremfor moderne «-ene», jf. samme vurdering i hamsun-markens-groede/rules.v1.json.",
     "Beholdt: «Familiens Håb / Freya» — «Haab» i skipsnavnet «Familiens Haab» er kjørt gjennom aa→å-mønsteret til «Håb» og lagt i properNames sammen med «Familiens», siden det fungerer som et navn på leke-skipet i guttenes lek."
   ]
 }
