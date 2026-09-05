@@ -155,6 +155,15 @@ export function describeRepositoryContract(name: string, make: () => BrandReposi
         expect(await repo.getProgress(KEY)).toBeNull();
       });
 
+      it("enumerates every stored record, and nothing after a delete", async () => {
+        expect(await repo.listProgress()).toEqual([]);
+        await repo.saveProgress(makeProgress(KEY));
+        await repo.saveProgress(makeProgress("other", { workId: "w2" }));
+        expect((await repo.listProgress()).map((p) => p.key).sort()).toEqual([KEY, "other"].sort());
+        await repo.deleteProgress(KEY);
+        expect((await repo.listProgress()).map((p) => p.key)).toEqual(["other"]);
+      });
+
       it("deleting a key that does not exist is a no-op", async () => {
         await expect(repo.deleteProgress("never-written")).resolves.toBeUndefined();
       });

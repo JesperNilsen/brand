@@ -23,6 +23,12 @@ export class MemoryRepository implements BrandRepository {
     const p = this.progress.get(key);
     return p ? { ...p, completedSegmentIds: [...p.completedSegmentIds] } : null;
   }
+  async listProgress(): Promise<ReadingProgress[]> {
+    return [...this.progress.values()].map((p) => ({
+      ...p,
+      completedSegmentIds: [...p.completedSegmentIds],
+    }));
+  }
   async saveProgress(value: ReadingProgress): Promise<void> {
     this.progress.set(value.key, { ...value });
   }

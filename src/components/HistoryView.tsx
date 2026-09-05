@@ -10,9 +10,12 @@ import type { SessionResult } from "@/domain/types";
 import { getRepository, isPersistent } from "@/infra/repository";
 import { formatDate, formatDuration, formatPercent, formatWpm } from "@/lib/format";
 import { editionLabel } from "@/lib/session-flow";
+import { DataTransfer } from "./DataTransfer";
 
 export function HistoryView() {
   const [sessions, setSessions] = useState<SessionResult[] | null>(null);
+  /** Bumped after an import so the table re-reads what is now stored. */
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     let alive = true;
@@ -24,7 +27,7 @@ export function HistoryView() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [reloadToken]);
 
   if (!sessions) return null;
 
@@ -107,6 +110,7 @@ export function HistoryView() {
           </table>
         </div>
       )}
+      <DataTransfer onImported={() => setReloadToken((n) => n + 1)} />
     </div>
   );
 }
