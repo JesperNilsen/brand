@@ -56,6 +56,38 @@ test.describe("Writing surface focus", () => {
     await expect(page.locator("header")).toHaveCSS("opacity", "1");
   });
 
+  test("a pointer resting over the header does not defeat focus mode", async ({ page }) => {
+    // Found by CI: the Linux runner reports the header as hovered from the
+    // start, so the whole chrome stayed at full opacity for the entire session.
+    // It reproduces anywhere the pointer happens to rest over a receding
+    // region, which is exactly where it lands after clicking something in it.
+    await page.goto(
+      `/skriv?mode=passage&work=ibsen-brand&segment=${long.id}&filter=words-only`,
+    );
+    const header = page.locator("header");
+    const box = await header.boundingBox();
+    await page.mouse.move(box!.x + 5, box!.y + 5);
+    expect(await header.evaluate((el) => el.matches(":hover"))).toBe(true);
+
+    await page.getByTestId("typing-input").focus();
+    await page.keyboard.type("oppe i sneen");
+    await expect(page.locator("html")).toHaveAttribute("data-typing", "on");
+    await expect(header).not.toHaveCSS("opacity", "1");
+  });
+
+  test("keyboard focus still brings a receded control back", async ({ page }) => {
+    await page.goto(
+      `/skriv?mode=passage&work=ibsen-brand&segment=${long.id}&filter=words-only`,
+    );
+    const header = page.locator("header");
+    await page.getByTestId("typing-input").focus();
+    await page.keyboard.type("oppe i sneen");
+    await expect(header).not.toHaveCSS("opacity", "1");
+
+    await header.getByRole("link", { name: "Historikk" }).focus();
+    await expect(header).toHaveCSS("opacity", "1");
+  });
+
   test("the prose is horizontally centred in the viewport", async ({ page }) => {
     await page.goto(
       `/skriv?mode=passage&work=ibsen-brand&segment=${long.id}&filter=as-printed`,

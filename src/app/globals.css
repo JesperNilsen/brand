@@ -336,7 +336,12 @@ a:hover {
   opacity: 1;
   transition: opacity 500ms ease;
 }
-[data-typing="on"] .recedes:hover,
+/* Keyboard focus brings a receded control back; hover deliberately does not.
+   A pointer left resting over the header, which is where it lands after
+   clicking anything in it, would otherwise hold that whole region at full
+   opacity for the entire session and quietly defeat focus mode for a user who
+   never notices why. Focus is intentional, pointer position is accidental.
+   The controls stay legible and clickable while receded. */
 [data-typing="on"] .recedes:focus-within {
   opacity: 1;
 }
