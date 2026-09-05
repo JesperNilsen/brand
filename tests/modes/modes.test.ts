@@ -15,6 +15,7 @@ const edition: TextEdition = {
   workId: "w",
   kind: "training-edition",
   version: "1",
+  contentHash: "sha256:test",
   languageProfileId: "brand-riksmaal",
   segments: [seg("s3", "tre", 3), seg("s1", "en", 1), seg("s2", "to", 2)],
 };

@@ -28,6 +28,7 @@
     "workId": "kielland-gift",
     "kind": "original",
     "version": "1.0.0",
+    "contentHash": "sha256:2dff6f05866e1f32ef3c4403a73bd9f268d580f90263c022607f294c2374bfa9",
     "segments": [
       {
         "id": "kap1-01",

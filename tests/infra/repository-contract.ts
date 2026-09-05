@@ -24,7 +24,7 @@ export function makeSession(
 ): SessionResult {
   return {
     id,
-    schemaVersion: 2,
+    schemaVersion: 3,
     startedAt,
     completedAt: startedAt,
     status: "completed",
@@ -33,6 +33,8 @@ export function makeSession(
     contentPackId: "ibsen-brand",
     workId: "ibsen-brand",
     editionId: "ibsen-brand.training.v1",
+    editionVersion: "1.0.0",
+    editionContentHash: "sha256:test",
     segmentIds: ["a"],
     errorMode: "flow",
     textFilterId: "as-printed",
@@ -84,6 +86,14 @@ const LEGACY_V1: Record<string, unknown> = {
   grossWpm: 50,
   netWpm: 49.5,
   accuracy: 0.99,
+};
+
+/** A record as the app wrote it after text filters but before edition versions. */
+const LEGACY_V2: Record<string, unknown> = {
+  ...LEGACY_V1,
+  id: "legacy-v2",
+  schemaVersion: 2,
+  textFilterId: "words-only",
 };
 
 const KEY = progressKey({
@@ -211,14 +221,24 @@ export function describeRepositoryContract(name: string, make: () => BrandReposi
 
         const one = await repo.getSession("legacy");
         expect(one).not.toBeNull();
-        expect(one!.schemaVersion).toBe(2);
+        expect(one!.schemaVersion).toBe(3);
         expect(one!.textFilterId).toBe("as-printed");
         expect(one!.netWpm).toBe(49.5);
 
         const listed = await repo.listSessions();
         expect(listed).toHaveLength(1);
-        expect(listed[0].schemaVersion).toBe(2);
+        expect(listed[0].schemaVersion).toBe(3);
         expect(listed[0].textFilterId).toBe("as-printed");
+      });
+
+      it("stamps an unknown edition on a v2 record rather than guessing one", async () => {
+        await repo.addSession(LEGACY_V2 as unknown as SessionResult);
+        const one = await repo.getSession("legacy-v2");
+        expect(one!.schemaVersion).toBe(3);
+        expect(one!.editionVersion).toBe("unknown");
+        expect(one!.editionContentHash).toBe("unknown");
+        // The filter it actually recorded survives; only the missing facts are filled.
+        expect(one!.textFilterId).toBe("words-only");
       });
 
       it("skips a record it cannot read instead of failing the whole list", async () => {

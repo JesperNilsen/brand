@@ -5,7 +5,7 @@
   "notes": [
     "Brand Training Edition av åpningen av to noveller fra Kiellands Noveletter (1879/1907-teksten): «Haabet er lysegrønt» og «Visne Blade». Bare ortografi er modernisert: aa→å, af→av, hvad→hva, efter→etter, kunde/vilde→kunne/ville, havde→hadde, blive→bli, ud(-)→ut(-), æ→e der moderne rettskriving har e, kort-vokal-konsonantfordobling der moderne rettskriving har det (træt→trett, tæt→tett, antal→antall, indtryk→inntrykk), soft→hard konsonant der moderne rettskriving har det (forsøgte→forsøkte, lidenskab→lidenskap, krog→krok), plads/kryds-klassen (d→s: plads→plass, kryds→kryss), -hed→-het (mangfoldighed→mangfoldighet, opmærksomhed→oppmerksomhet), øi→øy, samt store forbokstaver i vanlige substantiv → små (lowercaseNouns). To enkeltord der aa-mønsteret alene ikke ga riktig konsonant (faaet→fået→fått, Maade→Måde→måte) og ett der aa-mønsteret ga feil vokal (raabte→råbte→ropte, siden moderne verb er «rope», ikke «råbe») er rettet med egne ordoppslag etter at mønsteret er kjørt. Setningsstruktur, ordvalg, rytme og tegnsetting er uendret; se «Beholdt»-notatene.",
     "Kjælenavn/slektsord foran navn («Fætter Hans», «Tante Maren») er små bokstaver i moderne norsk («fetter Hans», «tante Maren»), slik det også praktiseres i dag — behandlet som vanlig substantiv, ikke egennavn.",
-    "Regelsettet ligger i content/kielland-noveletter/rules.json og kjøres av scripts/import/build-training-edition.ts. Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert."
+    "Regelsettet ligger i content/kielland-noveletter/rules.v1.json og kjøres av scripts/import/build-training-edition.ts. Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert."
   ],
   "patterns": [
     { "from": "Aa", "to": "Å", "flags": "g", "note": "Store forbokstaver: 'Aa' → 'Å'." },
@@ -94,7 +94,7 @@
     "properNames": ["Hans", "Ole", "Maren", "Mr", "Everton", "Sainsbury"]
   },
   "retained": {
-    "vare / vide / bleve / ere": "gammel flertallsbøying av verb (være/vite/bli være bøyd for flertall). Moderne norsk har ubøyd verbform uansett tall. Grammatikk, ikke rettskriving — ikke rørt, gjennomgående i begge noveller (samme vurdering som i kielland-gift/rules.json).",
+    "vare / vide / bleve / ere": "gammel flertallsbøying av verb (være/vite/bli være bøyd for flertall). Moderne norsk har ubøyd verbform uansett tall. Grammatikk, ikke rettskriving — ikke rørt, gjennomgående i begge noveller (samme vurdering som i kielland-gift/rules.v1.json).",
     "Broder / Broderen": "«broder» er fortsatt et gyldig, om enn høytidelig, moderne ord ved siden av «bror»; å korte det ned ville vært et ordvalg, ikke en rettskrivingssak, beholdt.",
     "Skrift (for hvert Skrift)": "uklart om dette er en eldre/dialektal skrivemåte for «skritt» eller et annet ord; for å unngå å gjette feil er det beholdt uendret.",
     "iveiret": "usikker på om moderne form er ett eller to ord («i været») og om ei→æ i det hele tatt er dekket av et tillatt mønster; beholdt.",
@@ -103,6 +103,6 @@
     "jagu": "usikker på om moderne skrivemåte dobler konsonant («jaggu»); beholdt.",
     "Øienlaagene": "moderne ord er «øyelokkene» (annen rot enn «laag»), ikke bare et lyd-for-lyd-mønster; kun aa→å-mønsteret er kjørt automatisk, resten er beholdt.",
     "ad (kom de dog ad de underligste Gjenveie)": "gammel preposisjonsbruk; moderne norsk ville brukt en annen preposisjon, det er ordvalg/grammatikk, ikke rettskriving, beholdt.",
-    "Thi": "gammelt konjunksjon for «for/fordi»; å endre det ville vært et ordvalg (og «ti» kunne forveksles med tallordet), beholdt — samme vurdering som i kielland-gift/rules.json."
+    "Thi": "gammelt konjunksjon for «for/fordi»; å endre det ville vært et ordvalg (og «ti» kunne forveksles med tallordet), beholdt — samme vurdering som i kielland-gift/rules.v1.json."
   }
 }

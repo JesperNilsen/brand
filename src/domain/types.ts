@@ -92,10 +92,20 @@ export type TextEdition = {
   id: string;
   workId: string;
   kind: TextEditionKind;
+  /** Immutable once published. A correction is a new version, never an edit. */
   version: string;
+  /**
+   * SHA-256 over the ordered segments (id, order, text) and nothing else, so
+   * it moves when the text the reader types moves and stays put when an
+   * editorial note is reworded. Computed by the builders, verified by
+   * `pnpm validate:content`.
+   */
+  contentHash: string;
   languageProfileId?: string;
   /** For training editions: the original edition this is derived from. */
   basedOnEditionId?: string;
+  /** The original's contentHash at build time, so drift underneath is visible. */
+  basedOnContentHash?: string;
   segments: TextSegment[];
   editorialNotes?: string[];
 };
@@ -156,8 +166,12 @@ export type SessionStatus = "completed" | "abandoned";
 
 export type SessionResult = {
   id: string;
-  /** 1 = before text filters existed; 2 adds the required textFilterId. */
-  schemaVersion: 2;
+  /**
+   * 1 = before text filters existed; 2 adds the required textFilterId;
+   * 3 adds editionVersion and editionContentHash, so a stored result names
+   * the exact text it was typed against rather than just the edition id.
+   */
+  schemaVersion: 3;
   /** ISO timestamp. */
   startedAt: string;
   completedAt?: string;
@@ -167,6 +181,13 @@ export type SessionResult = {
   contentPackId: string;
   workId: string;
   editionId: string;
+  /**
+   * The edition's version and content hash at the time of typing.
+   * `"unknown"` on records migrated from schema 1 or 2, which predate the
+   * fields: never guess provenance for text that cannot be identified.
+   */
+  editionVersion: string;
+  editionContentHash: string;
   segmentIds: string[];
   errorMode: ErrorMode;
   /** Which practice-form transform the target text was typed under. */

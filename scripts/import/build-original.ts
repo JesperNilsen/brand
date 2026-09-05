@@ -19,6 +19,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { countWords } from "../lib/text";
+import { editionContentHash } from "../lib/hash";
 
 type SegmentSpec = {
   id: string;
@@ -81,6 +82,7 @@ async function main() {
       workId: spec.work.id,
       kind: "original",
       version: spec.edition.version,
+      contentHash: editionContentHash(segments),
       segments,
       editorialNotes: spec.edition.editorialNotes ?? [],
     },

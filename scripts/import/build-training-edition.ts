@@ -6,6 +6,13 @@
  * regex `patterns`. Everything else is copied verbatim.
  *
  *   pnpm tsx scripts/import/build-training-edition.ts --pack ibsen-brand
+ *   pnpm tsx scripts/import/build-training-edition.ts --pack ibsen-brand --version 2
+ *
+ * A version N reads rules.vN.json and writes training-edition.vN.json. Both
+ * are immutable once published: a correction to a published edition is a new
+ * version, never an edit in place, because a stored session names the edition
+ * it was typed against and that text has to still exist. Omitting --version
+ * takes the highest rules.vN.json present.
  *
  * rules.json shape:
  * {
@@ -36,8 +43,9 @@
  */
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { countWords } from "../lib/text";
-import { applyLowercaseNouns, applyRules, type Rules } from "../lib/rules";
+import { readdir } from "node:fs/promises";
+import { buildTrainingEdition, serializeEdition, type OriginalFile } from "../lib/build-edition";
+import { type Rules } from "../lib/rules";
 
 function arg(name: string): string {
   const i = process.argv.indexOf(`--${name}`);
@@ -45,56 +53,43 @@ function arg(name: string): string {
   return process.argv[i + 1];
 }
 
+function optionalArg(name: string): string | undefined {
+  const i = process.argv.indexOf(`--${name}`);
+  return i === -1 ? undefined : process.argv[i + 1];
+}
+
+/** The highest N for which content/<pack>/rules.vN.json exists. */
+async function latestRulesVersion(dir: string): Promise<number> {
+  const versions = (await readdir(dir))
+    .map((f) => /^rules\.v(\d+)\.json$/.exec(f)?.[1])
+    .filter((v): v is string => v !== undefined)
+    .map(Number);
+  if (versions.length === 0) throw new Error(`no rules.vN.json in ${dir}`);
+  return Math.max(...versions);
+}
+
 async function main() {
   const pack = arg("pack");
   const dir = path.resolve(process.cwd(), "content", pack);
-  const original = JSON.parse(await readFile(path.join(dir, "original.json"), "utf8"));
-  const rules = JSON.parse(await readFile(path.join(dir, "rules.json"), "utf8")) as Rules;
-  const usage = new Map<string, number>();
+  const version = Number(optionalArg("version") ?? (await latestRulesVersion(dir)));
+  if (!Number.isInteger(version) || version < 1) throw new Error(`bad --version: ${version}`);
 
-  const properNames = new Set(rules.lowercaseNouns?.properNames ?? []);
-  const segments = original.edition.segments.map(
-    (s: { id: string; order: number; text: string; label?: string; difficulty?: number }) => {
-      let text = applyRules(s.text, rules, usage);
-      if (rules.lowercaseNouns) text = applyLowercaseNouns(text, properNames, usage);
-      return { ...s, text, wordCount: countWords(text) };
-    },
+  const original = JSON.parse(
+    await readFile(path.join(dir, "original.json"), "utf8"),
+  ) as OriginalFile;
+  const rules = JSON.parse(
+    await readFile(path.join(dir, `rules.v${version}.json`), "utf8"),
+  ) as Rules;
+
+  const { edition, unusedReplacements, appliedRuleCount } = buildTrainingEdition(original, rules);
+  const out = path.join(dir, `training-edition.v${version}.json`);
+  await writeFile(out, serializeEdition(edition), "utf8");
+  process.stdout.write(
+    `wrote ${path.relative(process.cwd(), out)} (${appliedRuleCount} rules applied)\n`,
   );
-
-  const applied = [...usage.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  const dict = rules.replacements ?? {};
-  const editorialNotes = [
-    ...(rules.notes ?? []),
-    ...(rules.patterns ?? []).map(
-      (p) => `Mønster: /${p.from}/ → «${p.to}» (${usage.get(`pattern:${p.from}`) ?? 0} forekomster)${p.note ? ` — ${p.note}` : ""}`,
-    ),
-    ...applied
-      .filter(([k]) => !k.startsWith("pattern:") && !k.startsWith("lowercase:"))
-      .map(([k, n]) => `Ortografi: «${k}» → «${dict[k]}» (${n})`),
-    ...applied
-      .filter(([k]) => k.startsWith("lowercase:"))
-      .map(([k, n]) => {
-        const word = k.slice("lowercase:".length);
-        return `Substantiv (stor → liten forbokstav): «${word}» → «${word[0].toLowerCase()}${word.slice(1)}» (${n})`;
-      }),
-    ...Object.entries(rules.retained ?? {}).map(([k, why]) => `Beholdt: «${k}» — ${why}`),
-  ];
-  const unused = Object.keys(dict).filter((k) => !usage.has(k));
-
-  const edition = {
-    id: rules.editionId,
-    workId: original.edition.workId,
-    kind: "training-edition",
-    version: rules.version,
-    languageProfileId: rules.languageProfileId,
-    basedOnEditionId: original.edition.id,
-    segments,
-    editorialNotes,
-  };
-  const out = path.join(dir, "training-edition.v1.json");
-  await writeFile(out, JSON.stringify(edition, null, 2) + "\n", "utf8");
-  process.stdout.write(`wrote ${path.relative(process.cwd(), out)} (${applied.length} rules applied)\n`);
-  if (unused.length) process.stdout.write(`unused replacements: ${unused.join(", ")}\n`);
+  if (unusedReplacements.length) {
+    process.stdout.write(`unused replacements: ${unusedReplacements.join(", ")}\n`);
+  }
 }
 
 main().catch((err) => {

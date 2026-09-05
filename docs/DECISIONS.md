@@ -68,6 +68,31 @@ spesifikasjonen lot stå åpne, og de få avvikene som var nødvendige.
 
 Se `docs/CORPUS_STATUS.md`. Kort: originaltekst bygges av `scripts/import/build-original.ts`
 fra arkivert kilde + `segments.json`; treningsutgaven bygges av
-`scripts/import/build-training-edition.ts` fra `rules.json` (ren ortografi, hver regel
+`scripts/import/build-training-edition.ts` fra `rules.vN.json` (ren ortografi, hver regel
 loggføres i `editorialNotes`). `pnpm validate:content` verifiserer proveniens linje for
 linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10 % ord).
+
+## Uforanderlige utgaver (fase 2)
+
+- **Utgaver er uforanderlige.** `rules.vN.json` bygger `training-edition.vN.json`.
+  En retting er en ny versjon, aldri en endring på stedet: en lagret økt navngir
+  utgaven den ble skrevet mot, og den teksten må fortsatt finnes for at tallene
+  skal bety noe.
+- **`contentHash`** er SHA-256 over segmentene i leserekkefølge, og bare over
+  `id`, `order` og `text`. En omformulert redaksjonsnotat, en ny etikett eller
+  et omregnet ordtall flytter den ikke. Det ble bekreftet i praksis: alle fire
+  notatene fikk rettet en filsti, filene endret seg, hashene stod stille.
+- **Hashen dekker den ufiltrerte teksten.** Hvilken øvingsform en økt brukte er
+  et eget faktum og bæres allerede av `textFilterId`.
+- **`basedOnContentHash`** lar en treningsutgave si hvilken original den ble
+  bygget fra, så drift under den er synlig i stedet for stille.
+- **`SessionResult` er schema 3**: `editionVersion` og `editionContentHash` er
+  påkrevd ved skriving. Rader fra schema 1 og 2 fylles med `"unknown"` ved
+  lesing. Provenance for tekst som ikke kan identifiseres blir aldri gjettet.
+- **Flere segmenter i et verk beholder `editionId`** og hever `version` og
+  hash. `progressKey()` inneholder `editionId`, så en ny id ville nullstilt all
+  lagret Nonstop-fremdrift.
+- **Validatoren bygger på nytt og sammenligner bytes.** Alle andre sjekker
+  sammenligner en utgave med seg selv; bare denne oppdager at en generert fil er
+  håndredigert. Negativt testet: ett endret tegn, en tuklet hash og en slettet
+  regelfil gir alle exit 1.

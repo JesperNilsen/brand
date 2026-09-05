@@ -3,8 +3,10 @@
   "workId": "hamsun-markens-groede",
   "kind": "training-edition",
   "version": "1.0.0",
+  "contentHash": "sha256:1d8c5519a5afbf1ddee33976cf063627f34f76b2ba12a6a7b33fc0cb52cf69d5",
   "languageProfileId": "brand-riksmaal",
   "basedOnEditionId": "hamsun-markens-groede.original",
+  "basedOnContentHash": "sha256:db67765fc4831f1266973af04debf38a2ea64493a0b6f430d0a9391a0eb572a2",
   "segments": [
     {
       "id": "del1-kap1-01",
@@ -73,7 +75,7 @@
   ],
   "editorialNotes": [
     "Brand Training Edition av åpningen av Hamsuns Markens Grøde (1917-ortografien). Bare ortografi er modernisert til moderne-konservativt riksmål: aa→å, store forbokstaver i vanlige substantiv → små (Dano-norsk konvensjon fra perioden, ikke ordvalg), af→av, hvad→hva, efter→etter, nu→nå, mig→meg, ind→inn, kort-vokal-konsonant-fordobling der moderne rettskriving har det (mand→mann, vand→vann, nat→natt, straf→straff, sit→sitt, kald→kall, blit→blitt, optat→opptatt, gik→gikk, fjæld→fjell, løvfald→løvfall, grøn→grønn), æ→e der moderne rettskriving har e (bæk→bekk, sæk→sekk, sætter→setter, rækker→rekker, lægger→legger, jærn→jern, flæsk→flesk, kvældene→kveldene, jærnskjæg→jernskjegg, kvindfolkhjælp→kvinnfolkhjelp m.fl.), øi→øy (øinene→øynene, høiden→høyden, værktøi→verktøy), samt to enkeltord der aa-mønsteret alene ikke ga riktig konsonantfordobling (faat→fått, slaat→slått, håndtert som fåt→fått / slåt→slått etter at aa→å er kjørt). Setningsstruktur, ordvalg, rytme og tegnsetting er uendret; se «Beholdt»-notatene for ord som bevisst ikke er rørt.",
-    "Regelsettet ligger i content/hamsun-markens-groede/rules.json og kjøres av scripts/import/build-training-edition.ts (inkludert lowercaseNouns-utvidelsen for substantiv-store-bokstaver). Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert.",
+    "Regelsettet ligger i content/hamsun-markens-groede/rules.v1.json og kjøres av scripts/import/build-training-edition.ts (inkludert lowercaseNouns-utvidelsen for substantiv-store-bokstaver). Utgaven er agent-utkast og bør leses av en redaktør før pakken regnes som kontrollert.",
     "Mønster: /Aa/ → «Å» (2 forekomster) — Store forbokstaver: 'Aa' → 'Å' (kjøres før 'aa' → 'å' slik at f.eks. 'Aaja' blir 'Åja', ikke 'AJa').",
     "Mønster: /aa/ → «å» (50 forekomster) — 1917-ortografiens 'aa' er alltid 'å' i denne teksten (paa, gaar, naar, saa, ogsaa, smaa osv.); ingen tilfeller av dobbel a inni ord med annen betydning.",
     "Ortografi: «af» → «av» (1)",

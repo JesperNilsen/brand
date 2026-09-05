@@ -29,6 +29,8 @@ function plan(overrides: Partial<SessionPlan>): SessionPlan {
     contentPackId: "pack",
     workId: "work",
     editionId: "edition",
+    editionVersion: "1.0.0",
+    editionContentHash: "sha256:test",
     errorMode: "flow",
     textFilterId: "as-printed",
     segments: [seg("a", "nå", 1)],

@@ -87,6 +87,8 @@ export const timedMode: GameModeDefinition = {
       contentPackId: input.contentPackId,
       workId: input.work.id,
       editionId: edition.id,
+      editionVersion: edition.version,
+      editionContentHash: edition.contentHash,
       errorMode: input.errorMode,
       textFilterId: input.textFilterId,
       segments,

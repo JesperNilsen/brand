@@ -28,6 +28,7 @@
     "workId": "hamsun-markens-groede",
     "kind": "original",
     "version": "1.0.0",
+    "contentHash": "sha256:db67765fc4831f1266973af04debf38a2ea64493a0b6f430d0a9391a0eb572a2",
     "segments": [
       {
         "id": "del1-kap1-01",

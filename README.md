@@ -41,8 +41,8 @@ vanskeligere å uthule.
 docs/spec/       styrende spesifikasjoner
 docs/DECISIONS.md tekniske valg og avvik
 docs/CORPUS_STATUS.md kildestatus per verk
-content/<pack>/  pack.json, segments.json, rules.json, original.json,
-                 training-edition.v1.json, source/ (arkivert råkilde)
+content/<pack>/  pack.json, segments.json, rules.vN.json, original.json,
+                 training-edition.vN.json, source/ (arkivert råkilde)
 scripts/import/  importere og bygge utgaver (replaybart fra source/)
 src/domain/      typer, språkprofil, innholdsregister, tastemotor, moduser, runner
 src/infra/       repository (IndexedDB + localStorage) og migrasjoner
@@ -57,8 +57,14 @@ tests/, e2e/     vitest og playwright
    og `scripts/import/wikikilden.ts`).
 2. Skriv `pack.json` og `segments.json` (segmenter angis med første og siste linje).
 3. `pnpm tsx scripts/import/build-original.ts --pack <pack>`
-4. Skriv `rules.json` (bare ortografi) og kjør
+4. Skriv `rules.v1.json` (bare ortografi) og kjør
    `pnpm tsx scripts/import/build-training-edition.ts --pack <pack>`
+
+   Utgaver er uforanderlige. En retting i en publisert utgave er en ny versjon
+   (`rules.v2.json` → `training-edition.v2.json`), aldri en endring på stedet,
+   fordi en lagret økt navngir utgaven den ble skrevet mot og den teksten må
+   fortsatt finnes. Ved flere segmenter i samme verk: behold `editionId`, hev
+   `version` og hashen. En ny `editionId` ville nullstilt all Nonstop-fremdrift.
 5. Registrer pakken i `src/domain/content/registry.ts` og kjør `pnpm validate:content`.
 
 ## Innhold, kilder og attribusjon

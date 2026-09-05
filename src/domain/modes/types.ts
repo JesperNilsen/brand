@@ -25,6 +25,9 @@ export type SessionPlan = {
   contentPackId: string;
   workId: string;
   editionId: string;
+  /** Carried so a finished session can record exactly which text it was. */
+  editionVersion: string;
+  editionContentHash: string;
   errorMode: ErrorMode;
   /** Practice-form transform already applied to `segments`. */
   textFilterId: TextFilterId;
