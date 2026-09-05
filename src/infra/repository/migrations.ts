@@ -6,7 +6,7 @@ import {
 import type { SessionResult, UserPreferences } from "@/domain/types";
 
 export const PREFERENCES_SCHEMA_VERSION = 1 as const;
-export const SESSION_SCHEMA_VERSION = 3 as const;
+export const SESSION_SCHEMA_VERSION = 4 as const;
 
 /**
  * Stamped on records written before editions carried a version and a hash.
@@ -65,8 +65,10 @@ export function migratePreferences(raw: unknown): UserPreferences {
  * against the edition as printed, so those records take that filter.
  * Version 2 predates edition versioning: those records name an edition id but
  * not which version of it, and since editions are immutable from version 3
- * onward there is no way to recover it after the fact. Both migrate forward to
- * the current version. The version number has to move each time, or one number
+ * onward there is no way to recover it after the fact. Version 3 predates
+ * pausing, so those records get pausedMs 0 — a fact, not a guess like the
+ * unknown edition above: there was no way to pause them. All migrate forward
+ * to the current version. The version number has to move each time, or one number
  * would denote two different serialized shapes and a later migration could not
  * tell them apart.
  *
@@ -77,7 +79,12 @@ export function migrateSession(raw: unknown): SessionResult | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as Record<string, unknown>;
   if (typeof r.id !== "string" || typeof r.startedAt !== "string") return null;
-  if (r.schemaVersion !== 1 && r.schemaVersion !== 2 && r.schemaVersion !== 3) {
+  if (
+    r.schemaVersion !== 1 &&
+    r.schemaVersion !== 2 &&
+    r.schemaVersion !== 3 &&
+    r.schemaVersion !== 4
+  ) {
     // Written by a newer build, or not a session at all.
     return null;
   }
@@ -94,12 +101,18 @@ export function migrateSession(raw: unknown): SessionResult | null {
       ? r.editionContentHash
       : UNKNOWN_EDITION;
 
+  const pausedMs = typeof r.pausedMs === "number" && r.pausedMs >= 0 ? r.pausedMs : 0;
+  const pauseCount =
+    typeof r.pauseCount === "number" && r.pauseCount >= 0 ? r.pauseCount : 0;
+
   const migrated: SessionResult = {
     ...(raw as SessionResult),
     schemaVersion: SESSION_SCHEMA_VERSION,
     textFilterId,
     editionVersion,
     editionContentHash,
+    pausedMs,
+    pauseCount,
   };
 
   // Idempotence is the property every later migration relies on, so return the
@@ -109,6 +122,8 @@ export function migrateSession(raw: unknown): SessionResult | null {
     r.schemaVersion === SESSION_SCHEMA_VERSION &&
     r.textFilterId === textFilterId &&
     r.editionVersion === editionVersion &&
-    r.editionContentHash === editionContentHash;
+    r.editionContentHash === editionContentHash &&
+    r.pausedMs === pausedMs &&
+    r.pauseCount === pauseCount;
   return unchanged ? (raw as SessionResult) : migrated;
 }

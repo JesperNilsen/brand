@@ -2,9 +2,15 @@ import { expect, test, type Page } from "@playwright/test";
 import training from "../content/ibsen-brand/training-edition.v1.json";
 
 const first = training.segments[0];
-const short = [...training.segments].sort((a, b) => a.text.length - b.text.length)[0];
+const short = [...training.segments].sort(
+  (a, b) => a.text.length - b.text.length,
+)[0];
 
-async function typeTarget(page: Page, text: string, opts: { mistakeAt?: number } = {}) {
+async function typeTarget(
+  page: Page,
+  text: string,
+  opts: { mistakeAt?: number } = {},
+) {
   const input = page.getByTestId("typing-input");
   await input.focus();
   const chars = Array.from(text);
@@ -20,9 +26,13 @@ async function typeTarget(page: Page, text: string, opts: { mistakeAt?: number }
 }
 
 test.describe("Passage flow", () => {
-  test("new user picks Brand, types a passage with a corrected mistake, sees a result and history", async ({ page }) => {
+  test("new user picks Brand, types a passage with a corrected mistake, sees a result and history", async ({
+    page,
+  }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Med ro, rytme");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Med ro, rytme",
+    );
     await page.getByRole("link", { name: /^Passasje/ }).click();
     await expect(page).toHaveURL(/\/velg\/passage$/);
     await page.getByRole("link", { name: /Ibsen: Brand/ }).click();
@@ -37,7 +47,9 @@ test.describe("Passage flow", () => {
     await expect(result).toBeVisible();
     await expect(page.getByTestId("accuracy")).toHaveText(/100/);
     await expect(page.getByTestId("errors")).toHaveText("1");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Ibsen");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Ibsen",
+    );
 
     await page.getByRole("link", { name: "Historikk" }).first().click();
     const table = page.getByTestId("history-table");
@@ -54,10 +66,18 @@ test.describe("Passage flow", () => {
     await input.focus();
     await page.keyboard.type(first.text.slice(0, 5));
     await page.evaluate(() => {
-      const el = document.querySelector('[data-testid="typing-input"]') as HTMLTextAreaElement;
+      const el = document.querySelector(
+        '[data-testid="typing-input"]',
+      ) as HTMLTextAreaElement;
       const dt = new DataTransfer();
       dt.setData("text/plain", "innlimt tekst som ikke skal telle");
-      el.dispatchEvent(new ClipboardEvent("paste", { clipboardData: dt, bubbles: true, cancelable: true }));
+      el.dispatchEvent(
+        new ClipboardEvent("paste", {
+          clipboardData: dt,
+          bubbles: true,
+          cancelable: true,
+        }),
+      );
     });
     await expect(page.getByText(/Innliming er skrudd av/)).toBeVisible();
     const correct = await page.locator(".ch-correct").count();
@@ -86,16 +106,21 @@ test.describe("Nonstop", () => {
     await expect(page.getByText(/Du har skrevet 1 av/)).toBeVisible();
     await page.getByRole("link", { name: "Fortsett" }).click();
     await expect(page.getByTestId("session-meta")).toContainText(/2 av \d+/);
-    await expect(page.getByTestId("session-meta")).toContainText(training.segments[1].label!);
+    await expect(page.getByTestId("session-meta")).toContainText(
+      training.segments[1].label!,
+    );
 
-    await page.getByTestId("stop-button").click();
+    await page.getByTestId("menu-button").click();
+    await page.getByTestId("menu-finish").click();
     await expect(page).toHaveURL(/\/resultat\//);
     await expect(page.getByTestId("result")).toContainText("Nonstop");
   });
 });
 
 test.describe("Timed", () => {
-  test("ends at the time limit and stores a completed session", async ({ page }) => {
+  test("ends at the time limit and stores a completed session", async ({
+    page,
+  }) => {
     await page.goto("/skriv?mode=timed&work=ibsen-brand&limit=60000");
     await page.clock.install();
     const input = page.getByTestId("typing-input");

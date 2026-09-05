@@ -6,10 +6,13 @@ import {
   metricsFromResult,
   runnerAbandon,
   runnerBackspace,
+  runnerElapsedMs,
   runnerInsert,
   runnerMetrics,
+  runnerPause,
   runnerRejectPaste,
   runnerRemainingMs,
+  runnerResume,
   runnerResumeSegmentId,
   runnerStop,
   runnerTick,
@@ -173,5 +176,88 @@ describe("Timed (time rule)", () => {
     const r0 = createRunner(plan({ gameModeId: "timed", segments, endRule: { kind: "time", limitMs: 60_000 } }));
     const r1 = runnerAbandon(runnerInsert(r0, "a", 0), 100);
     expect(r1.status).toBe("abandoned");
+  });
+});
+
+describe("Pause", () => {
+  it("stops the clock, so paused time is not counted as slow typing", () => {
+    const r0 = createRunner(plan({ segments: [seg("a", "abcdef", 1)] }));
+    const a = typeString(r0, "abc", 1000, 100); // three characters over 300 ms
+    const elapsedBefore = runnerElapsedMs(a.state, a.now);
+
+    const paused = runnerPause(a.state, a.now);
+    expect(paused.status).toBe("paused");
+    // A minute goes by with the session paused.
+    expect(runnerElapsedMs(paused, a.now + 60_000)).toBe(elapsedBefore);
+
+    const resumed = runnerResume(paused, a.now + 60_000);
+    expect(resumed.status).toBe("active");
+    expect(resumed.pausedMs).toBe(60_000);
+    expect(runnerElapsedMs(resumed, a.now + 60_000)).toBe(elapsedBefore);
+    // The clock runs again from where it stopped.
+    expect(runnerElapsedMs(resumed, a.now + 61_000)).toBe(elapsedBefore + 1000);
+  });
+
+  it("ignores keystrokes while paused", () => {
+    const r0 = createRunner(plan({ segments: [seg("a", "abcdef", 1)] }));
+    const a = typeString(r0, "abc", 1000, 100);
+    const paused = runnerPause(a.state, a.now);
+    const after = runnerInsert(paused, "d", a.now + 10);
+    expect(after).toBe(paused);
+    expect(runnerBackspace(paused, a.now + 20)).toBe(paused);
+  });
+
+  it("cannot pause a session that has not begun", () => {
+    const idle = createRunner(plan({}));
+    expect(runnerPause(idle, 1000)).toBe(idle);
+    expect(runnerPause(idle, 1000).pauseCount).toBe(0);
+  });
+
+  it("counts every pause and totals them", () => {
+    const r0 = createRunner(plan({ segments: [seg("a", "abcdef", 1)] }));
+    let s = typeString(r0, "a", 1000, 100).state;
+    s = runnerResume(runnerPause(s, 2000), 5000); // 3 s
+    s = runnerResume(runnerPause(s, 6000), 8000); // 2 s
+    expect(s.pauseCount).toBe(2);
+    expect(s.pausedMs).toBe(5000);
+  });
+
+  it("closes an open pause when the session ends, rather than counting it as typing", () => {
+    const r0 = createRunner(plan({ segments: [seg("a", "abcdef", 1)] }));
+    const a = typeString(r0, "abc", 1000, 100);
+    const elapsedBefore = runnerElapsedMs(a.state, a.now);
+    const paused = runnerPause(a.state, a.now);
+    const ended = runnerStop(paused, a.now + 30_000);
+    expect(ended.pausedMs).toBe(30_000);
+    expect(runnerElapsedMs(ended, a.now + 30_000)).toBe(elapsedBefore);
+
+    const result = toSessionResult(ended, a.now + 30_000, "s1");
+    expect(result.durationMs).toBe(elapsedBefore);
+    expect(result.pausedMs).toBe(30_000);
+    expect(result.pauseCount).toBe(1);
+  });
+
+  it("freezes the countdown in Timed, so a pause does not eat the limit", () => {
+    const r0 = createRunner(
+      plan({ segments: [seg("a", "abcdef", 1)], endRule: { kind: "time", limitMs: 60_000 } }),
+    );
+    const a = typeString(r0, "ab", 1000, 100);
+    const paused = runnerPause(a.state, a.now);
+    const remaining = runnerRemainingMs(paused, a.now);
+    expect(runnerRemainingMs(paused, a.now + 30_000)).toBe(remaining);
+    const resumed = runnerResume(paused, a.now + 30_000);
+    expect(runnerRemainingMs(resumed, a.now + 30_000)).toBe(remaining);
+    // And the limit still ends the session, 30 s of real time later than it
+    // would have without the pause.
+    const late = runnerInsert(resumed, "c", a.now + 30_000 + 60_000);
+    expect(late.status).toBe("completed");
+  });
+
+  it("a session that was never paused records nothing", () => {
+    const r0 = createRunner(plan({ segments: [seg("a", "ab", 1)] }));
+    const a = typeString(r0, "ab", 1000, 100);
+    const result = toSessionResult(a.state, a.now, "s2");
+    expect(result.pausedMs).toBe(0);
+    expect(result.pauseCount).toBe(0);
   });
 });

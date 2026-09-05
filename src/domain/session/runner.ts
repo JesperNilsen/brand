@@ -25,7 +25,7 @@ import {
 import type { SessionPlan } from "../modes/types";
 import type { SessionResult } from "../types";
 
-export type RunnerStatus = "idle" | "active" | "completed" | "abandoned";
+export type RunnerStatus = "idle" | "active" | "paused" | "completed" | "abandoned";
 
 export type RunnerState = {
   plan: SessionPlan;
@@ -39,6 +39,16 @@ export type RunnerState = {
   endedAt: number | null;
   status: RunnerStatus;
   pasteRejections: number;
+  /**
+   * Total time spent paused, subtracted from elapsed. Without it a pause would
+   * read as very slow typing, and every stored session would mean something
+   * different depending on whether the reader stepped away.
+   */
+  pausedMs: number;
+  /** When the current pause began; null unless paused. */
+  pausedAt: number | null;
+  /** How many times the session was paused. Recorded, because it is not nothing. */
+  pauseCount: number;
 };
 
 export function createRunner(plan: SessionPlan): RunnerState {
@@ -58,10 +68,21 @@ export function createRunner(plan: SessionPlan): RunnerState {
     endedAt: null,
     status: "idle",
     pasteRejections: 0,
+    pausedMs: 0,
+    pausedAt: null,
+    pauseCount: 0,
   };
 }
 
+/** Not finished: can still be resumed, finished or abandoned. */
 function isOpen(state: RunnerState): boolean {
+  return (
+    state.status === "idle" || state.status === "active" || state.status === "paused"
+  );
+}
+
+/** Open AND accepting keystrokes. A paused session is open but deaf. */
+function acceptsInput(state: RunnerState): boolean {
   return state.status === "idle" || state.status === "active";
 }
 
@@ -75,7 +96,10 @@ export function nextSegment(state: RunnerState) {
 
 export function runnerElapsedMs(state: RunnerState, now: number): number {
   if (state.startedAt === null) return 0;
-  return Math.max(0, (state.endedAt ?? now) - state.startedAt);
+  // While paused the clock stands still: measure to the moment the pause began,
+  // not to now. Earlier pauses are already in pausedMs.
+  const until = state.endedAt ?? state.pausedAt ?? now;
+  return Math.max(0, until - state.startedAt - state.pausedMs);
 }
 
 export function runnerRemainingMs(state: RunnerState, now: number): number | null {
@@ -104,6 +128,26 @@ export function runnerMetrics(state: RunnerState, now: number): Metrics {
   return computeMetrics(runnerCounts(state), runnerElapsedMs(state, now));
 }
 
+/**
+ * Pause. Only a session that has actually begun can be paused: pausing at idle
+ * would be pausing nothing, and would start counting a pause before the clock.
+ */
+export function runnerPause(state: RunnerState, now: number): RunnerState {
+  if (state.status !== "active") return state;
+  return { ...state, status: "paused", pausedAt: now, pauseCount: state.pauseCount + 1 };
+}
+
+/** Resume, folding the pause that just ended into the total. */
+export function runnerResume(state: RunnerState, now: number): RunnerState {
+  if (state.status !== "paused" || state.pausedAt === null) return state;
+  return {
+    ...state,
+    status: "active",
+    pausedMs: state.pausedMs + Math.max(0, now - state.pausedAt),
+    pausedAt: null,
+  };
+}
+
 /** Close the runner at the exact limit time when the clock has run out. */
 function closeAtLimit(state: RunnerState): RunnerState {
   const limitMs =
@@ -118,6 +162,9 @@ function finish(
   status: "completed" | "abandoned",
 ): RunnerState {
   if (!isOpen(state)) return state;
+  // Ending from a paused state: close the open pause first, or the time
+  // between pausing and ending would silently rejoin the elapsed total.
+  if (state.status === "paused") state = runnerResume(state, now);
   const engine =
     status === "completed"
       ? engineComplete(state.engine, now)
@@ -170,7 +217,7 @@ export function runnerInsert(
   text: string,
   now: number,
 ): RunnerState {
-  if (!isOpen(state)) return state;
+  if (!acceptsInput(state)) return state;
   if (timeIsUp(state, now)) return closeAtLimit(state);
 
   const engine = engineInsert(state.engine, text, now);
@@ -189,7 +236,7 @@ export function runnerInsert(
 }
 
 export function runnerBackspace(state: RunnerState, now: number): RunnerState {
-  if (!isOpen(state)) return state;
+  if (!acceptsInput(state)) return state;
   if (timeIsUp(state, now)) return closeAtLimit(state);
   const engine = engineBackspace(state.engine, now);
   return engine === state.engine ? state : { ...state, engine };
@@ -256,7 +303,7 @@ export function toSessionResult(
     .map((s) => s.id);
   return {
     id,
-    schemaVersion: 3,
+    schemaVersion: 4,
     startedAt: new Date(startedAt).toISOString(),
     completedAt: new Date(endedAt).toISOString(),
     status,
@@ -271,6 +318,8 @@ export function toSessionResult(
     errorMode: state.plan.errorMode,
     textFilterId: state.plan.textFilterId,
     durationMs: metrics.durationMs,
+    pausedMs: state.pausedMs,
+    pauseCount: state.pauseCount,
     targetCharacterCount: metrics.targetCharacterCount,
     typedCharacterCount: metrics.typedCharacterCount,
     correctCharacterCount: metrics.correctCharacterCount,

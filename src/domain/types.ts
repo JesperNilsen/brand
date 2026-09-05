@@ -188,9 +188,10 @@ export type SessionResult = {
   /**
    * 1 = before text filters existed; 2 adds the required textFilterId;
    * 3 adds editionVersion and editionContentHash, so a stored result names
-   * the exact text it was typed against rather than just the edition id.
+   * the exact text it was typed against rather than just the edition id;
+   * 4 adds pausedMs and pauseCount.
    */
-  schemaVersion: 3;
+  schemaVersion: 4;
   /** ISO timestamp. */
   startedAt: string;
   completedAt?: string;
@@ -211,7 +212,15 @@ export type SessionResult = {
   errorMode: ErrorMode;
   /** Which practice-form transform the target text was typed under. */
   textFilterId: TextFilterId;
+  /** Time typing, with any paused time already subtracted. */
   durationMs: number;
+  /**
+   * Time spent paused. Not part of durationMs — it is recorded so a rested
+   * session is not read as an unbroken one. Always 0 on records from schema 1
+   * to 3, which is a fact rather than a guess: pause did not exist then.
+   */
+  pausedMs: number;
+  pauseCount: number;
   targetCharacterCount: number;
   typedCharacterCount: number;
   correctCharacterCount: number;
