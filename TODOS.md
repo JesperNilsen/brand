@@ -126,3 +126,28 @@ avmontering dekker alle åtte.
 `docs/spec/PRODUCT.md` sier teksten skal dominere skjermen.
 
 **Kontekst:** `RunnerState` har alt som trengs; det er et rent visningsvalg.
+
+---
+
+## T-08 — Tidsport for tid til første tegn (P2, S / S)
+
+**Hva:** En e2e med strupet nettverk som måler tiden fra navigasjon til `/skriv`
+til første tegn er malt, med to sekunder som tak.
+
+**Hvorfor:** `docs/spec/PRODUCT.md` oppgir det som suksesskriterium («En økt kan
+startes på under to sekunder etter at appen er lastet»). Fase 3 flytter
+segmentteksten ut av bundelen og gir appen sin første nettverksavhengighet, og
+fasens egne porter måler bundlestørrelse og feilveien, ikke tiden. Porten kan
+altså være grønn mens det uttalte kriteriet brytes.
+
+**Fordeler:** Gjør et uttalt løfte målbart; fanger en regresjon fase 3s egne
+porter er blinde for.
+**Ulemper:** Strupet nett i Playwright er støyende å få stabilt, så porten kan
+bli flakete før den blir nyttig.
+
+**Kontekst:** Fase 3 skriver `public/content/manifest.json` og én fil per
+utgaveversjon, og gjør `loadEdition(id)` lat. Fase 3 punkt 4 fikser den
+funksjonelle siden (skriveflaten får ikke fokus før teksten finnes), men måler
+ikke ventetiden. Besluttet utsatt i plan-design-review D8, 2026-09-05.
+
+**Avhenger av:** fase 3 punkt 1 og 2.
