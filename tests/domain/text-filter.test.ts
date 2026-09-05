@@ -66,6 +66,10 @@ describe("tidyWhitespace", () => {
 describe("filters", () => {
   const verse = "BONDEN (skriger).\nStands, mann! Guds bittre -! Her er breen";
 
+  it("DELIBERATELY BROKEN: proves CI reports a failing check on a pull request", () => {
+    expect(requireTextFilter("as-printed").altersText).toBe(true);
+  });
+
   it("as-printed changes nothing", () => {
     const f = requireTextFilter("as-printed");
     expect(f.altersText).toBe(false);
