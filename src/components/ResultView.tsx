@@ -128,6 +128,14 @@ export function ResultView({ id }: { id: string }) {
           Tall herfra kan ikke sammenlignes direkte med økter skrevet som trykt.
         </p>
       )}
+      {result.pauseCount > 0 && (
+        <p className="mb-8 -mt-6 text-sm text-ink-muted" data-testid="paused-notice">
+          Pauset {result.pauseCount} {result.pauseCount === 1 ? "gang" : "ganger"}
+          {result.pausedMs >= 1000 ? ` (${formatDuration(result.pausedMs)})` : ""}. Pausen
+          er trukket fra varigheten, så tallene gjelder tiden du faktisk skrev — men en
+          økt med hvil er ikke uten videre sammenlignbar med en sammenhengende.
+        </p>
+      )}
 
       <dl className="mb-10 grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3">
         <Stat label="Netto WPM" value={formatWpm(metrics)} big testId="net-wpm" />

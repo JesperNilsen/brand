@@ -7,6 +7,7 @@ import {
   defaultPreferences,
   migratePreferences,
   migrateSession,
+  SESSION_SCHEMA_VERSION,
 } from "@/infra/repository/migrations";
 import { describeRepositoryContract, makeSession } from "./repository-contract";
 
@@ -17,20 +18,30 @@ let dbCounter = 0;
 describeRepositoryContract("MemoryRepository", () => new MemoryRepository());
 describeRepositoryContract(
   "IndexedDbRepository",
-  () => new IndexedDbRepository(new MemoryPreferences(), `brand-test-${++dbCounter}`),
+  () =>
+    new IndexedDbRepository(
+      new MemoryPreferences(),
+      `brand-test-${++dbCounter}`,
+    ),
 );
 
 describe("migrations", () => {
   it("preferences migration is idempotent and tolerant", () => {
     expect(migratePreferences(null)).toEqual(defaultPreferences());
     expect(migratePreferences({ theme: "purple" }).theme).toBe("system");
-    const p = { ...defaultPreferences(), theme: "light" as const, lastModeId: "passage" };
+    const p = {
+      ...defaultPreferences(),
+      theme: "light" as const,
+      lastModeId: "passage",
+    };
     expect(migratePreferences(migratePreferences(p))).toEqual(p);
   });
 
   it("session migration rejects unreadable records", () => {
     expect(migrateSession({})).toBeNull();
-    expect(migrateSession({ id: "x", startedAt: "2026", schemaVersion: 99 })).toBeNull();
+    expect(
+      migrateSession({ id: "x", startedAt: "2026", schemaVersion: 99 }),
+    ).toBeNull();
     const s = makeSession("ok", "2026-09-04T00:00:00.000Z");
     expect(migrateSession(s)).toEqual(s);
   });
@@ -64,7 +75,7 @@ describe("migrations", () => {
 
     const migrated = migrateSession(v1);
     expect(migrated).not.toBeNull();
-    expect(migrated!.schemaVersion).toBe(3);
+    expect(migrated!.schemaVersion).toBe(SESSION_SCHEMA_VERSION);
     expect(migrated!.textFilterId).toBe("as-printed");
     expect(migrated!.netWpm).toBe(49.5);
     // The edition it was typed against cannot be recovered, so it is named
@@ -77,7 +88,10 @@ describe("migrations", () => {
   });
 
   it("repairs a record whose filter field is missing or unknown", () => {
-    const broken = { ...makeSession("b", "2026-09-04T00:00:00.000Z"), textFilterId: "shouting" };
+    const broken = {
+      ...makeSession("b", "2026-09-04T00:00:00.000Z"),
+      textFilterId: "shouting",
+    };
     expect(migrateSession(broken)?.textFilterId).toBe("as-printed");
   });
 
@@ -96,7 +110,7 @@ describe("migrations", () => {
     delete v2.editionVersion;
     delete v2.editionContentHash;
     const out = migrateSession(v2);
-    expect(out!.schemaVersion).toBe(3);
+    expect(out!.schemaVersion).toBe(SESSION_SCHEMA_VERSION);
     expect(out!.editionVersion).toBe("unknown");
     expect(migrateSession(out)).toEqual(out);
   });

@@ -7,7 +7,9 @@ import {
   runnerAbandon,
   runnerBackspace,
   runnerInsert,
+  runnerPause,
   runnerRejectPaste,
+  runnerResume,
   runnerStop,
   runnerTick,
   type RunnerState,
@@ -31,6 +33,8 @@ export type TypingSessionHandlers = {
 export type UseTypingSessionOptions = {
   /** Called once when the runner reaches completed/abandoned. */
   onEnd?: (state: RunnerState) => void;
+  /** Called when Escape asks for the session menu. */
+  onRequestMenu?: () => void;
   /** Called whenever a segment is completed (Nonstop progress). */
   onSegmentComplete?: (state: RunnerState) => void;
   now?: () => number;
@@ -60,9 +64,11 @@ export function useTypingSession(
   const completedCountRef = useRef(0);
   const onEndRef = useRef(options.onEnd);
   const onSegmentRef = useRef(options.onSegmentComplete);
+  const onMenuRef = useRef(options.onRequestMenu);
   useEffect(() => {
     onEndRef.current = options.onEnd;
     onSegmentRef.current = options.onSegmentComplete;
+    onMenuRef.current = options.onRequestMenu;
   });
 
   const update = useCallback(
@@ -111,6 +117,8 @@ export function useTypingSession(
     setPasteNotice({ at: now() });
   }, [update, now]);
   const stop = useCallback(() => update((s, t) => runnerStop(s, t)), [update]);
+  const pause = useCallback(() => update((s, t) => runnerPause(s, t)), [update]);
+  const resume = useCallback(() => update((s, t) => runnerResume(s, t)), [update]);
   const abandon = useCallback(
     () => update((s, t) => runnerAbandon(s, t)),
     [update],
@@ -161,7 +169,13 @@ export function useTypingSession(
         ) {
           e.preventDefault();
         }
-        if (e.key === "Escape") (e.target as HTMLElement | null)?.blur();
+        if (e.key === "Escape") {
+          // Escape used to drop focus, which was a way out that never said so.
+          // It now opens the session menu; the menu's own Escape closes it and
+          // gives focus back.
+          e.preventDefault();
+          onMenuRef.current?.();
+        }
       },
       onPaste(e) {
         e.preventDefault();
@@ -182,5 +196,16 @@ export function useTypingSession(
     return () => window.clearTimeout(id);
   }, [pasteNotice]);
 
-  return { state, clock, handlers, pasteNotice, stop, abandon, insert, backspace };
+  return {
+    state,
+    clock,
+    handlers,
+    pasteNotice,
+    stop,
+    abandon,
+    pause,
+    resume,
+    insert,
+    backspace,
+  };
 }

@@ -143,3 +143,34 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   genererer katalog og assets på nytt og sammenligner byte for byte, og felte
   både en håndredigert assetfil, en foreldet katalog og en foreldreløs fil som
   ingen utgave peker på.
+
+## Pause og øktmeny
+
+- **Én vei ut, ikke en knapp.** «Avbryt»/«Avslutt økten» var hele utgangen, og
+  Escape slapp fokus uten å si det. Nå åpner Escape og «Meny» den samme
+  dialogen: fortsett, avslutt og lagre, eller forlat uten å lagre. Å forlate
+  uten å lagre er ikke ny oppførsel — å navigere bort mid-økt har alltid lagret
+  ingenting — men den er nå et valg framfor en bivirkning.
+- **Å åpne menyen pauser.** Klokken skal ikke gå mens leseren leser en meny i
+  stedet for teksten. Konsekvensen er villet: å kikke på menyen teller som en
+  pause og merker økten. Alternativet var en terskel, altså et magisk tall som
+  avgjør når en pause er ekte nok.
+- **Pausen trekkes fra, og noteres.** `runnerElapsedMs` måler til `pausedAt` når
+  økten står, så en pause leses ikke som svært langsom skriving. `pausedMs` og
+  `pauseCount` lagres, og resultat og historikk sier det: tallene gjelder tiden
+  som faktisk ble skrevet, men en økt med hvil er ikke uten videre
+  sammenlignbar med en sammenhengende. Samme linje som tekstformene følger.
+- **Skjemaversjon 4.** Rader fra 1–3 får `pausedMs: 0`. Det er et faktum, ikke
+  en gjetning som `"unknown"`-utgaven: pause fantes ikke da de ble skrevet.
+- **Å avslutte fra pause lukker pausen først.** Ellers ville tiden mellom
+  pausen og avslutningen stilltiende blitt lagt tilbake i den målte tiden.
+- **En pauset økt er åpen, men døv.** `isOpen` og `acceptsInput` er nå to
+  spørsmål: en pauset økt kan gjenopptas og avsluttes, men tar ikke imot
+  tastetrykk.
+- **Timed pauser også.** Nedtellingen fryser, og løpet bærer den samme
+  merkingen. Et 5-minutters løp med hvil skal ikke kunne leses som et
+  sammenhengende.
+- **Menyens Escape-lytter ligger på panelet, ikke på `document`.** En
+  document-lytter fanget selve tastetrykket som åpnet menyen — det bobler
+  fortsatt opp fra skriveflaten når React monterer panelet — så menyen åpnet og
+  lukket seg i ett trykk. Fanget av e2e-en, ikke av lesing.

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { MemoryRepository } from "@/infra/repository/MemoryRepository";
-import { defaultPreferences } from "@/infra/repository/migrations";
+import { defaultPreferences, SESSION_SCHEMA_VERSION } from "@/infra/repository/migrations";
 import {
   EXPORT_FORMAT_VERSION,
   ImportError,
@@ -88,7 +88,7 @@ describe("export / import", () => {
     const target = new MemoryRepository();
     await importData(target, legacy);
     const s = await target.getSession("old");
-    expect(s!.schemaVersion).toBe(3);
+    expect(s!.schemaVersion).toBe(SESSION_SCHEMA_VERSION);
     expect(s!.editionVersion).toBe("1.0.0");
   });
 

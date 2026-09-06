@@ -11,7 +11,11 @@ type Props = {
 /** Quiet live readout: time, net WPM, accuracy. */
 export function LiveMeter({ metrics, remainingMs, elapsedMs }: Props) {
   return (
-    <dl className="flex flex-wrap gap-x-8 gap-y-2 text-sm text-ink-muted" aria-live="off">
+    <dl
+      className="flex flex-wrap gap-x-8 gap-y-2 text-sm text-ink-muted"
+      aria-live="off"
+      data-testid="live-meter"
+    >
       <div>
         <dt className="label">{remainingMs !== null ? "Igjen" : "Tid"}</dt>
         <dd className="tabular-nums text-ink">

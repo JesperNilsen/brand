@@ -94,6 +94,11 @@ export function HistoryView() {
                     </td>
                     <td className="py-2 pr-4 text-ink-muted">
                       {requireTextFilter(s.textFilterId).displayName}
+                      {s.pauseCount > 0 && (
+                        <span title="Økten ble pauset" data-testid="history-paused">
+                          {" · pauset"}
+                        </span>
+                      )}
                     </td>
                     <td className="py-2 pr-4 text-right tabular-nums">{formatWpm(metricsFromResult(s))}</td>
                     <td className="py-2 pr-4 text-right tabular-nums">{formatPercent(s.accuracy)}</td>

@@ -31,6 +31,7 @@ import {
   resolveWorkAndEdition,
 } from "@/lib/session-flow";
 import { LiveMeter } from "./LiveMeter";
+import { SessionMenu } from "./SessionMenu";
 import { TypingSurface } from "./TypingSurface";
 
 type Loaded = {
@@ -129,6 +130,7 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
   const mode = getGameMode(plan.gameModeId);
   const progressRef = useRef<ReadingProgress | null>(progress);
   const [saving, setSaving] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const saveProgress = useCallback(
     async (state: RunnerState) => {
@@ -167,10 +169,39 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
     [router, saveProgress],
   );
 
-  const { state, clock, handlers, pasteNotice, stop } = useTypingSession(plan, {
-    onEnd,
-    onSegmentComplete: saveProgress,
-  });
+  const openMenu = useCallback(() => setMenuOpen(true), []);
+
+  const { state, clock, handlers, pasteNotice, stop, pause, resume } = useTypingSession(
+    plan,
+    {
+      onEnd,
+      onSegmentComplete: saveProgress,
+      onRequestMenu: openMenu,
+    },
+  );
+
+  // Opening the menu stops the clock. Reading a menu is not typing, and a
+  // session must never be credited with time nobody spent on the text.
+  useEffect(() => {
+    if (menuOpen) pause();
+  }, [menuOpen, pause]);
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    resume();
+  }, [resume]);
+
+  const discard = useCallback(() => {
+    // Navigating away mid-session has always stored nothing; this is the same
+    // exit, made deliberate and visible instead of implicit.
+    setMenuOpen(false);
+    router.push("/");
+  }, [router]);
+
+  const finishFromMenu = useCallback(() => {
+    setMenuOpen(false);
+    stop();
+  }, [stop]);
 
   // Focus mode: the surrounding interface recedes while typing is in progress.
   const typing = state?.status === "active";
@@ -221,7 +252,7 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
         engine={state.engine}
         handlers={handlers}
         autoFocus
-        disabled={finished}
+        disabled={finished || menuOpen}
         label={segment.label ?? `Segment ${segmentNumber}`}
         preview={
           plan.endRule.kind !== "all-segments" && upcoming
@@ -230,10 +261,26 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
         }
       />
 
+      <SessionMenu
+        open={menuOpen}
+        pausedMs={state.pausedMs}
+        pauseCount={state.pauseCount}
+        hasProgress={state.startedAt !== null}
+        onResume={closeMenu}
+        onFinish={finishFromMenu}
+        onDiscard={discard}
+      />
+
       <div className="recedes mt-12 flex flex-wrap items-center gap-4 text-sm text-ink-muted">
         {!finished && (
-          <button type="button" className="btn" onClick={stop} data-testid="stop-button">
-            {plan.endRule.kind === "all-segments" ? "Avbryt" : "Avslutt økten"}
+          <button
+            type="button"
+            className="btn"
+            onClick={openMenu}
+            data-testid="menu-button"
+          >
+            Meny
+            <span className="ml-2 text-sm text-ink-muted">Esc</span>
           </button>
         )}
         {finished && <span>{saving ? "Lagrer …" : "Ferdig."}</span>}

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { BrandRepository } from "@/infra/repository/BrandRepository";
-import { defaultPreferences } from "@/infra/repository/migrations";
+import { defaultPreferences, SESSION_SCHEMA_VERSION } from "@/infra/repository/migrations";
 import type { ReadingProgress, SessionResult } from "@/domain/types";
 import { progressKey } from "@/domain/types";
 
@@ -24,7 +24,7 @@ export function makeSession(
 ): SessionResult {
   return {
     id,
-    schemaVersion: 3,
+    schemaVersion: 4,
     startedAt,
     completedAt: startedAt,
     status: "completed",
@@ -39,6 +39,8 @@ export function makeSession(
     errorMode: "flow",
     textFilterId: "as-printed",
     durationMs: 10_000,
+    pausedMs: 0,
+    pauseCount: 0,
     targetCharacterCount: 100,
     typedCharacterCount: 100,
     correctCharacterCount: 98,
@@ -230,20 +232,20 @@ export function describeRepositoryContract(name: string, make: () => BrandReposi
 
         const one = await repo.getSession("legacy");
         expect(one).not.toBeNull();
-        expect(one!.schemaVersion).toBe(3);
+        expect(one!.schemaVersion).toBe(SESSION_SCHEMA_VERSION);
         expect(one!.textFilterId).toBe("as-printed");
         expect(one!.netWpm).toBe(49.5);
 
         const listed = await repo.listSessions();
         expect(listed).toHaveLength(1);
-        expect(listed[0].schemaVersion).toBe(3);
+        expect(listed[0].schemaVersion).toBe(SESSION_SCHEMA_VERSION);
         expect(listed[0].textFilterId).toBe("as-printed");
       });
 
       it("stamps an unknown edition on a v2 record rather than guessing one", async () => {
         await repo.addSession(LEGACY_V2 as unknown as SessionResult);
         const one = await repo.getSession("legacy-v2");
-        expect(one!.schemaVersion).toBe(3);
+        expect(one!.schemaVersion).toBe(SESSION_SCHEMA_VERSION);
         expect(one!.editionVersion).toBe("unknown");
         expect(one!.editionContentHash).toBe("unknown");
         // The filter it actually recorded survives; only the missing facts are filled.
