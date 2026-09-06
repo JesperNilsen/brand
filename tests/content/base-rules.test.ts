@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { baseOverrides, composeRules, type BaseRules, type Rules } from "../../scripts/lib/rules";
 import { brandRiksmaal } from "../../src/domain/language/brand-riksmaal";
-import { getBaseRuleSet, requireBaseRuleSet } from "../../src/domain/language/registry";
+import {
+  getBaseRuleSet,
+  listBaseRuleSets,
+  requireBaseRuleSet,
+} from "../../src/domain/language/base-rules";
 import { editionMajorVersion } from "../../src/domain/content/registry";
 
 /**
@@ -86,27 +90,74 @@ describe("brand-riksmaal base rule set", () => {
   });
 
   it("is published by the profile it belongs to", () => {
-    for (const s of brandRiksmaal.baseRuleSets) {
+    for (const s of listBaseRuleSets(brandRiksmaal.id)) {
       expect(s.languageProfileId).toBe(brandRiksmaal.id);
       expect(s.id.startsWith(brandRiksmaal.id)).toBe(true);
     }
   });
 
-  it("carries no rule that undoes another rule in the same set", () => {
-    // «nu» → «nå» and a rule producing «nu» would fight over the same word.
-    const r = requireBaseRuleSet("brand-riksmaal.base.v1").replacements ?? {};
-    for (const [from, to] of Object.entries(r)) {
-      expect(r[to], `${from}→${to} is itself rewritten`).toBeUndefined();
-    }
+  // Every published set, not just the newest: an old set is still the recipe
+  // behind every edition built with it, so it has to keep holding up too.
+  for (const set of listBaseRuleSets(brandRiksmaal.id)) {
+    describe(set.id, () => {
+      const r = set.replacements ?? {};
+
+      it("carries no rule that undoes another rule in the same set", () => {
+        // «nu» → «nå» and a rule producing «nu» would fight over the same word.
+        for (const [from, to] of Object.entries(r)) {
+          expect(r[to], `${from}→${to} is itself rewritten`).toBeUndefined();
+        }
+      });
+
+      it("never mechanises the profile's preferred forms, which are word choice", () => {
+        // LANGUAGE_PROFILE.md forbids changing the author's word choice; «mye»
+        // → «meget» would be exactly that, so preferredForms stay out of here.
+        for (const rejected of Object.values(brandRiksmaal.preferredForms)) {
+          if (rejected === "nu" || rejected === "efter") continue; // orthography, not word choice
+          expect(r[rejected], `${rejected} is a word choice, not orthography`).toBeUndefined();
+        }
+      });
+
+      it("keys on the lowercase form, which is the only one applyRules looks up", () => {
+        for (const key of Object.keys(r)) expect(key).toBe(key.toLowerCase());
+      });
+
+      it("belongs to the corpus family", () => {
+        expect(set.family ?? "historical-orthography").toBe("historical-orthography");
+      });
+    });
+  }
+
+  /**
+   * A published set is part of the recipe behind published editions, and its
+   * own notes say it is never edited in place. Editing it would not fail
+   * anywhere else until someone rebuilt an old edition and found different
+   * bytes, which could be months later. This fails immediately.
+   */
+  it("keeps brand-riksmaal.base.v1 frozen", () => {
+    const v1 = requireBaseRuleSet("brand-riksmaal.base.v1");
+    expect(v1.version).toBe("1.0.0");
+    expect(Object.keys(v1.replacements ?? {}).length).toBe(31);
+    expect(v1.patterns ?? []).toEqual([]);
   });
 
-  it("never mechanises the profile's preferred forms, which are word choice", () => {
-    // LANGUAGE_PROFILE.md forbids changing the author's word choice; «mye» →
-    // «meget» would be exactly that, so preferredForms must stay out of here.
-    const r = requireBaseRuleSet("brand-riksmaal.base.v1").replacements ?? {};
-    for (const rejected of Object.values(brandRiksmaal.preferredForms)) {
-      if (rejected === "nu" || rejected === "efter") continue; // orthography, not word choice
-      expect(r[rejected], `${rejected} is a word choice, not orthography`).toBeUndefined();
+  it("carries v2 as a superset of v1, so inheriting v2 loses nothing", () => {
+    const v1 = requireBaseRuleSet("brand-riksmaal.base.v1").replacements ?? {};
+    const v2 = requireBaseRuleSet("brand-riksmaal.base.v2").replacements ?? {};
+    for (const [from, to] of Object.entries(v1)) expect(v2[from]).toBe(to);
+  });
+
+  it("adds the -erne and soft-consonant classes to v2, and no -ede class", () => {
+    const v2 = requireBaseRuleSet("brand-riksmaal.base.v2").replacements ?? {};
+    expect(v2.netterne).toBe("nettene");
+    expect(v2.bygderne).toBe("bygdene");
+    expect(v2.sad).toBe("satt");
+    expect(v2.lod).toBe("lot");
+    // Measured, not assumed: «billede», «allerede», «brede» and «fremmede» all
+    // occur in the corpus and are not preterites, and «samlede» is ambiguous.
+    // The class is a reading decision (D11), not an orthographic rule.
+    for (const held of ["elskede", "samlede", "dansede", "svarede", "sagde", "nogle"]) {
+      expect(v2[held], `${held} must stay out of the base set`).toBeUndefined();
     }
   });
 });

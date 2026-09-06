@@ -142,7 +142,13 @@ tidsmålingen under strupet nett.
 
 ---
 
-## T-09 — De gjenstående danske formklassene (P1, M / M)
+## T-09 — De gjenstående danske formklassene (P1, delvis løst i base.v2)
+
+**Status 2026-09-06:** `-erne` og de bløte konsonantene er løst som eksplisitte
+ordpar i `brand-riksmaal.base.v2` (D12). Ingen pakke er kuttet til v3 ennå — det
+venter på D11-lesning. Preteritum `-ede` er målt og bevisst holdt utenfor: se
+D12 for hvorfor klassen ikke er mekanisk. Det som gjenstår av T-09 er altså (a)
+å lese og kutte v3-utgaver, og (b) å avgjøre `-ede` ord for ord under lesningen.
 
 **Hva:** Normalisere tre systematiske klasser som ingen av v1-ordlistene tok,
 og som derfor står igjen i alle fire treningsutgavene:
@@ -174,6 +180,44 @@ forfatterens ordvalg» må trekkes eksplisitt for denne klassen før den kjøres
 
 **Avhenger av:** D11 (redaksjonell diff-flyt). Dette er nøyaktig den mengden
 tekstendring som skal kunne leses av et menneske før den publiseres.
+
+## T-10 — `ReadingProgress` overlever ikke et utgavebump (P1, S / M)
+
+**Hva:** `progressKey()` inneholder `editionId`, og `migrations.ts` har ingen
+progressmigrasjon. Når et verk får en ny treningsutgave, får leseren en ny
+nøkkel og begynner forfra uten beskjed.
+
+**Hvorfor nå:** Det har allerede skjedd én gang, udokumentert, da tre pakker
+fikk v2. Det vil skje igjen i det øyeblikket noe kuttes til v3 på `base.v2`.
+
+**Alternativene er to, og bare to:** enten en `migrateReadingProgress` ved
+åpning av repositoryet som skriver nøkkelen om til nyeste utgave av samme
+verk+profil — gated på likt `segmentCount`, siden katalogen bærer antall og
+ikke id-listen — eller en bevisst beslutning om at framgang ikke følger med
+over et utgavebump. Det som ikke er et alternativ er å la det skje stille en
+tredje gang.
+
+## T-11 — Oppslag av fremmedord (P2, M / L)
+
+**Hva:** Slå opp et ord i teksten og få en kort forklaring. Korpuset er
+1800-tallsprosa, så behovet er reelt: «Ansigt», «Katheder», «Fjerpen»,
+«gardien’erne».
+
+**Merk:** Dette er ikke en ordbok. En allmenn ordbok er et rettighets- og
+størrelsesproblem, og appen har ingen sky å slå opp mot. Det som passer
+arkitekturen er en glosse *per utgave*: kandidatordene utledes fra korpuset,
+glosene skrives for hånd, og resultatet serveres som en statisk asset ved siden
+av utgaven — samme fetch-not-bundled-mønster, samme uforanderlighet.
+
+## T-12 — Merk et sitat og øv det på repeat (P2, M / M)
+
+**Hva:** Marker en passasje mens du skriver, legg den i en kø, og skriv den om
+igjen til den sitter.
+
+**Merk:** Dette er samme maskineri som feilkø-modusen: en økt bygget av et
+utvalg ekte utgavesegmenter i stedet for av hele utgaven. Kilden til utvalget
+er det eneste som skiller dem — feil du gjorde, eller passasjer du valgte. Bygg
+dem som én modus med to kilder, ikke som to moduser.
 
 ---
 

@@ -8,7 +8,13 @@
  *   TextEdition     — which text version is shown (original | training-edition)
  *
  * None of these types import from each other's modules; they only share ids.
+ * The one exception is RuleFamily, which the rule engine owns and this file
+ * re-exports rather than restating — two spellings of that union would let a
+ * rule set be one family here and another there.
  */
+import type { RuleFamily } from "./language/rules/types";
+
+export type { RuleFamily };
 
 export type ErrorMode = "flow" | "stop-on-error";
 
@@ -37,7 +43,6 @@ export type LanguageProfile = {
    * work and missing in another. Immutable once published: an edition is
    * rebuilt from exactly the base set it was produced with.
    */
-  baseRuleSets: readonly LanguageBaseRuleSet[];
 };
 
 /** A published, immutable set of base orthographic rules owned by a profile. */
@@ -45,6 +50,12 @@ export type LanguageBaseRuleSet = {
   id: string;
   languageProfileId: string;
   version: string;
+  /**
+   * Which normative direction the set moves text in. Absent means the corpus
+   * family (`historical-orthography`), which is the only one a build may
+   * compose; see `src/domain/language/rules/types.ts`.
+   */
+  family?: RuleFamily;
   notes?: string[];
   replacements?: Record<string, string>;
   patterns?: { from: string; to: string; flags?: string; note?: string }[];
@@ -111,6 +122,9 @@ export type TextEditionKind = "original" | "training-edition";
  * attribute a text, and to fetch the text itself. Small enough to ship in the
  * bundle however far the corpus grows.
  */
+/** How far a training edition has got through editorial review. */
+export type ReviewStatus = "unreviewed" | "in-review" | "reviewed";
+
 export type TextEditionMeta = {
   id: string;
   workId: string;
@@ -130,6 +144,22 @@ export type TextEditionMeta = {
   basedOnEditionId?: string;
   /** The original's contentHash at build time, so drift underneath is visible. */
   basedOnContentHash?: string;
+  /**
+   * Whether a human has read this training edition against its original.
+   *
+   * NOT the same thing as `SourceAttribution.verificationStatus`, which is
+   * about whether the transcription matches the source. This is about whether
+   * the normalisation an editor applied on top of it is defensible — a
+   * faithful transcription can still be normalised badly. Recorded in
+   * `content/<pack>/review.json`, which is a sibling of the edition rather
+   * than part of it: a review is a statement ABOUT a frozen edition, and
+   * writing it into the edition would change the bytes `validate:content`
+   * rebuilds and compares.
+   */
+  reviewStatus?: ReviewStatus;
+  reviewedBy?: string;
+  /** ISO date (YYYY-MM-DD). */
+  reviewedAt?: string;
   editorialNotes?: string[];
   /** Number of segments in the edition, so a list can be sized without the text. */
   segmentCount: number;

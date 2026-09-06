@@ -17,6 +17,7 @@ import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { countWords } from "./lib/text";
 import { editionContentHash } from "./lib/hash";
+import { loadReviews, publishedReviewFields, type ReviewFile } from "./lib/review";
 
 const contentRoot = path.resolve(process.cwd(), "content");
 const assetsDir = path.resolve(process.cwd(), "public", "content", "editions");
@@ -74,7 +75,7 @@ function assetName(edition: RawEdition): string {
  * Metadata, in a fixed key order. Fixed because the output is compared byte
  * for byte; object-literal order is the serialisation here.
  */
-function editionMeta(edition: RawEdition) {
+function editionMeta(edition: RawEdition, reviews: ReviewFile) {
   const segments = edition.segments;
   const meta: Record<string, unknown> = {
     id: edition.id,
@@ -86,6 +87,12 @@ function editionMeta(edition: RawEdition) {
   if (edition.languageProfileId) meta.languageProfileId = edition.languageProfileId;
   if (edition.basedOnEditionId) meta.basedOnEditionId = edition.basedOnEditionId;
   if (edition.basedOnContentHash) meta.basedOnContentHash = edition.basedOnContentHash;
+  // Review state rides in the catalog, never in the asset: the asset's bytes
+  // are what its content-hashed filename promises, and a reader's name is not
+  // part of the text. See scripts/lib/review.ts.
+  for (const [k, v] of Object.entries(publishedReviewFields(reviews[edition.id]))) {
+    meta[k] = v;
+  }
   meta.segmentCount = segments.length;
   meta.wordCount = segments.reduce((n, s) => n + s.wordCount, 0);
   meta.file = `${ASSET_URL_PREFIX}/${assetName(edition)}`;
@@ -120,6 +127,7 @@ export async function buildContentAssets(): Promise<BuildOutput> {
   for (const pack of packDirs) {
     const dir = path.join(contentRoot, pack);
     packs.push(await readJson(path.join(dir, "pack.json")));
+    const reviews = await loadReviews(dir);
 
     const original = await readJson<OriginalFile>(path.join(dir, "original.json"));
     // Every training edition present, not just the newest: a session saved
@@ -151,7 +159,7 @@ export async function buildContentAssets(): Promise<BuildOutput> {
       assets.push({ file: assetName(edition), contents: editionAsset(edition) });
     }
 
-    works.push({ ...original.work, editions: editions.map(editionMeta) });
+    works.push({ ...original.work, editions: editions.map((e) => editionMeta(e, reviews)) });
   }
 
   const catalog = `${[

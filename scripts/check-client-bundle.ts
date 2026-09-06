@@ -11,11 +11,19 @@
  * change, they are read only by the About page, and that page is a server
  * component precisely so they stay out of the bundle.
  *
+ * The orthographic base rule sets count too, and they are the reason this
+ * check grew a third kind of needle. They were in the bundle for the whole of
+ * phase 3 — a client module needed the default profile id, the profile carried
+ * the rule sets, and the rule sets carried the dictionaries — and nothing
+ * noticed, because a word list is neither corpus text nor an editorial note.
+ * No reader's browser has any use for them.
+ *
  * Run after `next build`:  pnpm check:bundle
  */
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { buildContentAssets } from "./build-content-assets";
+import { BASE_RULE_SETS } from "../src/domain/language/base-rules";
 
 const chunkRoot = path.resolve(process.cwd(), ".next", "static");
 
@@ -66,6 +74,15 @@ async function main() {
   if (firstNote) {
     needles.push({ what: "editorial notes", text: firstNote.trim() });
   }
+  // One distinctive word per base rule set. Long enough not to collide with
+  // ordinary identifiers, and taken from the set itself so a future v3 is
+  // covered without anyone remembering to add it here.
+  for (const set of BASE_RULE_SETS) {
+    const word = Object.keys(set.replacements ?? {})
+      .filter((k) => /^[a-z]{7,}$/.test(k))
+      .sort((a, b) => b.length - a.length)[0];
+    if (word) needles.push({ what: `${set.id} dictionary`, text: word });
+  }
   if (needles.length === 0) {
     console.error("check:bundle — no usable needle found; the check would pass vacuously.");
     process.exit(1);
@@ -90,8 +107,9 @@ async function main() {
   if (found.length) {
     console.error(
       `check:bundle — corpus text is in the client bundle:\n${found.join("\n")}\n\n` +
-        `Something imports content/ or a generated notes file from a client component. ` +
-        `Text belongs in public/content/editions/, fetched by edition-loader.ts.`,
+        `Something imports content/, a generated notes file, or a base rule set from a ` +
+        `client component. Text belongs in public/content/editions/, fetched by ` +
+        `edition-loader.ts; rule sets belong to build scripts and the report tooling only.`,
     );
     process.exit(1);
   }
