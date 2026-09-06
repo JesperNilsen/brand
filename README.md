@@ -59,6 +59,16 @@ Utgavefilene under `public/content/editions/` serveres `immutable` i ett år.
 Headeren er satt to steder med vilje: `next.config.ts` dekker det Next-kjøretiden
 serverer, `netlify.toml` dekker CDN-et, og CDN-et ser ikke det første.
 
+Sikkerhetsheaderne — `X-Content-Type-Options`, `Referrer-Policy` og
+`X-Frame-Options` — står begge steder av samme grunn, i motsatt retning. Første
+utrulling avslørte hvorfor det trengs: de sto bare i `netlify.toml`, og
+`[[headers]]` der treffer det CDN-et serverer. Hver side her rendres av
+Next-kjøretiden som en funksjon, som blokken aldri når. `/`, `/om` og `/skriv`
+gikk ut uten `Referrer-Policy` og `X-Frame-Options`. Den ene som var der,
+`X-Content-Type-Options`, satte Next selv — og det var nettopp det som fikk
+hullet til å se ut som om det ikke fantes. En headerregel er en påstand om
+oppførsel til den er lest av på et utrullet svar.
+
 **Førstegangsoppsett (bare et menneske kan gjøre dette).** Å koble et repo til
 Netlify krever innlogging og OAuth-godkjenning i nettleseren:
 
