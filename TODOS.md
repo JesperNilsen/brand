@@ -220,27 +220,36 @@ størrelsesbytte er synlig.
 
 ---
 
-## T-12 — Nonstop-resume-testen faller i full kjøring (P1, M / M)
+## T-12 — `pnpm test:e2e` faller lokalt, men ikke i CI (P3, M / M)
 
-**Hva:** Finne og fjerne tilstanden som lekker mellom testfiler, slik at
-`pnpm test:e2e` går grønt i én kjøring.
+**Hva:** Finne ut hvorfor `e2e/passage-flow.spec.ts:98` (Nonstop-resume) faller i
+full lokal kjøring på denne maskinen, og består i CI.
 
-**Hvorfor:** `e2e/passage-flow.spec.ts:98` faller på `Du har skrevet 1 av` etter
-en omlasting når hele suiten kjører, og består alene. Verifisert på ren `main`
-2026-09-06: 32 bestått, 1 falt — den er altså ikke innført av en endring, den
-står der. En port alle vet er rød, er ikke lenger en port.
+**Hvorfor:** Ikke fordi porten er rød — CI kjører 35 av 35 grønt, både på main
+og på designrevisjons-grenen. Problemet er at den lokale kjøringen ikke kan
+brukes som port før push: den viser én rød uansett hva du har endret, og da
+slutter man å lese den. Det er den samme mekanismen som gjør en ekte rød port
+verdiløs, bare ett steg tidligere.
 
-**Fordeler:** Neste ekte regresjon lander i en suite man faktisk ser på.
-**Ulemper:** Rekkefølgeavhengige feil er trege å spore.
+**Fordeler:** Gjør `pnpm test:e2e` til noe man kan stole på lokalt igjen.
+**Ulemper:** Miljøavhengige feil er trege å spore, og gevinsten er ren
+utvikleropplevelse — brukeren ser ingenting.
 
-**Kontekst:** `playwright.config.ts` har allerede `workers: 1` og
-`fullyParallel: false` — det var fiksen forrige gang, og den holder ikke lenger.
-Lagret Nonstop-fremdrift fra en tidligere testfil er den nærliggende mistanken:
-testen forventer *1* fullført segment, og ville feilet på samme måte om noe
-hadde lagt igjen et annet antall.
+**Kontekst:** Testen faller på `Du har skrevet 1 av` etter en omlasting, kun i
+full kjøring, kun lokalt. Verifisert på ren `main` 2026-09-06 ved å stashe og
+kjøre suiten på et urørt utsjekk: 32 bestått / 1 falt, samme test — altså ikke
+innført av en endring. Den består alene.
 
-**Akseptanse:** `pnpm test:e2e` avslutter med 0 i én full kjøring, tre ganger på
-rad, uten at noen test er hoppet over eller markert flaky.
+Merk at CI kjører **de samme filene i samme rekkefølge** og går grønt, så den
+nærliggende teorien om at en tidligere testfil lekker lagret Nonstop-fremdrift
+er *svekket*, ikke bekreftet. Se heller etter noe maskinlokalt: gjenbrukt
+nettleserprofil eller brukerdatakatalog mellom kjøringer, eller en tidsmargin
+som bare ryker på denne maskinen. `playwright.config.ts` har allerede
+`workers: 1` og `fullyParallel: false`.
+
+**Akseptanse:** `pnpm test:e2e` avslutter med 0 i én full lokal kjøring, tre
+ganger på rad, uten at noen test er hoppet over eller markert flaky.
 **Verify:** `pnpm test:e2e`
 
-**Avhenger av:** ingenting.
+**Avhenger av:** ingenting. Egner seg dårlig for uovervåket kjøring, siden
+symptomet ikke finnes i CI.
