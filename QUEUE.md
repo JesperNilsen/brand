@@ -114,3 +114,77 @@ notes:
   allocated `T-` number in TODOS.md on main before adding new ones. This queue
   file exists partly because those two lanes silently allocated the same three
   T-numbers on 2026-09-06.
+
+---
+
+## Q-002 · Hopp til en bestemt passasje i boken du er på
+status: ready
+lane: brand-ui
+
+acceptance:
+The Nonstop chooser (`/velg/nonstop?work=…`) lists every segment in order — the
+same ordered list Passage mode already renders in `ChooseView` — so a reader can
+open a specific passage of the book they are on instead of only continuing where
+they stopped. Specifically:
+
+1. **Every segment is a link, labelled as it already is** ("Første akt, 3 — Liv
+   og død"), starting a Nonstop session at that segment.
+2. **Segments already written in this work's stored progress are marked**, and
+   the mark is not colour alone.
+3. **"Fortsett der du slapp" stays the primary action** and stays first. The
+   index is the secondary route, not a replacement: the default behaviour of the
+   page must not change for someone who just wants to continue.
+4. **Jumping must not rewrite progress.** Opening segment 7 directly and
+   finishing it marks 7 done and leaves 3–6 untouched. Progress is a set of
+   completed segments, not a high-water mark, and this entry must not quietly
+   turn it into one.
+5. **Keyboard-reachable with accessible names**, so
+   `e2e/accessibility.spec.ts`'s "every interactive control on the writing page
+   has an accessible name" rule keeps holding for the chooser too.
+6. **No horizontal scroll at 375px** — same bar `e2e/responsive-history.spec.ts`
+   already sets for the history list. Twelve entries is comfortable; write it so
+   sixty is not a redesign.
+
+verify: `pnpm check:all`
+
+The gate is a new `e2e/nonstop-navigation.spec.ts`, and **it must be shown to
+fail on unmodified `src/`** — stash the implementation, run the spec, and record
+in the branch's commit message which assertions failed and which passed. A
+navigation test that passes against the current code is asserting something
+trivially true: Passage mode already lists segments, so a selector that finds
+"a list of segment links somewhere" finds one today. The assertions that
+actually bite are (2) and (4) — the completed marks, and progress surviving a
+jump.
+
+Shape it as:
+- write segment 1 of `ibsen-brand`, return to `/velg/nonstop?work=ibsen-brand`;
+- assert the index is visible and that segment 1 is marked done and 2–12 are not;
+- open segment 5 from the index directly, assert the surface shows segment 5's
+  text (not segment 2's);
+- finish it, return to the chooser, assert 1 and 5 are marked and 2–4 are not.
+
+notes:
+- **Prior art is in the same file.** `ChooseView.tsx` already renders the
+  ordered segment list under `mode.id === "passage"` (~line 222) via
+  `orderedSegments(text)`. This entry is largely about lifting that list so
+  Nonstop can render it too, plus the completed-state marks — not about writing
+  a new picker. Read that block before designing anything.
+- The Nonstop chooser today shows only `Du har skrevet {done} av
+  {totalSegments} segmenter. Fortsett der du slapp.` and a `Fortsett` link. That
+  string is what `e2e/passage-flow.spec.ts:106` asserts on, so keep it, or fix
+  that test deliberately rather than by accident.
+- **Non-goal: jumping from inside a running session.** The session menu
+  (Escape) is a separate surface with its own pause/finish semantics, and
+  wiring a jump into it would grow this branch past one review. File it
+  separately if wanted.
+- **Non-goal: a hierarchical table of contents.** Every work is currently one
+  act, part or chapter — 8 to 13 segments — so act/chapter grouping would be
+  structure over nothing. Its trigger is **T-01** (hele kapitler av alle fire
+  verk); revisit when a work has more than one act on main, not before.
+- Why this entry exists: opening a specific passage already works from
+  `/velg/passage`. Inside a book you are reading, it does not — Nonstop offers
+  continue and nothing else. That asymmetry is the whole feature.
+- **Lane note.** `brand-ui`, not `brand-main`, so it does not serialise behind
+  Q-001. The two do not overlap: Q-001 is `scripts/` + `DESIGN.md`, this is
+  `src/components/ChooseView.tsx` + `e2e/`. Check the highest allocated `T-`
+  number in TODOS.md on main before adding new ones.
