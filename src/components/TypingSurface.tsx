@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from
 import { deriveCharStates } from "@/domain/engine/render";
 import type { TypingSessionState } from "@/domain/engine/engine";
 import type { TypingSessionHandlers } from "@/hooks/useTypingSession";
+import { primeInputBuffer } from "@/lib/input-buffer";
 
 type Props = {
   engine: TypingSessionState;
@@ -49,18 +50,39 @@ export function TypingSurface({
     if (autoFocus && !disabled) inputRef.current?.focus();
   }, [autoFocus, disabled, engine.targetText]);
 
+  // The field must never be empty, or a soft keyboard's delete produces no
+  // event for the session to correct from; see lib/input-buffer. Primed on
+  // mount, whenever a new text takes over, and on every focus, since a phone
+  // returning from a lock screen or a switched app can hand back a field the
+  // system has cleared.
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    const prime = () => primeInputBuffer(el);
+    prime();
+    el.addEventListener("focus", prime);
+    return () => el.removeEventListener("focus", prime);
+  }, [engine.targetText]);
+
   // Native listeners: React's synthetic onBeforeInput lacks `inputType`.
   useEffect(() => {
     const el = inputRef.current;
     if (!el) return;
-    const { onBeforeInput, onCompositionEnd, onKeyDown, onPaste, onDrop } = handlers;
+    const { onBeforeInput, onInput, onCompositionEnd, onKeyDown, onPaste, onDrop } =
+      handlers;
     el.addEventListener("beforeinput", onBeforeInput);
+    // `input` is typed as a plain Event by the DOM lib even though every
+    // browser dispatches an InputEvent for it; `beforeinput` above is typed
+    // precisely. The cast is that gap and nothing more.
+    const onInputEvent = onInput as EventListener;
+    el.addEventListener("input", onInputEvent);
     el.addEventListener("compositionend", onCompositionEnd);
     el.addEventListener("keydown", onKeyDown);
     el.addEventListener("paste", onPaste);
     el.addEventListener("drop", onDrop);
     return () => {
       el.removeEventListener("beforeinput", onBeforeInput);
+      el.removeEventListener("input", onInputEvent);
       el.removeEventListener("compositionend", onCompositionEnd);
       el.removeEventListener("keydown", onKeyDown);
       el.removeEventListener("paste", onPaste);

@@ -334,3 +334,42 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   fryseassertion på id, versjon og antall nøkler. Å redigere den ville ellers
   ikke feilet noe sted før noen bygget en gammel utgave på nytt og fikk andre
   byte — kanskje måneder senere.
+
+## Skrivefeltet er aldri tomt (D13)
+
+- **Retting fantes ikke på telefon, og det var skjult av at skriving virket.**
+  Et fysisk Backspace er en tastehendelse, og Blink gjør den om til en
+  slettekommando uansett hva feltet inneholder — derfor brydde skrivebordet
+  seg aldri om at det skjulte tekstfeltet sto tomt. Et skjermtastatur sender
+  ingen taste. Det ber feltet slette det som står bak markøren (Androids
+  `deleteSurroundingText`, og samme redigeringsvei på iOS), og et tomt felt
+  har ingenting bak markøren. Nettleseren sendte da ingen hendelse i det hele
+  tatt — ikke én med feil `inputType`: ingen. `runnerBackspace` ble aldri kalt.
+- **Målt, ikke antatt.** `document.execCommand("delete")` — samme
+  redigeringskommando IME-veien ender i — sender ingenting på et tomt
+  tekstfelt og `deleteContentBackward` på et fylt. Det er hele mekanismen, og
+  det er den e2e-testen skrur på: Playwright kan ikke kjøre en ekte IME, og
+  `keyboard.press("Backspace")` er et fysisk tastetrykk på enhver
+  enhetsprofil — altså nettopp veien som aldri var i stykker. En test skrevet
+  slik består mot feilen.
+- **Feltet bærer nå en buffer av nullbreddemellomrom.** U+200B fordi
+  hjelpemiddelteknologi leser opp verdien til et tekstfelt og U+200B ikke
+  uttales; feltet er gjennomsiktig fra før, så ingenting synes. En serie, ikke
+  ett tegn, siden et holdt Backspace eller en slett-ord-bevegelse spiser mer
+  enn ett, og den fylles opp igjen etter hver hendelse som slapp gjennom.
+- **Bufferen holdes på alle plattformer, ikke bare der feilen viste seg.** En
+  egen kodevei for berøring ville vært et annet inputlag som ingen
+  skrivebordskjøring noensinne tar i, og tasteveien på skrivebordet er
+  beviselig likegyldig til hva feltet inneholder.
+- **Semantikken ligger fortsatt i `beforeinput`; `input` er nødutgangen.** Et
+  `input` vi allerede har sett som `beforeinput` er bare en gjenoppretting av
+  bufferen — IME-drevne endringer lar seg ikke alltid avbryte. Flagget som
+  skiller de to senkes i en mikrooppgave, ikke ved neste hendelse: `input`
+  fra samme redigering kommer synkront i samme oppgave, mens et flagg som
+  ventet på neste hendelse ble stående hevet hver gang `preventDefault`
+  lyktes og svelget den neste ekte rettingen.
+- **Innsettinger leses bevisst ikke ut av feltet.** `beforeinput` og
+  `compositionend` bærer allerede de innsettingene en økt godtar. Å utlede en
+  innsetting fra hva som står i feltet ville vært en bakvei for en avvist
+  innliming, og D-reglene om at liming skal avvises er ikke et
+  presentasjonsvalg.
