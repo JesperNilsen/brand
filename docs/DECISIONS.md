@@ -261,3 +261,40 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   kontekst, teller per regel, og lister til slutt reglene som *ikke* traff.
   Den siste listen er halvparten av nytten: den er hvordan et regelsett viser
   seg å være skrevet for en annen tekst enn den man har.
+
+## Redaksjonell lesning (D11)
+
+- **Lesningen bor ved siden av utgaven, ikke i den.** `validate:content` bygger
+  hver publiserte treningsutgave på nytt og byte-sammenligner hele filen, så
+  ethvert felt i `training-edition.vN.json` må produseres av byggeren. Et
+  menneskes navn er ikke det. Lesningen ligger derfor i
+  `content/<pack>/review.json`, og `contentHash` er urørt av konstruksjon: den
+  dekker bare `(id, order, text)`.
+- **`reviewedContentHash` er hele poenget med formatet.** Den kan ikke drive
+  for en genuint uforanderlig utgave. Et avvik betyr at noen har redigert en
+  publisert `rules.vN.json` på stedet i stedet for å kutte neste versjon —
+  nøyaktig den feilen uforanderlighetsregelen finnes for å hindre, og den
+  eneste som ellers er usynlig. Validatoren feiler på den.
+- **Feltene rir i katalogen, aldri i asseten.** Assetens byte er det det
+  innholdshashede filnavnet lover. Lesestatus, leser og dato foldes inn i
+  `editionMeta()`; hashen og lesningens egne notater blir igjen i review-filen
+  og når aldri appen.
+- **Fravær advarer, selvmotsigelse feiler.** Alle fire pakkene er skrevet av en
+  agent og ingen er lest, så en hard gate ville landet rød på main og lært alle
+  å overse den. `REVIEW_GATE` står på `"warn"` med begrunnelsen skrevet ned, og
+  advarer bare om den utgaven leseren *faktisk skriver* — eldre versjoner er
+  historie. En review-fil som motsier seg selv feiler uansett.
+- **Verktøyet har ingen `--approve`.** `pnpm review:edition <editionId>` viser
+  hver endring med posisjon, kontekst og hvilken regel som gjorde den, merket
+  `grunn` eller `pakke`. Det skriver ingenting. Et flagg som fører
+  godkjenningen ville vært ett tastetrykk fra å sertifisere ni hundre uleste
+  ord; å føre en lesning er et menneske som redigerer `review.json`.
+- **Verktøyet nekter å lese en fiksjon.** Før noe vises, kontrolleres det at
+  reglene faktisk gir den forpliktede teksten. Hvis ikke, er utgaven
+  håndredigert, og det er den som skal rettes — ikke lesningen.
+- **`/om` beskrev feil utgave.** Siden hentet treningsutgaven med
+  `getEdition()`, som gir første treff i listen — altså den generatoren tilfeldigvis
+  skrev først. Tre av fire verk viste dermed v1s redaksjonsnotater mens
+  skriveflaten serverte v2. Samme feil som `defaultEdition` fikk rettet i D9,
+  ett kallsted lenger unna. Siden bruker nå `defaultEdition` og viser lesestatus
+  ved siden av kontrollstatus.

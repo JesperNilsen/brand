@@ -13,6 +13,7 @@
     "test:e2e": "playwright test",
     "validate:content": "tsx scripts/validate-content.ts",
     "sprakrens": "tsx scripts/sprakrens.ts",
+    "review:edition": "tsx scripts/review-edition.ts",
     "check:css": "tsx scripts/check-css-layers.ts",
     "check:fast": "pnpm lint && pnpm typecheck && pnpm test && pnpm validate:content && pnpm check:css",
     "check:all": "pnpm check:fast && pnpm build && pnpm check:bundle && pnpm test:e2e",

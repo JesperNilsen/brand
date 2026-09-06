@@ -29,6 +29,7 @@ pnpm test             # vitest: motor, moduser, runner, repository-kontrakt
 pnpm validate:content # proveniens + treningsutgave-invarianter + genererte filer
 pnpm build:content    # katalog + tekstfiler under public/ (generert, sjekkes inn)
 pnpm sprakrens <fil>  # hva et regelsett ville endret i en tekst — endrer ingenting
+pnpm review:edition <editionId>  # les en treningsutgave mot originalen, endring for endring
 pnpm check:bundle     # korpusteksten skal ikke finnes i noen klientbundle
 pnpm check:css        # klasseselektorer utenfor @layer er en stum feil
 pnpm test:e2e         # playwright (bygger og starter egen server på :3199)
@@ -117,6 +118,10 @@ tests/, e2e/     vitest og playwright
    fortsatt finnes. Ved flere segmenter i samme verk: behold `editionId`, hev
    `version` og hashen. En ny `editionId` ville nullstilt all Nonstop-fremdrift.
 5. `pnpm build:content` og `pnpm validate:content`.
+6. `pnpm review:edition <editionId>` og les den. Før lesningen inn i
+   `content/<pack>/review.json` med `reviewedContentHash` — verktøyet skriver
+   aldri godkjenningen selv. `validate:content` advarer så lenge utgaven
+   leseren faktisk skriver er ulest.
 
    Ingen liste å vedlikeholde: `build:content` leser alt under `content/` og
    skriver katalogen (`src/domain/content/catalog.generated.ts`, uten tekst) og

@@ -123,6 +123,9 @@ export type TextEditionKind = "original" | "training-edition";
  * attribute a text, and to fetch the text itself. Small enough to ship in the
  * bundle however far the corpus grows.
  */
+/** How far a training edition has got through editorial review. */
+export type ReviewStatus = "unreviewed" | "in-review" | "reviewed";
+
 export type TextEditionMeta = {
   id: string;
   workId: string;
@@ -142,6 +145,22 @@ export type TextEditionMeta = {
   basedOnEditionId?: string;
   /** The original's contentHash at build time, so drift underneath is visible. */
   basedOnContentHash?: string;
+  /**
+   * Whether a human has read this training edition against its original.
+   *
+   * NOT the same thing as `SourceAttribution.verificationStatus`, which is
+   * about whether the transcription matches the source. This is about whether
+   * the normalisation an editor applied on top of it is defensible — a
+   * faithful transcription can still be normalised badly. Recorded in
+   * `content/<pack>/review.json`, which is a sibling of the edition rather
+   * than part of it: a review is a statement ABOUT a frozen edition, and
+   * writing it into the edition would change the bytes `validate:content`
+   * rebuilds and compares.
+   */
+  reviewStatus?: ReviewStatus;
+  reviewedBy?: string;
+  /** ISO date (YYYY-MM-DD). */
+  reviewedAt?: string;
   editorialNotes?: string[];
   /** Number of segments in the edition, so a list can be sized without the text. */
   segmentCount: number;

@@ -38,6 +38,9 @@ import { listTextFilters } from "../src/domain/text-filter";
 import { buildContentAssets } from "./build-content-assets";
 
 // The registry is the only list of profiles; a second one here would drift.
+import { loadReviews, reviewProblems } from "./lib/review";
+import { editionMajorVersion } from "../src/domain/content/registry";
+
 const KNOWN_PROFILES = new Set(listLanguageProfiles().map((p) => p.id));
 const contentRoot = path.resolve(process.cwd(), "content");
 
@@ -60,6 +63,18 @@ const KNOWN_LENGTH_DEVIATIONS = new Map<string, string>([
   ["hamsun-markens-groede/del1-kap1-06", "129 ord; resegmenteres i fase 7"],
 ]);
 const seenDeviations = new Set<string>();
+
+/**
+ * Whether an unreviewed default edition fails the build or only warns.
+ *
+ * "warn" today because all four packs were drafted by an agent and none has
+ * been read yet: a gate switched on now would land red on main and teach
+ * everyone to ignore it. It stays a warning until the backlog is read, and
+ * flipping it afterwards is one word. Incoherence in a review file — a hash
+ * that does not match, a review of an edition that does not exist — fails
+ * regardless: that is a contradiction, not an absence.
+ */
+const REVIEW_GATE: "warn" | "fail" = "warn";
 
 type Segment = {
   id: string;
@@ -166,6 +181,7 @@ function firstDifference(a: string, b: string): string {
 
 async function validatePack(pack: string) {
   const dir = path.join(contentRoot, pack);
+  const reviewable: { id: string; kind: string; contentHash: string }[] = [];
   const packJson = (await readJson(path.join(dir, "pack.json"))) as Record<string, unknown>;
   if (packJson.id !== pack) fail(pack, `pack.json id ${String(packJson.id)} != folder`);
   if (!["draft", "active", "archived"].includes(String(packJson.status))) {
@@ -306,7 +322,52 @@ async function validatePack(pack: string) {
         fail(pack, `${f}/${s.id}: word count ${s.wordCount} vs original ${o.wordCount} (rewrite?)`);
       }
     });
+    reviewable.push({ id: t.id, kind: t.kind, contentHash: String(t.contentHash) });
   }
+
+  await checkReviews(pack, dir, [
+    {
+      id: original.edition.id,
+      kind: original.edition.kind,
+      contentHash: String(
+        (original.edition as unknown as { contentHash?: string }).contentHash,
+      ),
+    },
+    ...reviewable,
+  ]);
+}
+
+/**
+ * A review file must agree with the editions it describes, and the edition a
+ * reader actually types should have been read by a human.
+ *
+ * The second half is the point of the whole mechanism, so it is aimed at the
+ * default edition only: superseded versions are history, and warning about
+ * them would bury the one line that matters.
+ */
+async function checkReviews(
+  pack: string,
+  dir: string,
+  editions: readonly { id: string; kind: string; contentHash: string }[],
+) {
+  const reviews = await loadReviews(dir);
+  for (const problem of reviewProblems(pack, reviews, editions)) fail(pack, problem);
+
+  const training = editions.filter((e) => e.kind === "training-edition");
+  if (training.length === 0) return;
+  const current = [...training].sort(
+    (a, b) => editionMajorVersion(b.id) - editionMajorVersion(a.id),
+  )[0];
+
+  const entry = reviews[current.id];
+  if (entry?.reviewStatus === "reviewed") return;
+  const say = REVIEW_GATE === "fail" ? fail : warn;
+  say(
+    pack,
+    `${current.id} er utgaven leseren faktisk skriver, og den er ${
+      entry ? entry.reviewStatus : "ikke ført i review.json"
+    }. Les den med «pnpm review:edition ${current.id}» og før den inn.`,
+  );
 }
 
 /**
