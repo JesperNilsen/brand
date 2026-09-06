@@ -118,7 +118,7 @@ Tailwind-verktøy (`text-3xl`, `text-2xl`, `text-xl`, `text-lg`) står fortsatt
 igjen i sju filer, og `--text-*` er referert null steder i TSX. Tallene i
 tabellen over er de faktiske størrelsene de verktøyene gir i dag, så
 målestokken er riktig beskrevet — den er bare ikke håndhevet noe sted ennå.
-Migreringen er **T-11**. Skriver du en ny skjerm før den er gjort, bruk
+Migreringen er **T-14**. Skriver du en ny skjerm før den er gjort, bruk
 tokenene: da er det én fil mindre å rydde.
 
 **Under `--text-meta` går man ikke for tekst som skal leses.** Bunnteksten lå

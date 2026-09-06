@@ -177,7 +177,15 @@ tekstendring som skal kunne leses av et menneske før den publiseres.
 
 ---
 
-## T-10 — Én beholder for varslene på resultatsiden (P3, S / S)
+<!--
+  T-10, T-11 og T-12 er tatt av språkrens-lanen (D10–D12) parallelt med
+  designrevisjonen. Begge greiner delte ut de samme tre numrene fra samme
+  utgangspunkt. Postene under er omnummerert til T-13–T-15 fordi de fortsatt
+  lå til gjennomgang da kollisjonen ble oppdaget; de andre var alt på main.
+  Sjekk høyeste tildelte nummer på main før du tar et nytt.
+-->
+
+## T-13 — Én beholder for varslene på resultatsiden (P3, S / S)
 
 **Hva:** Erstatte de tre `mb-8 -mt-6`-blokkene i `ResultView` med én stablet
 beholder som setter avstanden ett sted.
@@ -198,7 +206,7 @@ avbrutt økt i privat vindu med en tekstform som endrer teksten.
 
 ---
 
-## T-11 — Flytte overskriftene over på `--text-*`-tokenene (P3, S / M)
+## T-14 — Flytte overskriftene over på `--text-*`-tokenene (P3, S / M)
 
 **Hva:** Bytte `text-3xl` / `text-2xl` / `text-xl` / `text-lg` i visningene ut
 med målestokk-tokenene som nå finnes i `globals.css`.
@@ -220,7 +228,7 @@ størrelsesbytte er synlig.
 
 ---
 
-## T-12 — `pnpm test:e2e` faller lokalt, men ikke i CI (P3, M / M)
+## T-15 — `pnpm test:e2e` faller lokalt, men ikke i CI (P3, M / M)
 
 **Hva:** Finne ut hvorfor `e2e/passage-flow.spec.ts:98` (Nonstop-resume) faller i
 full lokal kjøring på denne maskinen, og består i CI.
