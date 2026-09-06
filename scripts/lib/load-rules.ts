@@ -8,7 +8,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { assertCorpusFamily, composeRules, type Rules } from "./rules";
-import { requireBaseRuleSet } from "../../src/domain/language/registry";
+import { requireBaseRuleSet } from "../../src/domain/language/base-rules";
 
 /** Read `rules.vN.json` for a pack and return it composed with its base set. */
 export async function loadRules(dir: string, version: number): Promise<Rules> {

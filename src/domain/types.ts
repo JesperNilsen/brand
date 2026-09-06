@@ -43,7 +43,6 @@ export type LanguageProfile = {
    * work and missing in another. Immutable once published: an edition is
    * rebuilt from exactly the base set it was produced with.
    */
-  baseRuleSets: readonly LanguageBaseRuleSet[];
 };
 
 /** A published, immutable set of base orthographic rules owned by a profile. */

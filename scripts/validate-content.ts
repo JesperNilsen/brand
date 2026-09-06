@@ -33,7 +33,8 @@ import { editionContentHash } from "./lib/hash";
 import { buildTrainingEdition, serializeEdition, type OriginalFile } from "./lib/build-edition";
 import { baseOverrides, type Rules } from "./lib/rules";
 import { loadRules } from "./lib/load-rules";
-import { listLanguageProfiles, getBaseRuleSet } from "../src/domain/language/registry";
+import { listLanguageProfiles } from "../src/domain/language/registry";
+import { getBaseRuleSet } from "../src/domain/language/base-rules";
 import { listTextFilters } from "../src/domain/text-filter";
 import { buildContentAssets } from "./build-content-assets";
 

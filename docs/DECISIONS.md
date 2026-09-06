@@ -298,3 +298,39 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   skriveflaten serverte v2. Samme feil som `defaultEdition` fikk rettet i D9,
   ett kallsted lenger unna. Siden bruker nå `defaultEdition` og viser lesestatus
   ved siden av kontrollstatus.
+
+## Grunnregler v2, og den klassen som ikke ble mekanisk (D12)
+
+- **`base.v2` arver hele v1 og legger til to av T-09s tre klasser.** v1 er
+  urørt og er fortsatt oppskriften bak hver utgave bygget med den. Ingen pakke
+  er kuttet på nytt ennå: v2 er frosset og tilgjengelig, og hvilke verk som
+  skal få en v3 er en redaksjonell avgjørelse etter D11-lesning, ikke en
+  bieffekt av at et regelsett landet.
+- **Migrasjonen krevde ingen kode.** `loadRules` slo allerede opp grunnsettet
+  via `baseRules`-feltet i pakkens egen regelfil, så de tre `rules.v2.json`
+  fortsetter å erklære v1 og bygger byte-identisk av konstruksjon.
+- **Nøklene er skrevet på formen ordet har ETTER pakkens mønstre.** Mønstre
+  kjører før erstatninger, så Hamsuns «Nætterne» er allerede «Netterne» når
+  ordlisten slår til, og Ibsens «fjeldvidderne» er «fjellvidderne». En nøkkel
+  skrevet av originalens form ville aldri truffet — og ingenting ville feilet.
+  Ordlisten ble enumerert ved å skanne treningsutgavene, ikke originalene.
+- **`-ede`-klassen ble målt og forkastet som mekanisk regel.** Skanningen ga 34
+  ord. Seks er ikke preteritum i det hele tatt («billede», «allerede», «nede»,
+  «brede», «dernede», «fremmede»); tre er tvetydige mellom preteritum og
+  adjektiv, og «samlede verker» er korrekt riksmål; og endelsen varierer med
+  verbet — «passerede» og «telegraferede» gir `-erte`, «svarede» gir «svarte»,
+  «skinnede» gir «skinte», «rodede» gir «rotet». Det er tretti redaksjonelle
+  avgjørelser forkledd som én ortografisk regel. De hører hjemme i en
+  menneskelig lesning, ikke i et sett som fryses for alltid.
+- **Grunnregelsettene lå i klientbundelen hele fase 3.** `migrations.ts` trengte
+  profilens id, profilen bar regelsettene, og regelsettene bar ordlistene.
+  `check:bundle` merket det ikke: en ordliste er hverken korpustekst eller
+  redaksjonsnotat. `baseRuleSets` er derfor tatt av `LanguageProfile` og lagt i
+  `base-rules.ts`, som er den eneste modulen som importerer JSON-filene, og
+  `check:bundle` har fått en tredje nåletype hentet fra settene selv — så en v3
+  er dekket uten at noen husker å legge den til. Gaten er verifisert ved å
+  gjeninnføre lekkasjen med vilje og se den feile.
+- **Hver publisert versjon testes, ikke bare den nyeste,** og v1 har fått en
+  fryseassertion på id, versjon og antall nøkler. Å redigere den ville ellers
+  ikke feilet noe sted før noen bygget en gammel utgave på nytt og fikk andre
+  byte — kanskje måneder senere.

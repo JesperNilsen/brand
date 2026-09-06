@@ -22,11 +22,8 @@ import {
   type RuleReport,
   type Rules,
 } from "../src/domain/language/rules";
-import {
-  DEFAULT_LANGUAGE_PROFILE_ID,
-  getBaseRuleSet,
-  requireLanguageProfile,
-} from "../src/domain/language/registry";
+import { DEFAULT_LANGUAGE_PROFILE_ID, requireLanguageProfile } from "../src/domain/language/registry";
+import { getBaseRuleSet, listBaseRuleSets } from "../src/domain/language/base-rules";
 import type { LanguageBaseRuleSet } from "../src/domain/types";
 import { countWords } from "./lib/text";
 
@@ -54,7 +51,7 @@ function parseArgs(argv: string[]): Options {
 /** The rule set to measure against: the one asked for, or the profile's newest. */
 function resolveRuleSet(id: string | undefined): LanguageBaseRuleSet {
   const profile = requireLanguageProfile(DEFAULT_LANGUAGE_PROFILE_ID);
-  const available = profile.baseRuleSets;
+  const available = listBaseRuleSets(profile.id);
   if (!id) {
     const newest = available[available.length - 1];
     if (!newest) throw new Error(`${profile.id} har ingen grunnregelsett`);
@@ -63,7 +60,7 @@ function resolveRuleSet(id: string | undefined): LanguageBaseRuleSet {
   const found = getBaseRuleSet(id);
   if (!found) {
     throw new Error(
-      `Ukjent regelsett: ${id}\nTilgjengelige: ${available.map((s) => s.id).join(", ")}`,
+      `Ukjent regelsett: ${id}\nTilgjengelige: ${available.map((s: LanguageBaseRuleSet) => s.id).join(", ")}`,
     );
   }
   return found;

@@ -15,7 +15,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { analyzeText, hitCounts, lineColumn, type RuleHit } from "../src/domain/language/rules";
-import { requireBaseRuleSet } from "../src/domain/language/registry";
+import { requireBaseRuleSet } from "../src/domain/language/base-rules";
 import { loadRules } from "./lib/load-rules";
 import { loadReviews } from "./lib/review";
 
