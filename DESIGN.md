@@ -4,6 +4,11 @@ Dette dokumentet beskriver systemet slik det faktisk er skipet, ikke slik det
 kunne blitt. Alt her er utledet fra `src/app/globals.css` og komponentene i
 `src/components/`. Endrer du en av dem, hører endringen hjemme her også.
 
+Der en regel ennå ikke er innfridd i koden, står det eksplisitt, med
+TODO-nummeret. Et designdokument som beskriver intensjoner i presens er verre
+enn ingen: neste leser tar det for avgjort og bygger videre på noe som ikke
+finnes. Skriver du inn en ny regel her, mål den først.
+
 Kilden til produktgrunnlaget er `docs/spec/PRODUCT.md`. Der en regel under
 finnes for å tjene et uttalt prinsipp, står prinsippet i parentes.
 
@@ -96,7 +101,7 @@ Skriften bærer produktløftet og er et valg, ikke en standardverdi.
               "Times New Roman", serif;
 ```
 
-Rot er `17px`. Målestokken er tokens, ikke Tailwind-verktøy spredt per visning:
+Rot er `17px`. Målestokken finnes som tokens i `globals.css`:
 
 | Token | Verdi | Til |
 | --- | --- | --- |
@@ -107,6 +112,14 @@ Rot er `17px`. Målestokken er tokens, ikke Tailwind-verktøy spredt per visning
 | `--text-body` | `1rem` | brødtekst |
 | `--text-meta` | `0.875rem` | metatekst, tabelldata |
 | `--text-label` | `0.8125rem` | `.label`, små kapitéler |
+
+**Status: tokenene er fasit, men visningene leser ennå ikke fra dem.** Sytten
+Tailwind-verktøy (`text-3xl`, `text-2xl`, `text-xl`, `text-lg`) står fortsatt
+igjen i sju filer, og `--text-*` er referert null steder i TSX. Tallene i
+tabellen over er de faktiske størrelsene de verktøyene gir i dag, så
+målestokken er riktig beskrevet — den er bare ikke håndhevet noe sted ennå.
+Migreringen er **T-11**. Skriver du en ny skjerm før den er gjort, bruk
+tokenene: da er det én fil mindre å rydde.
 
 **Under `--text-meta` går man ikke for tekst som skal leses.** Bunnteksten lå
 på `text-xs` (12,75px) i `--ink-faint`, altså liten *og* svak samtidig; den er
@@ -119,10 +132,19 @@ Lesebredden er `--measure: 34rem` og gjelder all prosa, inkludert skriveflaten.
 
 ## Komponenter
 
-Alle komponentklasser ligger i `@layer components`. **Dette er ikke valgfritt.**
-En ulagd regel slår enhver lagd Tailwind-utility uansett spesifisitet, og den
-feiler stille: elementet vises, bare med feil verdi. Repoet er bitt av dette to
-ganger (`a8386cb`, `0595a00`), og `pnpm check:css` håndhever det nå.
+Alle komponentklasser ligger i `@layer components`, og de globale
+elementreglene for `a` ligger i `@layer base`. **Dette er ikke valgfritt.** En
+ulagd regel slår enhver lagd Tailwind-utility uansett spesifisitet, og den
+feiler stille: elementet vises, bare med feil verdi.
+
+Repoet er bitt av dette **tre** ganger. `a8386cb` og `0595a00` var
+klasseselektorer. Den tredje, funnet 2026-09-06, var en elementselektor:
+`a { text-decoration: underline }` lå ulagd og slo både `no-underline` på
+ordmerket og menyen og den `text-decoration: none` som `.btn` og `.card` setter
+selv — hver lenkeformet knapp og hvert kort på siden var understreket, og
+ingenting rapporterte det. Porten så den gangen bare på klasseselektorer.
+`pnpm check:css` dekker nå elementselektorer også, med `html`, `body`, `:root`
+og `*` på allowlisten.
 
 Unntaket er skriveflaten (`typing-*`, `ch-*`, `recedes`, `is-*`), som er
 bevisst ulagd og står i allowlisten i `scripts/check-css-layers.ts` med
@@ -175,7 +197,8 @@ Ett bruddpunkt: `640px` (`sm:`).
   opp. Ni kolonner bak en taus sidelengs rulling er ikke en mobilvisning. Den
   stablede listen leder med verk og hastighet — det man skanner etter — og
   folder resten inn i én metalinje.
-- **Modus- og statistikkrutenett** går fra én til tre kolonner.
+- **Modusrutenettet** på forsiden går fra én til tre kolonner;
+  **statistikkrutenettet** på resultatsiden fra to til tre.
 
 Mobil-*app* er et ikke-mål i V1. Mobil *nett* er det ikke: skriveflaten har
 alltid hatt et bruddpunkt, og resten skal holde samme standard.
@@ -202,7 +225,16 @@ Dette er krav, ikke en sjekkliste å komme tilbake til.
 - **En dialog må gjøre skallet `inert`.** `aria-modal` er et løfte, ikke en
   mekanisme. `SessionMenu` portaleres til `<body>` nettopp for at resten kan
   gjøres inert uten å ramme panelet selv.
-- **Berøringsmål: 44px.**
+- **Berøringsmål: 44px gjelder kort og primærhandlinger, ikke lenketekst.**
+  Målt på 375px er 23 av 31 mål under 44px: menylenkene i toppen er 21,3px,
+  temavelgeren 35,9px og `.btn` 42,8px, mens kortene ligger på 91–185px. Det er
+  et valg, ikke et etterslep: mobil-*app* er et ikke-mål i V1, og en tett
+  tittellinje er en del av uttrykket. Kortene og primærknappene — det man
+  faktisk trykker på i en økt — er komfortable mål.
+
+  Grensen for å ta dette opp igjen: den dagen telefon blir en tiltenkt flate
+  for BRAND, skal 44px gjelde alt som kan trykkes, og toppmenyen må da få
+  luften det krever.
 - **`prefers-reduced-motion`** slår av markørblink, rulleovergangen i
   skriveflaten og dempingsovergangen.
 
