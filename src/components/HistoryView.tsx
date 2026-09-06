@@ -11,10 +11,12 @@ import { getRepository, isPersistent } from "@/infra/repository";
 import { formatDate, formatDuration, formatPercent, formatWpm } from "@/lib/format";
 import { editionLabel } from "@/lib/session-flow";
 import { DataTransfer } from "./DataTransfer";
+import { Loading } from "./Loading";
 
 export function HistoryView() {
   const [sessions, setSessions] = useState<SessionResult[] | null>(null);
-  /** Bumped after an import so the table re-reads what is now stored. */
+  const [failed, setFailed] = useState(false);
+  /** Bumped after an import, and by «Prøv igjen», so the list re-reads storage. */
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
@@ -23,13 +25,45 @@ export function HistoryView() {
       .listSessions({ limit: 200 })
       .then((s) => {
         if (alive) setSessions(s);
+      })
+      // Without this the page stayed blank forever when the read threw: no
+      // message, no way out. ChooseView and SessionView already model this
+      // failure; History was the one screen that did not.
+      .catch(() => {
+        if (alive) setFailed(true);
       });
     return () => {
       alive = false;
     };
   }, [reloadToken]);
 
-  if (!sessions) return null;
+  if (failed) {
+    return (
+      <div className="prose-measure" data-testid="history-error">
+        <p className="label mb-2">Historikk</p>
+        <h1 className="mb-4 text-2xl" role="alert">
+          Historikken kunne ikke leses.
+        </h1>
+        <p className="mb-6 text-ink-muted">
+          Nettleserens lokale lager svarte ikke. Øktene dine er sannsynligvis
+          uskadd — prøv igjen.
+        </p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => {
+            setFailed(false);
+            setReloadToken((n) => n + 1);
+          }}
+          data-testid="retry-button"
+        >
+          Prøv igjen
+        </button>
+      </div>
+    );
+  }
+
+  if (!sessions) return <Loading message="Henter historikken …" lines={3} />;
 
   return (
     <div>
@@ -53,7 +87,48 @@ export function HistoryView() {
           </Link>
         </p>
       ) : (
-        <div className="overflow-x-auto">
+        <>
+        {/*
+          Under 640px the nine-column table became a silent horizontal scroll:
+          no affordance said it moved, and the columns a reader actually scans
+          for (work, speed) were the ones pushed off-screen. The stacked list
+          leads with those and folds the rest into one meta line. Edition and
+          text form are control information and stay on the result page, which
+          is where a reader who cares about them is going anyway.
+        */}
+        <ul className="sm:hidden" data-testid="history-list">
+          {sessions.map((s) => {
+            const work = getWork(s.workId);
+            return (
+              <li key={s.id} className="border-t border-rule py-3">
+                <Link href={`/resultat/${s.id}`} className="no-underline">
+                  <span className="flex items-baseline justify-between gap-4">
+                    <span>
+                      {work ? (
+                        <>
+                          {work.author}, <i>{work.title}</i>
+                        </>
+                      ) : (
+                        s.workId
+                      )}
+                    </span>
+                    <span className="shrink-0 tabular-nums">
+                      {formatWpm(metricsFromResult(s))} wpm
+                    </span>
+                  </span>
+                  <span className="mt-1 block text-sm text-ink-muted">
+                    {formatDate(s.startedAt)} ·{" "}
+                    {getGameMode(s.gameModeId)?.displayName ?? s.gameModeId} ·{" "}
+                    {formatPercent(s.accuracy)} · {formatDuration(s.durationMs)} ·{" "}
+                    {s.status === "completed" ? "Fullført" : "Avbrutt"}
+                    {s.pauseCount > 0 ? " · pauset" : ""}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full text-sm" data-testid="history-table">
             <thead>
               <tr className="text-left">
@@ -114,6 +189,7 @@ export function HistoryView() {
             </tbody>
           </table>
         </div>
+        </>
       )}
       <DataTransfer onImported={() => setReloadToken((n) => n + 1)} />
     </div>

@@ -48,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <main className="mx-auto w-full max-w-4xl flex-1 px-5 py-10">
             {children}
           </main>
-          <footer className="recedes mx-auto w-full max-w-4xl px-5 py-6 text-xs text-ink-faint">
+          <footer className="recedes mx-auto w-full max-w-4xl px-5 py-6 text-sm text-ink-muted">
             Lokal lagring i nettleseren. Ingen konto, ingen sky.
           </footer>
         </ThemeProvider>

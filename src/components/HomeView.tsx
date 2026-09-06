@@ -34,7 +34,23 @@ export function HomeView() {
       <p className="label mb-2">Skriv deg inn i god norsk prosa</p>
       <h1 className="mb-8 text-3xl leading-tight">Med ro, rytme og målbar fremgang.</h1>
 
-      {href && lastWork && lastMode ? (
+      {/*
+        Three branches, not two. `prefs === null` means the stored preferences
+        are still in flight, and the old code fell through to the first-time
+        branch during that window — so the returning reader, who is the only
+        user V1 has, saw "Begynn med en passasje" flash before it swapped to
+        "Fortsett". The placeholder holds the button's space so nothing jumps.
+      */}
+      {prefs === null ? (
+        <section className="mb-10" data-testid="home-cta-pending">
+          <span className="btn btn-primary text-base opacity-55" aria-hidden="true">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+          <p className="mt-3 text-sm text-ink-muted" role="status">
+            Henter siste økt …
+          </p>
+        </section>
+      ) : href && lastWork && lastMode ? (
         <section className="mb-10">
           <Link href={href} className="btn btn-primary text-base">
             Fortsett

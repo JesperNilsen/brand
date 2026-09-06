@@ -14,6 +14,7 @@ import { requireTextFilter } from "@/domain/text-filter";
 import type { SessionResult, TextEdition } from "@/domain/types";
 import { getRepository, isPersistent } from "@/infra/repository";
 import { getLastSession } from "@/lib/last-session";
+import { Loading } from "./Loading";
 import { formatDuration, formatNumber, formatPercent, formatWpm } from "@/lib/format";
 import { editionLabel, nextSegmentAfter, sessionHref } from "@/lib/session-flow";
 
@@ -68,7 +69,9 @@ export function ResultView({ id }: { id: string }) {
     };
   }, [result]);
 
-  if (result === undefined) return null;
+  // The moment the loop pays off. A blank frame here reads as "your session is
+  // gone" rather than "one moment".
+  if (result === undefined) return <Loading message="Henter resultatet …" lines={2} />;
   if (result === null) {
     return (
       <div className="prose-measure">
@@ -203,12 +206,11 @@ export function ResultView({ id }: { id: string }) {
             Skriv samme utdrag igjen
           </Link>
         )}
-        <Link href="/historikk" className="btn">
-          Historikk
-        </Link>
-        <Link href="/" className="btn">
-          Forsiden
-        </Link>
+        {/*
+          «Historikk» and «Forsiden» used to sit here too, which put up to five
+          buttons in one row and let two duplicates of the header nav compete
+          with the single action the reader came for. The header carries both,
+          on every page, already. */}
       </div>
     </div>
   );

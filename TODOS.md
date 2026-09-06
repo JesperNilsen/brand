@@ -174,3 +174,73 @@ forfatterens ordvalg» må trekkes eksplisitt for denne klassen før den kjøres
 
 **Avhenger av:** D11 (redaksjonell diff-flyt). Dette er nøyaktig den mengden
 tekstendring som skal kunne leses av et menneske før den publiseres.
+
+---
+
+## T-10 — Én beholder for varslene på resultatsiden (P3, S / S)
+
+**Hva:** Erstatte de tre `mb-8 -mt-6`-blokkene i `ResultView` med én stablet
+beholder som setter avstanden ett sted.
+
+**Hvorfor:** Hvert varsel trekker seg selv oppover med en negativ marg, og
+regner med å være det eneste på siden. En avbrutt økt, i et privat vindu,
+skrevet med en tekstform, viser alle tre — og margene kolliderer.
+
+**Fordeler:** Fjerner en layoutfeil i nøyaktig den situasjonen der leseren
+allerede får dårlige nyheter.
+**Ulemper:** Sjelden kombinasjon, og rent kosmetisk når den inntreffer.
+
+**Kontekst:** `src/components/ResultView.tsx` — varslene `unsaved-notice`,
+tekstform og `paused-notice`. Hvert av dem er riktig alene. Reproduseres med en
+avbrutt økt i privat vindu med en tekstform som endrer teksten.
+
+**Avhenger av:** ingenting. Funnet i designrevisjonen 2026-09-06.
+
+---
+
+## T-11 — Flytte overskriftene over på `--text-*`-tokenene (P3, S / M)
+
+**Hva:** Bytte `text-3xl` / `text-2xl` / `text-xl` / `text-lg` i visningene ut
+med målestokk-tokenene som nå finnes i `globals.css`.
+
+**Hvorfor:** Tokenene finnes og `DESIGN.md` utpeker dem som fasit, men fem
+visninger setter fortsatt størrelsen selv. En fasit ingen leser fra er pynt, og
+størrelsene vil sprike første gang noen legger til en side.
+
+**Fordeler:** Gjør målestokken ekte; neste skjerm arver den i stedet for å gjette.
+**Ulemper:** En mekanisk endring over fem filer uten synlig resultat — akkurat
+den typen støy som kan skjule en ekte regresjon.
+
+**Kontekst:** `HomeView`, `ChooseView`, `ResultView`, `HistoryView` og
+`src/app/om/page.tsx`. Størrelsene er tilfeldigvis konsistente i dag. Gjøres som
+sin egen endring, med visuell sammenligning før og etter, slik at et utilsiktet
+størrelsesbytte er synlig.
+
+**Avhenger av:** tokenene, som landet 2026-09-06.
+
+---
+
+## T-12 — Nonstop-resume-testen faller i full kjøring (P1, M / M)
+
+**Hva:** Finne og fjerne tilstanden som lekker mellom testfiler, slik at
+`pnpm test:e2e` går grønt i én kjøring.
+
+**Hvorfor:** `e2e/passage-flow.spec.ts:98` faller på `Du har skrevet 1 av` etter
+en omlasting når hele suiten kjører, og består alene. Verifisert på ren `main`
+2026-09-06: 32 bestått, 1 falt — den er altså ikke innført av en endring, den
+står der. En port alle vet er rød, er ikke lenger en port.
+
+**Fordeler:** Neste ekte regresjon lander i en suite man faktisk ser på.
+**Ulemper:** Rekkefølgeavhengige feil er trege å spore.
+
+**Kontekst:** `playwright.config.ts` har allerede `workers: 1` og
+`fullyParallel: false` — det var fiksen forrige gang, og den holder ikke lenger.
+Lagret Nonstop-fremdrift fra en tidligere testfil er den nærliggende mistanken:
+testen forventer *1* fullført segment, og ville feilet på samme måte om noe
+hadde lagt igjen et annet antall.
+
+**Akseptanse:** `pnpm test:e2e` avslutter med 0 i én full kjøring, tre ganger på
+rad, uten at noen test er hoppet over eller markert flaky.
+**Verify:** `pnpm test:e2e`
+
+**Avhenger av:** ingenting.

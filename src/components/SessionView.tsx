@@ -31,6 +31,7 @@ import {
   resolveWorkAndEdition,
 } from "@/lib/session-flow";
 import { LiveMeter } from "./LiveMeter";
+import { Loading } from "./Loading";
 import { SessionMenu } from "./SessionMenu";
 import { TypingSurface } from "./TypingSurface";
 
@@ -50,7 +51,12 @@ export function SessionView() {
   const [failure, setFailure] = useState<Failure | null>(null);
   /** Bumped by «Prøv igjen»; re-runs the effect without touching the URL. */
   const [attempt, setAttempt] = useState(0);
+  const errorRef = useRef<HTMLHeadingElement>(null);
   const paramString = params.toString();
+
+  useEffect(() => {
+    if (failure) errorRef.current?.focus();
+  }, [failure]);
 
   useEffect(() => {
     let alive = true;
@@ -99,7 +105,12 @@ export function SessionView() {
   if (failure) {
     return (
       <div className="prose-measure" data-testid="session-error">
-        <p className="mb-4">{failure.message}</p>
+        {/* role="alert" and a focus target: the writing surface vanishing with
+            only a silent paragraph in its place left keyboard and screen-reader
+            users with no signal that anything had gone wrong. */}
+        <h1 className="mb-4 text-2xl" role="alert" tabIndex={-1} ref={errorRef}>
+          {failure.message}
+        </h1>
         <div className="flex flex-wrap gap-3">
           {failure.retryable && (
             <button
@@ -121,7 +132,9 @@ export function SessionView() {
       </div>
     );
   }
-  if (!loaded) return null;
+  // Not `null`: this is the network fetch the two-second promise is about, and
+  // a blank frame here is indistinguishable from a route that failed.
+  if (!loaded) return <Loading message="Henter teksten …" />;
   return <ActiveSession key={loaded.plan.id} {...loaded} />;
 }
 
