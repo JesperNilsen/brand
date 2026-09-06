@@ -1,0 +1,70 @@
+{
+  "id": "hamsun-markens-groede.training.v2",
+  "contentHash": "sha256:c23ab5fa6b0d3ca804f158be24466e4385e28657041b9b15edc3aeaeefb24b66",
+  "segments": [
+    {
+      "id": "del1-kap1-01",
+      "order": 1,
+      "text": "Den lange, lange sti over myrene og inn i skogene, hvem har trakket op den? Mannen, mennesket, den første som var her. Det var ingen sti før ham. Siden fulgte et og annet dyr de svake spor over moer og myrer og gjorde dem tydeligere, og siden igjen begynte en og annen Lap at snuse stien op og gå den når han skulle fra fjell til fjell og se til sin ren. Slik ble stien til gjennom den store almenning som ingen eiet, det herreløse land.",
+      "label": "Første del, kapittel I, 1",
+      "wordCount": 86,
+      "difficulty": 3
+    },
+    {
+      "id": "del1-kap1-02",
+      "order": 2,
+      "text": "Mannen kommer gående mot nord. Han bærer en sekk, den første sekk, den inneholder niste og nogen redskaper. Mannen er sterk og grov, han har rødt jernskjegg og små arr i ansiktet og på hendene — disse sårtomter, har han fått dem i arbeide eller i strid? Han er kanske kommet fra straff og vil skjule seg, han er kanske filosof og søker fred, men ialfald så kommer han der, et menneske midt i denne uhyre ensomhet. Han går og går, det er stilt for fugler og dyr omkring ham, stundom taler han et eller annet ord med seg selv: åja Herregud! sier han. Når han kommer over myrene og til vennlige steder med en åpen slette i skogen setter han sekken ned og begynder at vandre omkring og undersøke forholdene, etter en stund kommer han tilbake, tar sekken på ryggen og går igjen. Det varer hele dagen, han ser på solen hva det lider, det blir natt og han kaster seg på sin arm i lyngen.",
+      "label": "Første del, kapittel I, 2",
+      "wordCount": 166,
+      "difficulty": 4
+    },
+    {
+      "id": "del1-kap1-03",
+      "order": 3,
+      "text": "Om nogen timer går han igjen, åja Herregud! går igjen ret mot nord, ser på solen hva det lider, holder måltid på en leiv fiatbrød og gjeitost, drikker vann i en bekk og fortsetter sin gang. Også denne dag går med til hans vandring, for han må undersøke så mange vennlige steder i skogen. Hva går han etter? Etter land, etter jord? Han er kanske en utvandrer fra bygderne, han har øynene med seg og speider, stundom stiger han op på en haug og speider. Nå synker solen igjen.",
+      "label": "Første del, kapittel I, 3",
+      "wordCount": 89,
+      "difficulty": 3
+    },
+    {
+      "id": "del1-kap1-04",
+      "order": 4,
+      "text": "Han går på vestsiden av et dalføre med blandet skog, her er også løvskog og gressbund, det rekker i timer, det skumrer, men han hører et lite sus av en elv, og dette lille sus opliver ham som noget levende. Da han kommer op på høyden ser han dalen i halvmørke nedover og lengst ute himlen mot sør. Han legger seg.",
+      "label": "Første del, kapittel I, 4",
+      "wordCount": 61,
+      "difficulty": 2
+    },
+    {
+      "id": "del1-kap1-05",
+      "order": 5,
+      "text": "Om morgningen står han foran et landskap av skog og beitesmark, han stiger ned, her er en grønn li, han ser et skimt av elven langt nede og en hare som setter over den i et sprang. Mannen nikker som om det just høver at elven ikke er bredere enn et sprang. En rugende rype slår pludselig op ved hans føtter og hveser vilt imot ham, og mannen nikker igjen at her på stedet er dyr og fugler, det høver atter! Han vandrer i blåbærlyng og tyttebærlyng, i den syvtakkede skogstjerne og i småbregner; når han stanser hist og her og graver med et jern i jorden finner han her muldjord og der myr, gjødslet av flere tusen års løvfall og rotten kvist. Mannen nikker at her slår han seg ned, jo det gjør han, slår seg ned. I to dager vedblir han at streife om i omegnen, men vender om kveldene tilbake til lien. Han sover om netterne på et barleie, han er blitt så hjemme her, han har alt et barleie under en berghammer.",
+      "label": "Første del, kapittel I, 5",
+      "wordCount": 176,
+      "difficulty": 4
+    },
+    {
+      "id": "del1-kap1-06",
+      "order": 6,
+      "text": "Det verste hadde været at finne stedet, dette ingens sted, men hans; nå ble dagene opptatt av arbeide. Han begynte straks at løipe never i de fjernere skoger nå mens sevjen var i trærne, han la neveren i pres og tørket den, når han hadde en stor bør bar han den alle milene tilbake til bygden og solgte den til bygningsbruk. Og hjem til lien bar han atter nye sekker av matvarer og verktøy, mel, flesk, en gryte, en spade, gikk stien frem og tilbake og bar og bar. En født bærer, en pram gjennom skogene, å det var som han elsket sitt kall at gå meget og bære meget, som om det ikke at ha en bør på ryggen var en lat tilværelse og ikke noget for ham.",
+      "label": "Første del, kapittel I, 6",
+      "wordCount": 129,
+      "difficulty": 4
+    },
+    {
+      "id": "del1-kap1-07",
+      "order": 7,
+      "text": "Han kom en dag med sin tunge bør og desuten leiende to gjeiter og en ungbuk i bånd. Han var lykkelig for sine gjeiter som om de hadde været kjyr og var god mot dem. Det første fremmede menneske kom forbi, en vandrende Lap, han så gjeiterne og forstod at han var kommet til en mann som hadde slått seg ned her, han sa:",
+      "label": "Første del, kapittel I, 7",
+      "wordCount": 64,
+      "difficulty": 2
+    },
+    {
+      "id": "del1-kap1-08",
+      "order": 8,
+      "text": "Skal du bo her for godt? — Ja, svarte mannen. — Hva du heter? — Isak. Du vet ikke av en kvinnfolkhjelp til meg? — Nei. Men jeg skal orde det der jeg farer. — Gjør så! At jeg har dyr og ingen til at passe dem.",
+      "label": "Første del, kapittel I, 8",
+      "wordCount": 42,
+      "difficulty": 2
+    }
+  ]
+}

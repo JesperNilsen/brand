@@ -174,3 +174,48 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   document-lytter fanget selve tastetrykket som åpnet menyen — det bobler
   fortsatt opp fra skriveflaten når React monterer panelet — så menyen åpnet og
   lukket seg i ett trykk. Fanget av e2e-en, ikke av lesing.
+
+## Profilen eier grunnreglene (D9)
+
+- **Premisset i planen holdt ikke, og målingen ga en bedre grunn.** D9 var
+  begrunnet med at de fire pakkene gjentok profilens felles regler. Av 287
+  distinkte regelnøkler fantes 3 i alle fire pakkene og 255 i bare én: det var
+  nesten ingen duplisering å fjerne. Målingen viste i stedet den virkelige
+  gevinsten. Da de 31 reglene som faktisk er felles ble løftet opp, kom det
+  fram at pakkene **manglet** regler søsknene hadde: 27 forekomster av former
+  tre av fire pakker normaliserer, stående igjen i den fjerde bare fordi hver
+  ordliste var skrevet for hånd hver for seg (`sig` ×8 hos Hamsun, `sig` ×12,
+  `gik` ×3 og `nu` ×2 hos Noveletter, `magt` og `mig` hos Gift). Verdien er
+  altså konsistens, ikke færre linjer.
+- **Grunnreglene er frosset og versjonert som alt annet i kjeden.**
+  `src/domain/language/brand-riksmaal.base.v1.json` endres aldri på stedet. En
+  utgave bygges på nytt fra nøyaktig det grunnregelsettet den ble laget med, så
+  et redigerbart felles sett ville brutt D8 i det stille: gamle utgaver ville
+  sluttet å reprodusere uten at noen hadde rørt dem.
+- **Pakken vinner ved sammenstøt, men må si hvorfor.** Base først, pakke over.
+  Et verk med egen periodeortografi skal kunne avvike uten å redigere et sett
+  fire verk deler. Til gjengjeld feiler `validate:content` på en pakke som
+  gjentar en grunnregel uendret (duplisering sammenstillingen er til for å
+  fjerne) og på et avvik som ikke er begrunnet i `retained`.
+- **`preferredForms` er bevisst ikke mekaniske regler.** Profilen foretrekker
+  `meget` framfor `mye` og `selv` framfor `sjøl`. Det er ordvalg, og
+  `LANGUAGE_PROFILE.md` forbyr å bytte forfatterens ordvalg — å kjøre dem som
+  substitusjoner ville skrevet om Kielland. De styrer vår egen prosa og valget
+  mellom likeverdige normaliseringer. En test håndhever skillet.
+- **Én feil ble rettet på veien.** `hænderne → henderne` sto i to pakker:
+  hverken kildens danske form eller moderne riksmål — æ→e var gjort, den danske
+  bestemte flertallsendelsen `-erne` sto igjen. Grunnreglene gir `hendene`.
+- **`endnu` står igjen, med vilje.** To pakker gjør den til `ennu`, som beholder
+  det `nu` grunnreglene ellers gjør om til `nå`. `ennu` er en forsvarlig
+  konservativ riksmålsform, så motsetningen er en redaksjonell avgjørelse og
+  ikke en mekanisk. Den ligger i pakkene til et menneske har avgjort den, ikke i
+  profilen.
+- **Tre pakker fikk v2, Ibsen ikke.** Bumpeutløseren fra D7 er tekstendring.
+  Ibsens tekst er uendret av sammenstillingen, så en v2 ville vært en versjon
+  uten forskjell. `rules.v1.json` er frosset og selvstendig i alle fire pakkene;
+  mekanismen gjelder fra v2 og framover.
+- **`defaultEdition` valgte med `.find()`.** Riktig så lenge det fantes nøyaktig
+  én treningsutgave per profil, stille galt i det øyeblikket den andre kom:
+  den ville servert den utgaven generatoren tilfeldigvis skrev først. Ingenting
+  ville feilet — leseren ville bare skrevet en erstattet tekst, og den lagrede
+  økten ville navngitt den. Valget er nå eksplisitt høyeste versjon.

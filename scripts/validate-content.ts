@@ -31,11 +31,14 @@ import path from "node:path";
 import { countWords } from "./lib/text";
 import { editionContentHash } from "./lib/hash";
 import { buildTrainingEdition, serializeEdition, type OriginalFile } from "./lib/build-edition";
-import type { Rules } from "./lib/rules";
+import { baseOverrides, type Rules } from "./lib/rules";
+import { loadRules } from "./lib/load-rules";
+import { listLanguageProfiles, getBaseRuleSet } from "../src/domain/language/registry";
 import { listTextFilters } from "../src/domain/text-filter";
 import { buildContentAssets } from "./build-content-assets";
 
-const KNOWN_PROFILES = new Set(["brand-riksmaal"]);
+// The registry is the only list of profiles; a second one here would drift.
+const KNOWN_PROFILES = new Set(listLanguageProfiles().map((p) => p.id));
 const contentRoot = path.resolve(process.cwd(), "content");
 
 /** docs/spec/CORPUS.md: recommended V1 passage size for `Passage`. */
@@ -226,7 +229,7 @@ async function validatePack(pack: string) {
     // tell that a generated file was edited by hand.
     const committed = await readFile(path.join(dir, f), "utf8");
     try {
-      const rules = JSON.parse(await readFile(rulesFile, "utf8")) as Rules;
+      const rules = await loadRules(dir, Number(version));
       const rebuilt = serializeEdition(
         buildTrainingEdition(original as unknown as OriginalFile, rules).edition,
       );
@@ -235,6 +238,31 @@ async function validatePack(pack: string) {
       }
     } catch (err) {
       fail(pack, `${f}: cannot rebuild from rules.v${version}.json: ${(err as Error).message}`);
+    }
+
+    // The profile owns the shared orthography (D9). Once a pack inherits a base
+    // set, restating one of its rules is duplication — exactly what the
+    // composition exists to remove — and contradicting one is an editorial
+    // claim that has to be written down rather than buried in a dictionary.
+    const rawRules = JSON.parse(await readFile(rulesFile, "utf8")) as Rules;
+    if (rawRules.baseRules) {
+      const base = getBaseRuleSet(rawRules.baseRules);
+      if (!base) {
+        fail(pack, `rules.v${version}.json: unknown base rule set ${rawRules.baseRules}`);
+      } else {
+        const { redundant, diverging } = baseOverrides(rawRules, base);
+        for (const k of redundant) {
+          fail(pack, `rules.v${version}.json: «${k}» repeats ${base.id} unchanged — inherit it instead`);
+        }
+        for (const k of diverging) {
+          if (!(rawRules.retained ?? {})[k]) {
+            fail(
+              pack,
+              `rules.v${version}.json: «${k}» overrides ${base.id} («${base.replacements?.[k]}» → «${rawRules.replacements?.[k]}») without a reason in "retained"`,
+            );
+          }
+        }
+      }
     }
 
     const t = (await readJson(path.join(dir, f))) as {

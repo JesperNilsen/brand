@@ -1,4 +1,5 @@
-import type { LanguageProfile } from "../types";
+import type { LanguageBaseRuleSet, LanguageProfile } from "../types";
+import baseV1 from "./brand-riksmaal.base.v1.json";
 
 /**
  * brand-riksmaal — moderne-konservativt riksmål (docs/spec/LANGUAGE_PROFILE.md).
@@ -11,7 +12,7 @@ export const brandRiksmaal: LanguageProfile = {
   displayName: "Brand riksmål",
   locale: "nb-NO",
   description:
-    "Moderne, konservativt riksmål: lettlest, verdig og naturlig — aldri museumsaktig. Foretrekker frem, boken, syv, nå, etter, meget, selv og bygget.",
+    "Moderne, konservativt riksmål: lettlest, verdig og naturlig — aldri museumsaktig.",
   preferredForms: {
     frem: "fram",
     boken: "boka",
@@ -22,4 +23,10 @@ export const brandRiksmaal: LanguageProfile = {
     selv: "sjøl",
     bygget: "bygd",
   },
+  baseRuleSets: [baseV1 as LanguageBaseRuleSet],
 };
+
+/** Look up one of the profile's frozen base rule sets by id. */
+export function getBaseRuleSet(id: string): LanguageBaseRuleSet | undefined {
+  return brandRiksmaal.baseRuleSets.find((s) => s.id === id);
+}

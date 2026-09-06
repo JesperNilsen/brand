@@ -30,6 +30,24 @@ export type LanguageProfile = {
   description: string;
   /** Preferred form → the form it is preferred over ("frem" → "fram"). */
   preferredForms: Record<string, string>;
+  /**
+   * Frozen orthographic rule sets the profile owns, newest last. A content
+   * pack inherits one by id and lists only what is particular to its own text,
+   * so a normalisation the profile considers settled cannot be present in one
+   * work and missing in another. Immutable once published: an edition is
+   * rebuilt from exactly the base set it was produced with.
+   */
+  baseRuleSets: readonly LanguageBaseRuleSet[];
+};
+
+/** A published, immutable set of base orthographic rules owned by a profile. */
+export type LanguageBaseRuleSet = {
+  id: string;
+  languageProfileId: string;
+  version: string;
+  notes?: string[];
+  replacements?: Record<string, string>;
+  patterns?: { from: string; to: string; flags?: string; note?: string }[];
 };
 
 // ---------------------------------------------------------------------------
