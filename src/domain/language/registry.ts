@@ -1,4 +1,9 @@
-import type { LanguageBaseRuleSet, LanguageProfile } from "../types";
+/**
+ * Language profiles. Client-safe: nothing here imports a rule set, so the
+ * orthographic dictionaries stay out of the browser bundle. Rule sets are
+ * looked up through `base-rules.ts`.
+ */
+import type { LanguageProfile } from "../types";
 import { brandRiksmaal } from "./brand-riksmaal";
 
 const profiles: readonly LanguageProfile[] = [brandRiksmaal];
@@ -19,17 +24,3 @@ export function requireLanguageProfile(id: string): LanguageProfile {
   return p;
 }
 
-/** A frozen base rule set, looked up by its id across every profile. */
-export function getBaseRuleSet(id: string): LanguageBaseRuleSet | undefined {
-  for (const p of profiles) {
-    const found = p.baseRuleSets.find((s) => s.id === id);
-    if (found) return found;
-  }
-  return undefined;
-}
-
-export function requireBaseRuleSet(id: string): LanguageBaseRuleSet {
-  const s = getBaseRuleSet(id);
-  if (!s) throw new Error(`Unknown base rule set: ${id}`);
-  return s;
-}

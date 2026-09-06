@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getEdition, listContentPacks, listWorks } from "@/domain/content/registry";
+import { defaultEdition, listContentPacks, listWorks } from "@/domain/content/registry";
 // A server component, so the notes are rendered to HTML here and never reach
 // the reader as JavaScript. See `editorial-notes.generated.ts`.
 import { EDITORIAL_NOTES } from "@/domain/content/editorial-notes.generated";
@@ -40,7 +40,11 @@ export default function AboutPage() {
       <h2 className="mb-2 mt-8 text-xl">Kilder og redaksjonsnotater</h2>
       {listContentPacks().map((pack) =>
         listWorks(pack.id).map((work) => {
-          const training = getEdition(work, "training-edition");
+          // The edition the reader actually types. `getEdition` returned the
+          // first training edition in the array, which is whichever the
+          // generator emitted first — so this page described v1 while three of
+          // four works served v2.
+          const training = defaultEdition(work, brandRiksmaal.id);
           return (
             <section key={work.id} className="mb-8">
               <h3 className="mb-1 text-lg">
@@ -56,13 +60,18 @@ export default function AboutPage() {
                 {work.source.license}
                 <br />
                 Kontrollstatus: {work.source.verificationStatus}
+                <br />
+                Redaksjonell lesning:{" "}
+                {training.reviewStatus === "reviewed"
+                  ? `lest av ${training.reviewedBy}${training.reviewedAt ? ` (${training.reviewedAt})` : ""}`
+                  : "ikke lest av redaktør ennå"}
               </p>
               {work.source.editorialNotes?.map((n) => (
                 <p key={n} className="mb-1 text-sm text-ink-muted">
                   {n}
                 </p>
               ))}
-              {training && (
+              {training.kind === "training-edition" && (
                 <details className="mt-2 text-sm">
                   <summary className="cursor-pointer">
                     Redaksjonsnotater for Brand Training Edition {training.version}
