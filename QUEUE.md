@@ -22,7 +22,7 @@ bounded: one reviewable branch each.
 ---
 
 ## Q-001 · `check:design` — gate DESIGN.md's falsifiable claims
-status: blocked:PR #11 must land first — DESIGN.md does not exist on main until it does
+status: ready
 lane: brand-main
 
 acceptance:
@@ -105,8 +105,8 @@ notes:
   decision the rule is scoped to cards and primary actions only, so it needs its
   own careful specification. File it separately if wanted; do not let it grow
   this branch.
-- Flip `status:` to `ready` once PR #11 is merged. Until then the runner has no
-  DESIGN.md on main to gate and would produce a branch that cannot pass.
+- Unblocked 2026-09-06: PR #11 merged as `fc0e6b2`, so DESIGN.md and its
+  claims are on main and there is something to gate.
 - **Lane note.** This entry was written while the språkrens lane (D10–D12) was
   running unpushed on local main and a third lane held the shared checkout on
   `fix/mobile-backspace`. Nothing here touches `src/domain/language/` or
