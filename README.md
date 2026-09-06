@@ -28,6 +28,7 @@ pnpm typecheck        # kjører next typegen først; .next/types er gitignorert
 pnpm test             # vitest: motor, moduser, runner, repository-kontrakt
 pnpm validate:content # proveniens + treningsutgave-invarianter + genererte filer
 pnpm build:content    # katalog + tekstfiler under public/ (generert, sjekkes inn)
+pnpm sprakrens <fil>  # hva et regelsett ville endret i en tekst — endrer ingenting
 pnpm check:bundle     # korpusteksten skal ikke finnes i noen klientbundle
 pnpm check:css        # klasseselektorer utenfor @layer er en stum feil
 pnpm test:e2e         # playwright (bygger og starter egen server på :3199)

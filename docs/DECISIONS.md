@@ -219,3 +219,45 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   den ville servert den utgaven generatoren tilfeldigvis skrev først. Ingenting
   ville feilet — leseren ville bare skrevet en erstattet tekst, og den lagrede
   økten ville navngitt den. Valget er nå eksplisitt høyeste versjon.
+
+## Én matcher, to utganger (D10)
+
+- **Rapporten må komme fra samme matcher som omskrivningen.** Regelmotoren har
+  fått en rapportutgang ved siden av omskrivningsutgangen: `analyzeText` sier
+  hva reglene *ville* gjort, uten å gjøre det. Den er grunnlaget både for
+  redaksjonell lesning (D11) og for å måle en tekst mot normen. To matchere
+  ville vært billigere å skrive og verdiløse: en rapport fra en litt annen
+  matcher er en rapport om en tekst ingen taster.
+- **Flyttingen til `src/` er bevist, ikke antatt.** `scripts/lib/rules.ts` er nå
+  en ren re-eksport fra `src/domain/language/rules/`, fordi rapporten på sikt
+  skal kunne kjøre i nettleseren og en modul under `scripts/` ikke kan det.
+  `applyRules` matcher ikke lenger selv; den forbruker `stageHits` som
+  rapporten gjør. At det ikke endret noe utfall er ikke en påstand:
+  `validate:content` bygger seks publiserte treningsutgaver på nytt gjennom den
+  nye matcheren og byte-sammenligner dem.
+- **Posisjoner projiseres tilbake til kallerens tekst.** Steg to matcher i steg
+  én sitt resultat, så en rå posisjon derfra peker inn i en tekst leseren aldri
+  har sett. Hvert steg bærer derfor en kartlegging tilbake, og et treff
+  rapporteres på det stedet i originalen det hører hjemme. Et treff som lander
+  inne i en tidligere erstatning kollapser til hele den erstatningen — det er
+  det ærlige svaret, ikke en tilnærming.
+- **To regelfamilier som aldri får møtes.** Grunnreglene går én vei: 1800-talls
+  dansk-norsk → riksmål. Samtidsnormen går den andre: moderne bokmål →
+  BRAND-riksmål (`boka` → `boken`), og den finnes for å *rapportere* på tekst
+  brukeren har skrevet selv. Å folde den inn i en korpusbygging ville brutt
+  `LANGUAGE_PROFILE.md`s forbud mot å bytte forfatterens ordvalg og den
+  byte-identiske gjenoppbyggingen av hver publiserte utgave samtidig. Tre lag
+  hindrer det: `family` på typen, et kast i `loadRules` der id-oppslag har
+  fjernet typene, og tester. Ett lag ville vært en anbefaling.
+- **`base.v1.json` fikk ikke feltet.** Filens egne notater sier at den aldri
+  endres på stedet. Manglende `family` defaulter til korpusfamilien i kode.
+- **To feller ble målt, ikke gjettet, og står nå som tester.** `applyRules`
+  erstatter med en funksjon som returnerer `to`, så `$1` ekspanderes ikke — en
+  regel skrevet som om den gjorde det, setter inn tegnene `$1`. Og `\w` matcher
+  ikke æ ø å, så `(\w+)erne` mot «Hænderne» begynner å matche inne i ordet.
+  Begge treffer nøyaktig den som skriver T-09 som mønster i stedet for som
+  ordpar.
+- **`pnpm sprakrens <fil>` er verktøyet.** Den rapporterer treff med posisjon og
+  kontekst, teller per regel, og lister til slutt reglene som *ikke* traff.
+  Den siste listen er halvparten av nytten: den er hvordan et regelsett viser
+  seg å være skrevet for en annen tekst enn den man har.

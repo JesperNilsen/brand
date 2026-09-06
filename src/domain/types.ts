@@ -8,7 +8,13 @@
  *   TextEdition     — which text version is shown (original | training-edition)
  *
  * None of these types import from each other's modules; they only share ids.
+ * The one exception is RuleFamily, which the rule engine owns and this file
+ * re-exports rather than restating — two spellings of that union would let a
+ * rule set be one family here and another there.
  */
+import type { RuleFamily } from "./language/rules/types";
+
+export type { RuleFamily };
 
 export type ErrorMode = "flow" | "stop-on-error";
 
@@ -45,6 +51,12 @@ export type LanguageBaseRuleSet = {
   id: string;
   languageProfileId: string;
   version: string;
+  /**
+   * Which normative direction the set moves text in. Absent means the corpus
+   * family (`historical-orthography`), which is the only one a build may
+   * compose; see `src/domain/language/rules/types.ts`.
+   */
+  family?: RuleFamily;
   notes?: string[];
   replacements?: Record<string, string>;
   patterns?: { from: string; to: string; flags?: string; note?: string }[];
