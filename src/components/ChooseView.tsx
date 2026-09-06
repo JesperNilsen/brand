@@ -173,8 +173,13 @@ export function ChooseView({ modeId }: Props) {
   return (
     <div className="prose-measure">
       <p className="label mb-2">
-        <Link href={`/velg/${mode.id}`} className="no-underline hover:underline">
-          {mode.displayName}
+        {/*
+          Underlined, not hover-underlined. This is the only way back to the
+          work list, and hover does not exist on a touch screen: styled as a
+          bare .label it read as a heading, so on a phone the route back was
+          invisible. The arrow makes the direction explicit at label size. */}
+        <Link href={`/velg/${mode.id}`} className="underline">
+          ← {mode.displayName}
         </Link>
         {" · "}
         {pack?.title}
@@ -197,7 +202,9 @@ export function ChooseView({ modeId }: Props) {
 
       {mode.id === "passage" && textFailed && (
         <div data-testid="choose-error">
-          <p className="mb-4">Teksten kunne ikke lastes. Sjekk nettforbindelsen.</p>
+          <p className="mb-4" role="alert">
+            Teksten kunne ikke lastes. Sjekk nettforbindelsen.
+          </p>
           <button
             type="button"
             className="btn btn-primary"

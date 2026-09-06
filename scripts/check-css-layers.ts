@@ -17,6 +17,14 @@
  * Deliberately unlayered, and therefore allowed: the typing surface. Its rules
  * are never combined with a conflicting utility, and moving them into a layer
  * would make them lose to utilities applied on the same elements.
+ *
+ * Element selectors count too. The check used to look only at class selectors,
+ * and an unlayered `a { text-decoration: underline }` slipped through that gap
+ * and silently beat `no-underline` on the wordmark and the nav, plus the
+ * `text-decoration: none` that `.btn` and `.card` set for themselves — every
+ * link-shaped button on the site rendered underlined and nothing reported it.
+ * Bare `html`, `body` and `::selection` stay allowed: they are the document
+ * ground, never combined with a utility that sets the same property.
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -26,6 +34,9 @@ const SEARCH_DIRS = ["src"];
 
 /** Prefixes and exact names permitted outside a layer. Each is a decision. */
 const ALLOWED_PREFIXES = ["typing-", "ch-"];
+/** Element selectors permitted outside a layer: the document ground only. */
+const ALLOWED_ELEMENTS = new Set(["html", "body", ":root", "*"]);
+
 const ALLOWED_EXACT = new Set([
   "recedes",
   // Status modifiers emitted by TypingSurface. They only ever appear compounded
@@ -88,6 +99,17 @@ function check(file: string, css: string): Violation[] {
               violations.push({ file, line, className: m[1], selector: prelude });
             }
           }
+          // Element selectors, e.g. `a`, `a:hover`, `h1, h2`. Only flagged when
+          // the compound carries no class of its own — a class-bearing compound
+          // is already covered above.
+          if (!prelude.includes(".")) {
+            for (const part of prelude.split(",")) {
+              const tag = part.trim().match(/^([a-zA-Z][\w-]*)/)?.[1];
+              if (tag && !ALLOWED_ELEMENTS.has(tag)) {
+                violations.push({ file, line, className: tag, selector: prelude });
+              }
+            }
+          }
         }
       }
       preludeStart = i + 1;
@@ -105,9 +127,9 @@ const files = SEARCH_DIRS.flatMap((d) => cssFiles(join(ROOT, d)));
 const violations = files.flatMap((f) => check(relative(ROOT, f), readFileSync(f, "utf8")));
 
 if (violations.length > 0) {
-  console.error("Class selectors outside @layer:\n");
+  console.error("Selectors outside @layer:\n");
   for (const v of violations) {
-    console.error(`  ${v.file}:${v.line}  .${v.className}   in  ${v.selector}`);
+    console.error(`  ${v.file}:${v.line}  ${v.className}   in  ${v.selector}`);
   }
   console.error(
     [

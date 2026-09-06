@@ -11,8 +11,9 @@
   --surface: #fffdf8;
   --ink: #221f1b;
   --ink-muted: #625c53;
-  --ink-faint: #9a938a;
+  --ink-faint: #746e65;
   --rule: #e3dcd0;
+  --rule-strong: #8f8b83;
   --accent: #7a2f2f;
   --accent-soft: #f0e3e0;
   --error: #a63a3a;
@@ -24,6 +25,17 @@
     "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Charter,
     "Source Serif Pro", Georgia, "Times New Roman", serif;
   --measure: 34rem;
+
+  /* Type scale. Colour was systemised from the start and typography was not,
+     so heading sizes drifted into per-view Tailwind utilities. These are the
+     source of truth; DESIGN.md records what each step is for. */
+  --text-title: 1.9rem;
+  --text-heading: 1.5rem;
+  --text-section: 1.25rem;
+  --text-lead: 1.125rem;
+  --text-body: 1rem;
+  --text-meta: 0.875rem;
+  --text-label: 0.8125rem;
 }
 
 [data-theme="dark"] {
@@ -32,8 +44,9 @@
   --surface: #1f1d1a;
   --ink: #e9e3d8;
   --ink-muted: #a8a094;
-  --ink-faint: #6f695f;
+  --ink-faint: #8f887e;
   --rule: #302d28;
+  --rule-strong: #6a6864;
   --accent: #d19a8a;
   --accent-soft: #3a2a27;
   --error: #e08a84;
@@ -49,8 +62,9 @@
     --surface: #1f1d1a;
     --ink: #e9e3d8;
     --ink-muted: #a8a094;
-    --ink-faint: #6f695f;
+    --ink-faint: #8f887e;
     --rule: #302d28;
+    --rule-strong: #6a6864;
     --accent: #d19a8a;
     --accent-soft: #3a2a27;
     --error: #e08a84;
@@ -67,12 +81,20 @@
   --color-ink-muted: var(--ink-muted);
   --color-ink-faint: var(--ink-faint);
   --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-error: var(--error);
   --color-error-soft: var(--error-soft);
   --color-focus: var(--focus);
   --font-serif: var(--font-serif);
+  --text-title: var(--text-title);
+  --text-heading: var(--text-heading);
+  --text-section: var(--text-section);
+  --text-lead: var(--text-lead);
+  --text-body: var(--text-body);
+  --text-meta: var(--text-meta);
+  --text-label: var(--text-label);
 }
 
 html {
@@ -102,14 +124,23 @@ body {
   border-radius: 2px;
 }
 
-a {
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: var(--ink-faint);
-  text-underline-offset: 0.18em;
-}
-a:hover {
-  text-decoration-color: var(--accent);
+/* In @layer base, not unlayered. An unlayered element rule beats every layered
+   utility and component rule, exactly as an unlayered class rule does — and
+   this one did: `no-underline` on the wordmark and the nav, and the
+   `text-decoration: none` that `.btn` and `.card` set themselves, were all
+   silently defeated, so every link-shaped button and card on the site rendered
+   underlined. Layered, it now loses to both, which is the intent: this is the
+   default for prose links, not a rule about every anchor. */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--ink-faint);
+    text-underline-offset: 0.18em;
+  }
+  a:hover {
+    text-decoration-color: var(--accent);
+  }
 }
 
 /* Component classes live in Tailwind's `components` layer on purpose. An
@@ -119,7 +150,7 @@ a:hover {
 @layer components {
   /* Small-caps style labels used sparingly for meta information. */
   .label {
-    font-size: 0.78rem;
+    font-size: var(--text-label);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-muted);
@@ -134,7 +165,10 @@ a:hover {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    border: 1px solid var(--rule);
+    /* --rule-strong, not --rule: 1.4.11 wants 3:1 on the boundary that
+       identifies a control. --rule stays for decorative hairlines (the header
+       underline, table row separators), which the same criterion exempts. */
+    border: 1px solid var(--rule-strong);
     background: var(--surface);
     color: var(--ink);
     padding: 0.55rem 1.05rem;
@@ -177,7 +211,7 @@ a:hover {
 
   .card {
     display: block;
-    border: 1px solid var(--rule);
+    border: 1px solid var(--rule-strong);
     background: var(--surface);
     border-radius: 6px;
     padding: 1rem 1.15rem;
@@ -193,9 +227,30 @@ a:hover {
     font: inherit;
     color: var(--ink);
     background: var(--surface);
-    border: 1px solid var(--rule);
+    border: 1px solid var(--rule-strong);
     border-radius: 4px;
     padding: 0.35rem 0.6rem;
+  }
+
+  /* Waiting. Since the corpus moved out of the bundle a slow network is a
+     state the reader sees, so it is designed rather than left as a blank
+     frame. Static bars, not a shimmer: the tone is quiet, and an animated
+     placeholder competes with the prose it stands in for. The bars hold the
+     measure so nothing shifts when the text lands. */
+  .placeholder {
+    max-width: var(--measure);
+  }
+  .placeholder-line {
+    height: 1.85em;
+    border-radius: 3px;
+    background: var(--rule);
+    margin-bottom: 0.55rem;
+  }
+  .placeholder-line:nth-child(2) {
+    width: 88%;
+  }
+  .placeholder-line:nth-child(3) {
+    width: 64%;
   }
 }
 
@@ -317,7 +372,11 @@ a:hover {
     opacity 300ms ease;
 }
 .typing-surface:not(:focus-within) .typing-lines {
-  opacity: 0.55;
+  /* 0.75, not 0.55. At 0.55 the pending text sat at 2.35:1 against the page —
+     not "quietly secondary" but unreadable. 0.75 keeps pending at 3.13:1 and
+     typed text at 5.75:1, which is still an unmissable drop from the focused
+     state without making the passage illegible while it is unfocused. */
+  opacity: 0.75;
 }
 .typing-surface:not(:focus-within) .ch-cursor {
   animation: none;
@@ -330,7 +389,13 @@ a:hover {
    removed from the layout, so nothing shifts.
    ------------------------------------------------------------------------ */
 [data-typing="on"] .recedes {
-  opacity: 0.22;
+  /* 0.7, not 0.22. At 0.22 this composited to 1.36:1 for meta text and 1.57:1
+     for body — the header, meter and menu button were not receded but gone,
+     and the comment below used to claim otherwise. At 0.7 the worst text
+     inside a receded region sits at 3.13:1 (light) / 4.08:1 (dark) while the
+     prose stays at 14.8:1, so the hierarchy is still ~5x and nothing that
+     remains clickable has become unreadable. */
+  opacity: 0.7;
 }
 .recedes {
   opacity: 1;
@@ -341,12 +406,22 @@ a:hover {
    clicking anything in it, would otherwise hold that whole region at full
    opacity for the entire session and quietly defeat focus mode for a user who
    never notices why. Focus is intentional, pointer position is accidental.
-   The controls stay legible and clickable while receded. */
+   The controls stay legible and clickable while receded — see the measured
+   ratios on the opacity rule above, which is what makes that true. */
 [data-typing="on"] .recedes:focus-within {
   opacity: 1;
 }
 @media (prefers-reduced-motion: reduce) {
   .recedes {
     transition: none;
+  }
+}
+
+/* Both recessions are emphasis, not information: a reader who has asked the
+   platform for more contrast gets the interface at full strength instead. */
+@media (prefers-contrast: more) {
+  [data-typing="on"] .recedes,
+  .typing-surface:not(:focus-within) .typing-lines {
+    opacity: 1;
   }
 }

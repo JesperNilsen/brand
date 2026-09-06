@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 export type SessionMenuProps = {
   open: boolean;
@@ -41,6 +42,31 @@ export function SessionMenu({
   }, [open]);
 
   /**
+   * `aria-modal` alone is a promise, not a mechanism: a screen reader's virtual
+   * cursor can still walk the page behind the panel, which is a paused session
+   * the reader is not meant to be reading. `inert` on the rest of the shell is
+   * what makes the promise true, and it removes those elements from the tab
+   * order too, so the Tab handling below becomes a fallback rather than the
+   * only thing holding focus in.
+   *
+   * The panel is portalled to <body> (see the render below). It is written
+   * inside <main>, so inerting the shell in place would have made the dialog
+   * inert along with everything else — the one element that must stay live.
+   * Here the panel is already a child of <body>, so it is simply skipped.
+   */
+  useEffect(() => {
+    if (!open) return;
+    const shell = Array.from(document.body.children).filter(
+      (el): el is HTMLElement =>
+        el instanceof HTMLElement && !el.contains(panelRef.current),
+    );
+    for (const el of shell) el.inert = true;
+    return () => {
+      for (const el of shell) el.inert = false;
+    };
+  }, [open]);
+
+  /**
    * Scoped to the panel, not to `document`. A document listener would catch
    * the very Escape that opened the menu: that keypress is still bubbling up
    * from the writing surface when React mounts this panel, so the menu opened
@@ -68,9 +94,13 @@ export function SessionMenu({
     }
   };
 
+  // Portalled, not rendered in place: the inert effect above needs the panel to
+  // be a sibling of the shell rather than a descendant of it. Safe on the
+  // server because `open` is only ever set by a click, so this returns null
+  // during SSR and hydration.
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-paper/80 p-4 backdrop-blur-sm"
       // The backdrop is a way back to the text, not a way out of the session.
@@ -134,7 +164,8 @@ export function SessionMenu({
           Escape tar deg tilbake til teksten.
         </p>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
