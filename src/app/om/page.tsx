@@ -21,13 +21,6 @@ export default function AboutPage() {
 
       <h2 className="mb-2 mt-8 text-xl">Språkprofilen {brandRiksmaal.displayName}</h2>
       <p className="mb-4">{brandRiksmaal.description}</p>
-      <p className="mb-4 text-ink-muted">
-        Foretrukne former:{" "}
-        {Object.entries(brandRiksmaal.preferredForms)
-          .map(([a, b]) => `${a} (fremfor ${b})`)
-          .join(", ")}
-        .
-      </p>
 
       <h2 className="mb-2 mt-8 text-xl">To utgaver av hver tekst</h2>
       <p className="mb-4">

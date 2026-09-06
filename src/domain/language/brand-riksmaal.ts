@@ -11,7 +11,7 @@ export const brandRiksmaal: LanguageProfile = {
   displayName: "Brand riksmål",
   locale: "nb-NO",
   description:
-    "Moderne, konservativt riksmål: lettlest, verdig og naturlig — aldri museumsaktig. Foretrekker frem, boken, syv, nå, etter, meget, selv og bygget.",
+    "Moderne, konservativt riksmål: lettlest, verdig og naturlig — aldri museumsaktig.",
   preferredForms: {
     frem: "fram",
     boken: "boka",
