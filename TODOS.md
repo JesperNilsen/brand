@@ -139,3 +139,38 @@ ikke ventetiden. Besluttet utsatt i plan-design-review D8, 2026-09-05.
 ulåst. `e2e/content-loading.spec.ts` dekker at teksten faktisk hentes, at det
 skjer én gang, og at feilveien stopper økten; det som gjenstår er selve
 tidsmålingen under strupet nett.
+
+---
+
+## T-09 — De gjenstående danske formklassene (P1, M / M)
+
+**Hva:** Normalisere tre systematiske klasser som ingen av v1-ordlistene tok,
+og som derfor står igjen i alle fire treningsutgavene:
+
+- **Bestemt flertall `-erne` → `-ene`:** `bygderne`, `netterne`, `gjeiterne`,
+  `ferierne`, `spidserne`, `penneposerne`, `adjunkterne`.
+- **Preteritum `-ede` → `-et`/`-te`:** `telegraferede`, `samlede`, `rodede`,
+  `strittede`, `skrabede`, `blekkede`, `stammede`, `skinnede`, `elskede`,
+  `dansede`, `trykkede`, `stillede`.
+- **Bløt konsonant i småord:** `sad` → `satt`, `lod` → `lot`, `gad` → `gadd`,
+  `sagde` → `sa`, `bag` → `bak`, `nogle` → `noen`.
+
+**Hvorfor:** Fant ved profilkonformans-skanningen i D9. Utgavene kaller seg
+moderne-konservativt riksmål og inneholder fortsatt dansk bøyning. Dette er den
+største gjenstående avstanden mellom det `LANGUAGE_PROFILE.md` lover og det
+leseren faktisk skriver.
+
+**Fordeler:** Mekanismen finnes nå — dette er nye grunnregler i
+`brand-riksmaal.base.v2.json` pluss v3-utgaver, gjennom den samme porten.
+**Ulemper:** Ikke rene ordlisteregler. Et mønster `/(\w+)erne\b/ → $1ene`
+ødelegger `gjerne`, `moderne` og `skogstjerne`; `-ede` treffer `brede`, `nede`,
+`fremmede` og `allerede`. Enten trengs en vokterliste, eller så må klassene
+skrives ut som eksplisitte ordpar. Sistnevnte er tryggest og passer måten
+resten av kjeden allerede virker på.
+
+**Kontekst:** `sagde → sa` er ikke ren ortografi — det er et bøyningsvalg, og
+`sagde → sagte` finnes ikke i moderne riksmål. Grensen mot «ikke bytt
+forfatterens ordvalg» må trekkes eksplisitt for denne klassen før den kjøres.
+
+**Avhenger av:** D11 (redaksjonell diff-flyt). Dette er nøyaktig den mengden
+tekstendring som skal kunne leses av et menneske før den publiseres.

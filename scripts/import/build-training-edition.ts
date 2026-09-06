@@ -45,7 +45,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { readdir } from "node:fs/promises";
 import { buildTrainingEdition, serializeEdition, type OriginalFile } from "../lib/build-edition";
-import { type Rules } from "../lib/rules";
+import { loadRules } from "../lib/load-rules";
 
 function arg(name: string): string {
   const i = process.argv.indexOf(`--${name}`);
@@ -77,9 +77,7 @@ async function main() {
   const original = JSON.parse(
     await readFile(path.join(dir, "original.json"), "utf8"),
   ) as OriginalFile;
-  const rules = JSON.parse(
-    await readFile(path.join(dir, `rules.v${version}.json`), "utf8"),
-  ) as Rules;
+  const rules = await loadRules(dir, version);
 
   const { edition, unusedReplacements, appliedRuleCount } = buildTrainingEdition(original, rules);
   const out = path.join(dir, `training-edition.v${version}.json`);

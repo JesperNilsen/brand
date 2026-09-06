@@ -57,11 +57,25 @@ export function getEditionById(work: Work, id: string): TextEditionMeta | undefi
   return work.editions.find((e) => e.id === id);
 }
 
-/** The edition the user normally types: the training edition for the profile, else the original. */
+/** Major version from an edition id ending in `.vN`; 0 when it carries none. */
+export function editionMajorVersion(id: string): number {
+  return Number(/\.v(\d+)$/.exec(id)?.[1] ?? 0);
+}
+
+/**
+ * The edition the user normally types: the newest training edition for the
+ * profile, else the original.
+ *
+ * "Newest" has to be explicit. Once a work has both a v1 and a v2 the first
+ * match in the array is whichever the generator happened to emit first, so
+ * picking it would serve a superseded text on a directory listing's whim —
+ * and stored sessions name the edition they were typed against, so the choice
+ * is not cosmetic.
+ */
 export function defaultEdition(work: Work, languageProfileId: string): TextEditionMeta {
-  const training = work.editions.find(
-    (e) => e.kind === "training-edition" && e.languageProfileId === languageProfileId,
-  );
+  const training = work.editions
+    .filter((e) => e.kind === "training-edition" && e.languageProfileId === languageProfileId)
+    .sort((a, b) => editionMajorVersion(b.id) - editionMajorVersion(a.id))[0];
   const original = getEdition(work, "original");
   const chosen = training ?? original;
   if (!chosen) throw new Error(`Work ${work.id} has no editions`);
