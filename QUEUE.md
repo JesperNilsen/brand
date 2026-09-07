@@ -128,7 +128,9 @@ notes:
 ---
 
 ## Q-002 · Hopp til en bestemt passasje i boken du er på
-status: running:queue/q-002-nonstop-index
+status: done — merged as `034b140` (#22)
+result: Nonstop-velgeren lister hvert segment via en delt `SegmentIndex`, skrevne segmenter er merket med ordet «Skrevet», et eksplisitt segmentvalg slår det lagrede gjenopptakelsespunktet, og gjenopptakelsen utledes nå av mengden fullførte segmenter i stedet for kjørerens posisjon. Porten er målt mot tre plausible naive implementasjoner, ikke bare mot tomt tre — tabellen står i commit-meldingen.
+note: **kjøringen strandet.** Kjøreren døde etter siste filskriving 11:40 med arbeidet ukommittert i arbeidstreet og statusen stående på `running:` — nøyaktig det som ellers blokkerer en lane for alltid. Arbeidet ble tatt over, rebaset på main, ferdigstilt og verifisert i hovedutsjekket. Se også kontraktnotatet over om hvorfor `check:all` ikke kan passere i et køarbeidstre.
 lane: brand-ui
 
 acceptance:

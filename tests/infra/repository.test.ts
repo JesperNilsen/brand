@@ -151,7 +151,8 @@ describe("progress migration (T-10)", () => {
   });
 
   it("names a missing edition rather than dropping the record", () => {
-    const { editionId: _drop, ...noEdition } = legacy;
+    const noEdition: Record<string, unknown> = { ...legacy };
+    delete noEdition.editionId;
     const migrated = migrateProgress(noEdition);
     expect(migrated?.editionId).toBe("unknown");
     expect(migrated?.nextSegmentId).toBe("akt1-06");
