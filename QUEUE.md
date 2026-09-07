@@ -19,10 +19,20 @@ An entry without a real `verify:` gate is not ready to run unattended — the
 runner will mark it `blocked:no verify gate` rather than guess one. Keep entries
 bounded: one reviewable branch each.
 
+**`verify: pnpm check:all` cannot pass in a queue worktree.** The worktree's
+`node_modules` is a symlink to the main checkout's, and Turbopack refuses it
+("Symlink [project]/node_modules is invalid, it points out of the filesystem
+root"), so `pnpm build` — and therefore `check:all` — fails there for reasons
+that have nothing to do with the branch. `check:fast` runs fine. Until the
+runner installs into its own worktree, treat `check:fast` as the local gate and
+**CI on the pull request as the real `check:all`**; that is where Q-001 and
+Q-003 were actually verified.
+
 ---
 
 ## Q-001 · `check:design` — gate DESIGN.md's falsifiable claims
-status: ready
+status: done — merged as `50fa8f2` (#16)
+result: scripts/check-design.ts + a 10-case mutation self-test now recompute DESIGN.md's declared numeric claims from globals.css and src/**/*.tsx; wired into check:fast. Found and fixed two false numbers — the 0.75 typing-lines ratio (3,13 → 3,45, copied from the 0.7 recedes rule, same pair also wrong in the CSS comment) and the dark recedes figure (4,08 → 4,07).
 lane: brand-main
 
 acceptance:
@@ -118,7 +128,7 @@ notes:
 ---
 
 ## Q-002 · Hopp til en bestemt passasje i boken du er på
-status: ready
+status: running:queue/q-002-nonstop-index
 lane: brand-ui
 
 acceptance:
@@ -192,7 +202,8 @@ notes:
 ---
 
 ## Q-003 · Kortformbank: øvingsbiter utledet av utgaven
-status: ready
+status: done — merged as `919fb4b` (#17)
+result: build-drills.ts proposes candidates (143 for ibsen-brand, gitignored working file), the hand cut is 59 items (21 quote / 22 phrase / 16 word) in content/ibsen-brand/drills.v1.json, and validate:content now enforces verbatim-in-edition, editionContentHash freshness, unique ids/texts, a real segmentId and per-kind length floors — proven by 8 mutation cases in `pnpm check:drills`. No UI and no public/ emission: deferred to Q-004, see the commit message.
 lane: brand-content
 
 acceptance:
@@ -253,7 +264,7 @@ notes:
   allocated number on main first** — two lanes have already collided on this.
 
 ## Q-004 · Start å skrive uten å velge bok
-status: blocked:Q-003 — there is no bank to draw from until it lands
+status: ready
 lane: brand-ui
 
 acceptance:
@@ -289,8 +300,11 @@ finished drill is stored and marked non-comparable, and that two seeded starts
 differ.
 
 notes:
-- Flip `status:` to `ready` once Q-003 has landed on main and a bank exists to
-  read. Until then the runner would build a mode with nothing to serve.
+- Unblocked 2026-09-07: Q-003 merged as `919fb4b`, so
+  `content/ibsen-brand/drills.v1.json` (59 items) exists to read. It is not
+  emitted under `public/` yet — Q-003 left that here deliberately, so this entry
+  owns both the emission and the catalog field, and `validate:content`'s
+  orphan-asset check is what makes the two land together.
 - Read `src/domain/modes/passage.ts` and `timed.ts` first — `timed.ts` already
   takes a `seed` in `PlanSelection` for deterministic ordering under test, which
   is the mechanism (5) needs. Do not invent a second one.
