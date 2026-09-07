@@ -1,0 +1,419 @@
+{
+  "id": "ibsen-brand.drills.v1",
+  "contentHash": "sha256:1b9f950590f5aa4377f433689fd0c96ca6dad13bb5fc6bb9af84f528c069d007",
+  "items": [
+    {
+      "id": "q-01",
+      "order": 0,
+      "kind": "quote",
+      "text": "Hei, fremmedkarl, far ei så fort!",
+      "wordCount": 6
+    },
+    {
+      "id": "q-02",
+      "order": 1,
+      "kind": "quote",
+      "text": "Og hvert et veispor har vi tapt.",
+      "wordCount": 7
+    },
+    {
+      "id": "q-03",
+      "order": 2,
+      "kind": "quote",
+      "text": "Jeg hører duren av en foss.",
+      "wordCount": 6
+    },
+    {
+      "id": "q-04",
+      "order": 3,
+      "kind": "quote",
+      "text": "Frem må jeg, som jeg før har sagt.",
+      "wordCount": 8
+    },
+    {
+      "id": "q-05",
+      "order": 4,
+      "kind": "quote",
+      "text": "Det evner ingen mannemakt.",
+      "wordCount": 4
+    },
+    {
+      "id": "q-06",
+      "order": 5,
+      "kind": "quote",
+      "text": "Stans, mann! Det gjelder liv og død!",
+      "wordCount": 7
+    },
+    {
+      "id": "q-07",
+      "order": 6,
+      "kind": "quote",
+      "text": "Jeg må; jeg går en stormanns bud.",
+      "wordCount": 7
+    },
+    {
+      "id": "q-08",
+      "order": 7,
+      "kind": "quote",
+      "text": "Vend om; vær ei så strid og stiv!",
+      "wordCount": 8
+    },
+    {
+      "id": "q-09",
+      "order": 8,
+      "kind": "quote",
+      "text": "Du holder mindre enn du lover.",
+      "wordCount": 6
+    },
+    {
+      "id": "q-10",
+      "order": 9,
+      "kind": "quote",
+      "text": "Du setter livet til!",
+      "wordCount": 4
+    },
+    {
+      "id": "q-11",
+      "order": 10,
+      "kind": "quote",
+      "text": "Nei, han er både gal og vill!",
+      "wordCount": 7
+    },
+    {
+      "id": "q-12",
+      "order": 11,
+      "kind": "quote",
+      "text": "Gud bedre meg så sant og visst!",
+      "wordCount": 7
+    },
+    {
+      "id": "q-13",
+      "order": 12,
+      "kind": "quote",
+      "text": "Og til i dag hun gav deg frist?",
+      "wordCount": 8
+    },
+    {
+      "id": "q-14",
+      "order": 13,
+      "kind": "quote",
+      "text": "Det er ugjørligt verk. Vend om!",
+      "wordCount": 6
+    },
+    {
+      "id": "q-15",
+      "order": 14,
+      "kind": "quote",
+      "text": "Far hjem. Ditt liv er dødens vei.",
+      "wordCount": 7
+    },
+    {
+      "id": "q-16",
+      "order": 15,
+      "kind": "quote",
+      "text": "Du vet ei Gud og Gud ei deg.",
+      "wordCount": 8
+    },
+    {
+      "id": "q-17",
+      "order": 16,
+      "kind": "quote",
+      "text": "Da lider du for Herrens sak.",
+      "wordCount": 6
+    },
+    {
+      "id": "q-18",
+      "order": 17,
+      "kind": "quote",
+      "text": "Au, au; den karl er stiv og sterk.",
+      "wordCount": 8
+    },
+    {
+      "id": "q-19",
+      "order": 18,
+      "kind": "quote",
+      "text": "Slikt kaller han Vorherres verk!",
+      "wordCount": 5
+    },
+    {
+      "id": "q-20",
+      "order": 19,
+      "kind": "quote",
+      "text": "Han gikk innover heien.",
+      "wordCount": 4
+    },
+    {
+      "id": "q-21",
+      "order": 20,
+      "kind": "quote",
+      "text": "Ja, men jeg skimter ham ennu.",
+      "wordCount": 6
+    },
+    {
+      "id": "p-01",
+      "order": 21,
+      "kind": "phrase",
+      "text": "en ser så langt, som staven rekker -",
+      "wordCount": 7
+    },
+    {
+      "id": "p-02",
+      "order": 22,
+      "kind": "phrase",
+      "text": "En bekk har hulet seg innunder;",
+      "wordCount": 6
+    },
+    {
+      "id": "p-03",
+      "order": 23,
+      "kind": "phrase",
+      "text": "her er et dyp, som ingen bunner; -",
+      "wordCount": 7
+    },
+    {
+      "id": "p-04",
+      "order": 24,
+      "kind": "phrase",
+      "text": "Kjenn; - her er grunnen hul og sprød -",
+      "wordCount": 7
+    },
+    {
+      "id": "p-05",
+      "order": 25,
+      "kind": "phrase",
+      "text": "Kanhende det; men jeg vet best,",
+      "wordCount": 6
+    },
+    {
+      "id": "p-06",
+      "order": 26,
+      "kind": "phrase",
+      "text": "Hør, prest; om en er klok og lært,",
+      "wordCount": 8
+    },
+    {
+      "id": "p-07",
+      "order": 27,
+      "kind": "phrase",
+      "text": "han kan ei det, som er for svært.",
+      "wordCount": 8
+    },
+    {
+      "id": "p-08",
+      "order": 28,
+      "kind": "phrase",
+      "text": "En har jo kun det ene liv; -",
+      "wordCount": 7
+    },
+    {
+      "id": "p-09",
+      "order": 29,
+      "kind": "phrase",
+      "text": "Men her er is-tjern rundt omkring,",
+      "wordCount": 6
+    },
+    {
+      "id": "p-10",
+      "order": 30,
+      "kind": "phrase",
+      "text": "Én har dog vist, - er troen sann,",
+      "wordCount": 7
+    },
+    {
+      "id": "p-11",
+      "order": 31,
+      "kind": "phrase",
+      "text": "Hvis Herren for min død har bruk, -",
+      "wordCount": 7
+    },
+    {
+      "id": "p-12",
+      "order": 32,
+      "kind": "phrase",
+      "text": "Hør, bondemann; du sagde før,",
+      "wordCount": 5
+    },
+    {
+      "id": "p-13",
+      "order": 33,
+      "kind": "phrase",
+      "text": "men ei med saligt håp hun tør, -",
+      "wordCount": 7
+    },
+    {
+      "id": "p-14",
+      "order": 34,
+      "kind": "phrase",
+      "text": "I Jesu navn, du får ei glemme,",
+      "wordCount": 7
+    },
+    {
+      "id": "p-15",
+      "order": 35,
+      "kind": "phrase",
+      "text": "Ja, det var lenge før ifjor; -",
+      "wordCount": 6
+    },
+    {
+      "id": "p-16",
+      "order": 36,
+      "kind": "phrase",
+      "text": "og rygtes, hva en ei kan dølge,",
+      "wordCount": 7
+    },
+    {
+      "id": "p-17",
+      "order": 37,
+      "kind": "phrase",
+      "text": "så dømmes jeg i bolt og jern -",
+      "wordCount": 7
+    },
+    {
+      "id": "p-18",
+      "order": 38,
+      "kind": "phrase",
+      "text": "Hør, seg meg - kan du mindes, du,",
+      "wordCount": 7
+    },
+    {
+      "id": "p-19",
+      "order": 39,
+      "kind": "phrase",
+      "text": "Ei trenges veiløps kors for deg; -",
+      "wordCount": 6
+    },
+    {
+      "id": "p-20",
+      "order": 40,
+      "kind": "phrase",
+      "text": "De famler hjem. Du slappe trell,",
+      "wordCount": 6
+    },
+    {
+      "id": "p-21",
+      "order": 41,
+      "kind": "phrase",
+      "text": "på dødstrett rygg, med foten såret,",
+      "wordCount": 6
+    },
+    {
+      "id": "p-22",
+      "order": 42,
+      "kind": "phrase",
+      "text": "Hm; livet, livet; det er svært,",
+      "wordCount": 6
+    },
+    {
+      "id": "w-01",
+      "order": 43,
+      "kind": "word",
+      "text": "regnvær",
+      "wordCount": 1
+    },
+    {
+      "id": "w-02",
+      "order": 44,
+      "kind": "word",
+      "text": "halvmørkt",
+      "wordCount": 1
+    },
+    {
+      "id": "w-03",
+      "order": 45,
+      "kind": "word",
+      "text": "sprød",
+      "wordCount": 1
+    },
+    {
+      "id": "w-04",
+      "order": 46,
+      "kind": "word",
+      "text": "dødsens",
+      "wordCount": 1
+    },
+    {
+      "id": "w-05",
+      "order": 47,
+      "kind": "word",
+      "text": "skjæres",
+      "wordCount": 1
+    },
+    {
+      "id": "w-06",
+      "order": 48,
+      "kind": "word",
+      "text": "blålysblink",
+      "wordCount": 1
+    },
+    {
+      "id": "w-07",
+      "order": 49,
+      "kind": "word",
+      "text": "tørrskodd",
+      "wordCount": 1
+    },
+    {
+      "id": "w-08",
+      "order": 50,
+      "kind": "word",
+      "text": "styggevær",
+      "wordCount": 1
+    },
+    {
+      "id": "w-09",
+      "order": 51,
+      "kind": "word",
+      "text": "saligt",
+      "wordCount": 1
+    },
+    {
+      "id": "w-10",
+      "order": 52,
+      "kind": "word",
+      "text": "ugjørligt",
+      "wordCount": 1
+    },
+    {
+      "id": "w-11",
+      "order": 53,
+      "kind": "word",
+      "text": "hård",
+      "wordCount": 1
+    },
+    {
+      "id": "w-12",
+      "order": 54,
+      "kind": "word",
+      "text": "dølge",
+      "wordCount": 1
+    },
+    {
+      "id": "w-13",
+      "order": 55,
+      "kind": "word",
+      "text": "veiløps",
+      "wordCount": 1
+    },
+    {
+      "id": "w-14",
+      "order": 56,
+      "kind": "word",
+      "text": "møye",
+      "wordCount": 1
+    },
+    {
+      "id": "w-15",
+      "order": 57,
+      "kind": "word",
+      "text": "gavnløs",
+      "wordCount": 1
+    },
+    {
+      "id": "w-16",
+      "order": 58,
+      "kind": "word",
+      "text": "dødstrett",
+      "wordCount": 1
+    }
+  ]
+}

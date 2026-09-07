@@ -266,7 +266,8 @@ notes:
   allocated number on main first** — two lanes have already collided on this.
 
 ## Q-004 · Start å skrive uten å velge bok
-status: ready
+status: done — se commit
+result: `drill`-modus registrert som de tre andre, med `hasChooser: false` — ingen `/velg/drill`, fordi det å slippe å velge ER modusen. Banken emitteres nå som en egen hashet asset ved siden av utgaven, hentes og verifiseres av `drill-loader.ts`, og `check:bundle` har lært at en bank også er korpustekst. Landingssidens FALLBACK er byttet ut; «Fortsett» er urørt.
 lane: brand-ui
 
 acceptance:

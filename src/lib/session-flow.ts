@@ -21,6 +21,7 @@ import {
 } from "@/domain/text-filter";
 import {
   progressKey,
+  type DrillItem,
   type ReadingProgress,
   type TextEdition,
   type TextEditionMeta,
@@ -109,10 +110,10 @@ export function buildPlan(
   params: SessionParams,
   prefs: UserPreferences,
   progress: ReadingProgress | null,
-  content: { work: Work; edition: TextEdition },
+  content: { work: Work; edition: TextEdition; drills?: readonly DrillItem[] },
 ): SessionPlan {
   const mode = requireGameMode(params.mode);
-  const { work, edition } = content;
+  const { work, edition, drills } = content;
   const textFilterId =
     params.textFilterId ?? prefs.textFilterId ?? DEFAULT_TEXT_FILTER_ID;
   const plan = mode.buildPlan({
@@ -123,6 +124,7 @@ export function buildPlan(
     languageProfileId: prefs.languageProfileId,
     errorMode: prefs.defaultErrorMode,
     textFilterId,
+    drills,
     selection: {
       segmentId: params.segmentId,
       startSegmentId: progress?.nextSegmentId,

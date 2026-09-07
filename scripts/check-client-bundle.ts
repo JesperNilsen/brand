@@ -58,12 +58,16 @@ async function main() {
   const { assets, notes } = await buildContentAssets();
   const needles: { what: string; text: string }[] = [];
   for (const asset of assets) {
+    // An edition asset carries `segments`, a drill bank carries `items`. Both
+    // are corpus text, and a bank is the easier of the two to bundle by
+    // accident: it is small enough to look like configuration.
     const parsed = JSON.parse(asset.contents) as {
       id: string;
-      segments: { text: string }[];
+      segments?: { text: string }[];
+      items?: { text: string }[];
     };
-    for (const segment of parsed.segments) {
-      const n = needle(segment.text);
+    for (const piece of parsed.segments ?? parsed.items ?? []) {
+      const n = needle(piece.text);
       if (n) {
         needles.push({ what: `${parsed.id} text`, text: n });
         break;

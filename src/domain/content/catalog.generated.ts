@@ -277,7 +277,13 @@ export const WORKS: Work[] = [
         "basedOnContentHash": "sha256:dcca48d310d6dd50dddb91848ffaa169acb4f530d595f017e7198b7db953ac37",
         "segmentCount": 12,
         "wordCount": 936,
-        "file": "/content/editions/ibsen-brand.training.v1.92d613d9b1a3.json"
+        "file": "/content/editions/ibsen-brand.training.v1.92d613d9b1a3.json",
+        "drills": {
+          "id": "ibsen-brand.drills.v1",
+          "contentHash": "sha256:1b9f950590f5aa4377f433689fd0c96ca6dad13bb5fc6bb9af84f528c069d007",
+          "itemCount": 59,
+          "file": "/content/editions/ibsen-brand.training.v1.drills.1b9f950590f5.json"
+        }
       }
     ]
   },

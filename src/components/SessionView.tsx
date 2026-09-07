@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { EditionLoadError, loadEditionText, orderedSegments } from "@/domain/content/registry";
+import {
+  DrillLoadError,
+  EditionLoadError,
+  loadDrillBank,
+  loadEditionText,
+  orderedSegments,
+} from "@/domain/content/registry";
 import { newId } from "@/domain/ids";
 import { getGameMode } from "@/domain/modes/registry";
 import type { SessionPlan } from "@/domain/modes/types";
@@ -74,13 +80,29 @@ export function SessionView() {
         // it succeeds: a writing surface with no text to type against would
         // take focus and record keystrokes against nothing.
         const edition = await loadEditionText(resolved.edition);
+        // Drill types the bank, not the edition, so it needs a second asset —
+        // fetched here rather than inside the mode, because a mode builds a
+        // plan and must not be able to block on the network.
+        const drills =
+          parsed.mode === "drill"
+            ? await loadDrillBank(
+                resolved.edition.drills ??
+                  (() => {
+                    throw new Error("Denne utgaven har ingen øvingsbiter.");
+                  })(),
+              )
+            : undefined;
         const progress =
           parsed.mode === "nonstop"
             ? await repo.getProgress(
                 nonstopProgressKey(edition, resolved.work, prefs.languageProfileId),
               )
             : null;
-        const plan = buildPlan(parsed, prefs, progress, { work: resolved.work, edition });
+        const plan = buildPlan(parsed, prefs, progress, {
+          work: resolved.work,
+          edition,
+          drills,
+        });
         await repo.savePreferences(rememberChoice(prefs, plan));
         if (!alive) return;
         setFailure(null);
@@ -88,7 +110,7 @@ export function SessionView() {
       } catch (e) {
         if (!alive) return;
         setFailure(
-          e instanceof EditionLoadError
+          e instanceof EditionLoadError || e instanceof DrillLoadError
             ? {
                 message: "Teksten kunne ikke lastes. Sjekk nettforbindelsen.",
                 retryable: true,
@@ -234,10 +256,23 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
   const remaining = runnerRemainingMs(state, clock);
   const elapsed = runnerElapsedMs(state, clock);
   const finished = state.status === "completed" || state.status === "abandoned";
-  // Position within the edition (not within the plan), so Nonstop shows "4 av 12".
+  // Position within the edition (not within the plan), so Nonstop shows "4 av
+  // 12" — the reader's place in the book, not in this sitting.
+  //
+  // A drill is the exception, and has to be: its pieces are cut from the
+  // edition but are not its segments, so an edition-based lookup finds nothing
+  // and would count "0 av 12". Its pieces are the session, so they are what it
+  // counts.
+  const isDrill = plan.gameModeId === "drill";
   const editionOrder = orderedSegments(edition);
-  const segmentNumber = editionOrder.findIndex((s) => s.id === segment.id) + 1;
-  const segmentTotal = editionOrder.length;
+  const order = isDrill ? plan.segments : editionOrder;
+  const segmentNumber = order.findIndex((s) => s.id === segment.id) + 1;
+  const segmentTotal = order.length;
+  // Where you are, in the two modes where that is a real question. Passage has
+  // one segment, and Timed ends on the clock — a count there would suggest a
+  // finish line that does not exist. (Not derived from the end rule: Nonstop
+  // ends on `user-stop`, so the rule and the question are different things.)
+  const showsCounter = isDrill || plan.gameModeId === "nonstop";
 
   return (
     <div className="flex min-h-[70vh] flex-col justify-center">
@@ -248,7 +283,7 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
           </p>
           <p className="text-sm text-ink-muted" data-testid="session-meta">
             {segment.label ?? `Segment ${segmentNumber}`}
-            {plan.gameModeId === "nonstop" ? ` · ${segmentNumber} av ${segmentTotal}` : ""}
+            {showsCounter ? ` · ${segmentNumber} av ${segmentTotal}` : ""}
             {" · "}
             <Link href="/om" className="hover:text-accent">
               {editionLabel(edition)}

@@ -1,4 +1,5 @@
 import type {
+  DrillItem,
   ErrorMode,
   GameMode,
   TextEdition,
@@ -42,7 +43,7 @@ export type PlanSelection = {
   startSegmentId?: string;
   /** Timed: the time limit. */
   limitMs?: number;
-  /** Timed: deterministic ordering for tests. */
+  /** Timed and Drill: deterministic ordering for tests. */
   seed?: number;
 };
 
@@ -55,6 +56,13 @@ export type PlanInput = {
   errorMode: ErrorMode;
   /** Recorded on the plan; the transform itself is applied after buildPlan. */
   textFilterId: TextFilterId;
+  /**
+   * Drill: the edition's bank, fetched alongside its text. Mode-specific the
+   * way `PlanSelection.limitMs` is — a mode that does not need it never looks,
+   * and the one that does refuses to build a plan without it rather than
+   * inventing one.
+   */
+  drills?: readonly DrillItem[];
   selection: PlanSelection;
 };
 
