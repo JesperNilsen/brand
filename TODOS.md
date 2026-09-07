@@ -230,26 +230,25 @@ dem som én modus med to kilder, ikke som to moduser.
   Sjekk høyeste tildelte nummer på main før du tar et nytt.
 -->
 
-## T-13 — Én beholder for varslene på resultatsiden (P3, S / S)
+## T-13 — Én beholder for varslene på resultatsiden — LØST 2026-09-07
 
-**Hva:** Erstatte de tre `mb-8 -mt-6`-blokkene i `ResultView` med én stablet
-beholder som setter avstanden ett sted.
+**Løst, men premisset var galt, og det er verdt å skrive ned.** Posten sa at
+margene «kolliderer» når alle tre varslene vises samtidig. Målt før endringen:
+avstanden mellom varslene var **9 px**, ikke overlapp. Hver blokk hadde
+`mb-8 -mt-6`, og tilstøtende marger faller sammen til `32 + (-24) = 8` — altså
+en lovlig, men trang avstand, ikke et sammenbrudd. Ingenting lå oppå noe annet.
 
-**Hvorfor:** Hvert varsel trekker seg selv oppover med en negativ marg, og
-regner med å være det eneste på siden. En avbrutt økt, i et privat vindu,
-skrevet med en tekstform, viser alle tre — og margene kolliderer.
+Det som faktisk var galt var at avstanden ble satt tre steder, og at rytmen
+mellom varsler dermed var strammere enn resten av siden. Nå ligger de tre i én
+`flex flex-col gap-3`-beholder som setter `-mt-6 mb-8` én gang: **13 px** mellom
+varslene, uendret 56 px ned til tallene.
 
-**Fordeler:** Fjerner en layoutfeil i nøyaktig den situasjonen der leseren
-allerede får dårlige nyheter.
-**Ulemper:** Sjelden kombinasjon, og rent kosmetisk når den inntreffer.
-
-**Kontekst:** `src/components/ResultView.tsx` — varslene `unsaved-notice`,
-tekstform og `paused-notice`. Hvert av dem er riktig alene. Reproduseres med en
-avbrutt økt i privat vindu med en tekstform som endrer teksten.
-
-**Avhenger av:** ingenting. Funnet i designrevisjonen 2026-09-06.
-
----
+`e2e/result-notices.spec.ts` fremstiller kombinasjonen ingen lager ved et uhell
+— avbrutt økt, tekstform som endrer teksten, og en nettleser som ikke lagrer —
+og sjekker at alle tre vises, i rekkefølge, uten overlapp. **Den porten biter
+ikke på den gamle koden**, siden den gamle koden heller ikke overlappet; den er
+en regresjonsvakt for kombinasjonen, ikke et bevis på fiksen. Bevisene på fiksen
+er de to målingene over.
 
 ## T-14 — Flytte overskriftene over på `--text-*`-tokenene (P3, S / M)
 
