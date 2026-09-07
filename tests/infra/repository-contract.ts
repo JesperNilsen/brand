@@ -105,6 +105,23 @@ const KEY = progressKey({
   workId: "w",
 });
 
+/**
+ * A progress record exactly as the app wrote it before 2026-09-07, when the
+ * edition id was part of the key. Written straight into the store under that
+ * key, which is what makes this a migration test rather than a restatement of
+ * how the current code writes records.
+ */
+const LEGACY_PROGRESS = {
+  key: "brand-riksmaal::w.training.v1::nonstop::w",
+  workId: "w",
+  editionId: "w.training.v1",
+  languageProfileId: "brand-riksmaal",
+  gameModeId: "nonstop",
+  nextSegmentId: "s6",
+  completedSegmentIds: ["s1", "s2", "s3", "s4", "s5"],
+  updatedAt: "2026-09-01T10:00:00.000Z",
+} as unknown as ReadingProgress;
+
 export function describeRepositoryContract(name: string, make: () => BrandRepository): void {
   describe(`${name} (repository contract)`, () => {
     let repo: BrandRepository;
@@ -158,12 +175,17 @@ export function describeRepositoryContract(name: string, make: () => BrandReposi
       });
 
       it("enumerates every stored record, and nothing after a delete", async () => {
+        const OTHER = progressKey({
+          languageProfileId: "brand-riksmaal",
+          gameModeId: "nonstop",
+          workId: "w2",
+        });
         expect(await repo.listProgress()).toEqual([]);
         await repo.saveProgress(makeProgress(KEY));
-        await repo.saveProgress(makeProgress("other", { workId: "w2" }));
-        expect((await repo.listProgress()).map((p) => p.key).sort()).toEqual([KEY, "other"].sort());
+        await repo.saveProgress(makeProgress(OTHER, { workId: "w2" }));
+        expect((await repo.listProgress()).map((p) => p.key).sort()).toEqual([KEY, OTHER].sort());
         await repo.deleteProgress(KEY);
-        expect((await repo.listProgress()).map((p) => p.key)).toEqual(["other"]);
+        expect((await repo.listProgress()).map((p) => p.key)).toEqual([OTHER]);
       });
 
       it("deleting a key that does not exist is a no-op", async () => {
@@ -175,6 +197,57 @@ export function describeRepositoryContract(name: string, make: () => BrandReposi
         const read = await repo.getProgress(KEY);
         read!.completedSegmentIds.push("smuggled");
         expect((await repo.getProgress(KEY))?.completedSegmentIds).toEqual(["s1"]);
+      });
+
+      // T-10. The reader's place is in the work, not in one cut of it: a new
+      // training edition used to hand them a key nothing looked up, and they
+      // started the work over without being told. It had already happened once,
+      // undocumented, when three packs moved to v2.
+      it("finds progress written under the old edition-scoped key", async () => {
+        await repo.saveProgress(LEGACY_PROGRESS);
+
+        const found = await repo.getProgress(KEY);
+        expect(found?.nextSegmentId).toBe("s6");
+        expect(found?.completedSegmentIds).toEqual(["s1", "s2", "s3", "s4", "s5"]);
+        expect(found?.key).toBe(KEY);
+      });
+
+      it("merges the two records a reader has after an edition bump", async () => {
+        // Read five segments under v1, then two more after the bump wrote a
+        // second record. Both are real, and neither is the whole truth.
+        await repo.saveProgress(LEGACY_PROGRESS);
+        await repo.saveProgress({
+          ...makeProgress(KEY, {
+            editionId: "w.training.v2",
+            nextSegmentId: "s8",
+            completedSegmentIds: ["s6", "s7"],
+            updatedAt: "2026-09-05T10:00:00.000Z",
+          }),
+        });
+
+        const merged = await repo.getProgress(KEY);
+        expect(merged?.nextSegmentId).toBe("s8");
+        expect([...(merged?.completedSegmentIds ?? [])].sort()).toEqual([
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5",
+          "s6",
+          "s7",
+        ]);
+        // One record per key, or the history page would count the work twice.
+        expect(await repo.listProgress()).toHaveLength(1);
+      });
+
+      it("deleting also removes the legacy record behind the key", async () => {
+        // SessionView deletes progress when a work is finished. A legacy record
+        // left behind would be migrated forward on the next read and resurrect
+        // progress the reader had just completed.
+        await repo.saveProgress(LEGACY_PROGRESS);
+        await repo.deleteProgress(KEY);
+        expect(await repo.getProgress(KEY)).toBeNull();
+        expect(await repo.listProgress()).toEqual([]);
       });
     });
 

@@ -6,7 +6,13 @@ import type {
   UserPreferences,
 } from "@/domain/types";
 import type { PreferencesStore } from "../preferences/local-storage";
-import { applySessionQuery, type BrandRepository } from "./BrandRepository";
+import {
+  applySessionQuery,
+  readProgress,
+  readProgressList,
+  storedProgressKeys,
+  type BrandRepository,
+} from "./BrandRepository";
 import { migrateSession } from "./migrations";
 
 export const DB_NAME = "brand";
@@ -62,14 +68,17 @@ export class IndexedDbRepository implements BrandRepository {
     this.preferences.write(value);
   }
 
+  // Progress is read through the whole store rather than by store key: a
+  // record's key is recomputed from its fields on read, so one written under
+  // an older key still answers. See readProgressList().
   async getProgress(key: string): Promise<ReadingProgress | null> {
     const db = await this.db();
-    return (await db.get("progress", key)) ?? null;
+    return readProgress(await db.getAll("progress"), key);
   }
 
   async listProgress(): Promise<ReadingProgress[]> {
     const db = await this.db();
-    return db.getAll("progress");
+    return readProgressList(await db.getAll("progress"));
   }
 
   async saveProgress(value: ReadingProgress): Promise<void> {
@@ -79,7 +88,10 @@ export class IndexedDbRepository implements BrandRepository {
 
   async deleteProgress(key: string): Promise<void> {
     const db = await this.db();
-    await db.delete("progress", key);
+    const stored = storedProgressKeys(await db.getAll("progress"), key);
+    // The key itself too: a record may be gone from the store while a caller
+    // still holds its key, and delete on a missing key is a no-op anyway.
+    for (const k of new Set([key, ...stored])) await db.delete("progress", k);
   }
 
   async addSession(value: SessionResult): Promise<void> {

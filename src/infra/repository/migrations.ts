@@ -3,7 +3,7 @@ import {
   DEFAULT_TEXT_FILTER_ID,
   isTextFilterId,
 } from "@/domain/text-filter";
-import type { SessionResult, UserPreferences } from "@/domain/types";
+import { progressKey, type ReadingProgress, type SessionResult, type UserPreferences } from "@/domain/types";
 
 export const PREFERENCES_SCHEMA_VERSION = 1 as const;
 export const SESSION_SCHEMA_VERSION = 4 as const;
@@ -126,4 +126,74 @@ export function migrateSession(raw: unknown): SessionResult | null {
     r.pausedMs === pausedMs &&
     r.pauseCount === pauseCount;
   return unchanged ? (raw as SessionResult) : migrated;
+}
+
+/**
+ * Returns null when a stored progress record cannot be understood.
+ *
+ * The key is **recomputed from the record's own fields** rather than parsed out
+ * of the stored one. Records written before 2026-09-07 carry a key that
+ * included the edition id, so a new training edition gave the same reader, on
+ * the same work, a key nothing looked up — their place was still on disk and
+ * the app started them over anyway. Recomputing folds those records onto the
+ * key the app asks for today, and does the same for a key from any shape this
+ * has not seen, without needing to recognise the old format.
+ *
+ * There is no schemaVersion here, deliberately: a progress record is small and
+ * fully described by its fields, and a version number would have to be migrated
+ * before it could tell us anything the fields do not already say.
+ */
+export function migrateProgress(raw: unknown): ReadingProgress | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  if (
+    typeof r.workId !== "string" ||
+    typeof r.languageProfileId !== "string" ||
+    typeof r.gameModeId !== "string" ||
+    typeof r.nextSegmentId !== "string" ||
+    typeof r.updatedAt !== "string" ||
+    !Array.isArray(r.completedSegmentIds) ||
+    r.completedSegmentIds.some((id) => typeof id !== "string")
+  ) {
+    return null;
+  }
+  const key = progressKey({
+    languageProfileId: r.languageProfileId,
+    gameModeId: r.gameModeId,
+    workId: r.workId,
+  });
+  // Missing rather than wrong: a record with no edition names none, the way a
+  // pre-versioning session does. It is descriptive, so it is filled, not
+  // grounds for rejecting a reader's place in a book.
+  const editionId = typeof r.editionId === "string" ? r.editionId : UNKNOWN_EDITION;
+  // Idempotence by identity, as with migrateSession: this runs on every read of
+  // every record, and a later migration will run on its output.
+  if (r.key === key && r.editionId === editionId) return raw as ReadingProgress;
+  return { ...(raw as ReadingProgress), key, editionId };
+}
+
+/**
+ * One record per key, newest last-written wins, completed segments unioned.
+ *
+ * Two records collide exactly when a reader read the same work in the same mode
+ * under two editions — which is the situation this migration exists for. The
+ * union is the honest answer: they really did write those passages, and a
+ * segment id names the same passage in both editions. The rest of the record
+ * comes from the newer one, so the resume point is the one they last left.
+ */
+export function mergeProgress(records: readonly ReadingProgress[]): ReadingProgress[] {
+  const byKey = new Map<string, ReadingProgress>();
+  for (const record of records) {
+    const existing = byKey.get(record.key);
+    if (!existing) {
+      byKey.set(record.key, record);
+      continue;
+    }
+    const [older, newer] =
+      existing.updatedAt <= record.updatedAt ? [existing, record] : [record, existing];
+    const completed = new Set(older.completedSegmentIds);
+    for (const id of newer.completedSegmentIds) completed.add(id);
+    byKey.set(record.key, { ...newer, completedSegmentIds: [...completed] });
+  }
+  return [...byKey.values()];
 }

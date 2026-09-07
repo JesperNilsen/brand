@@ -1,5 +1,9 @@
 import type { BrandRepository } from "@/infra/repository";
-import { migratePreferences, migrateSession } from "@/infra/repository/migrations";
+import {
+  migratePreferences,
+  migrateProgress,
+  migrateSession,
+} from "@/infra/repository/migrations";
 import type { ReadingProgress, SessionResult, UserPreferences } from "@/domain/types";
 
 /**
@@ -62,17 +66,6 @@ export function exportFileName(now = new Date()): string {
 
 export class ImportError extends Error {}
 
-function isProgress(value: unknown): value is ReadingProgress {
-  if (!value || typeof value !== "object") return false;
-  const p = value as Record<string, unknown>;
-  return (
-    typeof p.key === "string" &&
-    typeof p.workId === "string" &&
-    typeof p.editionId === "string" &&
-    Array.isArray(p.completedSegmentIds)
-  );
-}
-
 /**
  * Reads a previously exported file back in.
  *
@@ -119,9 +112,13 @@ export async function importData(repo: BrandRepository, raw: unknown): Promise<I
     report.sessionsImported += 1;
   }
 
+  // Through the same migration the repository uses on read, and for the same
+  // reason: a file exported before 2026-09-07 carries progress keyed by
+  // edition, and importing it verbatim would restore a key nothing looks up.
   for (const candidate of Array.isArray(data.progress) ? data.progress : []) {
-    if (!isProgress(candidate)) continue;
-    await repo.saveProgress(candidate);
+    const progress = migrateProgress(candidate);
+    if (!progress) continue;
+    await repo.saveProgress(progress);
     report.progressImported += 1;
   }
 
