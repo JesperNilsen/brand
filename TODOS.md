@@ -272,54 +272,29 @@ størrelsesbytte er synlig.
 
 ---
 
-## T-15 — `pnpm test:e2e` faller lokalt, men ikke i CI (P3, M / M)
+## T-15 — `pnpm check:all` faller lokalt, men ikke i CI — LØST 2026-09-07
 
-**Hva:** Finne ut hvorfor `e2e/passage-flow.spec.ts:98` (Nonstop-resume) faller i
-full lokal kjøring på denne maskinen, og består i CI.
+**Årsaken var et kappløp i testen, ikke i appen — og ikke en tidsmargin.**
+`onSegmentComplete` skriver framgangen, og ingenting venter på den. Testen
+navigerte videre i det øyeblikket *grensesnittet* sa at segmentet var avansert
+(«2 av N»), altså mens skrivingen til IndexedDB fortsatt var underveis. På en
+maskin lastet av de to produksjonsbyggene `check:all` gjør først, rakk
+navigasjonen å komme først, siden ble lastet ut midt i transaksjonen, og
+velgeren rapporterte ærlig at det ikke fantes framgang. CI er raskere gjennom
+akkurat det vinduet, og gikk derfor grønt.
 
-**Hvorfor:** Ikke fordi porten er rød — CI kjører 35 av 35 grønt, både på main
-og på designrevisjons-grenen. Problemet er at den lokale kjøringen ikke kan
-brukes som port før push: den viser én rød uansett hva du har endret, og da
-slutter man å lese den. Det er den samme mekanismen som gjør en ekte rød port
-verdiløs, bare ett steg tidligere.
+**Målt, ikke antatt.** Tre `pnpm check:all` på rad på uendret `main` før
+endringen: grønn, **rød**, grønn — samme test, samme påstand
+(«Du har skrevet 1 av»). Tre på rad etter: grønn, grønn, grønn.
 
-**Fordeler:** Gjør `pnpm test:e2e` til noe man kan stole på lokalt igjen.
-**Ulemper:** Miljøavhengige feil er trege å spore, og gevinsten er ren
-utvikleropplevelse — brukeren ser ingenting.
+Testen venter nå på at posten faktisk ligger i IndexedDB
+(`waitForStoredProgress` i `e2e/passage-flow.spec.ts`) før den navigerer. Det er
+også en strengere påstand enn en fast ventetid ville vært: den sjekker at appen
+*lagret*, ikke at den sannsynligvis rakk det.
 
-**Kontekst:** Testen faller på `Du har skrevet 1 av` etter en omlasting, kun i
-full kjøring, kun lokalt. Verifisert på ren `main` 2026-09-06 ved å stashe og
-kjøre suiten på et urørt utsjekk: 32 bestått / 1 falt, samme test — altså ikke
-innført av en endring. Den består alene.
+**Observasjonen som følger med, og som ikke er fikset:** appen gir ingen garanti
+for at framgangsskrivingen er ferdig før en navigasjon. For et menneske er
+vinduet millisekunder etter siste tegn i et segment, og nettleseren fullfører
+normalt en påbegynt IndexedDB-transaksjon — men garantien finnes ikke. Om det
+noen gang skal lukkes, hører det hjemme i `SessionView`, ikke i en test.
 
-Merk at CI kjører **de samme filene i samme rekkefølge** og går grønt, så den
-nærliggende teorien om at en tidligere testfil lekker lagret Nonstop-fremdrift
-er *svekket*, ikke bekreftet. Se heller etter noe maskinlokalt: gjenbrukt
-nettleserprofil eller brukerdatakatalog mellom kjøringer, eller en tidsmargin
-som bare ryker på denne maskinen. `playwright.config.ts` har allerede
-`workers: 1` og `fullyParallel: false`.
-
-**Innsnevret 2026-09-06.** Diskriminanten er ikke full kjøring mot alene, slik
-det sto over — den er `pnpm check:all` mot `pnpm exec playwright test`:
-
-| kjøring | Nonstop |
-| --- | --- |
-| `pnpm check:all` | rød 2 av 2 |
-| `pnpm exec playwright test` (hele suiten) | grønn 4 av 4 |
-| `pnpm check:all` med `src/` reversert til main | rød |
-| CI, samme `pnpm check:all` | grønn |
-
-Hele suiten alene består altså. Det som skiller er de to produksjonsbyggene
-`check:all` gjør først (`pnpm build`, så `next build` i Playwrights `webServer`),
-og testen venter 5 s på en fremdriftstekst etter en omlasting. Se etter en
-tidsmargin som ryker på en lastet maskin, ikke etter lekkasje mellom testfiler —
-og merk at «rød uansett hva som er endret» ikke stemmer: urørt tre består 33 av
-33 i bar kjøring. Enkleste neste steg er å heve nettopp den ventetiden og se om
-den blir grønn tre ganger på rad.
-
-**Akseptanse:** `pnpm check:all` avslutter med 0 i tre fulle lokale kjøringer på
-rad, uten at noen test er hoppet over eller markert flaky.
-**Verify:** `pnpm test:e2e`
-
-**Avhenger av:** ingenting. Egner seg dårlig for uovervåket kjøring, siden
-symptomet ikke finnes i CI.
