@@ -299,8 +299,26 @@ nettleserprofil eller brukerdatakatalog mellom kjøringer, eller en tidsmargin
 som bare ryker på denne maskinen. `playwright.config.ts` har allerede
 `workers: 1` og `fullyParallel: false`.
 
-**Akseptanse:** `pnpm test:e2e` avslutter med 0 i én full lokal kjøring, tre
-ganger på rad, uten at noen test er hoppet over eller markert flaky.
+**Innsnevret 2026-09-06.** Diskriminanten er ikke full kjøring mot alene, slik
+det sto over — den er `pnpm check:all` mot `pnpm exec playwright test`:
+
+| kjøring | Nonstop |
+| --- | --- |
+| `pnpm check:all` | rød 2 av 2 |
+| `pnpm exec playwright test` (hele suiten) | grønn 4 av 4 |
+| `pnpm check:all` med `src/` reversert til main | rød |
+| CI, samme `pnpm check:all` | grønn |
+
+Hele suiten alene består altså. Det som skiller er de to produksjonsbyggene
+`check:all` gjør først (`pnpm build`, så `next build` i Playwrights `webServer`),
+og testen venter 5 s på en fremdriftstekst etter en omlasting. Se etter en
+tidsmargin som ryker på en lastet maskin, ikke etter lekkasje mellom testfiler —
+og merk at «rød uansett hva som er endret» ikke stemmer: urørt tre består 33 av
+33 i bar kjøring. Enkleste neste steg er å heve nettopp den ventetiden og se om
+den blir grønn tre ganger på rad.
+
+**Akseptanse:** `pnpm check:all` avslutter med 0 i tre fulle lokale kjøringer på
+rad, uten at noen test er hoppet over eller markert flaky.
 **Verify:** `pnpm test:e2e`
 
 **Avhenger av:** ingenting. Egner seg dårlig for uovervåket kjøring, siden
