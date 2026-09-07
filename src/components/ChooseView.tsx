@@ -33,6 +33,7 @@ import {
   nonstopProgressKey,
   sessionHref,
 } from "@/lib/session-flow";
+import { Loading } from "./Loading";
 import { TextFilterChooser } from "./TextFilterChooser";
 
 type Props = { modeId: string };
@@ -42,6 +43,16 @@ type Props = { modeId: string };
  * edition text fetched before it can render.
  */
 const LISTS_SEGMENTS = new Set(["passage", "nonstop"]);
+
+/**
+ * How long the list may be missing before the page admits it is waiting.
+ *
+ * DESIGN.md requires four states and never `null`, but bars that appear and
+ * vanish inside a hundred milliseconds are worse than the blank they replace:
+ * the eye reads the flash as a fault. The text is usually cached or local, so
+ * this is the threshold below which a wait is not worth naming.
+ */
+const LOADING_DELAY_MS = 300;
 
 /**
  * The ordered list of segments in a work. Passage has rendered this since V1;
@@ -109,6 +120,7 @@ export function ChooseView({ modeId }: Props) {
   const [fetchedText, setFetchedText] = useState<TextEdition | null>(null);
   const [textFailed, setTextFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [showLoading, setShowLoading] = useState(false);
   /** Set as soon as the user touches a control, so the late read cannot win. */
   const chosenRef = useRef(false);
   /** Serialises preference writes so two quick choices cannot settle out of order. */
@@ -166,6 +178,22 @@ export function ChooseView({ modeId }: Props) {
       alive = false;
     };
   }, [work, prefs, mode.id, attempt]);
+
+  // The same guards as the fetch above, deliberately: this is a clock on that
+  // wait, and deriving it from the rendered state instead would mean reading a
+  // value declared after the early returns — which a hook may not sit behind.
+  //
+  // Only raised, never lowered: the block it governs stops rendering the moment
+  // the text lands, so there is nothing to reset — and a retry after a failure
+  // is a wait the reader has already been told about, which is exactly when
+  // bars should appear at once rather than after another pause.
+  useEffect(() => {
+    if (!work || !prefs || !LISTS_SEGMENTS.has(mode.id)) return;
+    if (loadedEdition(defaultEdition(work, prefs.languageProfileId))) return;
+    if (fetchedText || textFailed) return;
+    const timer = setTimeout(() => setShowLoading(true), LOADING_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [work, prefs, mode.id, fetchedText, textFailed, attempt]);
 
   const chooseFilter = (next: TextFilterId) => {
     chosenRef.current = true;
@@ -225,6 +253,7 @@ export function ChooseView({ modeId }: Props) {
   const edition = defaultEdition(work, profileId);
   const text = loadedEdition(edition) ?? fetchedText;
   const segments = text ? orderedSegments(text) : null;
+  const waitingForText = LISTS_SEGMENTS.has(mode.id) && !segments && !textFailed;
   const completedIds = new Set(progress?.completedSegmentIds ?? []);
   const pack = getContentPack(work.contentPackId);
 
@@ -277,6 +306,10 @@ export function ChooseView({ modeId }: Props) {
         </div>
       )}
 
+      {mode.id === "passage" && waitingForText && showLoading && (
+        <Loading message="Henter teksten …" lines={4} />
+      )}
+
       {mode.id === "passage" && segments && (
         <SegmentIndex
           segments={segments}
@@ -299,6 +332,14 @@ export function ChooseView({ modeId }: Props) {
             totalSegments={edition.segmentCount}
             textFilterId={textFilterId}
           />
+          {waitingForText && showLoading && (
+            <section className="mt-10" aria-labelledby="nonstop-index-pending">
+              <h2 id="nonstop-index-pending" className="label mb-3">
+                Eller hopp til en passasje
+              </h2>
+              <Loading message="Henter teksten …" lines={3} />
+            </section>
+          )}
           {segments && (
             <section className="mt-10" aria-labelledby="nonstop-index">
               {/*
