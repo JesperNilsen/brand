@@ -1,0 +1,362 @@
+{
+  "id": "ibsen-brand.drills.v1",
+  "workId": "ibsen-brand",
+  "editionId": "ibsen-brand.training.v1",
+  "editionContentHash": "sha256:92d613d9b1a385454935b2ce614de39fe1159a77a1569f67393a3cd18e3170e9",
+  "items": [
+    {
+      "id": "q-01",
+      "kind": "quote",
+      "text": "Hei, fremmedkarl, far ei så fort!",
+      "segmentId": "akt1-01"
+    },
+    {
+      "id": "q-02",
+      "kind": "quote",
+      "text": "Og hvert et veispor har vi tapt.",
+      "segmentId": "akt1-01"
+    },
+    {
+      "id": "q-03",
+      "kind": "quote",
+      "text": "Jeg hører duren av en foss.",
+      "segmentId": "akt1-02"
+    },
+    {
+      "id": "q-04",
+      "kind": "quote",
+      "text": "Frem må jeg, som jeg før har sagt.",
+      "segmentId": "akt1-02"
+    },
+    {
+      "id": "q-05",
+      "kind": "quote",
+      "text": "Det evner ingen mannemakt.",
+      "segmentId": "akt1-03"
+    },
+    {
+      "id": "q-06",
+      "kind": "quote",
+      "text": "Stans, mann! Det gjelder liv og død!",
+      "segmentId": "akt1-03"
+    },
+    {
+      "id": "q-07",
+      "kind": "quote",
+      "text": "Jeg må; jeg går en stormanns bud.",
+      "segmentId": "akt1-03"
+    },
+    {
+      "id": "q-08",
+      "kind": "quote",
+      "text": "Vend om; vær ei så strid og stiv!",
+      "segmentId": "akt1-04"
+    },
+    {
+      "id": "q-09",
+      "kind": "quote",
+      "text": "Du holder mindre enn du lover.",
+      "segmentId": "akt1-05"
+    },
+    {
+      "id": "q-10",
+      "kind": "quote",
+      "text": "Du setter livet til!",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "q-11",
+      "kind": "quote",
+      "text": "Nei, han er både gal og vill!",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "q-12",
+      "kind": "quote",
+      "text": "Gud bedre meg så sant og visst!",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "q-13",
+      "kind": "quote",
+      "text": "Og til i dag hun gav deg frist?",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "q-14",
+      "kind": "quote",
+      "text": "Det er ugjørligt verk. Vend om!",
+      "segmentId": "akt1-07"
+    },
+    {
+      "id": "q-15",
+      "kind": "quote",
+      "text": "Far hjem. Ditt liv er dødens vei.",
+      "segmentId": "akt1-08"
+    },
+    {
+      "id": "q-16",
+      "kind": "quote",
+      "text": "Du vet ei Gud og Gud ei deg.",
+      "segmentId": "akt1-08"
+    },
+    {
+      "id": "q-17",
+      "kind": "quote",
+      "text": "Da lider du for Herrens sak.",
+      "segmentId": "akt1-09"
+    },
+    {
+      "id": "q-18",
+      "kind": "quote",
+      "text": "Au, au; den karl er stiv og sterk.",
+      "segmentId": "akt1-10"
+    },
+    {
+      "id": "q-19",
+      "kind": "quote",
+      "text": "Slikt kaller han Vorherres verk!",
+      "segmentId": "akt1-10"
+    },
+    {
+      "id": "q-20",
+      "kind": "quote",
+      "text": "Han gikk innover heien.",
+      "segmentId": "akt1-11"
+    },
+    {
+      "id": "q-21",
+      "kind": "quote",
+      "text": "Ja, men jeg skimter ham ennu.",
+      "segmentId": "akt1-11"
+    },
+    {
+      "id": "p-01",
+      "kind": "phrase",
+      "text": "en ser så langt, som staven rekker -",
+      "segmentId": "akt1-01"
+    },
+    {
+      "id": "p-02",
+      "kind": "phrase",
+      "text": "En bekk har hulet seg innunder;",
+      "segmentId": "akt1-02"
+    },
+    {
+      "id": "p-03",
+      "kind": "phrase",
+      "text": "her er et dyp, som ingen bunner; -",
+      "segmentId": "akt1-02"
+    },
+    {
+      "id": "p-04",
+      "kind": "phrase",
+      "text": "Kjenn; - her er grunnen hul og sprød -",
+      "segmentId": "akt1-03"
+    },
+    {
+      "id": "p-05",
+      "kind": "phrase",
+      "text": "Kanhende det; men jeg vet best,",
+      "segmentId": "akt1-04"
+    },
+    {
+      "id": "p-06",
+      "kind": "phrase",
+      "text": "Hør, prest; om en er klok og lært,",
+      "segmentId": "akt1-04"
+    },
+    {
+      "id": "p-07",
+      "kind": "phrase",
+      "text": "han kan ei det, som er for svært.",
+      "segmentId": "akt1-04"
+    },
+    {
+      "id": "p-08",
+      "kind": "phrase",
+      "text": "En har jo kun det ene liv; -",
+      "segmentId": "akt1-04"
+    },
+    {
+      "id": "p-09",
+      "kind": "phrase",
+      "text": "Men her er is-tjern rundt omkring,",
+      "segmentId": "akt1-05"
+    },
+    {
+      "id": "p-10",
+      "kind": "phrase",
+      "text": "Én har dog vist, - er troen sann,",
+      "segmentId": "akt1-05"
+    },
+    {
+      "id": "p-11",
+      "kind": "phrase",
+      "text": "Hvis Herren for min død har bruk, -",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "p-12",
+      "kind": "phrase",
+      "text": "Hør, bondemann; du sagde før,",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "p-13",
+      "kind": "phrase",
+      "text": "men ei med saligt håp hun tør, -",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "p-14",
+      "kind": "phrase",
+      "text": "I Jesu navn, du får ei glemme,",
+      "segmentId": "akt1-07"
+    },
+    {
+      "id": "p-15",
+      "kind": "phrase",
+      "text": "Ja, det var lenge før ifjor; -",
+      "segmentId": "akt1-08"
+    },
+    {
+      "id": "p-16",
+      "kind": "phrase",
+      "text": "og rygtes, hva en ei kan dølge,",
+      "segmentId": "akt1-09"
+    },
+    {
+      "id": "p-17",
+      "kind": "phrase",
+      "text": "så dømmes jeg i bolt og jern -",
+      "segmentId": "akt1-09"
+    },
+    {
+      "id": "p-18",
+      "kind": "phrase",
+      "text": "Hør, seg meg - kan du mindes, du,",
+      "segmentId": "akt1-11"
+    },
+    {
+      "id": "p-19",
+      "kind": "phrase",
+      "text": "Ei trenges veiløps kors for deg; -",
+      "segmentId": "akt1-11"
+    },
+    {
+      "id": "p-20",
+      "kind": "phrase",
+      "text": "De famler hjem. Du slappe trell,",
+      "segmentId": "akt1-12"
+    },
+    {
+      "id": "p-21",
+      "kind": "phrase",
+      "text": "på dødstrett rygg, med foten såret,",
+      "segmentId": "akt1-12"
+    },
+    {
+      "id": "p-22",
+      "kind": "phrase",
+      "text": "Hm; livet, livet; det er svært,",
+      "segmentId": "akt1-12"
+    },
+    {
+      "id": "w-01",
+      "kind": "word",
+      "text": "regnvær",
+      "segmentId": "akt1-01"
+    },
+    {
+      "id": "w-02",
+      "kind": "word",
+      "text": "halvmørkt",
+      "segmentId": "akt1-01"
+    },
+    {
+      "id": "w-03",
+      "kind": "word",
+      "text": "sprød",
+      "segmentId": "akt1-03"
+    },
+    {
+      "id": "w-04",
+      "kind": "word",
+      "text": "dødsens",
+      "segmentId": "akt1-04"
+    },
+    {
+      "id": "w-05",
+      "kind": "word",
+      "text": "skjæres",
+      "segmentId": "akt1-04"
+    },
+    {
+      "id": "w-06",
+      "kind": "word",
+      "text": "blålysblink",
+      "segmentId": "akt1-05"
+    },
+    {
+      "id": "w-07",
+      "kind": "word",
+      "text": "tørrskodd",
+      "segmentId": "akt1-05"
+    },
+    {
+      "id": "w-08",
+      "kind": "word",
+      "text": "styggevær",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "w-09",
+      "kind": "word",
+      "text": "saligt",
+      "segmentId": "akt1-06"
+    },
+    {
+      "id": "w-10",
+      "kind": "word",
+      "text": "ugjørligt",
+      "segmentId": "akt1-07"
+    },
+    {
+      "id": "w-11",
+      "kind": "word",
+      "text": "hård",
+      "segmentId": "akt1-08"
+    },
+    {
+      "id": "w-12",
+      "kind": "word",
+      "text": "dølge",
+      "segmentId": "akt1-09"
+    },
+    {
+      "id": "w-13",
+      "kind": "word",
+      "text": "veiløps",
+      "segmentId": "akt1-11"
+    },
+    {
+      "id": "w-14",
+      "kind": "word",
+      "text": "møye",
+      "segmentId": "akt1-12"
+    },
+    {
+      "id": "w-15",
+      "kind": "word",
+      "text": "gavnløs",
+      "segmentId": "akt1-12"
+    },
+    {
+      "id": "w-16",
+      "kind": "word",
+      "text": "dødstrett",
+      "segmentId": "akt1-12"
+    }
+  ]
+}

@@ -14,6 +14,9 @@
  *    produces from original.json (a hand-edited generated file)
  *  - a training edition with no matching rules.vN.json
  *  - unknown language profile ids
+ *  - a drill bank whose item is not in its edition verbatim, whose
+ *    editionContentHash has gone stale, or that repeats an id or text or
+ *    falls under the per-kind length floor
  *  - a generated catalog or edition asset that is not what `pnpm build:content`
  *    produces from content/ right now, or an asset file nothing points at
  *
@@ -33,6 +36,7 @@ import { editionContentHash } from "./lib/hash";
 import { buildTrainingEdition, serializeEdition, type OriginalFile } from "./lib/build-edition";
 import { baseOverrides, type Rules } from "./lib/rules";
 import { loadRules } from "./lib/load-rules";
+import { drillProblems } from "./lib/drills";
 import { listLanguageProfiles } from "../src/domain/language/registry";
 import { getBaseRuleSet } from "../src/domain/language/base-rules";
 import { listTextFilters } from "../src/domain/text-filter";
@@ -183,6 +187,7 @@ function firstDifference(a: string, b: string): string {
 async function validatePack(pack: string) {
   const dir = path.join(contentRoot, pack);
   const reviewable: { id: string; kind: string; contentHash: string }[] = [];
+  const trainingEditions: { id: string; workId: string; contentHash: string; segments: Segment[] }[] = [];
   const packJson = (await readJson(path.join(dir, "pack.json"))) as Record<string, unknown>;
   if (packJson.id !== pack) fail(pack, `pack.json id ${String(packJson.id)} != folder`);
   if (!["draft", "active", "archived"].includes(String(packJson.status))) {
@@ -324,6 +329,16 @@ async function validatePack(pack: string) {
       }
     });
     reviewable.push({ id: t.id, kind: t.kind, contentHash: String(t.contentHash) });
+    trainingEditions.push({ id: t.id, workId: t.workId, contentHash: String(t.contentHash), segments: t.segments });
+  }
+
+  // Drill banks. Checked against the editions this pack just validated, so an
+  // item is measured against the exact bytes that shipped rather than a copy.
+  for (const problem of await drillProblems(dir, [
+    original.edition as unknown as { id: string; workId: string; contentHash: string; segments: Segment[] },
+    ...trainingEditions,
+  ])) {
+    fail(pack, problem);
   }
 
   await checkReviews(pack, dir, [
