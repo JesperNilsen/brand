@@ -1,5 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import training from "../content/ibsen-brand/training-edition.v1.json";
+// T-15: the write is not awaited by the app, so the test waits for it. See the
+// module for the whole story.
+import { waitForStoredProgress } from "./support/progress";
 
 const first = training.segments[0];
 const short = [...training.segments].sort(
@@ -23,49 +26,6 @@ async function typeTarget(
     if (ch === "\n") await page.keyboard.press("Enter");
     else await page.keyboard.type(ch);
   }
-}
-
-/**
- * Wait until the progress record for `workId` is actually in IndexedDB.
- *
- * T-15: this test failed roughly one local `check:all` run in three, always on
- * "Du har skrevet 1 av", and never in CI. The cause is a race in the test, not
- * in the app: progress is written by `onSegmentComplete`, which nothing awaits,
- * and the test navigated as soon as the *UI* said the segment had advanced. On
- * a machine loaded by the two production builds `check:all` runs first, the
- * navigation could beat the write, the page unloaded mid-transaction, and the
- * chooser then honestly reported no progress.
- *
- * Asserting the record exists is also a stronger test than waiting a fixed
- * time: it checks the app persisted, rather than that it probably had.
- */
-async function waitForStoredProgress(page: Page, workId: string) {
-  await expect
-    .poll(
-      () =>
-        page.evaluate(
-          (id) =>
-            new Promise<number>((resolve, reject) => {
-              const open = indexedDB.open("brand");
-              open.onerror = () => reject(open.error);
-              open.onsuccess = () => {
-                const db = open.result;
-                const tx = db.transaction("progress", "readonly");
-                const all = tx.objectStore("progress").getAll();
-                all.onsuccess = () => {
-                  db.close();
-                  resolve(
-                    (all.result as { workId?: string }[]).filter((p) => p.workId === id).length,
-                  );
-                };
-                all.onerror = () => reject(all.error);
-              };
-            }),
-          workId,
-        ),
-      { message: `progress for ${workId} was never written to IndexedDB` },
-    )
-    .toBeGreaterThan(0);
 }
 
 test.describe("Passage flow", () => {

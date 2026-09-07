@@ -20,6 +20,7 @@ import { DEFAULT_TEXT_FILTER_ID } from "@/domain/text-filter";
 import type {
   ReadingProgress,
   TextEdition,
+  TextSegment,
   TextFilterId,
   UserPreferences,
   Work,
@@ -36,6 +37,62 @@ import { TextFilterChooser } from "./TextFilterChooser";
 
 type Props = { modeId: string };
 
+/**
+ * Modes whose chooser lists the individual segments, and therefore needs the
+ * edition text fetched before it can render.
+ */
+const LISTS_SEGMENTS = new Set(["passage", "nonstop"]);
+
+/**
+ * The ordered list of segments in a work. Passage has rendered this since V1;
+ * Nonstop renders the same list so a reader can open a particular passage of
+ * the book they are on instead of only continuing where they stopped.
+ *
+ * One component rather than two: the label, the metadata line and the
+ * 375px-safe layout are the same claim in both places, and the two copies
+ * would drift. Written so sixty entries is not a redesign — a flat list, no
+ * grouping, and the mark rides in the line that is already there.
+ */
+function SegmentIndex({
+  segments,
+  href,
+  completedIds,
+}: {
+  segments: TextSegment[];
+  href: (segment: TextSegment) => string;
+  completedIds?: ReadonlySet<string>;
+}) {
+  return (
+    <ul className="grid gap-2">
+      {segments.map((s, i) => {
+        const done = completedIds?.has(s.id) ?? false;
+        return (
+          <li key={s.id}>
+            <Link
+              href={href(s)}
+              data-segment-id={s.id}
+              data-done={completedIds ? String(done) : undefined}
+              className="card flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+            >
+              <span>{s.label ?? `Utdrag ${i + 1}`}</span>
+              <span className="shrink-0 text-sm text-ink-muted">
+                {/*
+                  A word, not a colour and not a tick on its own. The state has
+                  to survive a monochrome screen and a screen reader, and it
+                  rides in the metadata line that is already here so the row
+                  keeps its height and sixty of them still fit. */}
+                {done ? <span className="text-ink">Skrevet</span> : null}
+                {done ? " · " : null}
+                {s.wordCount} ord · ca. {estimateMinutes(s.wordCount)} min
+              </span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export function ChooseView({ modeId }: Props) {
   const mode = requireGameMode(modeId);
   const params = useSearchParams();
@@ -48,7 +105,7 @@ export function ChooseView({ modeId }: Props) {
   const [textFilterId, setTextFilterId] =
     useState<TextFilterId>(DEFAULT_TEXT_FILTER_ID);
   const [prefsLoaded, setPrefsLoaded] = useState(false);
-  /** Only Passage lists individual segments, so only Passage needs the text. */
+  /** Passage and Nonstop both list individual segments, so both need the text. */
   const [fetchedText, setFetchedText] = useState<TextEdition | null>(null);
   const [textFailed, setTextFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -91,7 +148,7 @@ export function ChooseView({ modeId }: Props) {
   }, [work, prefs, mode.id]);
 
   useEffect(() => {
-    if (!work || !prefs || mode.id !== "passage") return;
+    if (!work || !prefs || !LISTS_SEGMENTS.has(mode.id)) return;
     const meta = defaultEdition(work, prefs.languageProfileId);
     // Already in memory: the render below reads the cache directly, so there is
     // nothing to wait for and nothing to set.
@@ -168,6 +225,7 @@ export function ChooseView({ modeId }: Props) {
   const edition = defaultEdition(work, profileId);
   const text = loadedEdition(edition) ?? fetchedText;
   const segments = text ? orderedSegments(text) : null;
+  const completedIds = new Set(progress?.completedSegmentIds ?? []);
   const pack = getContentPack(work.contentPackId);
 
   return (
@@ -200,7 +258,7 @@ export function ChooseView({ modeId }: Props) {
         disabled={!prefsLoaded}
       />
 
-      {mode.id === "passage" && textFailed && (
+      {LISTS_SEGMENTS.has(mode.id) && textFailed && (
         <div data-testid="choose-error">
           <p className="mb-4" role="alert">
             Teksten kunne ikke lastes. Sjekk nettforbindelsen.
@@ -220,35 +278,52 @@ export function ChooseView({ modeId }: Props) {
       )}
 
       {mode.id === "passage" && segments && (
-        <ul className="grid gap-2">
-          {segments.map((s, i) => (
-            <li key={s.id}>
-              <Link
-                href={sessionHref({
-                  mode: "passage",
-                  workId: work.id,
-                  segmentId: s.id,
-                  textFilterId,
-                })}
-                className="card flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
-              >
-                <span>{s.label ?? `Utdrag ${i + 1}`}</span>
-                <span className="shrink-0 text-sm text-ink-muted">
-                  {s.wordCount} ord · ca. {estimateMinutes(s.wordCount)} min
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <SegmentIndex
+          segments={segments}
+          href={(s) =>
+            sessionHref({
+              mode: "passage",
+              workId: work.id,
+              segmentId: s.id,
+              textFilterId,
+            })
+          }
+        />
       )}
 
       {mode.id === "nonstop" && (
-        <NonstopStart
-          work={work}
-          progress={progress}
-          totalSegments={edition.segmentCount}
-          textFilterId={textFilterId}
-        />
+        <>
+          <NonstopStart
+            work={work}
+            progress={progress}
+            totalSegments={edition.segmentCount}
+            textFilterId={textFilterId}
+          />
+          {segments && (
+            <section className="mt-10" aria-labelledby="nonstop-index">
+              {/*
+                Secondary, and second. Continuing is what almost everyone comes
+                for, so it keeps the primary slot and the top of the page; this
+                is the other route, for a reader who wants a particular passage
+                of the book they are already in. */}
+              <h2 id="nonstop-index" className="label mb-3">
+                Eller hopp til en passasje
+              </h2>
+              <SegmentIndex
+                segments={segments}
+                completedIds={completedIds}
+                href={(s) =>
+                  sessionHref({
+                    mode: "nonstop",
+                    workId: work.id,
+                    segmentId: s.id,
+                    textFilterId,
+                  })
+                }
+              />
+            </section>
+          )}
+        </>
       )}
 
       {mode.id === "timed" && (
