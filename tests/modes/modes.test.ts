@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import { buildTimedStream, timedMode } from "@/domain/modes/timed";
 import { nonstopMode } from "@/domain/modes/nonstop";
 import { passageMode } from "@/domain/modes/passage";
-import { listGameModes, requireGameMode } from "@/domain/modes/registry";
+import {
+  listChoosableModes,
+  listGameModes,
+  requireGameMode,
+} from "@/domain/modes/registry";
 import type { PlanInput } from "@/domain/modes/types";
 import type { TextEdition, TextSegment, Work } from "@/domain/types";
 
@@ -56,13 +60,27 @@ function input(selection: PlanInput["selection"]): PlanInput {
 }
 
 describe("registry", () => {
-  it("exposes exactly the three V1 modes", () => {
+  it("exposes exactly the four V1 modes", () => {
     expect(listGameModes().map((m) => m.id).sort()).toEqual([
+      "drill",
       "nonstop",
       "passage",
       "timed",
     ]);
     expect(() => requireGameMode("markdown")).toThrow();
+  });
+
+  // Drill is available but not offered as a choice: not choosing is the mode,
+  // so a chooser page for it would be the feature undone. It still has to
+  // resolve by id, or a stored drill session could not name itself.
+  it("offers every mode as a choice except drill", () => {
+    expect(listChoosableModes().map((m) => m.id).sort()).toEqual([
+      "nonstop",
+      "passage",
+      "timed",
+    ]);
+    expect(requireGameMode("drill").id).toBe("drill");
+    expect(listGameModes().every((m) => m.availableInV1)).toBe(true);
   });
 });
 

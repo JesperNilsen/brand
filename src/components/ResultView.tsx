@@ -94,6 +94,8 @@ export function ResultView({ id }: { id: string }) {
       ? nextSegmentAfter(text, lastSegmentId)
       : undefined;
 
+  const isDrill = result.gameModeId === "drill";
+
   return (
     <div className="prose-measure" data-testid="result">
       <p className="label mb-2">
@@ -121,7 +123,10 @@ export function ResultView({ id }: { id: string }) {
         text filter, in a private window shows all three, and the margins then
         collide — precisely when the reader is already getting bad news.
       */}
-      {(unsaved || requireTextFilter(result.textFilterId).altersText || result.pauseCount > 0) && (
+      {(unsaved ||
+        isDrill ||
+        requireTextFilter(result.textFilterId).altersText ||
+        result.pauseCount > 0) && (
         <div className="mb-8 -mt-6 flex flex-col gap-3">
           {unsaved && (
             <p
@@ -132,6 +137,13 @@ export function ResultView({ id }: { id: string }) {
               Denne økten ble ikke lagret. Tallene under er riktige, men de er borte
               når du forlater siden. Nettleseren tillater ikke lokal lagring her, for
               eksempel i et privat vindu.
+            </p>
+          )}
+          {isDrill && (
+            <p className="text-sm text-ink-muted" data-testid="drill-notice">
+              Kortform: ti korte biter, ikke en sammenhengende passasje. Tallene gjelder
+              denne økten, men kan ikke sammenlignes direkte med en passasje — et sitat
+              starter og stopper for ofte til at hastigheten måler det samme.
             </p>
           )}
           {requireTextFilter(result.textFilterId).altersText && (

@@ -5,6 +5,7 @@ export const passageMode: GameModeDefinition = {
   displayName: "Passasje",
   description: "Velg et avgrenset utdrag og skriv det ferdig.",
   availableInV1: true,
+  hasChooser: true,
   defaultErrorMode: "flow",
   settingsSchema: {
     segmentId: { type: "string", required: true },

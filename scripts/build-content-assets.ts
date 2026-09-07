@@ -18,6 +18,7 @@ import path from "node:path";
 import { countWords } from "./lib/text";
 import { editionContentHash } from "./lib/hash";
 import { loadReviews, publishedReviewFields, type ReviewFile } from "./lib/review";
+import { loadDrillBanks, drillAssetItems, type DrillBank } from "./lib/drills";
 
 const contentRoot = path.resolve(process.cwd(), "content");
 const assetsDir = path.resolve(process.cwd(), "public", "content", "editions");
@@ -72,10 +73,23 @@ function assetName(edition: RawEdition): string {
 }
 
 /**
+ * The bank's own asset, beside the edition's and under the same rules: its
+ * name carries the hash of the items, so a re-cut bank is a new file rather
+ * than new bytes under an old name.
+ */
+function drillAssetName(bank: DrillBank, contentHash: string): string {
+  return `${bank.editionId}.drills.${shortHash(contentHash)}.json`;
+}
+
+function drillAsset(bank: DrillBank, contentHash: string, items: unknown[]): string {
+  return `${JSON.stringify({ id: bank.id, contentHash, items }, null, 2)}\n`;
+}
+
+/**
  * Metadata, in a fixed key order. Fixed because the output is compared byte
  * for byte; object-literal order is the serialisation here.
  */
-function editionMeta(edition: RawEdition, reviews: ReviewFile) {
+function editionMeta(edition: RawEdition, reviews: ReviewFile, drills?: DrillBankMeta) {
   const segments = edition.segments;
   const meta: Record<string, unknown> = {
     id: edition.id,
@@ -96,8 +110,14 @@ function editionMeta(edition: RawEdition, reviews: ReviewFile) {
   meta.segmentCount = segments.length;
   meta.wordCount = segments.reduce((n, s) => n + s.wordCount, 0);
   meta.file = `${ASSET_URL_PREFIX}/${assetName(edition)}`;
+  // Last, and only when the edition has one: a bank is optional, and a key
+  // that appears on every edition as `undefined` would still change the bytes
+  // this file is compared against.
+  if (drills) meta.drills = drills;
   return meta;
 }
+
+type DrillBankMeta = { id: string; contentHash: string; itemCount: number; file: string };
 
 /**
  * The asset itself carries its id and hash next to the segments. The loader
@@ -159,7 +179,39 @@ export async function buildContentAssets(): Promise<BuildOutput> {
       assets.push({ file: assetName(edition), contents: editionAsset(edition) });
     }
 
-    works.push({ ...original.work, editions: editions.map((e) => editionMeta(e, reviews)) });
+    // Drill banks. One per training edition at most, hashed over the items the
+    // same way an edition is hashed over its segments — the canonical form is
+    // shared, so the browser recomputes exactly these bytes.
+    const banksByEdition = new Map<string, DrillBankMeta>();
+    for (const bank of await loadDrillBanks(dir)) {
+      const edition = editions.find((e) => e.id === bank.editionId);
+      if (!edition) {
+        throw new Error(
+          `${pack}/${bank.id}: editionId ${bank.editionId} names no edition in this pack.`,
+        );
+      }
+      if (bank.editionContentHash !== edition.contentHash) {
+        throw new Error(
+          `${pack}/${bank.id}: editionContentHash is stale against ${edition.id}. ` +
+            `Re-check every item against the new text before moving the hash.`,
+        );
+      }
+      const items = drillAssetItems(bank, countWords);
+      const contentHash = editionContentHash(items);
+      const file = drillAssetName(bank, contentHash);
+      assets.push({ file, contents: drillAsset(bank, contentHash, items) });
+      banksByEdition.set(edition.id, {
+        id: bank.id,
+        contentHash,
+        itemCount: items.length,
+        file: `${ASSET_URL_PREFIX}/${file}`,
+      });
+    }
+
+    works.push({
+      ...original.work,
+      editions: editions.map((e) => editionMeta(e, reviews, banksByEdition.get(e.id))),
+    });
   }
 
   const catalog = `${[
@@ -206,7 +258,7 @@ async function main() {
   await writeFile(catalogFile, catalog, "utf8");
   await writeFile(notesFile, notes, "utf8");
   console.log(
-    `build:content — ${assets.length} editions to public/content/editions/, catalog written.`,
+    `build:content — ${assets.length} assets to public/content/editions/, catalog written.`,
   );
 }
 

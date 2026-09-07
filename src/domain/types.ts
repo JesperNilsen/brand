@@ -65,12 +65,19 @@ export type LanguageBaseRuleSet = {
 // GameMode
 // ---------------------------------------------------------------------------
 
-export type GameModeId = "nonstop" | "passage" | "timed";
+export type GameModeId = "nonstop" | "passage" | "timed" | "drill";
 
 export type GameMode = {
   id: GameModeId | string;
   displayName: string;
   availableInV1: boolean;
+  /**
+   * Whether the mode has a chooser at `/velg/<id>` and is offered in the list
+   * of modes. Drill has none, and that is the mode: it exists so a reader can
+   * start writing without choosing anything, so a page that asks them to
+   * choose would be the feature undone.
+   */
+  hasChooser: boolean;
   defaultErrorMode: ErrorMode;
   /** Declarative description of the mode's settings; UI-agnostic. */
   settingsSchema: Record<string, unknown>;
@@ -169,6 +176,35 @@ export type TextEditionMeta = {
    * Path under `public/`, content-hashed so it can be cached forever: a text
    * that changes gets a new name rather than a new copy under an old one.
    */
+  file: string;
+  /** The drill bank cut from this edition, when it has one. */
+  drills?: DrillBankMeta;
+};
+
+/** One short item in a drill bank: a quote, a clause, or a single hard word. */
+export type DrillKind = "quote" | "phrase" | "word";
+
+export type DrillItem = {
+  id: string;
+  order: number;
+  kind: DrillKind;
+  text: string;
+  wordCount: number;
+};
+
+/**
+ * Where an edition's drill bank lives and what it is.
+ *
+ * A sibling of the edition asset, under the same rules: content-hashed
+ * filename, hash re-verified in the browser, never bundled. The items are
+ * verbatim fragments of the edition — `pnpm validate:content` refuses a bank
+ * whose text is not in the edition it sits beside — so the bank carries
+ * exactly the rights the edition does.
+ */
+export type DrillBankMeta = {
+  id: string;
+  contentHash: string;
+  itemCount: number;
   file: string;
 };
 

@@ -128,3 +128,35 @@ export async function drillProblems(dir: string, editions: readonly Edition[]): 
   }
   return problems;
 }
+
+/** Every bank in a pack, newest version last. Empty when the pack has none. */
+export async function loadDrillBanks(dir: string): Promise<DrillBank[]> {
+  const files = (await readdir(dir)).filter((f) => /^drills\.v\d+\.json$/.test(f)).sort();
+  const banks: DrillBank[] = [];
+  for (const file of files) {
+    banks.push(JSON.parse(await readFile(path.join(dir, file), "utf8")) as DrillBank);
+  }
+  return banks;
+}
+
+/**
+ * The items as they are served: the bank's own order, with `order` and
+ * `wordCount` filled in, and `segmentId` dropped.
+ *
+ * `segmentId` is provenance — it is what `validate:content` checks the item
+ * against — and provenance belongs in the repository, not in a file every
+ * reader downloads. What the browser needs is the text, its kind and a stable
+ * order to hash.
+ */
+export function drillAssetItems(
+  bank: DrillBank,
+  countWords: (text: string) => number,
+): { id: string; order: number; kind: DrillKind; text: string; wordCount: number }[] {
+  return bank.items.map((item, i) => ({
+    id: item.id,
+    order: i,
+    kind: item.kind,
+    text: item.text,
+    wordCount: countWords(item.text),
+  }));
+}

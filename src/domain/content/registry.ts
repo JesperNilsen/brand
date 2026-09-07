@@ -100,4 +100,17 @@ export function estimateMinutes(wordCount: number): number {
   return Math.max(1, Math.round(wordCount / 35));
 }
 
+/**
+ * The works whose default edition carries a drill bank, in catalog order.
+ *
+ * Drill starts without a chooser, so something has to pick the edition. It is
+ * data, not a constant: today `ibsen-brand` is the only cut bank, and the day a
+ * second one lands this returns two and the choice becomes a real one to make
+ * rather than a name to find and change.
+ */
+export function worksWithDrills(languageProfileId: string): Work[] {
+  return WORKS.filter((w) => defaultEdition(w, languageProfileId).drills !== undefined);
+}
+
 export { loadEditionText, loadedEdition, EditionLoadError } from "./edition-loader";
+export { loadDrillBank, DrillLoadError } from "./drill-loader";
