@@ -114,30 +114,41 @@ export function ResultView({ id }: { id: string }) {
           ? ` · ${requireTextFilter(result.textFilterId).displayName}`
           : ""}
       </p>
-      {unsaved && (
-        <p
-          className="mb-8 -mt-6 rounded border border-rule bg-accent-soft px-4 py-3 text-sm"
-          role="status"
-          data-testid="unsaved-notice"
-        >
-          Denne økten ble ikke lagret. Tallene under er riktige, men de er borte
-          når du forlater siden. Nettleseren tillater ikke lokal lagring her, for
-          eksempel i et privat vindu.
-        </p>
-      )}
-      {requireTextFilter(result.textFilterId).altersText && (
-        <p className="mb-8 -mt-6 text-sm text-ink-muted">
-          Skrevet med tekstformen «{requireTextFilter(result.textFilterId).displayName}».
-          Tall herfra kan ikke sammenlignes direkte med økter skrevet som trykt.
-        </p>
-      )}
-      {result.pauseCount > 0 && (
-        <p className="mb-8 -mt-6 text-sm text-ink-muted" data-testid="paused-notice">
-          Pauset {result.pauseCount} {result.pauseCount === 1 ? "gang" : "ganger"}
-          {result.pausedMs >= 1000 ? ` (${formatDuration(result.pausedMs)})` : ""}. Pausen
-          er trukket fra varigheten, så tallene gjelder tiden du faktisk skrev — men en
-          økt med hvil er ikke uten videre sammenlignbar med en sammenhengende.
-        </p>
+      {/*
+        One container, one place where the spacing is set. Each notice used to
+        pull itself up with `-mt-6` and push the numbers down with `mb-8`, which
+        is right for exactly one of them: an abandoned session, written with a
+        text filter, in a private window shows all three, and the margins then
+        collide — precisely when the reader is already getting bad news.
+      */}
+      {(unsaved || requireTextFilter(result.textFilterId).altersText || result.pauseCount > 0) && (
+        <div className="mb-8 -mt-6 flex flex-col gap-3">
+          {unsaved && (
+            <p
+              className="rounded border border-rule bg-accent-soft px-4 py-3 text-sm"
+              role="status"
+              data-testid="unsaved-notice"
+            >
+              Denne økten ble ikke lagret. Tallene under er riktige, men de er borte
+              når du forlater siden. Nettleseren tillater ikke lokal lagring her, for
+              eksempel i et privat vindu.
+            </p>
+          )}
+          {requireTextFilter(result.textFilterId).altersText && (
+            <p className="text-sm text-ink-muted">
+              Skrevet med tekstformen «{requireTextFilter(result.textFilterId).displayName}».
+              Tall herfra kan ikke sammenlignes direkte med økter skrevet som trykt.
+            </p>
+          )}
+          {result.pauseCount > 0 && (
+            <p className="text-sm text-ink-muted" data-testid="paused-notice">
+              Pauset {result.pauseCount} {result.pauseCount === 1 ? "gang" : "ganger"}
+              {result.pausedMs >= 1000 ? ` (${formatDuration(result.pausedMs)})` : ""}. Pausen
+              er trukket fra varigheten, så tallene gjelder tiden du faktisk skrev — men en
+              økt med hvil er ikke uten videre sammenlignbar med en sammenhengende.
+            </p>
+          )}
+        </div>
       )}
 
       <dl className="mb-10 grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3">
