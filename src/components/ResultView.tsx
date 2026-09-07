@@ -101,7 +101,7 @@ export function ResultView({ id }: { id: string }) {
       <p className="label mb-2">
         {result.status === "completed" ? "Se resultat" : "Avbrutt økt"}
       </p>
-      <h1 className="mb-1 text-2xl">
+      <h1 className="mb-1 text-heading">
         {work ? (
           <>
             {work.author}: <i>{work.title}</i>
@@ -253,7 +253,7 @@ function Stat({
   return (
     <div>
       <dt className="label">{label}</dt>
-      <dd className={`tabular-nums ${big ? "text-2xl" : "text-lg"}`} data-testid={testId}>
+      <dd className={`tabular-nums ${big ? "text-heading" : "text-lead"}`} data-testid={testId}>
         {value}
       </dd>
     </div>

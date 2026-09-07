@@ -82,37 +82,39 @@ const cases: Case[] = [
     expects: /--ink disagrees between the two dark blocks/,
   },
   {
-    // Adoption drift in the direction that actually happens: someone adds one
-    // more ad-hoc utility and the doc's count silently stops being true.
-    name: "one more ad-hoc size utility added to a component",
-    mutate: (d) => edit(d, "src/components/HomeView.tsx", '<span className="block text-lg">', '<span className="block text-lg text-xl">'),
-    expects: /states adhoc=17 for the type scale; src\/\*\*\/\*\.tsx has 18/,
-  },
-  {
-    // The direction the entry calls out by name: the migration is finished but
-    // the document still says it is not.
-    name: "the migration finished while DESIGN.md still says pending",
-    mutate: (d) => {
-      edit(d, DOC, "status=pending adhoc=17 files=7 tokens=0", "status=pending adhoc=0 files=0 tokens=1");
-      for (const f of [
-        "src/app/layout.tsx",
-        "src/app/om/page.tsx",
-        "src/components/HistoryView.tsx",
-        "src/components/ChooseView.tsx",
+    // Adoption drift in the direction that actually happens now that T-14 has
+    // landed: a new screen reaches for Tailwind's own scale, and the document
+    // still says every size comes from the tokens.
+    name: "an ad-hoc size utility creeping back into a component",
+    mutate: (d) =>
+      edit(
+        d,
         "src/components/HomeView.tsx",
-        "src/components/SessionView.tsx",
-        "src/components/ResultView.tsx",
-      ]) {
-        const p = join(d, f);
-        writeFileSync(p, readFileSync(p, "utf8").replace(/\btext-(?:3xl|2xl|xl|lg)\b/g, "text-[var(--text-body)]"));
-      }
-    },
-    expects: /still says the type-scale migration \(T-14\) is pending/,
+        '<span className="block text-lead">',
+        '<span className="block text-xl">',
+      ),
+    expects: /says the type-scale migration \(T-14\) is done, but 1 ad-hoc/,
   },
   {
-    name: "DESIGN.md claiming the migration is done while utilities remain",
-    mutate: (d) => edit(d, DOC, "status=pending", "status=done"),
-    expects: /says the type-scale migration \(T-14\) is done, but 17 ad-hoc/,
+    // The counts themselves, in the direction a refactor moves them: a heading
+    // deleted or a screen removed leaves the document overstating adoption.
+    name: "a token use removed while DESIGN.md still counts it",
+    mutate: (d) =>
+      edit(
+        d,
+        "src/components/HistoryView.tsx",
+        '<h1 className="mb-4 text-heading">Tidligere økter</h1>',
+        "<h1 className=\"mb-4\">Tidligere økter</h1>",
+      ),
+    expects: /states tokens=17 for the type scale; src\/\*\*\/\*\.tsx has 16/,
+  },
+  {
+    // The reverse claim, still gated: the tree is migrated and the document
+    // says the work is outstanding. A doc that understates progress sends the
+    // next reader to redo it.
+    name: "DESIGN.md still saying pending after the migration landed",
+    mutate: (d) => edit(d, DOC, "status=done adhoc=0 files=0 tokens=17", "status=pending adhoc=0 files=0 tokens=17"),
+    expects: /still says the type-scale migration \(T-14\) is pending/,
   },
 ];
 

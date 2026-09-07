@@ -37,7 +37,7 @@ export function HomeView() {
   return (
     <div className="prose-measure">
       <p className="label mb-2">Skriv deg inn i god norsk prosa</p>
-      <h1 className="mb-8 text-3xl leading-tight">Med ro, rytme og målbar fremgang.</h1>
+      <h1 className="mb-8 text-title leading-tight">Med ro, rytme og målbar fremgang.</h1>
 
       {/*
         Three branches, not two. `prefs === null` means the stored preferences
@@ -107,7 +107,7 @@ export function HomeView() {
           {listChoosableModes().map((m) => (
             <li key={m.id}>
               <Link href={`/velg/${m.id}`} className="card h-full">
-                <span className="block text-lg">{m.displayName}</span>
+                <span className="block text-lead">{m.displayName}</span>
                 <span className="mt-1 block text-sm text-ink-muted">{m.description}</span>
               </Link>
             </li>

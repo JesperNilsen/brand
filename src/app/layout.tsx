@@ -29,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <div className="mx-auto flex w-full max-w-4xl items-baseline justify-between gap-6 px-5 py-4">
               <Link
                 href="/"
-                className="text-lg tracking-[0.18em] no-underline hover:text-accent"
+                className="text-lead tracking-[0.18em] no-underline hover:text-accent"
                 aria-label="BRAND – til forsiden"
               >
                 BRAND

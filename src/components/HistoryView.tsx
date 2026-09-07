@@ -41,7 +41,7 @@ export function HistoryView() {
     return (
       <div className="prose-measure" data-testid="history-error">
         <p className="label mb-2">Historikk</p>
-        <h1 className="mb-4 text-2xl" role="alert">
+        <h1 className="mb-4 text-heading" role="alert">
           Historikken kunne ikke leses.
         </h1>
         <p className="mb-6 text-ink-muted">
@@ -68,7 +68,7 @@ export function HistoryView() {
   return (
     <div>
       <p className="label mb-2">Historikk</p>
-      <h1 className="mb-4 text-2xl">Tidligere økter</h1>
+      <h1 className="mb-4 text-heading">Tidligere økter</h1>
       {!isPersistent() && (
         <p
           className="prose-measure mb-8 rounded border border-rule bg-accent-soft px-4 py-3 text-sm"

@@ -130,7 +130,7 @@ export function SessionView() {
         {/* role="alert" and a focus target: the writing surface vanishing with
             only a silent paragraph in its place left keyboard and screen-reader
             users with no signal that anything had gone wrong. */}
-        <h1 className="mb-4 text-2xl" role="alert" tabIndex={-1} ref={errorRef}>
+        <h1 className="mb-4 text-heading" role="alert" tabIndex={-1} ref={errorRef}>
           {failure.message}
         </h1>
         <div className="flex flex-wrap gap-3">
