@@ -373,3 +373,42 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   innsetting fra hva som står i feltet ville vært en bakvei for en avvist
   innliming, og D-reglene om at liming skal avvises er ikke et
   presentasjonsvalg.
+
+## Framgang hører til verket, ikke til utgaven (D14)
+
+- **`progressKey` inneholdt `editionId`, og det var feil på den stilleste måten
+  en feil kan være det.** En ny treningsutgave ga samme leser, på samme verk,
+  en nøkkel ingenting slo opp: framgangen lå fortsatt lagret, appen begynte
+  forfra, og ingenting sa noe. Det hadde alt skjedd én gang, udokumentert, da
+  tre pakker fikk v2 — og det ville skjedd igjen ved første v3, som er nøyaktig
+  det den redaksjonelle lesningen (D11) skal produsere.
+- **Nøkkelen regnes ut av postens egne felter, ikke parset ut av den lagrede.**
+  `migrateProgress` bygger `profil::modus::verk` av `languageProfileId`,
+  `gameModeId` og `workId`. Da trenger den ikke gjenkjenne det gamle formatet —
+  eller noe annet format den ennå ikke har sett — og migreringen er idempotent
+  ved identitet, slik `migrateSession` er, fordi den kjøres på hver lesning av
+  hver post.
+- **To poster for samme verk slås sammen, ikke velges mellom.** Etter et bump
+  har en leser en post per utgave, og begge er sanne. Nyeste post bestemmer
+  gjenopptakelsespunktet; fullførte segmenter unioneres. Det følger repoets eget
+  bilde av framgang som *en mengde fullførte segmenter*, ikke et høyvannsmerke.
+- **Sletting måtte lære det samme.** `SessionView` sletter framgangen når et
+  verk er fullført. Slettet vi bare den nye nøkkelen, ville neste lesning
+  migrert den gamle posten fram og gjenopplivet framgang leseren nettopp var
+  ferdig med — så `deleteProgress` sletter også hver lagret post som migrerer
+  til samme nøkkel.
+- **Lesningen går gjennom hele lageret, ikke gjennom lagerets nøkkel.** Det er
+  prisen: `getProgress` henter alle poster og finner sin. Antallet er én per
+  verk og modus, og alternativet — å skrive om nøklene i en IndexedDB-oppgradering
+  — ville ikke hjulpet importerte filer, som bærer de gamle nøklene med seg.
+  `importData` kjører derfor samme migrering som lesningen.
+- **`progressKey` tar fortsatt imot `editionId` og ignorerer den.** Kallstedene
+  holder utgaven de skriver mot, og skal slippe å vite at den forlot nøkkelen.
+  Feltet er dokumentert som ubrukt, ikke stilltiende droppet.
+- **Klassen som ikke er løst her:** en utgave som **resegmenterer** verket. Da
+  betyr ikke en segment-id samme passasje lenger, og både unionen og
+  gjenopptakelsespunktet mister mening. Alle utgaver bygges i dag av samme
+  `segments.json`, så det kan ikke skje ved et uhell. Se T-10 for hva porten mot
+  det ville vært.
+- **Porten er vist at den biter:** med `src/` stashet feiler 13 tester — begge
+  adaptere, migreringen selv og importveien.

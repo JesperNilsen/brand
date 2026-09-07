@@ -5,10 +5,13 @@ import { MemoryRepository } from "@/infra/repository/MemoryRepository";
 import { MemoryPreferences } from "@/infra/preferences/local-storage";
 import {
   defaultPreferences,
+  mergeProgress,
   migratePreferences,
+  migrateProgress,
   migrateSession,
   SESSION_SCHEMA_VERSION,
 } from "@/infra/repository/migrations";
+import { progressKey } from "@/domain/types";
 import { describeRepositoryContract, makeSession } from "./repository-contract";
 
 let dbCounter = 0;
@@ -113,5 +116,87 @@ describe("migrations", () => {
     expect(out!.schemaVersion).toBe(SESSION_SCHEMA_VERSION);
     expect(out!.editionVersion).toBe("unknown");
     expect(migrateSession(out)).toEqual(out);
+  });
+});
+
+describe("progress migration (T-10)", () => {
+  const legacy = {
+    key: "brand-riksmaal::ibsen-brand.training.v1::nonstop::ibsen-brand",
+    workId: "ibsen-brand",
+    editionId: "ibsen-brand.training.v1",
+    languageProfileId: "brand-riksmaal",
+    gameModeId: "nonstop",
+    nextSegmentId: "akt1-06",
+    completedSegmentIds: ["akt1-01", "akt1-02"],
+    updatedAt: "2026-09-01T10:00:00.000Z",
+  };
+
+  it("recomputes the key from the record's own fields", () => {
+    const migrated = migrateProgress(legacy);
+    expect(migrated?.key).toBe(
+      progressKey({
+        languageProfileId: "brand-riksmaal",
+        gameModeId: "nonstop",
+        workId: "ibsen-brand",
+      }),
+    );
+    // The edition it was written against is kept: it is the only way to tell
+    // later that these segment ids came from a different cut of the work.
+    expect(migrated?.editionId).toBe("ibsen-brand.training.v1");
+  });
+
+  it("returns the very same object when nothing needs changing", () => {
+    const current = migrateProgress(legacy)!;
+    expect(migrateProgress(current)).toBe(current);
+  });
+
+  it("names a missing edition rather than dropping the record", () => {
+    const { editionId: _drop, ...noEdition } = legacy;
+    const migrated = migrateProgress(noEdition);
+    expect(migrated?.editionId).toBe("unknown");
+    expect(migrated?.nextSegmentId).toBe("akt1-06");
+    expect(migrateProgress(migrated)).toBe(migrated);
+  });
+
+  it("rejects a record it cannot understand rather than guessing", () => {
+    expect(migrateProgress(null)).toBeNull();
+    expect(migrateProgress({ workId: "w" })).toBeNull();
+    expect(migrateProgress({ ...legacy, completedSegmentIds: [1, 2] })).toBeNull();
+    expect(migrateProgress({ ...legacy, nextSegmentId: undefined })).toBeNull();
+  });
+
+  it("merges colliding records newest-wins, completed segments unioned", () => {
+    const older = migrateProgress(legacy)!;
+    const newer = migrateProgress({
+      ...legacy,
+      key: "brand-riksmaal::ibsen-brand.training.v2::nonstop::ibsen-brand",
+      editionId: "ibsen-brand.training.v2",
+      nextSegmentId: "akt1-09",
+      completedSegmentIds: ["akt1-07"],
+      updatedAt: "2026-09-06T10:00:00.000Z",
+    })!;
+
+    const [merged, ...rest] = mergeProgress([older, newer]);
+    expect(rest).toEqual([]);
+    expect(merged.nextSegmentId).toBe("akt1-09");
+    expect(merged.editionId).toBe("ibsen-brand.training.v2");
+    expect(merged.completedSegmentIds.sort()).toEqual(["akt1-01", "akt1-02", "akt1-07"]);
+  });
+
+  it("merges the same way whichever order the records arrive in", () => {
+    const a = migrateProgress(legacy)!;
+    const b = migrateProgress({
+      ...legacy,
+      key: "brand-riksmaal::ibsen-brand.training.v2::nonstop::ibsen-brand",
+      nextSegmentId: "akt1-09",
+      completedSegmentIds: ["akt1-07"],
+      updatedAt: "2026-09-06T10:00:00.000Z",
+    })!;
+    expect(mergeProgress([a, b])).toEqual(mergeProgress([b, a]));
+  });
+
+  it("keeps progress for different works apart", () => {
+    const other = migrateProgress({ ...legacy, workId: "kielland-gift" })!;
+    expect(mergeProgress([migrateProgress(legacy)!, other])).toHaveLength(2);
   });
 });

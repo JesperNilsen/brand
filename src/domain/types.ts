@@ -289,17 +289,30 @@ export type SessionQuery = {
   limit?: number;
 };
 
-/** Stable key for ReadingProgress. */
+/**
+ * Stable key for ReadingProgress: profile, mode and work.
+ *
+ * The edition used to be part of it, and that was wrong. A reader's place is in
+ * the *work*, not in one cut of it — so a new training edition handed every
+ * reader a fresh key and started them over without saying so. It had already
+ * happened once, undocumented, when three packs moved to v2, and it would have
+ * happened again on the first v3.
+ *
+ * Editions of a work are built from the same `segments.json`, so a segment id
+ * means the same passage across versions and progress carries over intact. A
+ * future edition that re-segments a work would break that assumption, and the
+ * record still names the edition it was written against so such a case can be
+ * recognised rather than silently trusted.
+ */
 export function progressKey(input: {
   languageProfileId: string;
-  editionId: string;
   gameModeId: string;
   workId: string;
+  /**
+   * Accepted and deliberately unused: call sites hold the edition they are
+   * typing and should not have to know it left the key.
+   */
+  editionId?: string;
 }): string {
-  return [
-    input.languageProfileId,
-    input.editionId,
-    input.gameModeId,
-    input.workId,
-  ].join("::");
+  return [input.languageProfileId, input.gameModeId, input.workId].join("::");
 }

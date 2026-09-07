@@ -9,8 +9,15 @@ import {
   importData,
   serializeExport,
 } from "@/lib/data-transfer";
-import type { ReadingProgress, SessionResult } from "@/domain/types";
+import { progressKey, type ReadingProgress, type SessionResult } from "@/domain/types";
 import { makeSession } from "../infra/repository-contract";
+
+/** The key an ibsen-brand nonstop record has today; see progressKey(). */
+const PROGRESS_KEY = progressKey({
+  languageProfileId: "brand-riksmaal",
+  gameModeId: "nonstop",
+  workId: "ibsen-brand",
+});
 
 function progress(key: string): ReadingProgress {
   return {
@@ -32,7 +39,26 @@ describe("export / import", () => {
     await repo.savePreferences({ ...defaultPreferences(), theme: "dark", lastModeId: "timed" });
     await repo.addSession(makeSession("a", "2026-09-01T10:00:00.000Z"));
     await repo.addSession(makeSession("b", "2026-09-02T10:00:00.000Z", { netWpm: 61 }));
-    await repo.saveProgress(progress("k1"));
+    await repo.saveProgress(progress(PROGRESS_KEY));
+  });
+
+  // T-10. A file exported before 2026-09-07 carries progress keyed by edition.
+  // Imported verbatim it would restore a record nothing ever looks up — the
+  // reader would see their history come back and their place in the book not.
+  it("imports progress from a file written under the old edition-scoped key", async () => {
+    const empty = new MemoryRepository();
+    const report = await importData(empty, {
+      format: "brand-export",
+      formatVersion: EXPORT_FORMAT_VERSION,
+      exportedAt: "2026-09-05T10:00:00.000Z",
+      preferences: defaultPreferences(),
+      sessions: [],
+      progress: [progress("brand-riksmaal::ibsen-brand.training.v1::nonstop::ibsen-brand")],
+    });
+
+    expect(report.progressImported).toBe(1);
+    expect((await empty.getProgress(PROGRESS_KEY))?.nextSegmentId).toBe("akt1-04");
+    expect((await empty.listProgress()).map((p) => p.key)).toEqual([PROGRESS_KEY]);
   });
 
   it("round-trips through an emptied store", async () => {
@@ -53,7 +79,7 @@ describe("export / import", () => {
     });
     expect(await empty.listSessions()).toEqual(before);
     expect((await empty.getPreferences()).theme).toBe("dark");
-    expect((await empty.getProgress("k1"))?.completedSegmentIds).toEqual([
+    expect((await empty.getProgress(PROGRESS_KEY))?.completedSegmentIds).toEqual([
       "akt1-01",
       "akt1-02",
       "akt1-03",

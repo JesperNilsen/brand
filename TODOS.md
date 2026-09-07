@@ -181,21 +181,22 @@ forfatterens ordvalg» må trekkes eksplisitt for denne klassen før den kjøres
 **Avhenger av:** D11 (redaksjonell diff-flyt). Dette er nøyaktig den mengden
 tekstendring som skal kunne leses av et menneske før den publiseres.
 
-## T-10 — `ReadingProgress` overlever ikke et utgavebump (P1, S / M)
+## T-10 — `ReadingProgress` overlever ikke et utgavebump — LØST 2026-09-07
 
-**Hva:** `progressKey()` inneholder `editionId`, og `migrations.ts` har ingen
-progressmigrasjon. Når et verk får en ny treningsutgave, får leseren en ny
-nøkkel og begynner forfra uten beskjed.
+**Løst i D14** (`docs/DECISIONS.md`): nøkkelen inneholder ikke lenger
+`editionId`. Framgang hører til verket, ikke til én utgave av det, og gamle
+poster foldes inn ved lesning fordi nøkkelen regnes ut av postens egne felter.
+To poster for samme verk slås sammen (nyeste vinner, fullførte segmenter
+unioneres), og sletting tar den gamle posten med seg.
 
-**Hvorfor nå:** Det har allerede skjedd én gang, udokumentert, da tre pakker
-fikk v2. Det vil skje igjen i det øyeblikket noe kuttes til v3 på `base.v2`.
-
-**Alternativene er to, og bare to:** enten en `migrateReadingProgress` ved
-åpning av repositoryet som skriver nøkkelen om til nyeste utgave av samme
-verk+profil — gated på likt `segmentCount`, siden katalogen bærer antall og
-ikke id-listen — eller en bevisst beslutning om at framgang ikke følger med
-over et utgavebump. Det som ikke er et alternativ er å la det skje stille en
-tredje gang.
+**Det som gjenstår, og som er en annen feil enn denne:** en framtidig utgave som
+**resegmenterer** et verk. Da betyr ikke lenger en segment-id samme passasje på
+tvers av versjoner, og både unionen og gjenopptakelsespunktet blir meningsløse.
+I dag bygges hver utgave av samme `segments.json`, så det kan ikke skje ved et
+uhell — men porten mot det finnes ikke. Posten bærer `editionId`, som er nok til
+å oppdage tilfellet; det som mangler er en sjekk mot katalogens `segmentCount`
+(og helst id-listen) på lesetidspunktet. Tas når en utgave faktisk endrer
+segmentgrensene, ikke før.
 
 ## T-11 — Oppslag av fremmedord (P2, M / L)
 

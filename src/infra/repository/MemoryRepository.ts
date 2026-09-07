@@ -4,7 +4,13 @@ import type {
   SessionResult,
   UserPreferences,
 } from "@/domain/types";
-import { applySessionQuery, type BrandRepository } from "./BrandRepository";
+import {
+  applySessionQuery,
+  readProgress,
+  readProgressList,
+  storedProgressKeys,
+  type BrandRepository,
+} from "./BrandRepository";
 import { defaultPreferences, migrateSession } from "./migrations";
 
 /** In-memory adapter for tests and server-side rendering fallbacks. */
@@ -20,11 +26,11 @@ export class MemoryRepository implements BrandRepository {
     this.preferences = { ...value };
   }
   async getProgress(key: string): Promise<ReadingProgress | null> {
-    const p = this.progress.get(key);
+    const p = readProgress([...this.progress.values()], key);
     return p ? { ...p, completedSegmentIds: [...p.completedSegmentIds] } : null;
   }
   async listProgress(): Promise<ReadingProgress[]> {
-    return [...this.progress.values()].map((p) => ({
+    return readProgressList([...this.progress.values()]).map((p) => ({
       ...p,
       completedSegmentIds: [...p.completedSegmentIds],
     }));
@@ -34,6 +40,9 @@ export class MemoryRepository implements BrandRepository {
   }
   async deleteProgress(key: string): Promise<void> {
     this.progress.delete(key);
+    for (const k of storedProgressKeys([...this.progress.values()], key)) {
+      this.progress.delete(k);
+    }
   }
   async addSession(value: SessionResult): Promise<void> {
     this.sessions.set(value.id, { ...value });
