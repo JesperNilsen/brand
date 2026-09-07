@@ -296,25 +296,18 @@ noen gang skal lukkes, hører det hjemme i `SessionView`, ikke i en test.
 
 ---
 
-## T-16 — Segmentlisten i velgeren har ingen ventetilstand (P3, S / S)
+## T-16 — Segmentlisten i velgeren har ingen ventetilstand — LØST 2026-09-07
 
-**Hva:** `ChooseView` tegner ingenting der segmentlisten skal stå mens
-utgaveteksten hentes — verken for Passage (slik det har vært siden fase 3) eller
-for Nonstop (nytt med Q-002).
+Både Passage og Nonstop viser nå `Loading` der listen skal stå — men først etter
+`LOADING_DELAY_MS` (300 ms). Regelen er tosidig, og begge sidene er testet i
+`e2e/choose-loading.spec.ts`: en treg tekst SKAL navngi ventingen, og en tekst
+som kommer med en gang skal ikke blinke med stolper. Et blink leses som en feil,
+ikke som arbeid.
 
-**Hvorfor:** `DESIGN.md` sier at hver asynkron visning har fire tilstander og
-«aldri `null`». Listen er en asynkron visning: etter fase 3 ligger korpuset
-utenfor bundelen, så ventingen er ekte nettverkstid.
+Nonstop beholder overskriften «Eller hopp til en passasje» over stolpene, så
+leseren vet hva som er på vei. Primærhandlingen tegnes fortsatt uten å vente på
+noe.
 
-**Fordeler:** `Loading.tsx` finnes allerede fra designrevisjonen, og feilveien
-(`choose-error` med «Prøv igjen») finnes også — det er bare ventetilstanden som
-mangler.
-**Ulemper:** På en rask forbindelse er teksten framme før noen rekker å se noe,
-så gevinsten er smal — og stolper som blinker forbi er verre enn ingenting.
-Skal gjøres med en liten forsinkelse før stolpene vises, ikke uten.
+Vist at porten biter begge veier: uten blokken feiler de to tregt-tekst-testene;
+med `LOADING_DELAY_MS = 0` feiler ingen-blink-testen.
 
-**Kontekst:** Q-002 utvidet hentingen til Nonstop, men primærhandlingen
-(«Fortsett»/«Begynn») tegnes uten å vente på teksten, så ingen blir stående uten
-noe å gjøre. Det er grunnen til at dette er P3 og ikke ble tatt der.
-
-**Avhenger av:** ingenting.
