@@ -47,3 +47,9 @@ next-env.d.ts
 
 # netlify
 .netlify
+
+# Drill candidates. `pnpm build:drills` proposes; a human cuts the proposal
+# down into content/*/drills.vN.json, which IS tracked. Committing the
+# candidate file would put a machine's suggestions next to an editorial
+# decision and make it unclear which of the two ships.
+content/*/drills-candidates.v*.json
