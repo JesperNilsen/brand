@@ -13,10 +13,7 @@ import { newId } from "@/domain/ids";
 import { requireGameMode } from "@/domain/modes/registry";
 import { DEFAULT_TIMED_LIMIT_MS, TIMED_LIMIT_OPTIONS_MS } from "@/domain/modes/timed";
 import type { SessionPlan } from "@/domain/modes/types";
-import {
-  runnerResumeSegmentId,
-  type RunnerState,
-} from "@/domain/session/runner";
+import type { RunnerState } from "@/domain/session/runner";
 import {
   applyTextFilter,
   DEFAULT_TEXT_FILTER_ID,
@@ -142,17 +139,33 @@ export function buildPlan(
   return { ...plan, textFilterId, segments };
 }
 
-/** Progress record after a nonstop runner state change; null when the work is finished. */
+/**
+ * Progress record after a nonstop runner state change; null when the work is
+ * finished — every segment of the edition written, not merely every segment of
+ * this plan.
+ *
+ * The resume point is DERIVED: the first segment of the edition that is not in
+ * the completed set. It is not the runner's own position, and the difference
+ * only shows once a reader can jump. A plan that starts at segment 5 ends when
+ * segment 12 is done, and the runner would then report the work finished and
+ * delete the record — forgetting segment 1, which the reader really did write.
+ * Deriving instead keeps the promise the record makes: progress is a set of
+ * completed segments, not a high-water mark, and "Fortsett" goes to the first
+ * thing still unwritten rather than to the furthest point reached.
+ *
+ * For an uninterrupted read the two agree exactly, segment for segment, which
+ * is why this is not a behaviour change for anyone who never jumps.
+ */
 export function progressFromRunner(
   state: RunnerState,
-  edition: TextEditionMeta,
+  edition: TextEdition,
   previous: ReadingProgress | null,
   nowIso: string,
 ): ReadingProgress | null {
-  const resume = runnerResumeSegmentId(state);
-  if (resume === null) return null;
   const completed = new Set(previous?.completedSegmentIds ?? []);
   for (const id of state.completedSegmentIds) completed.add(id);
+  const resume = orderedSegments(edition).find((s) => !completed.has(s.id))?.id ?? null;
+  if (resume === null) return null;
   return {
     key: progressKey({
       languageProfileId: state.plan.languageProfileId,
