@@ -250,27 +250,22 @@ ikke på den gamle koden**, siden den gamle koden heller ikke overlappet; den er
 en regresjonsvakt for kombinasjonen, ikke et bevis på fiksen. Bevisene på fiksen
 er de to målingene over.
 
-## T-14 — Flytte overskriftene over på `--text-*`-tokenene (P3, S / M)
+## T-14 — Flytte overskriftene over på `--text-*`-tokenene — LØST 2026-09-07
 
-**Hva:** Bytte `text-3xl` / `text-2xl` / `text-xl` / `text-lg` i visningene ut
-med målestokk-tokenene som nå finnes i `globals.css`.
+Sytten `text-3xl`/`text-2xl`/`text-xl`/`text-lg` er borte fra `src/`. `@theme
+inline` gjør hvert token til et verktøy med samme navn, så en visning skriver
+`text-heading` og navngir aldri variabelen — og `check:design` teller nå begge
+formene, siden en teller som bare så etter `--text-*` ville vist null gjennom en
+fullført migrering.
 
-**Hvorfor:** Tokenene finnes og `DESIGN.md` utpeker dem som fasit, men fem
-visninger setter fortsatt størrelsen selv. En fasit ingen leser fra er pynt, og
-størrelsene vil sprike første gang noen legger til en side.
+**Ett tall flyttet seg:** forsidens h1 lå på `text-3xl` (1,875rem) mens DESIGN.md
+sa 1,9rem. Nå stemmer dokumentet. 0,4 px.
 
-**Fordeler:** Gjør målestokken ekte; neste skjerm arver den i stedet for å gjette.
-**Ulemper:** En mekanisk endring over fem filer uten synlig resultat — akkurat
-den typen støy som kan skjule en ekte regresjon.
-
-**Kontekst:** `HomeView`, `ChooseView`, `ResultView`, `HistoryView` og
-`src/app/om/page.tsx`. Størrelsene er tilfeldigvis konsistente i dag. Gjøres som
-sin egen endring, med visuell sammenligning før og etter, slik at et utilsiktet
-størrelsesbytte er synlig.
-
-**Avhenger av:** tokenene, som landet 2026-09-06.
-
----
+`e2e/type-scale.spec.ts` måler det nettleseren faktisk gjengir. Den finnes fordi
+`check:design` ikke kan se forskjell på et klassenavn som virker og ett som ikke
+gjør det: `text-headnig` genererer ingenting, overskriften arver brødtekst, og
+verken diffen eller den statiske porten sier fra. Vist: med `text-title` skrevet
+feil måler h1 17 px i stedet for 32,3.
 
 ## T-15 — `pnpm check:all` faller lokalt, men ikke i CI — LØST 2026-09-07
 

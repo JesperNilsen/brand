@@ -190,7 +190,7 @@ export function ChooseView({ modeId }: Props) {
     return (
       <div className="prose-measure">
         <p className="label mb-2">{mode.displayName}</p>
-        <h1 className="mb-2 text-2xl">Velg et verk</h1>
+        <h1 className="mb-2 text-heading">Velg et verk</h1>
         <p className="mb-8 text-ink-muted">{mode.description}</p>
         {listContentPacks().map((pack) => (
           <section key={pack.id} className="mb-8" aria-labelledby={`pack-${pack.id}`}>
@@ -204,7 +204,7 @@ export function ChooseView({ modeId }: Props) {
                     href={`/velg/${mode.id}?work=${encodeURIComponent(w.id)}`}
                     className="card"
                   >
-                    <span className="block text-lg">
+                    <span className="block text-lead">
                       {w.author}: <i>{w.title}</i>
                       {w.publishedYear ? (
                         <span className="text-ink-muted"> ({w.publishedYear})</span>
@@ -242,7 +242,7 @@ export function ChooseView({ modeId }: Props) {
         {" · "}
         {pack?.title}
       </p>
-      <h1 className="mb-1 text-2xl">
+      <h1 className="mb-1 text-heading">
         {work.author}: <i>{work.title}</i>
       </h1>
       <p className="mb-8 text-sm text-ink-muted">

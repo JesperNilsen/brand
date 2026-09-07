@@ -126,14 +126,20 @@ Rot er `17px`. Målestokken finnes som tokens i `globals.css`:
 | `--text-meta` | `0.875rem` | metatekst, tabelldata |
 | `--text-label` | `0.8125rem` | `.label`, små kapitéler |
 
-**Status: tokenene er fasit, men visningene leser ennå ikke fra dem.** Sytten
-Tailwind-verktøy (`text-3xl`, `text-2xl`, `text-xl`, `text-lg`) står fortsatt
-igjen i sju filer, og `--text-*` er referert null steder i TSX. Tallene i
-tabellen over er de faktiske størrelsene de verktøyene gir i dag, så
-målestokken er riktig beskrevet — den er bare ikke håndhevet noe sted ennå.
-Migreringen er **T-14**.
-<!-- check:design adoption status=pending adhoc=17 files=7 tokens=0 --> Skriver du en ny skjerm før den er gjort, bruk
-tokenene: da er det én fil mindre å rydde.
+**Status: målestokken er fasit, og visningene leser fra den (T-14, 7. september
+2026).** `@theme inline` gjør hvert `--text-*`-token til et verktøy med samme
+navn, så en visning skriver `text-heading` og navngir aldri variabelen. De sytten
+`text-3xl`/`text-2xl`/`text-xl`/`text-lg` er borte fra `src/`, og `pnpm
+check:design` teller begge deler: et nytt ad hoc-verktøy feiler porten.
+<!-- check:design adoption status=done adhoc=0 files=0 tokens=17 -->
+
+Ett tall flyttet seg i migreringen, og det er det eneste: forsidens h1 lå på
+`text-3xl` (1,875rem) mens tabellen sa 1,9rem. Nå er tabellen sann — 0,4 px, og
+verdt å nevne bare fordi hele poenget med en fasit er at den ikke lyver.
+
+**Bruk tokenene, ikke Tailwinds egen skala.** `text-2xl` og `--text-heading` er
+tilfeldigvis like store i dag; det er tilfeldigheten fasiten finnes for å
+avskaffe.
 
 **Under `--text-meta` går man ikke for tekst som skal leses.** Bunnteksten lå
 på `text-xs` (12,75px) i `--ink-faint`, altså liten *og* svak samtidig; den er

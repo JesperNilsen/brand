@@ -310,7 +310,16 @@ function tsxFiles(dir: string): string[] {
 }
 
 const ADHOC = /\btext-(?:3xl|2xl|xl|lg)\b/g;
-const TOKEN_REF = /--text-[a-z-]+/g;
+/**
+ * A use of the scale, in either form it can take.
+ *
+ * `@theme inline` turns each `--text-*` token into a utility of the same name,
+ * so a component that adopts the scale writes `text-heading` and never names
+ * the variable. Counting only `--text-*` would therefore have read zero
+ * through a completed migration — the gate would have been watching for
+ * something the finished state does not contain.
+ */
+const TOKEN_REF = /\btext-(?:title|heading|section|lead|body|meta|label)\b|--text-[a-z-]+/g;
 
 let adhoc = 0;
 let adhocFiles = 0;

@@ -11,7 +11,7 @@ export default function AboutPage() {
   return (
     <article className="prose-measure">
       <p className="label mb-2">Om</p>
-      <h1 className="mb-6 text-2xl">BRAND og Brand Training Edition</h1>
+      <h1 className="mb-6 text-heading">BRAND og Brand Training Edition</h1>
 
       <p className="mb-4">
         BRAND er en skrive- og tasteapp for konsentrert trening på norsk prosa. Navnet viser til
@@ -19,10 +19,10 @@ export default function AboutPage() {
         identitet. Alt lagres lokalt i nettleseren; det finnes ingen konto og ingen sky.
       </p>
 
-      <h2 className="mb-2 mt-8 text-xl">Språkprofilen {brandRiksmaal.displayName}</h2>
+      <h2 className="mb-2 mt-8 text-section">Språkprofilen {brandRiksmaal.displayName}</h2>
       <p className="mb-4">{brandRiksmaal.description}</p>
 
-      <h2 className="mb-2 mt-8 text-xl">To utgaver av hver tekst</h2>
+      <h2 className="mb-2 mt-8 text-section">To utgaver av hver tekst</h2>
       <p className="mb-4">
         Hver tekst finnes i to atskilte lag. <b>Originalteksten</b> er en nøyaktig transkripsjon
         av kilden, med kildehenvisning og uten språklige inngrep. <b>Brand Training Edition</b> er
@@ -37,7 +37,7 @@ export default function AboutPage() {
         løpet av økten, også de du rettet med Backspace.
       </p>
 
-      <h2 className="mb-2 mt-8 text-xl">Kilder og redaksjonsnotater</h2>
+      <h2 className="mb-2 mt-8 text-section">Kilder og redaksjonsnotater</h2>
       {listContentPacks().map((pack) =>
         listWorks(pack.id).map((work) => {
           // The edition the reader actually types. `getEdition` returned the
@@ -47,7 +47,7 @@ export default function AboutPage() {
           const training = defaultEdition(work, brandRiksmaal.id);
           return (
             <section key={work.id} className="mb-8">
-              <h3 className="mb-1 text-lg">
+              <h3 className="mb-1 text-lead">
                 {work.author}: <i>{work.title}</i>
                 {work.publishedYear ? ` (${work.publishedYear})` : ""}
               </h3>
