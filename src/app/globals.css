@@ -373,9 +373,12 @@ body {
 }
 .typing-surface:not(:focus-within) .typing-lines {
   /* 0.75, not 0.55. At 0.55 the pending text sat at 2.35:1 against the page —
-     not "quietly secondary" but unreadable. 0.75 keeps pending at 3.13:1 and
-     typed text at 5.75:1, which is still an unmissable drop from the focused
-     state without making the passage illegible while it is unfocused. */
+     not "quietly secondary" but unreadable. 0.75 keeps pending at 3.45:1 and
+     typed text at 6.81:1, which is still an unmissable drop from the focused
+     state without making the passage illegible while it is unfocused. (Those
+     two numbers read 3.13 and 5.75 until 2026-09-07: they were the figures for
+     the 0.7 `.recedes` rule, copied across. `pnpm check:design` now recomputes
+     the pending one from the tokens, so the pair cannot drift apart again.) */
   opacity: 0.75;
 }
 .typing-surface:not(:focus-within) .ch-cursor {

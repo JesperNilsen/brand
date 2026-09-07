@@ -55,6 +55,13 @@ variabler — ingen komponent skriver en heksverdi selv.
 
 ### Kontrast er et krav, ikke en ambisjon
 
+<!-- check:design role token=--ink role=text -->
+<!-- check:design role token=--ink-muted role=text -->
+<!-- check:design role token=--ink-faint role=text -->
+<!-- check:design role token=--error role=text -->
+<!-- check:design role token=--rule-strong role=boundary -->
+
+
 Alle forhold er WCAG 2.1 mot `--paper`. **Brødtekst skal ligge på 4,5:1 eller
 over. Grensen som identifiserer en interaktiv komponent skal ligge på 3:1 eller
 over** (WCAG 1.4.11).
@@ -63,6 +70,8 @@ To feil ble funnet i revisjonen 6. september 2026 og er rettet:
 
 - `--ink-faint` lå på **2,75:1** (lys) og ble brukt til bunntekst og
   instruksjonsglyfer. Nå `#746e65` → 4,56:1 mot papir, 4,96:1 mot flate.
+  <!-- check:design contrast token=--ink-faint theme=light vs=paper ratio=4.56 -->
+  <!-- check:design contrast token=--ink-faint theme=light vs=surface ratio=4.96 -->
 - `.btn` og `.card` hentet grensen sin fra `--rule` på **1,23:1**. Rammen rundt
   en sekundærknapp var i praksis usynlig. Derfor finnes `--rule-strong`.
 
@@ -78,8 +87,12 @@ To steder demper vi med `opacity`, og begge er *fremheving*, ikke informasjon:
 
 | Regel | Verdi | Verste tekst innenfor |
 | --- | --- | --- |
-| `[data-typing="on"] .recedes` | `0.7` | 3,13:1 (lys) / 4,08:1 (mørk) |
-| `.typing-surface:not(:focus-within) .typing-lines` | `0.75` | 3,13:1 ventende tekst |
+| `[data-typing="on"] .recedes` | `0.7` | 3,13:1 (lys) / 4,07:1 (mørk) |
+| `.typing-surface:not(:focus-within) .typing-lines` | `0.75` | 3,45:1 ventende tekst |
+
+<!-- check:design opacity selector=[data-typing="on"]~.recedes theme=light token=--ink-muted value=0.7 ratio=3.13 -->
+<!-- check:design opacity selector=[data-typing="on"]~.recedes theme=dark token=--ink-muted value=0.7 ratio=4.07 -->
+<!-- check:design opacity selector=.typing-surface:not(:focus-within)~.typing-lines theme=light token=--ink-muted value=0.75 ratio=3.45 -->
 
 Begge lå tidligere langt lavere — `.recedes` på `0.22`, altså **1,36:1**, med
 en kommentar i kildekoden som påsto at kontrollene «stay legible». De gjorde de
@@ -118,7 +131,8 @@ Tailwind-verktøy (`text-3xl`, `text-2xl`, `text-xl`, `text-lg`) står fortsatt
 igjen i sju filer, og `--text-*` er referert null steder i TSX. Tallene i
 tabellen over er de faktiske størrelsene de verktøyene gir i dag, så
 målestokken er riktig beskrevet — den er bare ikke håndhevet noe sted ennå.
-Migreringen er **T-14**. Skriver du en ny skjerm før den er gjort, bruk
+Migreringen er **T-14**.
+<!-- check:design adoption status=pending adhoc=17 files=7 tokens=0 --> Skriver du en ny skjerm før den er gjort, bruk
 tokenene: da er det én fil mindre å rydde.
 
 **Under `--text-meta` går man ikke for tekst som skal leses.** Bunnteksten lå
@@ -257,3 +271,8 @@ skjedde og hva leseren kan gjøre — ikke hva som gikk galt internt.
 3. Ny asynkron visning: alle fire tilstander, ikke bare den som virker.
 4. Ny primærknapp: sjekk at det fortsatt bare er én på skjermen.
 5. Oppdater dette dokumentet i samme endring.
+6. Tallene her er portet: `pnpm check:design` regner dem ut fra
+   `globals.css` og `src/**/*.tsx` på nytt og feiler når de ikke stemmer.
+   Endrer du et tall, endrer du markøren ved siden av det — og markøren er
+   en HTML-kommentar, så den er usynlig i den ferdige teksten. Grammatikken
+   står øverst i `scripts/check-design.ts`.
