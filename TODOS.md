@@ -181,6 +181,11 @@ forfatterens ordvalg» må trekkes eksplisitt for denne klassen før den kjøres
 **Avhenger av:** D11 (redaksjonell diff-flyt). Dette er nøyaktig den mengden
 tekstendring som skal kunne leses av et menneske før den publiseres.
 
+**Køført 2026-09-08 som Q-005**, med avstanden målt: 22 forekomster igjen i de
+fire utgavene leseren faktisk skriver (Ibsen 3, Hamsun 3, Gift 14, Noveletter
+2). Posten blokkerer på lesningen, og bærer også den nye porten
+(`check:conformance`) som gjør avstanden til noe maskinen holder på null.
+
 ## T-10 — `ReadingProgress` overlever ikke et utgavebump — LØST 2026-09-07
 
 **Løst i D14** (`docs/DECISIONS.md`): nøkkelen inneholder ikke lenger

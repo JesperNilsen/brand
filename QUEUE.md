@@ -314,3 +314,125 @@ notes:
 - **Non-goal: personalisation.** See Q-003's note and T-02. A drill that claims
   to know what *you* need is a different feature and is blocked on data that is
   not stored.
+
+---
+
+## Q-005 · T-09: kutt v3-utgavene lesningen ber om
+status: blocked:redaksjonell lesning — `content/*/review.json` finnes ikke ennå
+lane: brand-content
+
+acceptance:
+Hver pakke som lesningen sier skal kuttes får en `rules.v3.json` på
+`brand-riksmaal.base.v2` og en `training-edition.v3.json` bygget gjennom den
+vanlige kjeden, pluss en ny port som holder resultatet ærlig.
+
+**Målt 2026-09-07, mot `base.v2`, på de fire utgavene leseren faktisk skriver:**
+
+| utgave | treff | formene |
+| --- | --- | --- |
+| `ibsen-brand.training.v1` | 3 | `fjellvidderne`, `Gad`, `gad` |
+| `hamsun-markens-groede.training.v2` | 3 | `bygderne`, `netterne`, `gjeiterne` |
+| `kielland-gift.training.v2` | 14 | `sad`, `ferierne`, `spidserne`, `penneposerne`, `adjunkterne`, `gad`, `bag` |
+| `kielland-noveletter.training.v2` | 2 | `lod`, `sad` |
+
+Tjueto forekomster til sammen. Det er hele avstanden mellom det
+`LANGUAGE_PROFILE.md` lover og det leseren skriver i dag, og den er nå et tall
+og ikke en anelse.
+
+1. **En ny port, `scripts/check-conformance.ts` (`pnpm check:conformance`, i
+   `check:fast`),** som kjører profilens gjeldende grunnregelsett over hver
+   pakkes NYESTE treningsutgave og feiler på ethvert treff. Den feiler på main i
+   dag — det er poenget: den blir grønn når kuttet er gjort, og rød igjen første
+   gang et grunnregelsett vokser uten at utgavene følger etter.
+2. **`rules.v3.json` per pakke som skal kuttes**, med `baseRules:
+   "brand-riksmaal.base.v2"` og bare pakkespesifikke tillegg. Ikke rør v1/v2:
+   de er oppskriften bak utgaver som allerede er skrevet mot.
+3. **`training-edition.v3.json` bygget med `build-training-edition`**, aldri
+   håndredigert — `validate:content` bygger den på nytt og sammenligner byte for
+   byte.
+4. **`-ede`-klassen røres ikke mekanisk.** D12 målte den og forkastet den:
+   endelsen varierer med verbet, og de tretti avgjørelsene hører til lesningen.
+   Det som kommer fra lesningen som ord-for-ord-valg legges i pakkens egen
+   regelfil, ikke i grunnsettet.
+5. **Kortformbanken følger med.** `content/ibsen-brand/drills.v1.json` navngir
+   `ibsen-brand.training.v1`s contentHash, så et Ibsen-v3 gjør banken ugyldig
+   med vilje. Hvert av de 59 elementene må kontrolleres mot den nye teksten og
+   banken kuttes på nytt som `drills.v2.json` — `validate:content` feiler til
+   det er gjort, og det er den porten som gjør at de to ikke kan skille lag.
+
+verify: `pnpm check:conformance && pnpm check:all`
+
+Porten må vises at den biter, slik Q-001 og Q-003 krevde: en muteringstest som
+setter en normalisert form tilbake til den danske i en midlertidig kopi av
+treet, og ser `check:conformance` gå rød. En port som ikke kan vises å feile er
+ingen port.
+
+notes:
+- **Blokkeringen er ekte og kan ikke omgås.** Hvilke pakker som skal kuttes, og
+  hva som skal skje med `Gad`/`gad` i Ibsen og `sagde`-klassen, er redaksjonelle
+  avgjørelser. Lesepakkene ligger i `~/dev/brand-review-packets/`; når en
+  lesning er ført inn i `content/<pakke>/review.json`, flipp denne til `ready`
+  og skriv inn hvilke pakker den gjelder.
+- **Fremgang overlever nå et utgavebump** (T-10, `2687cef`). Det var den ene
+  grunnen til å utsette et v3-kutt, og den er borte.
+- **Utgavene er allerede fikspunkter av sine egne regelsett** — null treff for
+  alle sju, målt 2026-09-07. Det er en annen invariant enn den over, og den bør
+  fortsette å holde: hvis `check:conformance` skrives generelt nok til å dekke
+  begge, si det i doc-kommentaren hvorfor de er to påstander og ikke én.
+- Kjeden står i `README.md`: `rules.vN.json` → `build-training-edition` →
+  `pnpm build:content` → `pnpm validate:content`. Ingen kodeendring kreves for
+  selve kuttet; porten er det eneste nye.
+- `REVIEW_GATE` i `scripts/validate-content.ts:78` står på `"warn"`. Når en
+  utgave er lest OG kuttet, er det den linjen som gjør ulest tekst til en hard
+  feil — vurder den i samme runde, men ikke flipp den før alle fire pakkene er
+  lest.
+
+---
+
+## Q-006 · D10: «Balstemning» inn i korpuset
+status: blocked:redaksjonell lesning — nye ord er ny lesegjeld
+lane: brand-content
+
+acceptance:
+«Balstemning» — spesifikasjonens prioriterte tekst — importeres inn i
+`kielland-noveletter` gjennom den samme porten alt annet går gjennom.
+
+1. **Kilden arkiveres verbatim** under `content/kielland-noveletter/source/`,
+   hentet med `scripts/import/wikikilden.ts`. Søk på **«Balstemning» med én L**:
+   1907-utgavens stavemåte. Den moderne «Ballstemning» gir null treff, og det
+   var hele grunnen til at teksten sto oppført som utilgjengelig i et halvt år.
+2. **`segments.json` utvides** med novellens segmenter, prefikset med tittelen
+   slik de to andre novellene er («Balstemning, 1» …).
+3. **`original.json` og treningsutgaven bygges på nytt** med `build-original` og
+   `build-training-edition`, aldri for hånd. `validate:content` kontrollerer
+   proveniens linje for linje mot den arkiverte kildefilen.
+4. **`docs/CORPUS_STATUS.md` oppdateres** med ordtall, segmenter og
+   rettighetsgrunnlag — uendret fra resten av pakken (Kielland d. 1906;
+   Wikikildens transkripsjon CC BY-SA 4.0).
+5. **Kontrollstatus røres ikke.** Den nye teksten er `agent-drafted` som resten,
+   og lesningen av den er ny gjeld, ikke noe denne posten kan gjøre opp.
+
+verify: `pnpm validate:content && pnpm check:all`
+
+Porten er `validate:content`s proveniensjekk, og den må vises at den biter: endre
+ett ord i `original.json` uten å endre kilden, i en midlertidig kopi, og se den
+gå rød. Det er den kontrollen som skiller «importert» fra «skrevet av».
+
+notes:
+- **Avvik fra CEO-planen, med vilje.** Planen sier D10 = Balstemning *pluss*
+  resten av *Noveletter* (~26 000 ord). Denne posten tar bare Balstemning
+  (~2 100 ord). Grunnen: hvert ord som importeres er et ord redaktøren skylder
+  en lesning, og ingen av de fire pakkene er lest ennå. «Erotik og Idyl», «En
+  Middag», «To Venner» og «Slaget ved Waterloo» får sin egen post når uken med
+  faktisk bruk er gjennomført — som er nøyaktig den porten planen selv setter
+  før korpuset utvides videre.
+- Kilde: `https://no.wikisource.org/wiki/Balstemning`, transkludert fra
+  `Kielland - Samlede Værker 1.djvu`, sidene 27–32, korrekturkvalitet 4
+  (validert). Samme bind som «Haabet er lysegrønt» og «Visne Blade».
+- **Rekkefølge mot Q-005:** hvis Q-005 kutter `kielland-noveletter` til v3, gjør
+  det FØRST. Å importere ny tekst inn i en pakke som samtidig får nytt regelsett
+  betyr to årsaker til at én utgave endret seg, og da er byte-sammenligningen
+  ikke lenger et bevis på noe.
+- Lærdommen som står igjen fra det opprinnelige feilsporet: et negativt
+  søkeresultat gjelder søkestrengen, ikke verket. Søk på stavemåten *utgaven*
+  bruker, og kryssjekk mot bindets `Indeks:`-side før noe erklæres utilgjengelig.
