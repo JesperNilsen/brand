@@ -85,6 +85,7 @@ type Segment = {
   id: string;
   order: number;
   text: string;
+  part?: string;
   label?: string;
   wordCount: number;
   difficulty?: number;
@@ -144,6 +145,9 @@ function checkSegments(pack: string, editionId: string, segments: Segment[]) {
     if (s.difficulty !== undefined && ![1, 2, 3, 4, 5].includes(s.difficulty)) {
       fail(pack, `${where}: difficulty out of range`);
     }
+    if (s.part !== undefined && (typeof s.part !== "string" || s.part.trim() !== s.part || !s.part)) {
+      fail(pack, `${where}: part må være en ikke-tom tittel uten kantmellomrom`);
+    }
     // Every practice form must leave something to type. A segment emptied by a
     // filter cannot be dropped from a session plan without corrupting saved
     // reading progress, so it is a content error rather than a runtime case.
@@ -153,6 +157,29 @@ function checkSegments(pack: string, editionId: string, segments: Segment[]) {
       }
     }
   });
+
+  // Parts must be contiguous, and either every segment has one or none does.
+  //
+  // The chooser groups by part while keeping the edition's own order, so a part
+  // that comes back after another one would either be split into two groups
+  // that share a name or force the list out of reading order. Neither is a
+  // rendering decision: it is the content saying two different things about
+  // where a passage sits.
+  const parts = segments.map((s) => s.part);
+  const named = parts.filter((p) => p !== undefined).length;
+  if (named > 0 && named < parts.length) {
+    fail(pack, `${editionId}: ${named} av ${parts.length} segmenter har part — enten alle eller ingen`);
+  }
+  const seenParts = new Set<string>();
+  let previous: string | undefined;
+  for (const part of parts) {
+    if (part === previous) continue;
+    if (part !== undefined && seenParts.has(part)) {
+      fail(pack, `${editionId}: part «${part}» kommer tilbake etter en annen del — delene må være sammenhengende`);
+    }
+    if (part !== undefined) seenParts.add(part);
+    previous = part;
+  }
 }
 
 /** The hash has to be checked, or it is decoration that drifts silently. */

@@ -21,6 +21,7 @@ export type OriginalFile = {
       id: string;
       order: number;
       text: string;
+      part?: string;
       label?: string;
       difficulty?: number;
     }>;

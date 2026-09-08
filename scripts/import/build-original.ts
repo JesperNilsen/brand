@@ -13,7 +13,7 @@
  *   "work": { id, contentPackId, author, title, publishedYear, source },
  *   "edition": { id, version, editorialNotes? },
  *   "speakerLinePattern": "^[A-ZÆØÅ][A-ZÆØÅ ]*( \\(.*\\))?\\.$",   // optional
- *   "segments": [{ id, label?, start, end, difficulty? }]
+ *   "segments": [{ id, part?, label?, start, end, difficulty? }]
  * }
  */
 import { readFile, writeFile } from "node:fs/promises";
@@ -26,6 +26,7 @@ type SegmentSpec = {
   label?: string;
   start: string;
   end: string;
+  part?: string;
   difficulty?: 1 | 2 | 3 | 4 | 5;
 };
 
@@ -69,6 +70,11 @@ async function main() {
       id: s.id,
       order: index + 1,
       text,
+      // The novella, act or chapter this segment belongs to. Authored here
+      // rather than derived from the id or split out of the label: a group
+      // needs a title a reader recognises, and neither `haabet-01` nor a guess
+      // about where a comma falls in «Haabet er lysegrønt, 1» is one.
+      part: s.part,
       label: s.label,
       wordCount: countWords(text),
       difficulty: s.difficulty,
