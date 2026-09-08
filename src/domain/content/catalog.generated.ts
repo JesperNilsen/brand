@@ -384,6 +384,16 @@ export const WORKS: Work[] = [
         "file": "/content/editions/kielland-noveletter.original.b7d0ef61833c.json"
       },
       {
+        "id": "kielland-noveletter.original.v2",
+        "workId": "kielland-noveletter",
+        "kind": "original",
+        "version": "2.0.0",
+        "contentHash": "sha256:94b143e16d5cb3aa0ffd7c0efafc447327d4d46a05ae038ffaeac60c77b5f0cc",
+        "segmentCount": 264,
+        "wordCount": 25664,
+        "file": "/content/editions/kielland-noveletter.original.v2.94b143e16d5c.json"
+      },
+      {
         "id": "kielland-noveletter.training.v1",
         "workId": "kielland-noveletter",
         "kind": "training-edition",
@@ -408,6 +418,19 @@ export const WORKS: Work[] = [
         "segmentCount": 13,
         "wordCount": 853,
         "file": "/content/editions/kielland-noveletter.training.v2.e492070c9614.json"
+      },
+      {
+        "id": "kielland-noveletter.training.v3",
+        "workId": "kielland-noveletter",
+        "kind": "training-edition",
+        "version": "3.0.0",
+        "contentHash": "sha256:6f32ade3995123227510d9c9e878a46cc9831790d18ba90b4361a561052c6763",
+        "languageProfileId": "brand-riksmaal",
+        "basedOnEditionId": "kielland-noveletter.original.v2",
+        "basedOnContentHash": "sha256:94b143e16d5cb3aa0ffd7c0efafc447327d4d46a05ae038ffaeac60c77b5f0cc",
+        "segmentCount": 264,
+        "wordCount": 25669,
+        "file": "/content/editions/kielland-noveletter.training.v3.6f32ade39951.json"
       }
     ]
   }
