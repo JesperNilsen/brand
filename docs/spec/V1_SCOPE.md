@@ -18,7 +18,7 @@ Alle tre bruker `flow` som standard feilmodus. Kontrakter og innstillinger kan f
 
 - Henrik Ibsen: *Brand*.
 - Knut Hamsun: *Markens grøde*.
-- Alexander Kielland: *Noveletter*, med «Ballstemning» prioritert.
+- Alexander Kielland: *Noveletter*, med «Balstemning» prioritert (1907-utgavens stavemåte, med én L).
 - Alexander Kielland: *Gift*.
 - Originaltekst og separat Brand Training Edition, med kildemetadata og enkel redaksjonell versjonering.
 

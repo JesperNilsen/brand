@@ -37,7 +37,7 @@
       "verificationStatus": "agent-drafted",
       "editorialNotes": [
         "Rå HTML arkivert under source/wikikilden/visne-blade.html.",
-        "Novellesamlingens prioriterte tekst, «Ballstemning», har ingen bekreftet fri digital kilde funnet; se docs/CORPUS_STATUS.md."
+        "Samlingens prioriterte tekst, «Balstemning», er ennå ikke i pakken, men finnes korrekturlest på Wikikilden under 1907-utgavens stavemåte med én L (https://no.wikisource.org/wiki/Balstemning). Den tidligere merknaden her sa at ingen fri kilde var funnet; feilen lå i søkestrengen, ikke i kilden. Se docs/CORPUS_STATUS.md."
       ]
     }
   ]

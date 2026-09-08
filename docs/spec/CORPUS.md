@@ -10,7 +10,7 @@ Corpuset skal gi litterært gode tekster med varierende rytme, setningslengde og
 | --- | --- | --- | --- |
 | 1 | `ibsen-brand` | Henrik Ibsen, *Brand* | Produktets navngivende kjernetekst; egnet for `Nonstop` og `Passage`. |
 | 2 | `hamsun-markens-groede` | Knut Hamsun, *Markens grøde* | Langform, naturprosa og vedvarende rytme. |
-| 3 | `kielland-noveletter` | Alexander Kielland, *Noveletter* | Korte, selvstendige økter; prioriter «Ballstemning». |
+| 3 | `kielland-noveletter` | Alexander Kielland, *Noveletter* | Korte, selvstendige økter; prioriter «Balstemning» — 1907-utgaven staver den med én L, og søk på den moderne skrivemåten gir null treff. |
 | 4 | `kielland-gift` | Alexander Kielland, *Gift* | Samfunnskritisk roman med variert dialog og fortellende prosa. |
 
 Et minimum for første lansering er én kontrollert treningsutgave av alle fire verkene, med passasjer som kan brukes direkte i `Passage` og `Timed`. Hvis redaksjonelt arbeid må avgrenses, lanser *Brand* fullt og de øvrige verkene som utvalgte, kvalitetssikrede passasjer.
