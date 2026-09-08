@@ -389,28 +389,45 @@ notes:
 
 ---
 
-## Q-006 · D10: «Balstemning» inn i korpuset
-status: blocked:redaksjonell lesning — nye ord er ny lesegjeld
+## Q-006 · D10: hele «Noveletter» inn i korpuset
+status: blocked:Q-007 — en flat liste på ~400 segmenter er ikke en velger; og etter Q-005 hvis den kutter denne pakken, se notes
 lane: brand-content
 
 acceptance:
-«Balstemning» — spesifikasjonens prioriterte tekst — importeres inn i
-`kielland-noveletter` gjennom den samme porten alt annet går gjennom.
+Alle fem novellene i *Noveletter* (1879) står i `kielland-noveletter`, importert
+gjennom den samme porten alt annet går gjennom. Pakken har i dag to av dem.
 
-1. **Kilden arkiveres verbatim** under `content/kielland-noveletter/source/`,
-   hentet med `scripts/import/wikikilden.ts`. Søk på **«Balstemning» med én L**:
-   1907-utgavens stavemåte. Den moderne «Ballstemning» gir null treff, og det
-   var hele grunnen til at teksten sto oppført som utilgjengelig i et halvt år.
-2. **`segments.json` utvides** med novellens segmenter, prefikset med tittelen
-   slik de to andre novellene er («Balstemning, 1» …).
-3. **`original.json` og treningsutgaven bygges på nytt** med `build-original` og
+| novelle | ord | status |
+| --- | --- | --- |
+| «Haabet er lysegrønt» | ~450 (åpningen) | importert |
+| «Visne Blade» | ~400 (åpningen) | importert |
+| **«Balstemning»** | ~2 100 | denne posten |
+| **«Erotik og Idyl»** | ~4 700 | denne posten |
+| **«En Middag»** | ~2 100 | denne posten |
+| **«To Venner»** | ~6 700 | denne posten |
+| **«Slaget ved Waterloo»** | ~8 300 | denne posten |
+
+1. **Hver kilde arkiveres verbatim** under `content/kielland-noveletter/source/`,
+   hentet med `scripts/import/wikikilden.ts`. Søk på **«Balstemning» med én L** —
+   1907-utgavens stavemåte. Den moderne «Ballstemning» gir null treff, og det var
+   hele grunnen til at teksten sto oppført som utilgjengelig i et halvt år.
+2. **De to allerede importerte novellene utvides til hele teksten**, ikke bare
+   åpningen, slik at pakken er hele samlingen og ikke en blanding av utdrag og
+   hele noveller. Er det for mye for én post, skal det stå her som en egen post —
+   ikke gjøres halvveis.
+3. **`segments.json` utvides per novelle**, med id-prefiks og etiketter som
+   følger mønsteret som allerede finnes: `haabet-01` / «Haabet er lysegrønt, 1».
+   Prefikset er det Q-007 grupperer på, så det er ikke kosmetikk.
+4. **`original.json` og treningsutgaven bygges på nytt** med `build-original` og
    `build-training-edition`, aldri for hånd. `validate:content` kontrollerer
    proveniens linje for linje mot den arkiverte kildefilen.
-4. **`docs/CORPUS_STATUS.md` oppdateres** med ordtall, segmenter og
-   rettighetsgrunnlag — uendret fra resten av pakken (Kielland d. 1906;
-   Wikikildens transkripsjon CC BY-SA 4.0).
-5. **Kontrollstatus røres ikke.** Den nye teksten er `agent-drafted` som resten,
-   og lesningen av den er ny gjeld, ikke noe denne posten kan gjøre opp.
+5. **`docs/CORPUS_STATUS.md` oppdateres** med ordtall, segmenter og
+   rettighetsgrunnlag per novelle — uendret fra resten av pakken (Kielland
+   d. 1906; Wikikildens transkripsjon CC BY-SA 4.0).
+6. **Kontrollstatus røres ikke.** Teksten er `agent-drafted` som resten.
+7. **Én commit per novelle** på greinen. Diffen er stor og generert; det som gjør
+   den lesbar er at hver kilde, hvert segmentsett og hver gjenoppbygging kan
+   leses for seg.
 
 verify: `pnpm validate:content && pnpm check:all`
 
@@ -419,20 +436,74 @@ ett ord i `original.json` uten å endre kilden, i en midlertidig kopi, og se den
 gå rød. Det er den kontrollen som skiller «importert» fra «skrevet av».
 
 notes:
-- **Avvik fra CEO-planen, med vilje.** Planen sier D10 = Balstemning *pluss*
-  resten av *Noveletter* (~26 000 ord). Denne posten tar bare Balstemning
-  (~2 100 ord). Grunnen: hvert ord som importeres er et ord redaktøren skylder
-  en lesning, og ingen av de fire pakkene er lest ennå. «Erotik og Idyl», «En
-  Middag», «To Venner» og «Slaget ved Waterloo» får sin egen post når uken med
-  faktisk bruk er gjennomført — som er nøyaktig den porten planen selv setter
-  før korpuset utvides videre.
-- Kilde: `https://no.wikisource.org/wiki/Balstemning`, transkludert fra
-  `Kielland - Samlede Værker 1.djvu`, sidene 27–32, korrekturkvalitet 4
-  (validert). Samme bind som «Haabet er lysegrønt» og «Visne Blade».
+- **Dette er hele D10 slik CEO-planen skrev den** (operatørens avgjørelse
+  2026-09-08, etter at posten først var snevret inn til Balstemning alene).
+  Konsekvensen skal være uttalt og ikke oppdages senere: pakken går fra 853 ord
+  og 13 segmenter til rundt **26 800 ord og ~400 segmenter**, og
+  `kielland-noveletter` blir dermed den desidert største lesegjelden av de fire —
+  én størrelsesorden over de andre. Redaktørlesningen av denne pakken bør
+  planlegges som novelle-for-novelle, ikke som én økt.
+- **Q-007 er ikke en anbefaling, den er en forutsetning.** Ved ~66 ord per
+  segment gir importen omtrent 400 segmenter i én flat liste, i to velgere som
+  begge lister hvert segment. Q-002 skrev eksplisitt at hierarkiet skulle vente
+  til et verk hadde mer enn én del på main — det er nøyaktig det denne posten
+  gjør sant.
 - **Rekkefølge mot Q-005:** hvis Q-005 kutter `kielland-noveletter` til v3, gjør
   det FØRST. Å importere ny tekst inn i en pakke som samtidig får nytt regelsett
   betyr to årsaker til at én utgave endret seg, og da er byte-sammenligningen
   ikke lenger et bevis på noe.
-- Lærdommen som står igjen fra det opprinnelige feilsporet: et negativt
-  søkeresultat gjelder søkestrengen, ikke verket. Søk på stavemåten *utgaven*
-  bruker, og kryssjekk mot bindets `Indeks:`-side før noe erklæres utilgjengelig.
+- Kilder: `https://no.wikisource.org/wiki/Balstemning` og de fire andre i samme
+  bind, alle transkludert fra `Kielland - Samlede Værker 1.djvu` og korrekturlest
+  på Wikikilden. Kryssjekk mot bindets `Indeks:`-side før noe erklæres
+  utilgjengelig — et negativt søkeresultat gjelder søkestrengen, ikke verket.
+- **T-01 (hele kapitler av alle fire verk) er ikke løst av dette.** Denne posten
+  gjør ett verk komplett; de tre andre står fortsatt på åpningsutdrag.
+
+---
+
+## Q-007 · Grupper segmentlisten etter del
+status: ready
+lane: brand-ui
+
+acceptance:
+Segmentlisten grupperes etter delen segmentet hører til — novelle, akt eller
+kapittel — i begge velgerne som lister segmenter, og et verk med bare én del ser
+ut nøyaktig som i dag.
+
+1. **Gruppene kommer fra data, ikke fra en strengsplitt på etiketten.**
+   *Underspesifisert, avgjør før du begynner:* enten et `part`-felt i
+   `segments.json` (håndskrevet, altså ærlig proveniens) eller id-prefikset
+   (`haabet-`, `visne-`), som allerede finnes og allerede er meningsbærende. Å
+   splitte etiketten «Haabet er lysegrønt, 1» på komma er en gjetning om
+   tegnsetting i en tittel, og det er ikke et datamodellvalg.
+2. **`ibsen-brand` ser ut som før.** Ett verk med én akt får ingen ekstra
+   overskrift og ingen ekstra klikk: gruppering av én gruppe er struktur over
+   ingenting, og Q-002 avviste den med rette da det var tilfellet for alle fire.
+3. **`kielland-noveletter` viser to grupper i dag** («Haabet er lysegrønt» og
+   «Visne Blade»), som er nok til å bygge og bevise dette før Q-006 gjør det til
+   fem.
+4. **Skrevne segmenter er fortsatt merket**, og merket er fortsatt et ord og
+   ikke en farge. Gruppen bør også kunne si hvor mye av seg selv som er skrevet.
+5. **Fortsatt ingen sidelengs rulling på 375px**, og fortsatt tastaturnåbart med
+   navn på hver lenke — samme to krav Q-002 satte.
+6. **Skrevet for 400, ikke for 26.** Det er tallet Q-006 gir, og det er hele
+   grunnen til at denne posten finnes.
+
+verify: `pnpm check:all`
+
+Gaten utvides i `e2e/nonstop-navigation.spec.ts` (eller en søsterfil), og må
+vises å feile på uendret `src/`: den påstanden som biter er at
+`kielland-noveletter` viser to navngitte grupper med riktige segmenter under
+hver, mens `ibsen-brand` viser nøyaktig én flat liste uten gruppeoverskrift.
+
+notes:
+- **Prior art er i filen selv.** `SegmentIndex` i `src/components/ChooseView.tsx`
+  er allerede felles for Passage og Nonstop etter Q-002 — dette er én komponent
+  å endre, ikke to.
+- Q-002s ikke-mål sa at hierarkiet skulle revurderes «når et verk har mer enn én
+  akt på main, ikke før». `kielland-noveletter` har hatt to noveller siden 4.
+  september; det er den betingelsen, og Q-006 gjør den umulig å ignorere.
+- **Ikke en innholdsfortegnelse med sammenklapping som standard.** Teksten skal
+  dominere, og en leser som kommer for å hoppe skal se hvor hun er — ikke en
+  liste av lukkede skuffer. Om noe skal kunne lukkes, avgjør det som et eget
+  spørsmål med 400 elementer foran deg.
