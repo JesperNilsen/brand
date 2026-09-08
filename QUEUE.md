@@ -652,12 +652,70 @@ notes:
   endret på publiserte utgaver (`720cd3f`).
 - Se D17 og T-18.
 
+## Q-011 · T-19: moduler med egen fremdrift
+status: ready
+lane: brand-ui
+
+acceptance:
+Et verk kan deles i moduler som har egen identitet og **egen fremdrift**, mens
+grensesnittet fortsatt viser at modulen hører til verket.
+
+1. **Modulen er en post, ikke en streng.** `segments.json` kan erklære
+   `modules: [{ id, title, order }]`, og et segment peker på `moduleId` i stedet
+   for dagens frie `part`-streng. `part` beholdes som visningsnavn der en pakke
+   allerede har det — Q-007s gruppering skal fortsette å virke uendret på de
+   fire nåværende pakkene, og *Noveletter*s sju deler er prøven på det.
+2. **Fremdrift per modul.** `ReadingProgress`-nøkkelen får modulen som et
+   valgfritt ledd. Et verk uten moduler beholder nøyaktig dagens nøkkel og
+   dagens oppførsel — ingen migrasjon for de fire pakkene som finnes.
+3. **D14 og T-10 står.** Nøkkelen skal fortsatt ikke inneholde `editionId`:
+   fremgang hører til verket (og nå til modulen i verket), aldri til én utgave
+   av det. `migrateProgress` regner fortsatt nøkkelen ut av postens egne felter,
+   og kolliderende poster slås sammen med nyeste vinner og fullførte segmenter
+   unionert.
+4. **Fullføring per modul.** En modul kan være ferdigskrevet mens verket ikke
+   er. Velgeren merker den skrevne modulen med det samme ORDET Q-002 innførte
+   («Skrevet»), ikke med en farge.
+5. **Vanskelighet per modul.** Modulen kan bære sin egen vanskelighet, utledet
+   av segmentene sine når den ikke er satt.
+
+verify: `pnpm check:all`
+
+Porten er tosidig og begge sidene må vises å bite:
+- **En ny e2e** som skriver fremdrift på én modul rett inn i IndexedDB — samme
+  grep som `e2e/progress-edition-bump.spec.ts` og `e2e/edition-drift.spec.ts` —
+  og krever at bare den modulen er merket skrevet, ikke verket og ikke
+  søskenmodulene.
+- **En regresjonsport på nøkkelen:** en lagret post fra før modulene fantes skal
+  gi nøyaktig samme nøkkel etter migrasjonen som før. Den testen skal FEILE hvis
+  modulleddet skrives inn ubetinget.
+
+**NB — en e2e som navigerer rett etter at et segment er fullført må vente på at
+posten faktisk står i IndexedDB.** Det var T-15s flake, og den formen er
+nøyaktig denne postens form.
+
+notes:
+- **Hvorfor dette må inn før importen, ikke etter:** *Enten–Eller* deles i
+  Diapsalmata, Det umiddelbart erotiske, Forførerens Dagbog og utvalgte partier
+  fra «Eller», og Diapsalmata skal kunne være ferdig mens resten ikke er. En
+  modell som utvides etter at tekst er importert, endrer tekst som allerede er
+  skrevet mot — samme grunn som i D15.
+- **Hvorfor `part` ikke holder:** Q-007 (`6ac1f40`, #31) grupperer segmentlisten
+  etter en fri streng på segmentet. Strengen har ingen id, ingen rekkefølge
+  utover segmentrekkefølgen, og — det avgjørende — ingen fremdriftsnøkkel.
+- **Denne posten var bevisst holdt utenfor køen** fordi den rører
+  fremdriftsnøkkelen; køført 2026-09-08 på operatørens beslutning. Den er derfor
+  strengere gated enn de to foran: migrasjonen skal ikke bare passere, den skal
+  vises å ikke røre en post uten moduler.
+- **Ikke-mål:** å innføre moduler i noen eksisterende pakke. De fire som finnes
+  skal komme uendret ut på den andre siden; det er halve porten.
+- Se D17 og T-19.
+
 ---
 
-**Ikke køført, med vilje.** T-19 (moduler med egen fremdrift), T-20 (regelsett
-for dansk og landsmål) og T-21 (verseformatering) står i `TODOS.md` og er
-bevisst holdt utenfor køen: T-19 endrer `ReadingProgress`-nøkkelen og trenger en
-migrasjon som skal leses av et menneske, T-20 avhenger av den redaksjonelle
-lesningen på samme måte som Q-005, og T-21 skal ikke gjøres før prosakjeden
-står. **Ingen av de 25 verkene importeres før Q-009, Q-010 og T-19 er landet** —
-deretter *Sult*, *Gift*, *Et dukkehjem*, i den rekkefølgen.
+**Ikke køført, med vilje.** T-20 (regelsett for dansk og landsmål) og T-21
+(verseformatering) står i `TODOS.md` og er bevisst holdt utenfor køen: T-20
+avhenger av den redaksjonelle lesningen på samme måte som Q-005, og T-21 skal
+ikke gjøres før prosakjeden står. **Ingen av de 25 verkene importeres før Q-009,
+Q-010 og Q-011 er landet** — deretter *Sult*, *Gift*, *Et dukkehjem*, i den
+rekkefølgen.

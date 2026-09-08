@@ -95,8 +95,21 @@ filosofi, kvinneerfaring, historisk roman og dansk litteratur.
 5. *Amtmandens Døttre*
 6. *Enten–Eller: Diapsalmata*
 7. *Pan*
-8. *Kristin Lavransdatter: Kransen*
+8. *Garman & Worse* — **byttet inn for *Kristin Lavransdatter: Kransen***
 9. *Ved Vejen*
+
+**Dokumentert avvik, 2026-09-08.** Bølgens plass nr. 8 var *Kristin
+Lavransdatter: Kransen*. Verket er fritt i Norge fra 2020, men det finnes ingen
+fri transkripsjon av det — fri status er ikke en fri tekst. *Garman & Worse*
+(rangeringens nr. 10) er funnet på Wikikilden og tar plassen i bølgen. **Dette
+er et bytte i bølgen, ikke i rangeringen:** *Kransen* står fortsatt som nr. 8 og
+*Garman & Worse* som nr. 10, og *Kransen* går inn så snart det finnes en kilde å
+importere fra. Se `docs/CORPUS_STATUS.md` for grunnlaget.
+
+Byttet koster bølgen litt av spennvidden den ble valgt for: den historiske
+romanen faller ut, og Kielland får to plasser. *Ved Vejen* (dansk) og
+*Amtmandens Døttre* (kvinneerfaring) bærer fortsatt hver sin akse alene, så det
+er en tynnere bølge, ikke en annen bølge.
 
 ## Hyller
 

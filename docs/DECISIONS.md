@@ -525,3 +525,13 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   gjelder enhver modernisert dansk eller norsk utgave — det er samme feilform
   som `docs/spec/CORPUS.md` alltid har advart mot, men den er lettere å gå på
   når kilden ser vitenskapelig ut.
+- **Første dokumenterte avvik, samme dag som regelen ble skrevet.** *Kristin
+  Lavransdatter: Kransen* er tatt ut av første bølge og *Garman & Worse* satt
+  inn — ikke fordi *Kransen* er tyngre å bygge, men fordi det ikke finnes noen
+  fri transkripsjon å bygge av. **Rangeringen står uendret:** *Kransen* er
+  fortsatt nr. 8 og *Garman & Worse* nr. 10; det er bølgen som er byttet, og
+  byttet faller bort når en kilde finnes. Grunnlaget står i
+  `docs/CORPUS_STATUS.md` under «Avvik 1», med det byttet koster skrevet ut —
+  den historiske romanen faller ut av bølgen, og Kielland får to av ni plasser.
+  Regelen er ikke at rangeringen aldri viker; den er at den bare viker for
+  kilden, og at prisen skrives ned.

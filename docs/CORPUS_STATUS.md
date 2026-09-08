@@ -159,7 +159,33 @@ begrunnelsen når den trengs.
 Praktisk betyr det at bølgens tre første — *Sult*, *Gift*, *Et dukkehjem* — er
 de eneste som er klare til import i dag, og at det passer nøyaktig med
 rekkefølgeregelen i D17. Før noen av dem importeres skal Q-009 (hyller), Q-010
-(verksmetadata) og T-19 (moduler) stå.
+(verksmetadata) og Q-011 (moduler) stå.
+
+### Avvik 1 — *Garman & Worse* inn i bølgen for *Kristin Lavransdatter: Kransen*
+
+**Besluttet 2026-09-08 av operatøren.** `docs/spec/CORPUS.md` krever at et avvik
+fra rangeringen begrunnes skriftlig; dette er den begrunnelsen.
+
+- **Grunn:** *Kransen* har ingen fri transkripsjon. Undset døde i 1949 og verket
+  er fritt i Norge fra 2020, så rettighetsporten er passert — men søk på både
+  «Kristin Lavransdatter» og «Undset» på no.wikisource ga null treff
+  2026-09-08. Alternativet ville vært å transkribere fra en skannet
+  førsteutgave hos Nasjonalbiblioteket, som er et vesentlig større arbeid enn de
+  øvrige åtte postene i bølgen til sammen.
+- **Hva som ble byttet:** bølgens plass nr. 8. *Garman & Worse* (rangeringens nr.
+  10) er funnet på no.wikisource og tar plassen.
+- **Hva som IKKE ble byttet:** rangeringen. *Kransen* står fortsatt som nr. 8 og
+  *Garman & Worse* som nr. 10. Byttet gjelder utgivelsesbølgen alene, og faller
+  bort så snart det finnes en kilde for *Kransen*.
+- **Hva byttet koster:** den historiske romanen faller ut av bølgen, og Kielland
+  får to av ni plasser. Bølgen ble valgt for å slå an spennvidden; etter byttet
+  bærer *Ved Vejen* den danske aksen og *Amtmandens Døttre* kvinneerfaringen
+  hver for seg, uten reserve.
+- **Ikke løst av byttet:** nr. 4 (*Frygt og Bæven*), nr. 7 (*Pan*) og nr. 9
+  (*Ved Vejen*) mangler fortsatt en bekreftet fri kilde. De står i bølgen som
+  før, og de fire åpne kildespørsmålene nedenfor gjelder uendret. Undset-punktet
+  er beholdt der fordi det fortsatt skal besvares — byttet utsetter spørsmålet,
+  det avlyser det ikke.
 
 Åpne kildespørsmål å ta neste gang, i denne rekkefølgen:
 
@@ -174,7 +200,8 @@ rekkefølgeregelen i D17. Før noen av dem importeres skal Q-009 (hyller), Q-010
 3. **Undset nr. 8 og 14** — *Kransen* og *Jenny*. Hvis ingen fri transkripsjon
    finnes, er alternativet en egen transkripsjon fra en skannet førsteutgave
    (Nasjonalbiblioteket), som er et vesentlig større arbeid enn de andre postene
-   i bølgen. Vurder å bytte plass med nr. 10 *Garman & Worse*, som er funnet.
+   i bølgen. *Kransen* er tatt ut av bølgen i mellomtiden (avvik 1 over); det
+   endrer ikke at spørsmålet skal besvares, bare når det haster.
 4. **Bang nr. 9 og 18** — *Ved Vejen* og *Tine*. Andre Bang-verk finnes på
    da.wikisource, så søk på bindtittel og innholdsfortegnelse framfor på
    verkstittelen alene.

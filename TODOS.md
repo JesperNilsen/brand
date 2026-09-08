@@ -439,3 +439,7 @@ prosaorienterte innholdsmodellen. Posten tas når prosakjeden står, ikke før.
 `speakerLinePattern`, som holder replikknavnet sammen med replikken. *Et
 dukkehjem* (nr. 3, første bølge) er første prosadrama som prøver den, og er
 prøven på om replikknavn, sceneanvisninger og dialogstruktur overlever kjeden.
+
+**Køført 2026-09-08 som Q-011** på operatørens beslutning, med en strengere port
+enn de to postene foran: migrasjonen skal ikke bare passere, den skal vises å
+ikke røre en fremdriftspost for et verk uten moduler.
