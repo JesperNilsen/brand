@@ -165,6 +165,15 @@ describe("brand-riksmaal base rule set", () => {
 describe("editionMajorVersion", () => {
   it("reads the version off an edition id", () => {
     expect(editionMajorVersion("kielland-gift.training.v2")).toBe(2);
-    expect(editionMajorVersion("kielland-gift.original")).toBe(0);
+    expect(editionMajorVersion("kielland-noveletter.original.v2")).toBe(2);
+  });
+
+  // An unsuffixed id is version 1, not 0. `<work>.original` is the first
+  // original and keeps that form because stored sessions and every training
+  // edition's basedOnEditionId already name it that way; reading it as 0 would
+  // sort a later original ahead of it correctly by accident and a same-named
+  // work's first training edition wrongly.
+  it("treats an unsuffixed id as the first version", () => {
+    expect(editionMajorVersion("kielland-gift.original")).toBe(1);
   });
 });

@@ -390,7 +390,7 @@ notes:
 ---
 
 ## Q-006 · D10: hele «Noveletter» inn i korpuset
-status: blocked:Q-005-rekkefølge — Q-007 er landet, så det som gjenstår er å kutte pakken til v3 først hvis Q-005 gjør det; ellers klar
+status: running:queue/q-006-noveletter — kildene er arkivert og kjeden tåler nå at et verk vokser; segmenteringen gjenstår
 lane: brand-content
 
 acceptance:
@@ -508,3 +508,49 @@ notes:
   dominere, og en leser som kommer for å hoppe skal se hvor hun er — ikke en
   liste av lukkede skuffer. Om noe skal kunne lukkes, avgjør det som et eget
   spørsmål med 400 elementer foran deg.
+
+---
+
+## Q-008 · Si fra når en lagret økt navngir en tekst som har endret seg
+status: ready
+lane: brand-ui
+
+acceptance:
+Historikken og resultatsiden sier fra når en økts `editionContentHash` ikke er
+den katalogen har for den utgaven — i stedet for å merke økten stille med en
+utgave hvis tekst er en annen enn den som ble skrevet.
+
+1. **Sammenligningen finnes ett sted**, som en ren funksjon over lagret økt +
+   katalog: `unknown` (økter fra schema 1–2, som er en ærlig ikke-verdi og ikke
+   et avvik), `match`, `moved` (samme id, annen hash) og `gone` (id finnes ikke
+   i katalogen lenger).
+2. **Resultatsiden sier det i varselbeholderen som allerede finnes** (T-13), med
+   samme tone som de andre varslene: hva som er sant, ikke hva som gikk galt.
+   Tallene står — de ble målt — men de er ikke sammenlignbare med en økt mot
+   dagens tekst.
+3. **Historikken merker raden**, med et ord og ikke en farge, slik «pauset»
+   allerede gjør.
+4. **`unknown` merkes ikke som avvik.** En økt fra før utgavehashene fantes vet
+   ikke hvilken tekst den ble skrevet mot, og å påstå at den har endret seg ville
+   vært like galt som å påstå at den ikke har det.
+
+verify: `pnpm check:all`
+
+Gaten er en ny `e2e/edition-drift.spec.ts` som skriver en økt rett inn i
+IndexedDB med en hash som ikke finnes i katalogen — samme grep som
+`e2e/progress-edition-bump.spec.ts` bruker — og krever at både historikken og
+resultatsiden sier fra. Den må vises å feile på uendret `src/`.
+
+notes:
+- **Hvorfor dette finnes:** D7 lagrer `editionVersion` og `editionContentHash`
+  på hver økt nettopp for at en senere endring ikke skal kunne forfalske et
+  gammelt resultat — men ingenting leser dem tilbake. Uforanderligheten ble
+  holdt av disiplin alene, og disiplinen ble oppdaget som utilstrekkelig da
+  Q-006 skulle legge tekst til et verk (se D15). Versjonerte originaler gjør at
+  det ikke SKAL skje; denne posten gjør at det SYNES hvis det skjer likevel.
+- Feltene finnes allerede på `SessionResult`; ingen skjemaendring, ingen
+  migrasjon.
+- Prior art for varselet: `ResultView`s beholder fra T-13 og tekstform-varselet
+  ved siden av det. Prior art for merket i historikken: «pauset».
+- **Ikke-mål:** å reparere eller skjule slike økter. De er ekte målinger av en
+  ekte tekst; det eneste som mangler er at siden sier hvilken.

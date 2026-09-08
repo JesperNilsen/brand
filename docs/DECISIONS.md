@@ -412,3 +412,36 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   det ville vært.
 - **Porten er vist at den biter:** med `src/` stashet feiler 13 tester — begge
   adaptere, migreringen selv og importveien.
+
+## Originalen er versjonert, som alt annet (D15)
+
+- **Utgaver har vært uforanderlige siden D7 — bortsett fra den ene som bar
+  teksten.** `build-original.ts` skrev alltid `original.json`, så eneste måte å
+  legge tekst til et verk på var å skrive over originalen hver tidligere økt var
+  skrevet mot, og hver treningsutgave utledet av den med den. Ingenting ville
+  feilet. Resultatene ville bare begynt å navngi en tekst som ikke fantes lenger,
+  som er nøyaktig det D7 ble bygget for å hindre.
+- **Formen er den samme som `rules.vN.json`, inkludert det gamle navnet.**
+  `original.json` er versjon 1 med id `<verk>.original`; `original.v2.json` er
+  versjon 2 med id `<verk>.original.v2`. Versjon 1 er ikke døpt om, fordi den
+  id-en er det lagrede økter og hver treningsutgaves `basedOnEditionId` allerede
+  peker på. Id-en utledes nå av versjonen i stedet for å skrives for hånd: en
+  håndskrevet id som var uenig med filnavnet ville vært en økt som peker på en
+  tekst ingen finner.
+- **Gjenoppbyggingen følger `basedOnEditionId`, ikke den nyeste originalen.** Det
+  er hele forskjellen mellom en port og en formalitet: en eldre treningsutgave
+  bygget på nytt mot den nye originalen ville feilet med rette, og «bygg den mot
+  det som er gjeldende» er nøyaktig grepet som stille skriver om teksten en
+  tidligere økt ble skrevet mot.
+- **Work-blokken må være identisk i alle originaler.** Hver original bygges av
+  sin egen segmentspec og bærer derfor en kopi. Uten porten ville Om-sidens
+  beskrivelse av et verk avhengt av hvilken fil som tilfeldigvis ble lest.
+- **T-10 er det som gjorde dette mulig.** README sa tidligere det motsatte —
+  «behold `editionId`, hev `version`» — og begrunnelsen var at en ny `editionId`
+  nullstilte all Nonstop-fremdrift. Etter T-10 er nøkkelen profil + modus + verk,
+  uten utgave, og innvendingen falt bort. En instruks kan overleve grunnen sin.
+- **`pnpm check:originals` beviser det i begge retninger:** at en andre original
+  lar den første og alt utledet av den stå urørt og gyldig, og at fire feilveier
+  faktisk stoppes — id som ikke matcher filversjonen, to originaler som er uenige
+  om verket, en treningsutgave som navngir en original som ikke finnes, og en
+  original redigert på stedet.

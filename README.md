@@ -93,7 +93,7 @@ eventuelt viser seg, ikke produksjon senere.
 docs/spec/       styrende spesifikasjoner
 docs/DECISIONS.md tekniske valg og avvik
 docs/CORPUS_STATUS.md kildestatus per verk
-content/<pack>/  pack.json, segments.json, rules.vN.json, original.json,
+content/<pack>/  pack.json, segments[.vN].json, rules.vN.json, original[.vN].json,
                  training-edition.vN.json, source/ (arkivert råkilde)
 scripts/import/  importere og bygge utgaver (replaybart fra source/)
 src/domain/      typer, språkprofil, innholdsregister, tastemotor, moduser, runner
@@ -115,8 +115,19 @@ tests/, e2e/     vitest og playwright
    Utgaver er uforanderlige. En retting i en publisert utgave er en ny versjon
    (`rules.v2.json` → `training-edition.v2.json`), aldri en endring på stedet,
    fordi en lagret økt navngir utgaven den ble skrevet mot og den teksten må
-   fortsatt finnes. Ved flere segmenter i samme verk: behold `editionId`, hev
-   `version` og hashen. En ny `editionId` ville nullstilt all Nonstop-fremdrift.
+   fortsatt finnes.
+
+   **Det gjelder originalen også.** Skal et verk vokse — mer av samlingen, et
+   lengre utdrag, en rettet transkripsjon — er det `segments.v2.json` →
+   `build-original --version 2` → `original.v2.json`, og en ny treningsutgave
+   bygget fra den (`build-training-edition --version 3`, som tar den nyeste
+   originalen om ikke `--original` sier noe annet). De gamle filene røres ikke.
+   `pnpm check:originals` beviser at de ikke gjør det.
+
+   Denne oppskriften sa tidligere det motsatte — «behold `editionId`, hev
+   `version`» — fordi en ny `editionId` nullstilte all Nonstop-fremdrift. Det
+   stemmer ikke lenger: etter T-10 er fremdriftsnøkkelen profil + modus + verk,
+   uten utgave, og den innvendingen falt bort.
 5. `pnpm build:content` og `pnpm validate:content`.
 6. `pnpm review:edition <editionId>` og les den. Før lesningen inn i
    `content/<pack>/review.json` med `reviewedContentHash` — verktøyet skriver

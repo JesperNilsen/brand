@@ -46,6 +46,7 @@ import path from "node:path";
 import { readdir } from "node:fs/promises";
 import { buildTrainingEdition, serializeEdition, type OriginalFile } from "../lib/build-edition";
 import { loadRules } from "../lib/load-rules";
+import { latestOriginal, originalFileName, readOriginal } from "../lib/originals";
 
 function arg(name: string): string {
   const i = process.argv.indexOf(`--${name}`);
@@ -74,16 +75,26 @@ async function main() {
   const version = Number(optionalArg("version") ?? (await latestRulesVersion(dir)));
   if (!Number.isInteger(version) || version < 1) throw new Error(`bad --version: ${version}`);
 
-  const original = JSON.parse(
-    await readFile(path.join(dir, "original.json"), "utf8"),
-  ) as OriginalFile;
+  // Which original this edition is cut from is a decision, not a default that
+  // may drift: `basedOnEditionId` is written from it, and `validate:content`
+  // rebuilds this file from exactly that original. Omit --original and you get
+  // the newest one, which is what a new cut wants; name it explicitly to
+  // reproduce an older edition.
+  const originalVersion = Number(
+    optionalArg("original") ?? (await latestOriginal(dir)).version,
+  );
+  if (!Number.isInteger(originalVersion) || originalVersion < 1) {
+    throw new Error(`bad --original: ${originalVersion}`);
+  }
+  const original = await readOriginal<OriginalFile>(dir, originalVersion);
   const rules = await loadRules(dir, version);
 
   const { edition, unusedReplacements, appliedRuleCount } = buildTrainingEdition(original, rules);
   const out = path.join(dir, `training-edition.v${version}.json`);
   await writeFile(out, serializeEdition(edition), "utf8");
   process.stdout.write(
-    `wrote ${path.relative(process.cwd(), out)} (${appliedRuleCount} rules applied)\n`,
+    `wrote ${path.relative(process.cwd(), out)} (${appliedRuleCount} rules applied, ` +
+      `from ${originalFileName(originalVersion)})\n`,
   );
   if (unusedReplacements.length) {
     process.stdout.write(`unused replacements: ${unusedReplacements.join(", ")}\n`);
