@@ -91,3 +91,90 @@ Ett verk (`kielland-noveletter`), sju noveller. Segmentetiketter er prefikset me
 - **Corpuset er utdrag, ikke hele verk.** Alle fire pakker inneholder bare åpningen av det aktuelle kapittelet/den aktuelle novellen (i tråd med `docs/spec/CORPUS.md`s V1-avgrensning), ikke hele *Markens Grøde*, *Gift* eller de fullstendige novellene.
 - **Alle treningsutgaver er agent-utkast (`verificationStatus: "agent-drafted"`).** Ingen av dem er lest av en menneskelig redaktør ennå. `docs/spec/LANGUAGE_PROFILE.md` krever at «en redaktør [skal] kontrollere at tekstens setningsmelodi og litterære særpreg er beholdt» før en pakke regnes som kontrollert — det gjenstår for alle fire pakker (ibsen-brand inkludert, som var ferdig fra før). Se hver pakkes `rules.v1.json`-felt `retained` for ord som bevisst er latt urørt fordi riktig moderne form var usikker, og selve sluttrapporten for denne runden for en kortere liste over de mest tvilsomme enkeltvalgene.
 - **Én dokumentert transkripsjonsrettelse.** I `kielland-gift` er «Abrabam» (åpenbar bokstavfeil på Wikikilden, mot 10+ korrekte forekomster av «Abraham» ellers i samme kapittel) rettet til «Abraham» i treningsutgaven, i tråd med `docs/spec/LANGUAGE_PROFILE.md`s adgang til å rette dokumenterte transkripsjonsfeil. Originalteksten beholder «Abrabam» uendret (verbatim mot kilden).
+
+---
+
+# Planlagt katalog (D17)
+
+Rangeringen på 25 verk står i `docs/spec/CORPUS.md`. Denne seksjonen er
+**forhåndssorteringen**, ikke verifiseringen: den svarer på om verket i det hele
+tatt kan vurderes, og hvor en fri kilde eventuelt finnes. Hvert verk må
+fortsatt verifiseres for seg, mot den konkrete kilden, før import.
+
+## Dødsår — førstesorteringen
+
+Grunnregelen er at forfatteren døde i 1955 eller tidligere. **Alle 25 verkene
+består den**, med Hamsun (d. 1952) og Undset (d. 1949) som de seneste. Det er
+nettopp derfor regelen ikke er nok alene: den utelukker ingen av dem, og alt
+arbeidet ligger i det neste leddet — om det finnes en fri *digital utgave*.
+
+| Forfatter | Levetid | Vernetid utløp (Norge, life+70) |
+| --- | --- | --- |
+| Ludvig Holberg | 1684–1754 | for lengst |
+| N.F.S. Grundtvig | 1783–1872 | for lengst |
+| H.C. Andersen | 1805–1875 | for lengst |
+| Søren Kierkegaard | 1813–1855 | for lengst |
+| Camilla Collett | 1813–1895 | for lengst |
+| Henrik Ibsen | 1828–1906 | 1977 |
+| Jonas Lie | 1833–1908 | 1979 |
+| Georg Brandes | 1842–1927 | 1998 |
+| J.P. Jacobsen | 1847–1885 | for lengst |
+| Alexander Kielland | 1849–1906 | 1977 |
+| Arne Garborg | 1851–1924 | 1995 |
+| Herman Bang | 1857–1912 | 1983 |
+| Henrik Pontoppidan | 1857–1943 | 2014 |
+| Knut Hamsun | 1859–1952 | 2023 |
+| Sigrid Undset | 1882–1949 | 2020 |
+
+## Kildesøk 2026-09-08 — første bølge
+
+Metode: HTTP-oppslag og Wikisource-søk mot no. og da.wikisource, samt oppslag
+på Project Runeberg. **Et negativt resultat gjelder søkestrengen, ikke verket**
+— samme lærdom som «Balstemning» kostet oss. Radene merket «ikke funnet» er
+åpne spørsmål, ikke konklusjoner.
+
+| # | Verk | Funnet | Kilde |
+| --- | --- | --- | --- |
+| 1 | *Sult* | **ja, skannbasert** | `no.wikisource.org/wiki/Sult` — transkludert fra `Sult (Knut Hamsun).djvu`, fire stykker (`Sult/01`–`Sult/04`) |
+| 2 | *Gift* (hele) | **ja, skannbasert** | `no.wikisource.org/wiki/Gift` — 13 kapitler (`Gift/1`–`Gift/13`) fra `Kielland - Samlede Værker 2.djvu`, `{{PD-old|nb}}`. Pakken har i dag bare s. 167–173 §1 |
+| 3 | *Et dukkehjem* | **ja, men ikke skannbasert der** | `no.wikisource.org/wiki/Et_Dukkehjem` er en elektronisk utgave **kopiert fra Project Runeberg**, med en `opprydning`-merkelapp om at teksten bør flyttes til de skannede sidene (`Side:Samfundets støtter, dukkehjem, gengangere.djvu/225`). `runeberg.org/dukkhjem/` svarer. **Bruk Runeberg direkte eller de skannede sidene — ikke en avskrift av en avskrift.** Runeberg er samme leverandør som `ibsen-brand` allerede bruker |
+| 4 | *Frygt og Bæven* | **ikke funnet** | Ikke på da.wikisource under den tittelen; ikke på gjettet Runeberg-slug |
+| 5 | *Amtmandens Døttre* | **ja** | `no.wikisource.org/wiki/Amtmandens_Døttre._En_Fortælling` |
+| 6 | *Enten–Eller: Diapsalmata* | **ja, skannbasert, førsteutgaven** | `da.wikisource.org/wiki/Enten_—_Eller._Første_Deel/1` = Diapsalmata, transkludert fra `Enten-Eller Første Deel.djvu` s. 17–46 (1843). Første og Anden Deel finnes begge, med åtte underdeler i Første |
+| 7 | *Pan* | **ikke funnet** | Ikke på no.wikisource; ikke på gjettet Runeberg-slug |
+| 8 | *Kristin Lavransdatter: Kransen* | **ikke funnet** | Ingen treff på «Kristin Lavransdatter» eller «Undset» på no.wikisource. Verket er fritt i Norge fra 2020, men **fri status er ikke det samme som fri transkripsjon** |
+| 9 | *Ved Vejen* | **ikke funnet** | Ikke på da.wikisource; andre Bang-verk finnes der (*Under Aaget*, *Liv og Død*, *De uden Fædreland*) |
+
+Utenfor bølgen, funnet underveis og verdt å notere: *Garman og Worse* (nr. 10)
+finnes på no.wikisource, og *Niels Lyhne* (nr. 15) svarer på
+`runeberg.org/nielslyhne/`.
+
+## Konsekvens for rekkefølgen
+
+Rangeringen står. Men **nr. 4, 7, 8 og 9 har ikke en bekreftet fri digital kilde
+per 2026-09-08**, og `docs/spec/CORPUS.md` tillater et midlertidig avvik når
+kildekvalitet krever det — mot skriftlig begrunnelse. Denne seksjonen er den
+begrunnelsen når den trengs.
+
+Praktisk betyr det at bølgens tre første — *Sult*, *Gift*, *Et dukkehjem* — er
+de eneste som er klare til import i dag, og at det passer nøyaktig med
+rekkefølgeregelen i D17. Før noen av dem importeres skal Q-009 (hyller), Q-010
+(verksmetadata) og T-19 (moduler) stå.
+
+Åpne kildespørsmål å ta neste gang, i denne rekkefølgen:
+
+1. **Kierkegaard nr. 4 og 19** — *Frygt og Bæven* og *Sygdommen til Døden*. Søk
+   på 1843/1849-utgavenes egen stavemåte og på `Indeks:`-sider for skannede
+   bind, slik `Enten — Eller. Første Deel` er bygget. Merk fellen fra D17: den
+   moderne kritiske utgaven (*Søren Kierkegaards Skrifter*) er et eget verk med
+   egne rettigheter — grunnlaget må være førsteutgaven.
+2. **Hamsun nr. 7 og 11** — *Pan* og *Victoria*. Wikikilden har *Sult* og
+   *Markens Grøde* skannbasert, så leverandøren finnes; spørsmålet er om disse
+   to er transkribert ennå.
+3. **Undset nr. 8 og 14** — *Kransen* og *Jenny*. Hvis ingen fri transkripsjon
+   finnes, er alternativet en egen transkripsjon fra en skannet førsteutgave
+   (Nasjonalbiblioteket), som er et vesentlig større arbeid enn de andre postene
+   i bølgen. Vurder å bytte plass med nr. 10 *Garman & Worse*, som er funnet.
+4. **Bang nr. 9 og 18** — *Ved Vejen* og *Tine*. Andre Bang-verk finnes på
+   da.wikisource, så søk på bindtittel og innholdsfortegnelse framfor på
+   verkstittelen alene.

@@ -470,3 +470,58 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   denne tilstanden med vilje — og det er hele poenget med den. Vist at den
   biter: uten implementasjonen feiler de to første tilfellene, mens det tredje
   (posten fra før feltene fantes) består, som det skal.
+
+## Katalogen blir et dannelsesbibliotek (D17)
+
+- **Retningen er utvidet, ikke produktet.** BRAND skal fortsatt være en rolig
+  riksmålsskrivetrener med samme grensesnitt, samme språkstandard og samme
+  implementerte tekster. Det som endrer seg er hva katalogen skal bli: et
+  kuratert norsk–dansk dannelsesbibliotek på 25 verk, rangert etter redaksjonell
+  prioritet. Rangeringen står i `docs/spec/CORPUS.md` og **skal ikke omrokeres
+  fordi et verk er lettere å importere**; et avvik krever en skriftlig grunn i
+  `docs/CORPUS_STATUS.md`.
+- **En plass i rangeringen betyr «vokse», ikke «importere på nytt», for et verk
+  som allerede står i corpuset.** *Gift* er nr. 2 og finnes i dag som åpningen
+  av kapittel I. Etter D15 er veien dit en ny `original.vN.json`, aldri en
+  overskriving av den utgaven tidligere økter er skrevet mot.
+- **Hyllen er en egen akse, ikke et felt på verket.** Fire hyller (Norske
+  klassikere, Danske klassikere, Idé og tro, Korte tekster), og et verk kan stå
+  på flere uten at innholdsposten dupliseres. Det utelukker både `tags` (fri
+  streng, ingen kuratert rekkefølge) og `ContentPack` (én eier per verk) som
+  bærer. Georg Brandes står på to hyller i dag; det er ikke et grensetilfelle
+  man kan utsette.
+- **Grensen mot dansk er ortografi og bøyning, ikke leksikon.** Kierkegaard,
+  Bang og Pontoppidan skal ikke flates ut til generisk samtidsnorsk. Det er
+  samme grense `LANGUAGE_PROFILE.md` allerede trekker under «Ikke tillatte
+  inngrep», anvendt på et dansk utgangspunkt — så retningen legger ingen ny
+  regel til profilen, den navngir hvilket utgangspunkt reglene gjelder fra.
+  `RuleFamily` har i dag to verdier, og `historical-orthography` beskriver seg
+  selv som «19th-century Dano-Norwegian»; dansk-dansk er et annet utgangspunkt
+  og trenger sitt eget sett, ikke en utvidelse av det norske (T-20).
+- **Ett verk bryter grensen med vilje.** *Bondestudentar* krever en faktisk
+  overføring fra landsmål, som per definisjon bytter forfatterens ordvalg.
+  Derfor kan den ikke være en `training-edition` av samme slag som de andre; den
+  må merkes som noe annet, ellers betyr «treningsutgave» to forskjellige ting i
+  samme katalog.
+- **`part` er ikke en modul.** Q-007 grupperte segmentlisten etter en fri streng
+  på segmentet. *Enten–Eller* krever moduler med id, rekkefølge og **egen
+  fremdrift og fullføring** — Diapsalmata skal kunne være ferdigskrevet mens
+  resten av verket ikke er. D14 la fremdriften på verket; en modulnøkkel er et
+  nivå til, og den må inn før *Enten–Eller*, ikke etter.
+- **Dødsåret er den ene opplysningen rettighetsvurderingen hviler på, og i dag
+  ligger den i en fritekstlisens.** Grunnregelen «forfatteren døde i 1955 eller
+  tidligere» er en førstesortering ingen maskin kan kjøre så lenge tallet bare
+  finnes i en setning. Det samme gjelder originalspråk og tilpasningsstatus
+  (T-18).
+- **Rekkefølgen er struktur før import.** Ingen av de 25 importeres før
+  arkitekturen tåler hyller, moduler, dansk kildespråk og strukturert
+  rettighetsmetadata. Deretter *Sult*, *Gift*, *Et dukkehjem*. Grunnen er den
+  samme som i D15: en modell som utvides etter at tekst er importert, endrer
+  tekst som allerede er skrevet mot.
+- **Den kjente fellen for denne katalogen er den kritiske utgaven.**
+  Kierkegaards tekst finnes både som 1843-utgave og som moderne kritiske
+  utgaver; tekstetableringen og apparatet i en kritisk utgave er et eget verk
+  med egne rettigheter. Grunnlaget må være originalutgaven. Samme resonnement
+  gjelder enhver modernisert dansk eller norsk utgave — det er samme feilform
+  som `docs/spec/CORPUS.md` alltid har advart mot, men den er lettere å gå på
+  når kilden ser vitenskapelig ut.

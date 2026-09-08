@@ -320,3 +320,122 @@ noe.
 Vist at porten biter begge veier: uten blokken feiler de to tregt-tekst-testene;
 med `LOADING_DELAY_MS = 0` feiler ingen-blink-testen.
 
+
+---
+
+## T-17 — Hyller som egen akse (P1, M / S)
+
+**Hva:** Fire kuraterte hyller — Norske klassikere, Danske klassikere, Idé og
+tro, Korte tekster — som leseren navigerer etter, og som et verk kan stå på
+flere av uten at innholdsposten dupliseres.
+
+**Hvorfor:** D17 gjør katalogen til 25 verk med flere verk per forfatter. I dag
+er én `ContentPack` lik ett verk, og pakken er det eneste navigerbare nivået.
+Med *Sult*, *Pan* og *Victoria* i katalogen er «Hamsun-pakken» ikke lenger et
+svar på hva leseren leter etter.
+
+**Hvorfor ikke `tags`:** feltet finnes (`["prosa", "novelle", "1800-tallet"]`),
+men det er frie strenger uten kuratert rekkefølge og uten visningsnavn. En hylle
+er et redaksjonelt utvalg med en tittel og en orden; en tag er en egenskap.
+**Hvorfor ikke `ContentPack`:** en pakke eier verket sitt (`workIds`), og Georg
+Brandes står på to hyller allerede ved katalogens start.
+
+**Form:** en egen liste — `content/shelves.json` eller tilsvarende — som peker
+på `workId`, bygges inn i `catalog.generated.ts` av `pnpm build:content`, og
+valideres mot at hver `workId` finnes. Ingen endring i noen utgave, ingen
+`contentHash` som beveger seg.
+
+**Port:** `validate:content` feiler når en hylle navngir et verk som ikke
+finnes, og når et verk ikke står på noen hylle.
+
+## T-18 — Verksmetadata rettighetsvurderingen faktisk hviler på (P1, S / S)
+
+**Hva:** Fire felter som mangler på `Work`/`SourceAttribution`:
+
+- `authorDeathYear` — tallet grunnregelen «døde i 1955 eller tidligere» leser;
+- `originalLanguage` — `da-NO`, `da-DK`, `nb-NO`, `nn-NO`, skilt fra
+  transkripsjonens språk;
+- `adaptationStatus` — hvor langt Brand-tilpasningen er kommet, som noe annet
+  enn `verificationStatus` (transkripsjonen) og `reviewStatus` (lesningen);
+- `rightsStatus` — status i det fri som en verdi, ikke som en setning inne i
+  `license`.
+
+**Hvorfor:** i dag står dødsåret i fritekst («Kielland d. 1906; verkets vernetid
+er utløpt»). Førstesorteringen i `docs/spec/CORPUS.md` kan derfor ikke kjøres av
+noen maskin, og med 25 verk er det den sorteringen som avgjør hva som i det hele
+tatt kan importeres. `license` beholdes som den fulle, presise setningen —
+feltene legges ved siden av, de erstatter den ikke.
+
+**Med i samme post:** attribusjonslinjen der teksten skrives — «Språklig
+bearbeidet etter Brand-standarden. Basert på [utgave og år].» — som i dag bare
+finnes på `/om`.
+
+**Port:** `validate:content` krever feltene på hvert verk, og feiler når
+`authorDeathYear` er senere enn 1955 uten en eksplisitt begrunnelse i pakken.
+
+## T-19 — Moduler med egen fremdrift (P1, L / M)
+
+**Hva:** Et verk kan deles i moduler som har id, rekkefølge, visningsnavn og
+**egen fremdrift, fullføring og vanskelighet**, samtidig som grensesnittet viser
+at modulen hører til verket.
+
+**Hvorfor:** *Enten–Eller* skal ikke først presenteres som én uavbrutt tekst.
+Diapsalmata, Det umiddelbart erotiske, Forførerens Dagbog og utvalgte partier fra
+«Eller» er skrivekurs hver for seg; Diapsalmata implementeres først.
+
+**Hvorfor `part` ikke holder:** Q-007 grupperer segmentlisten etter en fri
+streng på segmentet. Strengen har ingen id, ingen rekkefølge utover
+segmentrekkefølgen, og — det avgjørende — ingen fremdriftsnøkkel. D14 la
+fremdriften på verket, og det var riktig for et verk med én tekst. En modul er
+et nivå til.
+
+**Rekkefølge:** dette må inn **før** *Enten–Eller* importeres, ikke etter. En
+modell som utvides etter at tekst er importert, endrer tekst som allerede er
+skrevet mot — samme grunn som i D15.
+
+**Merk:** `ReadingProgress`-nøkkelen endres. T-10s rettelse gjelder fortsatt
+(nøkkelen skal ikke inneholde `editionId`), og migrasjonen må folde eksisterende
+poster inn på verksnivået uten å miste fullførte segmenter.
+
+## T-20 — Regelsett for dansk og for landsmål (P1, L / M)
+
+**Hva:** To nye utgangspunkter for tilpasningen, hver med sitt eget regelsett.
+
+**Dansk-dansk.** `RuleFamily` har i dag to verdier, og `historical-orthography`
+beskriver seg selv som «19th-century Dano-Norwegian» — altså dansk-norsk, som er
+det de fire nåværende pakkene har. Kierkegaard, Bang, Pontoppidan, Jacobsen,
+Holberg, Andersen, Grundtvig og Brandes starter et annet sted. Sett skal legges
+ved siden av det norske, ikke inn i det: en regel som er riktig for dansk-norsk
+1880 er ikke automatisk riktig for dansk 1843.
+
+**Grensen, skrevet ut:** for danske verk er tilpasningen ortografi og bøyning,
+**ikke leksikon**. Ordforråd, argument, rytme og forfatterstemme står. Det er
+samme grense `LANGUAGE_PROFILE.md` allerede trekker; det nye er at den må gjelde
+mot et dansk utgangspunkt, der fristelsen til å bytte ord er større.
+
+**Landsmål.** *Bondestudentar* krever en faktisk overføring, ikke modernisert
+rettskrivning — den bytter per definisjon forfatterens ordvalg og bryter dermed
+med profilens forbud. Den kan derfor ikke være en `training-edition` av samme
+slag som de andre. Enten et eget `kind`, eller en `adaptationStatus` som sier
+det høyt. Ellers betyr «treningsutgave» to forskjellige ting i samme katalog.
+
+**Avhenger av:** D11-lesningen. Dette er nøyaktig den mengden tekstendring som
+skal leses av et menneske før den publiseres — og for dansk er mengden større
+enn noe pakkene har vært gjennom hittil.
+
+## T-21 — Verseformatering (P2, M / M)
+
+**Hva:** Verselinjer, innrykk og strofegrenser som noe utgaven bærer, ikke som
+tilfeldige `\n` i en segmenttekst.
+
+**Hvorfor:** *Peer Gynt* er nr. 17. `ibsen-brand` er også versedrama og virker i
+dag, men trykkets halvlinje-innrykk er bevisst ikke gjengitt (se pakkens
+`editorialNotes`) — det er en avgrensning, ikke en løsning.
+
+**Regel fra D17:** versedramaet skal **ikke** få bestemme den første
+prosaorienterte innholdsmodellen. Posten tas når prosakjeden står, ikke før.
+
+**Drama for øvrig virker allerede:** `segments.json` har
+`speakerLinePattern`, som holder replikknavnet sammen med replikken. *Et
+dukkehjem* (nr. 3, første bølge) er første prosadrama som prøver den, og er
+prøven på om replikknavn, sceneanvisninger og dialogstruktur overlever kjeden.
