@@ -390,7 +390,7 @@ notes:
 ---
 
 ## Q-006 · D10: hele «Noveletter» inn i korpuset
-status: running:queue/q-006-noveletter — kildene er arkivert og kjeden tåler nå at et verk vokser; segmenteringen gjenstår
+status: done — se commit; hele samlingen er inne som original.v2 + training-edition.v3 (264 segmenter, 25 664 ord)
 lane: brand-content
 
 acceptance:

@@ -1,5 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
-import noveletter from "../content/kielland-noveletter/training-edition.v2.json";
+// The edition the chooser actually serves: the newest training edition of the
+// pack. Following the default rather than pinning v2 is the point — this suite
+// is about how a work with parts is listed, not about one version of one work.
+import noveletter from "../content/kielland-noveletter/training-edition.v3.json";
 import { waitForCompletedSegments } from "./support/progress";
 
 /**
@@ -64,9 +67,12 @@ test.describe("Segment groups", () => {
       `1 av ${written} skrevet`,
     );
     await expect(page.locator(`a[data-segment-id="${first.id}"]`)).toContainText("Skrevet");
-    // The other novella is untouched, and says so.
-    const rest = noveletter.segments.length - written;
-    await expect(page.locator(`[data-part="${PARTS[1]}"] h3`)).toContainText(`0 av ${rest} skrevet`);
+    // The next part is untouched, and says so — counted from its own segments,
+    // not from "everything else": the work has seven parts, not two.
+    const next = noveletter.segments.filter(
+      (s) => (s as { part?: string }).part === PARTS[1],
+    ).length;
+    await expect(page.locator(`[data-part="${PARTS[1]}"] h3`)).toContainText(`0 av ${next} skrevet`);
   });
 
   test("the groups do not scroll sideways at 375px", async ({ page }) => {

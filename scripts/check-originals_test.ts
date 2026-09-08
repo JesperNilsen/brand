@@ -23,7 +23,11 @@ import { join } from "node:path";
 import { editionContentHash } from "./lib/hash";
 
 const ROOT = process.cwd();
-const PACK = "content/kielland-noveletter";
+// A pack with exactly ONE original, because the cases here add a synthetic
+// second one — pointing this at a pack that already has two would overwrite a
+// real file and fail for that reason instead of the one under test. That is
+// exactly what happened the day kielland-noveletter grew.
+const PACK = "content/ibsen-brand";
 
 type Original = {
   work: Record<string, unknown>;
@@ -105,7 +109,7 @@ const cases: { name: string; mutate: (dir: string) => void; expects: RegExp | nu
       addSecondOriginal(d);
       const file = join(d, PACK, "training-edition.v1.json");
       const t = JSON.parse(readFileSync(file, "utf8")) as { basedOnEditionId: string };
-      t.basedOnEditionId = "kielland-noveletter.original.v9";
+      t.basedOnEditionId = "ibsen-brand.original.v9";
       writeFileSync(file, `${JSON.stringify(t, null, 2)}\n`);
     },
     expects: /navngir ingen original i pakken/,

@@ -67,6 +67,21 @@ const KNOWN_LENGTH_DEVIATIONS = new Map<string, string>([
   ["hamsun-markens-groede/del1-kap1-02", "166 ord; resegmenteres i fase 7"],
   ["hamsun-markens-groede/del1-kap1-05", "176 ord; resegmenteres i fase 7"],
   ["hamsun-markens-groede/del1-kap1-06", "129 ord; resegmenteres i fase 7"],
+  // Novelletter, hele samlingen: ti segmenter der ETT avsnitt er lengre enn
+  // taket alene (eller, for visne-15, der novellen slutter). Grensene er satt
+  // av forfatterens egne avsnitt, og å dele et avsnitt for å treffe et tall
+  // ville satt leseren midt i en setning ved øktstart. Ikke fase 7-gjeld:
+  // dette er så nær rekkevidden teksten kommer.
+  ["kielland-noveletter/visne-15", "33 ord; novellens siste avsnitt"],
+  ["kielland-noveletter/erotik-03", "131 ord; ett avsnitt"],
+  ["kielland-noveletter/erotik-27", "125 ord; ett avsnitt"],
+  ["kielland-noveletter/erotik-36", "138 ord; ett avsnitt"],
+  ["kielland-noveletter/erotik-44", "152 ord; ett avsnitt"],
+  ["kielland-noveletter/middag-15", "145 ord; ett avsnitt"],
+  ["kielland-noveletter/venner-01", "124 ord; ett avsnitt"],
+  ["kielland-noveletter/venner-06", "132 ord; ett avsnitt"],
+  ["kielland-noveletter/venner-30", "124 ord; ett avsnitt"],
+  ["kielland-noveletter/waterloo-40", "146 ord; ett avsnitt"],
 ]);
 const seenDeviations = new Set<string>();
 

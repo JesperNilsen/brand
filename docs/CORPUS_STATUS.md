@@ -51,10 +51,17 @@ Etablert før denne runden; uendret. Se `content/ibsen-brand/rules.v1.json` for 
 | Hentet | 2026-09-04 |
 | Rettighetsgrunnlag | Public domain (Kielland d. 1906, mer enn 70 år siden). Wikikildens transkripsjon er CC BY-SA 4.0; attribusjon beholdt i pakken. |
 | Kontrollstatus | agent-drafted |
-| Ordtall / segmenter | 851 ord totalt, 13 segmenter (7 fra «Haabet er lysegrønt», 6 fra «Visne Blade») |
-| Inkludert | Åpningen av hver novelle: «Haabet er lysegrønt» fra «Du støver!» til vognforbikjøringen; «Visne Blade» fra galleribetraktningen til beskrivelsen av det engelske maleriet. |
+| Ordtall / segmenter | **v2 (gjeldende): 25 664 ord, 264 segmenter** — hele samlingen. v1: 851 ord, 13 segmenter (åpningen av de to første novellene), beholdt uendret. |
+| Inkludert | **Alle syv novellene**, i bindets egen rekkefølge: «Haabet er lysegrønt» (26 segm.), «Visne Blade» (15), «Erotik og Idyl» (45), «Balstemning» (19), «En Middag» (17), «To Venner» (64), «Slaget ved Waterloo» (78). Rekkefølgen er lest av innholdsfortegnelsen på Wikikildens `Novelletter`-side. |
 
-Ett verk (`kielland-noveletter`), to noveller i denne omgang. Segmentetiketter er prefikset med novelletittelen («Haabet er lysegrønt, 1» … «Visne Blade, 1» …). **Spesifikasjonens prioriterte tekst «Ballstemning» finnes på Wikikilden**, korrekturlest, i samme bind — under 1907-utgavens stavemåte **«Balstemning» med én L** (`https://no.wikisource.org/wiki/Balstemning`, ~2 100 ord). Se «Rettet 2026-09-04» under.
+**Utvidet 2026-09-08 til hele samlingen (D10).** Originalen er versjonert:
+`original.json` (v1) er åpningen av de to første novellene og er utgaven hver
+økt skrevet før denne datoen ble skrevet mot; `original.v2.json` er hele
+*Novelletter*. Begge står, og `training-edition.v3.json` er bygget av v2 med
+samme regelsett som v2 brukte — se D15 for hvorfor originalen måtte bli
+versjonerbar først.
+
+Ett verk (`kielland-noveletter`), sju noveller. Segmentetiketter er prefikset med novelletittelen («Haabet er lysegrønt, 1» … «Visne Blade, 1» …). **Spesifikasjonens prioriterte tekst «Ballstemning» finnes på Wikikilden**, korrekturlest, i samme bind — under 1907-utgavens stavemåte **«Balstemning» med én L** (`https://no.wikisource.org/wiki/Balstemning`, ~2 100 ord). Se «Rettet 2026-09-04» under.
 
 ---
 
