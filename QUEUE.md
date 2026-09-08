@@ -344,7 +344,7 @@ og ikke en anelse.
    pakkes NYESTE treningsutgave og feiler på ethvert treff. Den feiler på main i
    dag — det er poenget: den blir grønn når kuttet er gjort, og rød igjen første
    gang et grunnregelsett vokser uten at utgavene følger etter.
-2. **`rules.v3.json` per pakke som skal kuttes**, med `baseRules:
+2. **`rules.vN.json` per pakke som skal kuttes** — neste ledige nummer, ikke nødvendigvis v3: `kielland-noveletter` er allerede på v3 etter Q-006, så den pakken kuttes til v4. De tre andre står fortsatt på v1/v2, med `baseRules:
    "brand-riksmaal.base.v2"` og bare pakkespesifikke tillegg. Ikke rør v1/v2:
    de er oppskriften bak utgaver som allerede er skrevet mot.
 3. **`training-edition.v3.json` bygget med `build-training-edition`**, aldri
@@ -390,7 +390,7 @@ notes:
 ---
 
 ## Q-006 · D10: hele «Noveletter» inn i korpuset
-status: done — se commit; hele samlingen er inne som original.v2 + training-edition.v3 (264 segmenter, 25 664 ord)
+status: done — `3ed5080` (#34, kilder + versjonerte originaler) og `a99fef1` (#35, hele samlingen: original.v2 + training-edition.v3, 264 segmenter, 25 664 ord)
 lane: brand-content
 
 acceptance:
