@@ -162,7 +162,7 @@ export const CONTENT_PACKS: ContentPack[] = [
         "verificationStatus": "agent-drafted",
         "editorialNotes": [
           "Rå HTML arkivert under source/wikikilden/visne-blade.html.",
-          "Novellesamlingens prioriterte tekst, «Ballstemning», har ingen bekreftet fri digital kilde funnet; se docs/CORPUS_STATUS.md."
+          "Samlingens prioriterte tekst, «Balstemning», er ennå ikke i pakken, men finnes korrekturlest på Wikikilden under 1907-utgavens stavemåte med én L (https://no.wikisource.org/wiki/Balstemning). Den tidligere merknaden her sa at ingen fri kilde var funnet; feilen lå i søkestrengen, ikke i kilden. Se docs/CORPUS_STATUS.md."
         ]
       }
     ]
@@ -369,7 +369,7 @@ export const WORKS: Work[] = [
       "verificationStatus": "agent-drafted",
       "editorialNotes": [
         "Rå HTML arkivert under source/wikikilden/haabet-er-lysegroent.html og source/wikikilden/visne-blade.html; hver novelle er ekstrahert til sin egen .txt og deretter satt sammen til source/noveletter.txt (Haabet er lysegrønt først, så Visne Blade), fordi segments.json/build-original.ts bare støtter én sourceFile per pakke.",
-        "«Ballstemning», som er spesifikasjonens prioriterte novelle, har ingen bekreftet fri digital kilde funnet (Wikikilden: 0 treff i søk på tittelen; Project Gutenberg: bare oversettelser; runeberg.org: kielsaml/kinovel-katalogsidene svarer 404). «Visne Blade» er brukt i stedet; se docs/CORPUS_STATUS.md for detaljer om forsøket."
+        "«Balstemning», som er spesifikasjonens prioriterte novelle, er IKKE med i denne pakken ennå, men den finnes: 1907-utgaven staver tittelen med én L, og under den stavemåten er teksten fullt transkribert og korrekturlest på Wikikilden (https://no.wikisource.org/wiki/Balstemning, ~2 100 ord, samme bind som de to novellene her). En tidligere merknad på dette stedet sa at ingen fri kilde fantes; det var galt, og feilen lå i søkestrengen — alle søk brukte den moderne skrivemåten «Ballstemning» med to L-er. Rettet 2026-09-04 i docs/CORPUS_STATUS.md og 2026-09-08 her."
       ]
     },
     "editions": [
