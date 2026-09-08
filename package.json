@@ -18,11 +18,12 @@
     "review:edition": "tsx scripts/review-edition.ts",
     "check:css": "tsx scripts/check-css-layers.ts",
     "check:design": "tsx scripts/check-design_test.ts && tsx scripts/check-design.ts",
-    "check:fast": "pnpm lint && pnpm typecheck && pnpm test && pnpm validate:content && pnpm check:css && pnpm check:design && pnpm check:drills",
+    "check:fast": "pnpm lint && pnpm typecheck && pnpm test && pnpm validate:content && pnpm check:css && pnpm check:design && pnpm check:drills && pnpm check:originals",
     "check:all": "pnpm check:fast && pnpm build && pnpm check:bundle && pnpm test:e2e",
     "check": "pnpm check:all",
     "build:content": "tsx scripts/build-content-assets.ts",
-    "check:bundle": "tsx scripts/check-client-bundle.ts"
+    "check:bundle": "tsx scripts/check-client-bundle.ts",
+    "check:originals": "tsx scripts/check-originals_test.ts"
   },
   "dependencies": {
     "idb": "^8.0.3",

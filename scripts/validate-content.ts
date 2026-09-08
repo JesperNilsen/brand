@@ -36,6 +36,7 @@ import { editionContentHash } from "./lib/hash";
 import { buildTrainingEdition, serializeEdition, type OriginalFile } from "./lib/build-edition";
 import { baseOverrides, type Rules } from "./lib/rules";
 import { loadRules } from "./lib/load-rules";
+import { listOriginals, originalEditionId, readOriginal } from "./lib/originals";
 import { drillProblems } from "./lib/drills";
 import { listLanguageProfiles } from "../src/domain/language/registry";
 import { getBaseRuleSet } from "../src/domain/language/base-rules";
@@ -224,23 +225,49 @@ async function validatePack(pack: string) {
     if (!KNOWN_PROFILES.has(p)) fail(pack, `unknown language profile ${p}`);
   }
 
-  const original = (await readJson(path.join(dir, "original.json"))) as {
+  type OriginalJson = {
     work: Record<string, unknown>;
     edition: { id: string; workId: string; kind: string; segments: Segment[] };
   };
+  // Every original the pack has, oldest first. There is more than one whenever a
+  // work has grown — more of the collection, a longer excerpt — because growing
+  // the text of a published edition would falsify every session already typed
+  // against it. The newest is the one the work's metadata is read from.
+  const originalRefs = await listOriginals(dir);
+  const originals: OriginalJson[] = [];
+  for (const ref of originalRefs) {
+    originals.push(await readOriginal<OriginalJson>(dir, ref.version));
+  }
+  const original = originals.at(-1)!;
   const workId = String(original.work.id);
   if (!(packJson.workIds as string[]).includes(workId)) {
     fail(pack, `work ${workId} not listed in pack.workIds`);
   }
   if (original.work.contentPackId !== pack) fail(pack, `work.contentPackId != ${pack}`);
-  if (original.edition.kind !== "original") fail(pack, `original.json edition.kind must be original`);
-  if (original.edition.workId !== workId) fail(pack, `original edition workId mismatch`);
+  for (const [i, ref] of originalRefs.entries()) {
+    const o = originals[i];
+    if (o.edition.kind !== "original") fail(pack, `${ref.file} edition.kind must be original`);
+    if (o.edition.workId !== workId) fail(pack, `${ref.file}: workId mismatch`);
+    const expectedId = originalEditionId(workId, ref.version);
+    if (o.edition.id !== expectedId) {
+      fail(pack, `${ref.file}: edition.id «${o.edition.id}», expected «${expectedId}»`);
+    }
+    // One work, one description of it. The work block is repeated in every
+    // original file because each is built from its own segment spec, so the
+    // gate is that they agree — otherwise the About page's account of a work
+    // would depend on which file happened to be read.
+    if (i > 0 && JSON.stringify(o.work) !== JSON.stringify(originals[0].work)) {
+      fail(pack, `${ref.file}: work-blokken er ikke identisk med den i ${originalRefs[0].file}`);
+    }
+  }
   const source = original.work.source as Record<string, unknown> | undefined;
   for (const key of ["author", "title", "language", "sourceUrl", "retrievedAt", "provider", "license", "digitalEdition", "verificationStatus"]) {
     if (!source || !source[key]) fail(pack, `work.source.${key} missing`);
   }
-  checkSegments(pack, original.edition.id, original.edition.segments);
-  checkContentHash(pack, original.edition.id, original.edition as unknown as { contentHash?: string; segments: Segment[] });
+  for (const o of originals) {
+    checkSegments(pack, o.edition.id, o.edition.segments);
+    checkContentHash(pack, o.edition.id, o.edition as unknown as { contentHash?: string; segments: Segment[] });
+  }
 
   // Provenance: every original line must exist verbatim in an archived source text.
   const sourceDir = path.join(dir, "source");
@@ -258,10 +285,12 @@ async function validatePack(pack: string) {
     fail(pack, `source/ directory missing`);
     sourceLines = new Set();
   }
-  for (const s of original.edition.segments) {
-    for (const line of s.text.split("\n")) {
-      if (line.length && !sourceLines.has(line)) {
-        fail(pack, `${s.id}: line not found in archived source: "${line.slice(0, 60)}"`);
+  for (const o of originals) {
+    for (const s of o.edition.segments) {
+      for (const line of s.text.split("\n")) {
+        if (line.length && !sourceLines.has(line)) {
+          fail(pack, `${o.edition.id}/${s.id}: line not found in archived source: "${line.slice(0, 60)}"`);
+        }
       }
     }
   }
@@ -276,17 +305,32 @@ async function validatePack(pack: string) {
     // Rebuild from the frozen inputs and demand the exact bytes back. Every
     // other check here compares an edition against itself; only this one can
     // tell that a generated file was edited by hand.
+    //
+    // From ITS OWN original, named by `basedOnEditionId` — not from the newest.
+    // Once a work has grown, an older training edition rebuilt from the newer
+    // original would legitimately fail, and "rebuild it against whatever is
+    // current" is precisely the move that would quietly rewrite the text an
+    // earlier session was typed against.
     const committed = await readFile(path.join(dir, f), "utf8");
-    try {
-      const rules = await loadRules(dir, Number(version));
-      const rebuilt = serializeEdition(
-        buildTrainingEdition(original as unknown as OriginalFile, rules).edition,
+    const committedJson = JSON.parse(committed) as { basedOnEditionId?: string };
+    const basedOn = originals.find((o) => o.edition.id === committedJson.basedOnEditionId);
+    if (!basedOn) {
+      fail(
+        pack,
+        `${f}: basedOnEditionId «${String(committedJson.basedOnEditionId)}» navngir ingen original i pakken`,
       );
-      if (rebuilt !== committed) {
-        fail(pack, `${f}: not reproducible from rules.v${version}.json\n${firstDifference(committed, rebuilt)}`);
+    } else {
+      try {
+        const rules = await loadRules(dir, Number(version));
+        const rebuilt = serializeEdition(
+          buildTrainingEdition(basedOn as unknown as OriginalFile, rules).edition,
+        );
+        if (rebuilt !== committed) {
+          fail(pack, `${f}: not reproducible from rules.v${version}.json + ${basedOn.edition.id}\n${firstDifference(committed, rebuilt)}`);
+        }
+      } catch (err) {
+        fail(pack, `${f}: cannot rebuild from rules.v${version}.json: ${(err as Error).message}`);
       }
-    } catch (err) {
-      fail(pack, `${f}: cannot rebuild from rules.v${version}.json: ${(err as Error).message}`);
     }
 
     // The profile owns the shared orthography (D9). Once a pack inherits a base
@@ -327,24 +371,29 @@ async function validatePack(pack: string) {
     };
     if (t.kind !== "training-edition") fail(pack, `${f}: kind must be training-edition`);
     if (t.workId !== workId) fail(pack, `${f}: workId mismatch`);
-    if (t.id === original.edition.id) fail(pack, `${f}: id must differ from original`);
-    if (t.basedOnEditionId !== original.edition.id) fail(pack, `${f}: basedOnEditionId must point to original`);
+    if (originals.some((o) => o.edition.id === t.id)) fail(pack, `${f}: id must differ from every original`);
+    // `basedOn` is checked above, where the rebuild uses it; here it only has to
+    // name one of the pack's originals rather than the newest.
+    if (!originals.some((o) => o.edition.id === t.basedOnEditionId)) {
+      fail(pack, `${f}: basedOnEditionId must point to an original in this pack`);
+    }
     if (!t.languageProfileId || !KNOWN_PROFILES.has(t.languageProfileId)) {
       fail(pack, `${f}: unknown languageProfileId`);
     }
     if (!t.editorialNotes || t.editorialNotes.length === 0) fail(pack, `${f}: editorialNotes missing`);
     checkSegments(pack, t.id, t.segments);
     checkContentHash(pack, f, t);
-    const originalHash = (original.edition as unknown as { contentHash?: string }).contentHash;
+    const source = originals.find((o) => o.edition.id === t.basedOnEditionId) ?? original;
+    const originalHash = (source.edition as unknown as { contentHash?: string }).contentHash;
     if (t.basedOnContentHash !== originalHash) {
-      fail(pack, `${f}: basedOnContentHash does not match the original it derives from`);
+      fail(pack, `${f}: basedOnContentHash does not match ${source.edition.id}`);
     }
     checkPassageLength(pack, t.id, t.segments);
-    if (t.segments.length !== original.edition.segments.length) {
-      fail(pack, `${f}: segment count differs from original`);
+    if (t.segments.length !== source.edition.segments.length) {
+      fail(pack, `${f}: segment count differs from ${source.edition.id}`);
     }
     t.segments.forEach((s, i) => {
-      const o = original.edition.segments[i];
+      const o = source.edition.segments[i];
       if (!o) return;
       if (s.id !== o.id) fail(pack, `${f}/${s.id}: id differs from original ${o.id}`);
       const ol = o.text.split("\n").length;
@@ -362,20 +411,23 @@ async function validatePack(pack: string) {
   // Drill banks. Checked against the editions this pack just validated, so an
   // item is measured against the exact bytes that shipped rather than a copy.
   for (const problem of await drillProblems(dir, [
-    original.edition as unknown as { id: string; workId: string; contentHash: string; segments: Segment[] },
+    ...(originals.map((o) => o.edition) as unknown as {
+      id: string;
+      workId: string;
+      contentHash: string;
+      segments: Segment[];
+    }[]),
     ...trainingEditions,
   ])) {
     fail(pack, problem);
   }
 
   await checkReviews(pack, dir, [
-    {
-      id: original.edition.id,
-      kind: original.edition.kind,
-      contentHash: String(
-        (original.edition as unknown as { contentHash?: string }).contentHash,
-      ),
-    },
+    ...originals.map((o) => ({
+      id: o.edition.id,
+      kind: o.edition.kind,
+      contentHash: String((o.edition as unknown as { contentHash?: string }).contentHash),
+    })),
     ...reviewable,
   ]);
 }

@@ -49,17 +49,33 @@ export function requireWork(id: string): Work {
   return w;
 }
 
+/**
+ * The newest edition of a kind.
+ *
+ * Newest, not first: originals are versioned too since a work can grow, and
+ * the first match in the array is whichever the generator happened to emit
+ * first. The same mistake on training editions once served three works their
+ * v1 while the writing surface used v2.
+ */
 export function getEdition(work: Work, kind: TextEditionKind): TextEditionMeta | undefined {
-  return work.editions.find((e) => e.kind === kind);
+  return work.editions
+    .filter((e) => e.kind === kind)
+    .sort((a, b) => editionMajorVersion(b.id) - editionMajorVersion(a.id))[0];
 }
 
 export function getEditionById(work: Work, id: string): TextEditionMeta | undefined {
   return work.editions.find((e) => e.id === id);
 }
 
-/** Major version from an edition id ending in `.vN`; 0 when it carries none. */
+/**
+ * Major version from an edition id ending in `.vN`.
+ *
+ * An id with no suffix is version 1, not version 0: `<work>.original` is the
+ * first original, and it keeps the unsuffixed form because stored sessions and
+ * every training edition's `basedOnEditionId` already name it that way.
+ */
 export function editionMajorVersion(id: string): number {
-  return Number(/\.v(\d+)$/.exec(id)?.[1] ?? 0);
+  return Number(/\.v(\d+)$/.exec(id)?.[1] ?? 1);
 }
 
 /**

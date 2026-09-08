@@ -19,6 +19,7 @@ import { countWords } from "./lib/text";
 import { editionContentHash } from "./lib/hash";
 import { loadReviews, publishedReviewFields, type ReviewFile } from "./lib/review";
 import { loadDrillBanks, drillAssetItems, type DrillBank } from "./lib/drills";
+import { listOriginals, readOriginal } from "./lib/originals";
 
 const contentRoot = path.resolve(process.cwd(), "content");
 const assetsDir = path.resolve(process.cwd(), "public", "content", "editions");
@@ -149,13 +150,21 @@ export async function buildContentAssets(): Promise<BuildOutput> {
     packs.push(await readJson(path.join(dir, "pack.json")));
     const reviews = await loadReviews(dir);
 
-    const original = await readJson<OriginalFile>(path.join(dir, "original.json"));
-    // Every training edition present, not just the newest: a session saved
-    // against v1 must still resolve after v2 lands.
+    // Every original present, and every training edition — not just the newest
+    // of either. A session saved against v1 must still resolve after v2 lands,
+    // and that is the whole reason an original is versioned at all. The work's
+    // own metadata comes from the newest original; `validate:content` requires
+    // them to agree, so which one is read cannot matter.
+    const originalRefs = await listOriginals(dir);
+    const originalFiles: OriginalFile[] = [];
+    for (const ref of originalRefs) {
+      originalFiles.push(await readOriginal<OriginalFile>(dir, ref.version));
+    }
+    const original = originalFiles.at(-1)!;
     const trainingFiles = (await readdir(dir))
       .filter((f) => /^training-edition\.v\d+\.json$/.test(f))
       .sort();
-    const editions: RawEdition[] = [original.edition];
+    const editions: RawEdition[] = originalFiles.map((o) => o.edition);
     for (const f of trainingFiles) {
       editions.push(await readJson<RawEdition>(path.join(dir, f)));
     }
