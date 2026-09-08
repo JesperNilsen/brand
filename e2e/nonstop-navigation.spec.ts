@@ -80,6 +80,12 @@ test.describe("Nonstop index", () => {
     const primary = page.locator("a.btn-primary");
     await expect(primary).toHaveCount(1);
     await expect(primary).toHaveText(/Begynn|Fortsett/);
+    // Wait for the list before comparing positions with it. The segments arrive
+    // with the fetched edition text, and `page.evaluate` does not retry: on a
+    // loaded runner the index was simply not there yet, and "no segment link"
+    // read as "the primary action is not first" — a red that says the opposite
+    // of what happened. This went red in CI on a docs-only pull request.
+    await expect(page.locator("a[data-segment-id]").first()).toBeVisible();
     // First in the document, before any segment link: the default route for a
     // reader who just wants to continue must not have moved.
     const primaryFirst = await page.evaluate(() => {
