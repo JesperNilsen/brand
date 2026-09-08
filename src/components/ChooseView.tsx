@@ -171,8 +171,13 @@ function SegmentIndex({
               {/*
                 The group says how much of itself is written, so a reader can
                 see where they are without opening it. Counted, not coloured —
-                and only where the marks are shown at all. */}
-              <span className="ml-2 text-ink-muted normal-case">
+                and only where the marks are shown at all.
+
+                The separator is a character, not a margin: `ml-2` spaces the
+                two on screen but leaves nothing between them in the text, and
+                a screen reader then says «Haabet er lysegrønt7 segmenter». */}
+              {" · "}
+              <span className="text-ink-muted normal-case">
                 {done === null
                   ? `${part.segments.length} segmenter`
                   : `${done} av ${part.segments.length} skrevet`}
