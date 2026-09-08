@@ -28,6 +28,10 @@ Ingen kodeendring kreves.
 
 **Avhenger av:** D11 (redaksjonell diff-flyt) og uken med faktisk bruk (D10).
 
+**Merk 2026-09-08:** Q-006 gjør ETT verk komplett (`kielland-noveletter`, hele
+*Noveletter*). T-01 er fortsatt de tre andre — Ibsen, Hamsun og Gift står
+fortsatt på åpningsutdrag.
+
 ---
 
 ## T-02 — Øvingsverdi: feillokalisering og repetisjonskø (P2, L / M)
