@@ -18,6 +18,7 @@ import { analyzeText, hitCounts, lineColumn, type RuleHit } from "../src/domain/
 import { requireBaseRuleSet } from "../src/domain/language/base-rules";
 import { loadRules } from "./lib/load-rules";
 import { loadReviews } from "./lib/review";
+import { originalVersionOf, readOriginal } from "./lib/originals";
 
 const contentRoot = path.resolve(process.cwd(), "content");
 
@@ -94,12 +95,21 @@ async function main(): Promise<void> {
   const packReplacements = rawPack.replacements ?? {};
   const baseReplacements = base?.replacements ?? {};
 
-  const original = JSON.parse(await readFile(path.join(dir, "original.json"), "utf8")) as {
-    edition: { id: string; segments: Segment[] };
-  };
   const committed = JSON.parse(
     await readFile(path.join(dir, `training-edition.v${version}.json`), "utf8"),
-  ) as { id: string; contentHash: string; segments: Segment[] };
+  ) as { id: string; contentHash: string; basedOnEditionId?: string; segments: Segment[] };
+
+  // The original this edition was actually cut from, not `original.json`.
+  // Once a work has grown there is more than one, and reading v3 against v1
+  // compares the text to something it was never derived from — which is not a
+  // subtle wrongness: every rule appears to have failed, and the tool tells the
+  // reader the edition was hand-edited. It said exactly that the day
+  // «Noveletter» became a whole collection.
+  const originalVersion = originalVersionOf(committed.basedOnEditionId ?? "");
+  const original = await readOriginal<{ edition: { id: string; segments: Segment[] } }>(
+    dir,
+    originalVersion,
+  );
 
   const reviews = await loadReviews(dir);
   const entry = reviews[opts.editionId];
