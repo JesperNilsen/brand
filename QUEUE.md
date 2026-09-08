@@ -512,7 +512,8 @@ notes:
 ---
 
 ## Q-008 · Si fra når en lagret økt navngir en tekst som har endret seg
-status: ready
+status: done — se commit
+result: `editionDrift()` i `src/domain/content/edition-drift.ts` gir `match`/`moved`/`gone`/`unknown` av lagret økt + katalogutgave. Resultatsiden sier det i T-13s varselbeholder, historikken merker raden med et ord i linjen som allerede finnes. `unknown` merkes ikke: en økt fra schema 1–2 kan ikke si hva den ble skrevet mot.
 lane: brand-ui
 
 acceptance:

@@ -445,3 +445,28 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   faktisk stoppes — id som ikke matcher filversjonen, to originaler som er uenige
   om verket, en treningsutgave som navngir en original som ikke finnes, og en
   original redigert på stedet.
+
+## Hashen på hver økt blir lest (D16)
+
+- **D7 lagret `editionContentHash` på hver økt for at en senere endring ikke
+  skulle kunne forfalske et gammelt resultat — og så leste ingenting den.**
+  Garantien hvilte på disiplin. Q-006 var i ferd med å bruke opp den disiplinen:
+  å legge tekst til et verk ville skrevet om utgaven hver tidligere økt navngir,
+  uten at noen port, side eller test sa et ord. Versjonerte originaler (D15)
+  gjør at det ikke skal skje; dette gjør at det synes hvis det skjer likevel.
+- **Fire tilstander, og den fjerde er den viktigste.** `match`, `moved` (samme
+  id, annen hash), `gone` (id-en finnes ikke lenger) og `unknown` — en post fra
+  schema 1 eller 2, som er fra før feltene fantes. `unknown` merkes ikke: å si
+  at teksten er endret ville vært nøyaktig like galt som å si at den ikke er
+  det, og «vet ikke» er en ærlig verdi.
+- **Tallene trekkes ikke tilbake.** De ble målt mot en tekst som virkelig sto
+  der. Det eneste som mangler er at siden sier hvilken — varselet forklarer, det
+  advarer ikke.
+- **Merket i historikken er et ord i linjen som allerede finnes,** slik
+  «pauset» er. En farge ville ikke overlevd en monokrom skjerm eller en
+  skjermleser, og en ekstra kolonne ville betalt for et sjeldent tilfelle med
+  plass hver rad bruker.
+- **Porten skriver øktene rett inn i IndexedDB,** fordi appen ikke kan lage
+  denne tilstanden med vilje — og det er hele poenget med den. Vist at den
+  biter: uten implementasjonen feiler de to første tilfellene, mens det tredje
+  (posten fra før feltene fantes) består, som det skal.
