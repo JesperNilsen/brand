@@ -462,7 +462,7 @@ notes:
 ---
 
 ## Q-007 · Grupper segmentlisten etter del
-status: done — se commit
+status: done — merged as `6ac1f40` (#31)
 result: `part` er et felt i `segments.json`, båret gjennom byggekjeden og validert: `validate:content` krever at delene er sammenhengende og at enten alle eller ingen segmenter har en. `contentHash` dekker id/order/tekst, så å navngi delene av et verk lager ingen ny utgave — hverken lesningen, kortformbanken eller lagrede økter merker det. `kielland-noveletter` viser to navngitte grupper med skrevet-telling per gruppe; `ibsen-brand` er uendret, flat og uten overskrift.
 lane: brand-ui
 
