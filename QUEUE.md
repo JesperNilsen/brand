@@ -390,7 +390,7 @@ notes:
 ---
 
 ## Q-006 · D10: hele «Noveletter» inn i korpuset
-status: blocked:Q-007 — en flat liste på ~400 segmenter er ikke en velger; og etter Q-005 hvis den kutter denne pakken, se notes
+status: blocked:Q-005-rekkefølge — Q-007 er landet, så det som gjenstår er å kutte pakken til v3 først hvis Q-005 gjør det; ellers klar
 lane: brand-content
 
 acceptance:
@@ -462,7 +462,8 @@ notes:
 ---
 
 ## Q-007 · Grupper segmentlisten etter del
-status: ready
+status: done — se commit
+result: `part` er et felt i `segments.json`, båret gjennom byggekjeden og validert: `validate:content` krever at delene er sammenhengende og at enten alle eller ingen segmenter har en. `contentHash` dekker id/order/tekst, så å navngi delene av et verk lager ingen ny utgave — hverken lesningen, kortformbanken eller lagrede økter merker det. `kielland-noveletter` viser to navngitte grupper med skrevet-telling per gruppe; `ibsen-brand` er uendret, flat og uten overskrift.
 lane: brand-ui
 
 acceptance:

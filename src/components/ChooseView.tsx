@@ -64,14 +64,23 @@ const LOADING_DELAY_MS = 300;
  * would drift. Written so sixty entries is not a redesign — a flat list, no
  * grouping, and the mark rides in the line that is already there.
  */
-function SegmentIndex({
+/**
+ * The segments of one part, in order, as rows.
+ *
+ * Kept separate from the grouping above it so a work with one part renders
+ * exactly the markup it did before parts existed — including the absence of a
+ * heading. Grouping a single group is structure over nothing.
+ */
+function SegmentRows({
   segments,
   href,
   completedIds,
+  offset,
 }: {
   segments: TextSegment[];
   href: (segment: TextSegment) => string;
   completedIds?: ReadonlySet<string>;
+  offset: number;
 }) {
   return (
     <ul className="grid gap-2">
@@ -85,7 +94,7 @@ function SegmentIndex({
               data-done={completedIds ? String(done) : undefined}
               className="card flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
             >
-              <span>{s.label ?? `Utdrag ${i + 1}`}</span>
+              <span>{s.label ?? `Utdrag ${offset + i + 1}`}</span>
               <span className="shrink-0 text-sm text-ink-muted">
                 {/*
                   A word, not a colour and not a tick on its own. The state has
@@ -101,6 +110,84 @@ function SegmentIndex({
         );
       })}
     </ul>
+  );
+}
+
+/** Segments grouped into the parts they belong to, in reading order. */
+type Part = { title?: string; segments: TextSegment[]; offset: number };
+
+/**
+ * Split an ordered segment list on the part boundaries it already carries.
+ *
+ * Reading order is never rearranged: parts are contiguous by construction and
+ * `validate:content` fails a pack where they are not, so a boundary is simply
+ * the point where the name changes. A work with no parts comes back as one
+ * unnamed group, which is what makes the single-part case free.
+ */
+export function splitIntoParts(segments: TextSegment[]): Part[] {
+  const parts: Part[] = [];
+  segments.forEach((segment, i) => {
+    const last = parts.at(-1);
+    if (last && last.title === segment.part) last.segments.push(segment);
+    else parts.push({ title: segment.part, segments: [segment], offset: i });
+  });
+  return parts;
+}
+
+/**
+ * The ordered list of segments in a work, grouped by part where the work has
+ * them.
+ *
+ * Passage has rendered this list since V1 and Nonstop since Q-002; the grouping
+ * arrives now because Q-006 turns one work into five novellas and some four
+ * hundred segments. At that size a flat list is not a chooser, and the reader
+ * who wants «To Venner» should not have to count.
+ */
+function SegmentIndex({
+  segments,
+  href,
+  completedIds,
+}: {
+  segments: TextSegment[];
+  href: (segment: TextSegment) => string;
+  completedIds?: ReadonlySet<string>;
+}) {
+  const parts = splitIntoParts(segments);
+  // One group, or a group without a name: the work has no parts, and the list
+  // stays exactly as it was before this existed.
+  if (parts.length <= 1 || parts.some((p) => p.title === undefined)) {
+    return <SegmentRows segments={segments} href={href} completedIds={completedIds} offset={0} />;
+  }
+  return (
+    <div className="grid gap-8" data-testid="segment-groups">
+      {parts.map((part) => {
+        const done = completedIds
+          ? part.segments.filter((s) => completedIds.has(s.id)).length
+          : null;
+        return (
+          <section key={part.title} aria-labelledby={`part-${part.offset}`} data-part={part.title}>
+            <h3 id={`part-${part.offset}`} className="label mb-3">
+              {part.title}
+              {/*
+                The group says how much of itself is written, so a reader can
+                see where they are without opening it. Counted, not coloured —
+                and only where the marks are shown at all. */}
+              <span className="ml-2 text-ink-muted normal-case">
+                {done === null
+                  ? `${part.segments.length} segmenter`
+                  : `${done} av ${part.segments.length} skrevet`}
+              </span>
+            </h3>
+            <SegmentRows
+              segments={part.segments}
+              href={href}
+              completedIds={completedIds}
+              offset={part.offset}
+            />
+          </section>
+        );
+      })}
+    </div>
   );
 }
 

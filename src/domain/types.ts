@@ -117,6 +117,15 @@ export type TextSegment = {
   id: string;
   order: number;
   text: string;
+  /**
+   * The novella, act or chapter this segment belongs to, when the work has
+   * more than one. Present only where a pack authored it in `segments.json`;
+   * a work with a single part has none, and its list stays flat.
+   *
+   * Not part of `contentHash`: the hash covers `id`, `order` and `text`, so
+   * naming the parts of an existing work does not create a new edition of it.
+   */
+  part?: string;
   label?: string;
   wordCount: number;
   difficulty?: 1 | 2 | 3 | 4 | 5;
