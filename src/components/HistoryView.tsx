@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getEditionById, getWork } from "@/domain/content/registry";
 import { getGameMode } from "@/domain/modes/registry";
+import { driftLabel, editionDrift } from "@/domain/content/edition-drift";
 import { metricsFromResult } from "@/domain/session/runner";
 import { requireTextFilter } from "@/domain/text-filter";
 import type { SessionResult } from "@/domain/types";
@@ -99,6 +100,9 @@ export function HistoryView() {
         <ul className="sm:hidden" data-testid="history-list">
           {sessions.map((s) => {
             const work = getWork(s.workId);
+            const drift = driftLabel(
+              editionDrift(s, work ? getEditionById(work, s.editionId) : undefined),
+            );
             return (
               <li key={s.id} className="border-t border-rule py-3">
                 <Link href={`/resultat/${s.id}`} className="no-underline">
@@ -122,6 +126,11 @@ export function HistoryView() {
                     {formatPercent(s.accuracy)} · {formatDuration(s.durationMs)} ·{" "}
                     {s.status === "completed" ? "Fullført" : "Avbrutt"}
                     {s.pauseCount > 0 ? " · pauset" : ""}
+                    {/*
+                      A word, in the line that already lists the other facts —
+                      the same shape «pauset» takes. The row must say that the
+                      text moved even where a colour cannot be seen. */}
+                    {drift ? ` · ${drift}` : ""}
                   </span>
                 </Link>
               </li>
@@ -164,8 +173,13 @@ export function HistoryView() {
                         s.workId
                       )}
                     </td>
-                    <td className="py-2 pr-4 text-ink-muted">
+                    <td className="py-2 pr-4 text-ink-muted" data-testid="history-edition">
                       {edition ? editionLabel(edition) : s.editionId}
+                      {driftLabel(editionDrift(s, edition)) ? (
+                        <span data-testid="history-drift">
+                          {` · ${driftLabel(editionDrift(s, edition))}`}
+                        </span>
+                      ) : null}
                     </td>
                     <td className="py-2 pr-4 text-ink-muted">
                       {requireTextFilter(s.textFilterId).displayName}

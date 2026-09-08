@@ -11,6 +11,7 @@ import {
 import { getGameMode } from "@/domain/modes/registry";
 import { metricsFromResult } from "@/domain/session/runner";
 import { requireTextFilter } from "@/domain/text-filter";
+import { editionDrift, isDrifted } from "@/domain/content/edition-drift";
 import type { SessionResult, TextEdition } from "@/domain/types";
 import { getRepository, isPersistent } from "@/infra/repository";
 import { getLastSession } from "@/lib/last-session";
@@ -95,6 +96,9 @@ export function ResultView({ id }: { id: string }) {
       : undefined;
 
   const isDrill = result.gameModeId === "drill";
+  // What the numbers were measured against, and whether that text is still
+  // here. See `edition-drift.ts` for why this is read at all.
+  const drift = editionDrift(result, edition);
 
   return (
     <div className="prose-measure" data-testid="result">
@@ -125,6 +129,7 @@ export function ResultView({ id }: { id: string }) {
       */}
       {(unsaved ||
         isDrill ||
+        isDrifted(drift) ||
         requireTextFilter(result.textFilterId).altersText ||
         result.pauseCount > 0) && (
         <div className="mb-8 -mt-6 flex flex-col gap-3">
@@ -137,6 +142,22 @@ export function ResultView({ id }: { id: string }) {
               Denne økten ble ikke lagret. Tallene under er riktige, men de er borte
               når du forlater siden. Nettleseren tillater ikke lokal lagring her, for
               eksempel i et privat vindu.
+            </p>
+          )}
+          {isDrifted(drift) && (
+            <p className="text-sm text-ink-muted" data-testid="drift-notice">
+              {drift === "moved" ? (
+                <>
+                  Teksten i denne utgaven er endret etter at økten ble skrevet. Tallene
+                  gjelder teksten som faktisk sto her da — den er bare ikke lenger den
+                  appen viser under samme navn.
+                </>
+              ) : (
+                <>
+                  Utgaven denne økten ble skrevet mot finnes ikke lenger i appen. Tallene
+                  står, men teksten bak dem kan ikke hentes fram igjen herfra.
+                </>
+              )}
             </p>
           )}
           {isDrill && (
