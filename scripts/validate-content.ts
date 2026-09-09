@@ -21,6 +21,9 @@
  *    produces from content/ right now, or an asset file nothing points at
  *  - a shelf in content/shelves.json that names a work the catalogue does not
  *    have, or a work that stands on no shelf at all
+ *  - a work missing authorDeathYear, rightsStatus or originalLanguage, a
+ *    training edition missing adaptationStatus, or a rights claim of public
+ *    domain over an author who died after 1955 with no written basis
  *
  * Warns (exit 0) on:
  *  - training-edition passages outside the 35-120 word range that
@@ -41,6 +44,7 @@ import { loadRules } from "./lib/load-rules";
 import { listOriginals, originalEditionId, readOriginal } from "./lib/originals";
 import { drillProblems } from "./lib/drills";
 import { loadShelves, shelfProblems } from "./lib/shelves";
+import { adaptationProblems, rightsProblems } from "./lib/rights";
 import { listLanguageProfiles } from "../src/domain/language/registry";
 import { getBaseRuleSet } from "../src/domain/language/base-rules";
 import { listTextFilters } from "../src/domain/text-filter";
@@ -283,9 +287,10 @@ async function validatePack(pack: string) {
     }
   }
   const source = original.work.source as Record<string, unknown> | undefined;
-  for (const key of ["author", "title", "language", "sourceUrl", "retrievedAt", "provider", "license", "digitalEdition", "verificationStatus"]) {
+  for (const key of ["author", "title", "language", "sourceUrl", "retrievedAt", "provider", "license", "digitalEdition", "verificationStatus", "authorDeathYear", "rightsStatus"]) {
     if (!source || !source[key]) fail(pack, `work.source.${key} missing`);
   }
+  for (const problem of rightsProblems(original.work, source)) fail(pack, problem);
   for (const o of originals) {
     checkSegments(pack, o.edition.id, o.edition.segments);
     checkContentHash(pack, o.edition.id, o.edition as unknown as { contentHash?: string; segments: Segment[] });
@@ -385,6 +390,7 @@ async function validatePack(pack: string) {
       workId: string;
       kind: string;
       languageProfileId?: string;
+      adaptationStatus?: string;
       basedOnEditionId?: string;
       contentHash?: string;
       basedOnContentHash?: string;
@@ -392,6 +398,7 @@ async function validatePack(pack: string) {
       editorialNotes?: string[];
     };
     if (t.kind !== "training-edition") fail(pack, `${f}: kind must be training-edition`);
+    for (const problem of adaptationProblems(f, t)) fail(pack, problem);
     if (t.workId !== workId) fail(pack, `${f}: workId mismatch`);
     if (originals.some((o) => o.edition.id === t.id)) fail(pack, `${f}: id must differ from every original`);
     // `basedOn` is checked above, where the rebuild uses it; here it only has to

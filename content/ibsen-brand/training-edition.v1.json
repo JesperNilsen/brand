@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "contentHash": "sha256:92d613d9b1a385454935b2ce614de39fe1159a77a1569f67393a3cd18e3170e9",
   "languageProfileId": "brand-riksmaal",
+  "adaptationStatus": "orthography",
   "basedOnEditionId": "ibsen-brand.original",
   "basedOnContentHash": "sha256:dcca48d310d6dd50dddb91848ffaa169acb4f530d595f017e7198b7db953ac37",
   "segments": [

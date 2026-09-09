@@ -2,6 +2,7 @@
   "editionId": "kielland-noveletter.training.v2",
   "version": "2.0.0",
   "languageProfileId": "brand-riksmaal",
+  "adaptationStatus": "orthography",
   "baseRules": "brand-riksmaal.base.v1",
   "notes": [
     "Brand Training Edition av åpningen av to noveller fra Kiellands Noveletter (1879/1907-teksten): «Haabet er lysegrønt» og «Visne Blade». Bare ortografi er modernisert: aa→å, af→av, hvad→hva, efter→etter, kunde/vilde→kunne/ville, havde→hadde, blive→bli, ud(-)→ut(-), æ→e der moderne rettskriving har e, kort-vokal-konsonantfordobling der moderne rettskriving har det (træt→trett, tæt→tett, antal→antall, indtryk→inntrykk), soft→hard konsonant der moderne rettskriving har det (forsøgte→forsøkte, lidenskab→lidenskap, krog→krok), plads/kryds-klassen (d→s: plads→plass, kryds→kryss), -hed→-het (mangfoldighed→mangfoldighet, opmærksomhed→oppmerksomhet), øi→øy, samt store forbokstaver i vanlige substantiv → små (lowercaseNouns). To enkeltord der aa-mønsteret alene ikke ga riktig konsonant (faaet→fået→fått, Maade→Måde→måte) og ett der aa-mønsteret ga feil vokal (raabte→råbte→ropte, siden moderne verb er «rope», ikke «råbe») er rettet med egne ordoppslag etter at mønsteret er kjørt. Setningsstruktur, ordvalg, rytme og tegnsetting er uendret; se «Beholdt»-notatene.",

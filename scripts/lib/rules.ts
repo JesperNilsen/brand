@@ -17,6 +17,7 @@ export {
   isSentenceInitial,
   OPENING_QUOTE,
   SENTENCE_BOUNDARY,
+  type AdaptationStatus,
   type BaseRules,
   type RuleFamily,
   type Rules,

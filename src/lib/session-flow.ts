@@ -238,3 +238,24 @@ export function editionLabel(edition: TextEditionMeta): string {
     ? `Brand Training Edition ${edition.version}`
     : "Originaltekst";
 }
+
+/**
+ * What the reader is typing, and what it rests on.
+ *
+ * The attribution belonged only to `/om` until now, which is the one page a
+ * reader has no reason to open while writing. A normalised text that does not
+ * say it has been normalised is the failure this line exists to prevent — so it
+ * stands where the text is met, not where the sources are catalogued.
+ *
+ * The printed edition is quoted whole, not shortened to «tittel (år)». Q-010
+ * exists precisely because the facts the catalogue needs were buried in prose;
+ * slicing a bibliographic sentence for a tidier line would be the same mistake
+ * in a new place. It carries the year because the edition statement carries it.
+ */
+export function attributionLine(work: Work, edition: TextEditionMeta): string {
+  const printed = work.source.digitalEdition.trim();
+  const basis = `Basert på ${printed.endsWith(".") ? printed : `${printed}.`}`;
+  return edition.kind === "training-edition"
+    ? `Språklig bearbeidet etter Brand-standarden. ${basis}`
+    : `Originaltekst, uendret. ${basis}`;
+}

@@ -5,6 +5,7 @@
     "author": "Knut Hamsun",
     "title": "Markens grøde",
     "publishedYear": 1917,
+    "originalLanguage": "da-NO",
     "source": {
       "author": "Knut Hamsun",
       "title": "Markens Grøde",
@@ -14,7 +15,9 @@
       "archiveId": "wikikilden:Markens_Grøde/1/01",
       "retrievedAt": "2026-09-04",
       "provider": "Wikikilden (no.wikisource.org)",
+      "authorDeathYear": 1952,
       "license": "Public domain i Norge (Hamsun d. 1952; verkets vernetid utløp 2023-01-01, life+70) og i USA (utgitt 1917, før 1928-grensen). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "rightsStatus": "public-domain",
       "digitalEdition": "Markens Grøde. Kristiania: Gyldendal, 1917. Første del, kapittel I (transkribert etter Internet Archive-skanningen markensgrde01hams; Wikikilden-siden Markens_Grøde/1/01 transkluderer sidene 5–15 i skannet bok / trykte sider 11–21).",
       "verificationStatus": "agent-drafted",
       "editorialNotes": [

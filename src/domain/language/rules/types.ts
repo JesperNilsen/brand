@@ -25,12 +25,38 @@ export type RuleFamily = "historical-orthography" | "contemporary-usage";
 /** The family a rule set that omits the field belongs to. */
 export const DEFAULT_RULE_FAMILY: RuleFamily = "historical-orthography";
 
+/**
+ * How far the adaptation itself has gone.
+ *
+ * A third axis, and deliberately not a rename of either neighbour:
+ * `verificationStatus` asks whether the transcription is faithful to the
+ * source, `reviewStatus` asks whether the normalisation has been read and
+ * found defensible, and this asks what was done to the text at all.
+ *
+ * `converted` is reserved for a text carried across from another written
+ * standard — Bondestudentar from landsmål, which by definition replaces the
+ * author's word choices and therefore cannot be a `training-edition` of the
+ * same kind as the others (D17, T-20).
+ */
+export type AdaptationStatus = "none" | "orthography" | "orthography-and-morphology" | "converted";
+
 export type RulePattern = { from: string; to: string; flags?: string; note?: string };
 
 export type Rules = {
   editionId: string;
   version: string;
   languageProfileId: string;
+  /**
+   * What this rule set actually does to the text, carried into the edition it
+   * builds and from there into the catalogue.
+   *
+   * It lives on the rule set rather than beside the edition because it is a
+   * property of the rules: a list of orthographic substitutions is
+   * `orthography` whatever text it is run over. Optional only so the v1 rule
+   * sets that predate the field still rebuild byte for byte; `validate:content`
+   * requires every published training edition to carry it.
+   */
+  adaptationStatus?: AdaptationStatus;
   /**
    * Id of a frozen base rule set owned by the language profile
    * (`brand-riksmaal.base.v1`). The pack inherits it and lists below only what
