@@ -1,0 +1,35 @@
+{
+  "shelves": [
+    {
+      "id": "norske-klassikere",
+      "title": "Norske klassikere",
+      "description": "Ibsen, Hamsun, Kielland, Undset, Lie, Collett og beslektede forfattere.",
+      "workIds": [
+        "ibsen-brand",
+        "hamsun-markens-groede",
+        "kielland-gift",
+        "kielland-noveletter"
+      ]
+    },
+    {
+      "id": "danske-klassikere",
+      "title": "Danske klassikere",
+      "description": "Bang, Pontoppidan, Jacobsen, Holberg og beslektede forfattere.",
+      "workIds": []
+    },
+    {
+      "id": "ide-og-tro",
+      "title": "Idé og tro",
+      "description": "Kierkegaard, Grundtvig, Georg Brandes og andre filosofiske, teologiske eller idéhistoriske tekster.",
+      "workIds": []
+    },
+    {
+      "id": "korte-tekster",
+      "title": "Korte tekster",
+      "description": "Noveller, essays, taler, utdrag og utvalgte eventyr — egnet for korte økter.",
+      "workIds": [
+        "kielland-noveletter"
+      ]
+    }
+  ]
+}

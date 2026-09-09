@@ -559,7 +559,7 @@ notes:
 ---
 
 ## Q-009 · Hyller som egen akse
-status: ready
+status: review:queue/q-009-hyller
 lane: brand-content
 
 acceptance:

@@ -125,6 +125,14 @@ verket og ikke en `ContentPack`.
 | **Idé og tro** | Kierkegaard, Grundtvig, Georg Brandes og andre filosofiske, teologiske eller idéhistoriske tekster. |
 | **Korte tekster** | Noveller, essays, taler, utdrag og utvalgte eventyr — egnet for korte økter. |
 
+Hyllene står i `content/shelves.json` og emitteres til `SHELVES` i
+`catalog.generated.ts`; `listShelves()`, `getShelf()` og `listShelvesForWork()`
+leser dem. `pnpm validate:content` avviser en hylle som navngir et verk
+katalogen ikke har, og et verk som ikke står på noen hylle. En hylle kan være
+tom — «Danske klassikere» og «Idé og tro» er erklært før første import, slik at
+den kuraterte rekkefølgen allerede er satt når den kommer — men en tom hylle
+vises ikke.
+
 ## Enten–Eller som moduler
 
 *Enten–Eller* skal ikke først presenteres som én uavbrutt tekst. Verket består
