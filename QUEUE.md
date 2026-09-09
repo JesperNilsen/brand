@@ -559,7 +559,8 @@ notes:
 ---
 
 ## Q-009 · Hyller som egen akse
-status: review:queue/q-009-hyller
+status: done — merged as `3d3f2f0` (#41)
+result: content/shelves.json + SHELVES i catalog.generated.ts; listShelves()/getShelf()/listShelvesForWork() i registry.ts. Tre porter vist å feile: en hylle som navngir et verk katalogen ikke har, et verk uten hylle, og et manglende shelves.json. «Noveletter» står på to hyller, så mange-til-mange er et faktisk tilfelle og ikke bare en fixture. Ingen contentHash beveget seg.
 lane: brand-content
 
 acceptance:
