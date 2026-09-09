@@ -20,6 +20,7 @@ import { DEFAULT_TEXT_FILTER_ID } from "@/domain/text-filter";
 import type {
   ReadingProgress,
   TextEdition,
+  TextModule,
   TextSegment,
   TextFilterId,
   UserPreferences,
@@ -113,8 +114,14 @@ function SegmentRows({
   );
 }
 
-/** Segments grouped into the parts they belong to, in reading order. */
-type Part = { title?: string; segments: TextSegment[]; offset: number };
+/**
+ * Segments grouped into the parts or modules they belong to, in reading order.
+ *
+ * `id` is present only for a module. It is what lets a group say «Skrevet» about
+ * itself: a part has no identity, so «this group is finished» is a sentence only
+ * a module can be the subject of.
+ */
+type Part = { id?: string; title?: string; segments: TextSegment[]; offset: number };
 
 /**
  * Split an ordered segment list on the part boundaries it already carries.
@@ -124,6 +131,30 @@ type Part = { title?: string; segments: TextSegment[]; offset: number };
  * the point where the name changes. A work with no parts comes back as one
  * unnamed group, which is what makes the single-part case free.
  */
+/**
+ * Split an ordered segment list on the modules the edition declares.
+ *
+ * Ordered by the modules' own `order`, not by where their segments happen to
+ * fall — a module is a declared thing with a place in the work, and
+ * `validate:content` already refuses an edition where the two disagree. A
+ * module the edition declares but no segment claims cannot occur for the same
+ * reason, so this does not have to render an empty group.
+ */
+export function splitIntoModules(segments: TextSegment[], modules: TextModule[]): Part[] {
+  const ordered = [...modules].sort((a, b) => a.order - b.order);
+  return ordered
+    .map((m) => {
+      const own = segments.filter((s) => s.moduleId === m.id);
+      return {
+        id: m.id,
+        title: m.title,
+        segments: own,
+        offset: own.length ? segments.indexOf(own[0]) : 0,
+      };
+    })
+    .filter((g) => g.segments.length > 0);
+}
+
 export function splitIntoParts(segments: TextSegment[]): Part[] {
   const parts: Part[] = [];
   segments.forEach((segment, i) => {
@@ -147,12 +178,17 @@ function SegmentIndex({
   segments,
   href,
   completedIds,
+  modules,
 }: {
   segments: TextSegment[];
   href: (segment: TextSegment) => string;
   completedIds?: ReadonlySet<string>;
+  modules?: TextModule[];
 }) {
-  const parts = splitIntoParts(segments);
+  // Modules win where an edition has them: they are the division the work
+  // declares, and the one progress is kept against. `part` stays the fallback,
+  // unchanged, which is what keeps the four works that exist today identical.
+  const parts = modules?.length ? splitIntoModules(segments, modules) : splitIntoParts(segments);
   // One group, or a group without a name: the work has no parts, and the list
   // stays exactly as it was before this existed.
   if (parts.length <= 1 || parts.some((p) => p.title === undefined)) {
@@ -164,8 +200,19 @@ function SegmentIndex({
         const done = completedIds
           ? part.segments.filter((s) => completedIds.has(s.id)).length
           : null;
+        // Only a module can be «Skrevet». A part has no progress of its own —
+        // «alle segmentene er skrevet» and «denne delen er ferdig» are the same
+        // sentence for a part and two different ones for a module, and D17 put
+        // completion on the module.
+        const finished = part.id !== undefined && done !== null && done === part.segments.length;
         return (
-          <section key={part.title} aria-labelledby={`part-${part.offset}`} data-part={part.title}>
+          <section
+            key={part.id ?? part.title}
+            aria-labelledby={`part-${part.offset}`}
+            data-part={part.title}
+            data-module={part.id}
+            data-module-done={part.id !== undefined ? String(finished) : undefined}
+          >
             <h3 id={`part-${part.offset}`} className="label mb-3">
               {part.title}
               {/*
@@ -178,9 +225,18 @@ function SegmentIndex({
                 a screen reader then says «Haabet er lysegrønt7 segmenter». */}
               {" · "}
               <span className="text-ink-muted normal-case">
-                {done === null
-                  ? `${part.segments.length} segmenter`
-                  : `${done} av ${part.segments.length} skrevet`}
+                {/*
+                  The same word Q-002 gave a segment, for the same reason: a
+                  state has to survive a monochrome screen and a screen reader.
+                  A finished module says so outright rather than making the
+                  reader compare two numbers. */}
+                {finished ? (
+                  <span className="text-ink">Skrevet</span>
+                ) : done === null ? (
+                  `${part.segments.length} segmenter`
+                ) : (
+                  `${done} av ${part.segments.length} skrevet`
+                )}
               </span>
             </h3>
             <SegmentRows
@@ -405,6 +461,7 @@ export function ChooseView({ modeId }: Props) {
       {mode.id === "passage" && segments && (
         <SegmentIndex
           segments={segments}
+          modules={edition?.modules}
           href={(s) =>
             sessionHref({
               mode: "passage",
@@ -444,6 +501,7 @@ export function ChooseView({ modeId }: Props) {
               </h2>
               <SegmentIndex
                 segments={segments}
+                modules={edition?.modules}
                 completedIds={completedIds}
                 href={(s) =>
                   sessionHref({

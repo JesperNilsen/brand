@@ -12,6 +12,7 @@ import type {
   ContentPack,
   Shelf,
   TextEdition,
+  TextModule,
   TextEditionKind,
   TextEditionMeta,
   TextSegment,
@@ -146,6 +147,42 @@ export function getSegment(edition: TextEdition, id: string): TextSegment | unde
 
 export function firstSegment(edition: TextEdition): TextSegment {
   return [...edition.segments].sort((a, b) => a.order - b.order)[0];
+}
+
+/**
+ * The modules an edition declares, in reading order. Empty when it has none,
+ * which is every work today.
+ */
+export function orderedModules(edition: TextEditionMeta): TextModule[] {
+  return [...(edition.modules ?? [])].sort((a, b) => a.order - b.order);
+}
+
+export function getModule(edition: TextEditionMeta, id: string): TextModule | undefined {
+  return edition.modules?.find((m) => m.id === id);
+}
+
+/** A module's segments, in reading order. */
+export function moduleSegments(edition: TextEdition, moduleId: string): TextSegment[] {
+  return orderedSegments(edition).filter((s) => s.moduleId === moduleId);
+}
+
+/**
+ * A module's difficulty: what it declares, else the hardest of its segments.
+ *
+ * Derived rather than required, because for most modules it is not a judgement
+ * anyone needs to make separately — the segments already carry it. Declared
+ * when a module is harder than its parts suggest, which is a real case for a
+ * philosophical text whose sentences are short.
+ */
+export function moduleDifficulty(
+  edition: TextEdition,
+  module: TextModule,
+): number | undefined {
+  if (module.difficulty !== undefined) return module.difficulty;
+  const found = moduleSegments(edition, module.id)
+    .map((s) => s.difficulty)
+    .filter((d): d is NonNullable<TextSegment["difficulty"]> => d !== undefined);
+  return found.length ? Math.max(...found) : undefined;
 }
 
 /** Segments in reading order. */

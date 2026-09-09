@@ -20,7 +20,8 @@
  *   "work": { id, contentPackId, author, title, publishedYear, source },
  *   "edition": { id, version, editorialNotes? },
  *   "speakerLinePattern": "^[A-ZÆØÅ][A-ZÆØÅ ]*( \\(.*\\))?\\.$",   // optional
- *   "segments": [{ id, part?, label?, start, end, difficulty? }]
+ *   "modules": [{ id, title, order, difficulty? }]          (optional)
+ *   "segments": [{ id, part?, moduleId?, label?, start, end, difficulty? }]
  * }
  */
 import { readFile, writeFile } from "node:fs/promises";
@@ -35,14 +36,18 @@ type SegmentSpec = {
   start: string;
   end: string;
   part?: string;
+  moduleId?: string;
   difficulty?: 1 | 2 | 3 | 4 | 5;
 };
+
+type ModuleSpec = { id: string; title: string; order: number; difficulty?: 1 | 2 | 3 | 4 | 5 };
 
 type Spec = {
   sourceFile: string;
   work: Record<string, unknown>;
   edition: { id: string; version: string; editorialNotes?: string[] };
   speakerLinePattern?: string;
+  modules?: ModuleSpec[];
   segments: SegmentSpec[];
 };
 
@@ -92,6 +97,9 @@ async function main() {
       // needs a title a reader recognises, and neither `haabet-01` nor a guess
       // about where a comma falls in «Haabet er lysegrønt, 1» is one.
       part: s.part,
+      // A module, unlike a part, has an identity a progress key can name. The
+      // two coexist: `part` stays the display name where a pack authored one.
+      moduleId: s.moduleId,
       label: s.label,
       wordCount: countWords(text),
       difficulty: s.difficulty,
@@ -116,6 +124,10 @@ async function main() {
       kind: "original",
       version: spec.edition.version,
       contentHash: editionContentHash(segments),
+      // Only when the spec declares them: a key that appears as `undefined` on
+      // every edition without modules would still change bytes that
+      // `validate:content` compares.
+      ...(spec.modules ? { modules: spec.modules } : {}),
       segments,
       editorialNotes: spec.edition.editorialNotes ?? [],
     },
