@@ -50,6 +50,7 @@ type RawEdition = {
   version: string;
   contentHash: string;
   languageProfileId?: string;
+  adaptationStatus?: string;
   basedOnEditionId?: string;
   basedOnContentHash?: string;
   editorialNotes?: string[];
@@ -101,6 +102,10 @@ function editionMeta(edition: RawEdition, reviews: ReviewFile, drills?: DrillBan
     contentHash: edition.contentHash,
   };
   if (edition.languageProfileId) meta.languageProfileId = edition.languageProfileId;
+  // An original applies no adaptation, and says so rather than leaving the
+  // field off: a reader asking «what was done to this text» should get an
+  // answer for every edition, not silence for half of them.
+  meta.adaptationStatus = edition.kind === "original" ? "none" : edition.adaptationStatus;
   if (edition.basedOnEditionId) meta.basedOnEditionId = edition.basedOnEditionId;
   if (edition.basedOnContentHash) meta.basedOnContentHash = edition.basedOnContentHash;
   // Review state rides in the catalog, never in the asset: the asset's bytes

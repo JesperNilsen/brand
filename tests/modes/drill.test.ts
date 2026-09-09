@@ -34,6 +34,7 @@ const edition: TextEdition = {
   version: "1.0.0",
   contentHash: "sha256:test",
   languageProfileId: "brand-riksmaal",
+  adaptationStatus: "orthography",
   segmentCount: 1,
   wordCount: 3,
   file: "/content/editions/w.training.v1.test.json",

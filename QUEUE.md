@@ -604,7 +604,7 @@ notes:
 - Se D17 og T-17.
 
 ## Q-010 · Verksmetadata rettighetsvurderingen hviler på
-status: ready
+status: review:queue/q-010-rettighetsmetadata
 lane: brand-content
 
 acceptance:

@@ -8,13 +8,13 @@
  *   TextEdition     — which text version is shown (original | training-edition)
  *
  * None of these types import from each other's modules; they only share ids.
- * The one exception is RuleFamily, which the rule engine owns and this file
- * re-exports rather than restating — two spellings of that union would let a
- * rule set be one family here and another there.
+ * The exceptions are RuleFamily and AdaptationStatus, which the rule engine
+ * owns and this file re-exports rather than restating — two spellings of either
+ * union would let a rule set be one thing here and another there.
  */
-import type { RuleFamily } from "./language/rules/types";
+import type { AdaptationStatus, RuleFamily } from "./language/rules/types";
 
-export type { RuleFamily };
+export type { AdaptationStatus, RuleFamily };
 
 export type ErrorMode = "flow" | "stop-on-error";
 
@@ -92,6 +92,33 @@ export type VerificationStatus =
   | "agent-drafted"
   | "editor-verified";
 
+/**
+ * The rights claim on a source, as a value beside the prose, never instead of
+ * it.
+ *
+ * `license` keeps the full sentence — it is what the reader sees on `/om`, and
+ * a rights statement compressed into an enum is a rights statement that has
+ * lost the part someone would need to check it. This is the sortable half.
+ *
+ * `public-domain` is derived from the death year alone; `public-domain-verified`
+ * means someone looked at the concrete source. All 25 works in
+ * `docs/spec/CORPUS.md` pass the death-year sort, which is exactly why passing
+ * it is not enough on its own.
+ */
+export type RightsStatus = "public-domain" | "public-domain-verified" | "restricted" | "unknown";
+
+/**
+ * The language the work was WRITTEN in, as opposed to
+ * `SourceAttribution.language`, which describes the transcription that was
+ * fetched.
+ *
+ * They are not the same question and they will diverge: a Wikikilden page of a
+ * Danish text is transcribed by a Norwegian project. The catalogue needs the
+ * first to know which rule set applies (D17: dansk-dansk is a different
+ * starting point, not an extension of the Norwegian one).
+ */
+export type OriginalLanguage = "da-NO" | "da-DK" | "nb-NO" | "nn-NO";
+
 export type SourceAttribution = {
   author: string;
   title: string;
@@ -104,8 +131,27 @@ export type SourceAttribution = {
   retrievedAt: string;
   /** Who makes the digital text available (e.g. "Wikikilden", "Project Runeberg"). */
   provider: string;
+  /**
+   * The year the author died — the one fact the first sort in
+   * `docs/spec/CORPUS.md` reads («forfatteren døde i 1955 eller tidligere»).
+   *
+   * It is a number rather than a sentence inside `license` because a sentence
+   * cannot be sorted, and with 25 works in the plan this is the field that
+   * decides what may be imported at all.
+   */
+  authorDeathYear: number;
   /** Rights status / licence of the text as used. */
   license: string;
+  /** The sortable half of `license`. See RightsStatus. */
+  rightsStatus: RightsStatus;
+  /**
+   * Why this text is usable even though the author died after 1955.
+   *
+   * Required exactly then, and meaningless otherwise: the death-year sort is
+   * the cheap first pass, and a work that fails it needs a reason written down
+   * rather than an enum quietly asserting the opposite.
+   */
+  rightsBasis?: string;
   /** Printed edition / transcription the digital text is based on. */
   digitalEdition: string;
   editorialNotes?: string[];
@@ -188,6 +234,11 @@ export type TextEditionMeta = {
   file: string;
   /** The drill bank cut from this edition, when it has one. */
   drills?: DrillBankMeta;
+  /**
+   * What was done to the text. An original is `none`; a training edition says
+   * what its rule set actually does. See AdaptationStatus.
+   */
+  adaptationStatus: AdaptationStatus;
 };
 
 /** One short item in a drill bank: a quote, a clause, or a single hard word. */
@@ -228,6 +279,8 @@ export type Work = {
   author: string;
   title: string;
   publishedYear?: number;
+  /** The language the work was written in. See OriginalLanguage. */
+  originalLanguage: OriginalLanguage;
   editions: TextEditionMeta[];
   source: SourceAttribution;
 };

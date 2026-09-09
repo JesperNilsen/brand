@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "contentHash": "sha256:2365ad52a5d090f7c8460276810c68ba65f08329f84b3835bd7ae6d6e057772a",
   "languageProfileId": "brand-riksmaal",
+  "adaptationStatus": "orthography",
   "basedOnEditionId": "kielland-gift.original",
   "basedOnContentHash": "sha256:2dff6f05866e1f32ef3c4403a73bd9f268d580f90263c022607f294c2374bfa9",
   "segments": [
