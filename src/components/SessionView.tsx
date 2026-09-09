@@ -28,6 +28,7 @@ import { getRepository } from "@/infra/repository";
 import { rememberLastSession } from "@/lib/last-session";
 import { useTypingSession } from "@/hooks/useTypingSession";
 import {
+  attributionLine,
   buildPlan,
   editionLabel,
   nonstopProgressKey,
@@ -308,6 +309,15 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
             : undefined
         }
       />
+
+      {/*
+        Chrome, so it recedes while typing — but it is not optional chrome. A
+        text that has been normalised has to say so where it is read, not only
+        on /om. See attributionLine().
+      */}
+      <p className="recedes mt-6 text-sm text-ink-muted" data-testid="attribution">
+        {attributionLine(work, edition)}
+      </p>
 
       <SessionMenu
         open={menuOpen}

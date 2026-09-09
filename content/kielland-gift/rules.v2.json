@@ -2,6 +2,7 @@
   "editionId": "kielland-gift.training.v2",
   "version": "2.0.0",
   "languageProfileId": "brand-riksmaal",
+  "adaptationStatus": "orthography",
   "baseRules": "brand-riksmaal.base.v1",
   "notes": [
     "Brand Training Edition av åpningen av Kiellands Gift (1883/1907-teksten). Bare ortografi er modernisert: aa→å, af→av, hvad→hva, efter→etter, nu→nå, mig/dig/sig→meg/deg/seg, kunde/skulde/vilde→kunne/skulle/ville, havde→hadde, blev→ble, ud→ut, æ→e der moderne rettskriving har e, kort-vokal-konsonantfordobling der moderne rettskriving har det (bænk→benk, blæk→blekk, udtryk→uttrykk, ind-→inn-), soft→hard konsonant der moderne rettskriving har det (ansigt→ansikt, brugte→brukte), øi→øy, samt store forbokstaver i vanlige substantiv → små (lowercaseNouns-regelen). Setningsstruktur, ordvalg, rytme og tegnsetting er uendret.",

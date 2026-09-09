@@ -5,6 +5,7 @@
   "version": "2.0.0",
   "contentHash": "sha256:c23ab5fa6b0d3ca804f158be24466e4385e28657041b9b15edc3aeaeefb24b66",
   "languageProfileId": "brand-riksmaal",
+  "adaptationStatus": "orthography",
   "basedOnEditionId": "hamsun-markens-groede.original",
   "basedOnContentHash": "sha256:db67765fc4831f1266973af04debf38a2ea64493a0b6f430d0a9391a0eb572a2",
   "segments": [

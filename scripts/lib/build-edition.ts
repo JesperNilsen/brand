@@ -73,6 +73,11 @@ export function buildTrainingEdition(original: OriginalFile, rules: Rules): Buil
       version: rules.version,
       contentHash: editionContentHash(segments),
       languageProfileId: rules.languageProfileId,
+      // What the rule set does to the text, carried from the rules into the
+      // edition so the catalogue can state it without re-reading the rules.
+      // Omitted when the rule set does not declare it, so the v1 editions that
+      // predate the field still rebuild byte for byte.
+      ...(rules.adaptationStatus ? { adaptationStatus: rules.adaptationStatus } : {}),
       basedOnEditionId: original.edition.id,
       basedOnContentHash: original.edition.contentHash,
       segments,

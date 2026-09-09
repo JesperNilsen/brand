@@ -5,6 +5,7 @@
     "author": "Alexander L. Kielland",
     "title": "Noveletter",
     "publishedYear": 1879,
+    "originalLanguage": "da-NO",
     "source": {
       "author": "Alexander L. Kielland",
       "title": "Noveletter",
@@ -14,7 +15,9 @@
       "archiveId": "wikikilden:Novelletter",
       "retrievedAt": "2026-09-04",
       "provider": "Wikikilden (no.wikisource.org)",
+      "authorDeathYear": 1906,
       "license": "Public domain (Kielland d. 1906; verkets vernetid er utløpt, life+70). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "rightsStatus": "public-domain",
       "digitalEdition": "Samlede Værker, Første Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. To noveller er brukt: «Haabet er lysegrønt» (trykte sider 7–13, Wikikilden-siden Haabet_er_lysegrønt) og «Visne Blade» (trykte sider 13–16, Wikikilden-siden Visne_Blade). Åpningen av hver novelle er tatt med.",
       "verificationStatus": "agent-drafted",
       "editorialNotes": [

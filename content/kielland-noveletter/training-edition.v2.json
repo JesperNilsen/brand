@@ -5,6 +5,7 @@
   "version": "2.0.0",
   "contentHash": "sha256:e492070c9614c704b148c89561b2dc9a2199247751b5b18abb52e10f605f4a3f",
   "languageProfileId": "brand-riksmaal",
+  "adaptationStatus": "orthography",
   "basedOnEditionId": "kielland-noveletter.original",
   "basedOnContentHash": "sha256:b7d0ef61833c3045e4a5f36a5f46e89e5b867e2ecfe3a672b24d14c6d96a97b7",
   "segments": [
