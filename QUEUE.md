@@ -655,7 +655,8 @@ notes:
 - Se D17 og T-18.
 
 ## Q-011 · T-19: moduler med egen fremdrift
-status: review:queue/q-011-moduler
+status: done — merged as `a9f6244` (#46)
+result: TextModule + moduleId på segmentet, modules på TextEditionMeta, modulleddet i progressKey som et VALGFRITT ledd — et verk uten moduler gir samme bytes som før. splitIntoModules() i velgeren; bare en modul kan være «Skrevet». Regresjonsporten påstår den eksakte nøkkelstrengen og er vist å bite: gjør leddet ubetinget, og fem av åtte tilfeller blir røde. De fire pakkene kom uendret ut — catalog.generated.ts byte-identisk. Merkings-e2e-en er utsatt til Enten–Eller, se notatet i posten.
 lane: brand-ui
 
 acceptance:
