@@ -604,7 +604,8 @@ notes:
 - Se D17 og T-17.
 
 ## Q-010 · Verksmetadata rettighetsvurderingen hviler på
-status: review:queue/q-010-rettighetsmetadata
+status: done — merged as `6659436` (#43)
+result: authorDeathYear + rightsStatus (+ valgfri rightsBasis) på SourceAttribution, originalLanguage på Work, adaptationStatus på TextEditionMeta båret fra regelsettet gjennom buildTrainingEdition. Attribusjonslinjen står nå på skriveflaten, ikke bare på /om. Portene ligger som rene funksjoner i scripts/lib/rights.ts (samme form som shelfProblems/reviewProblems), med seks tilfeller vist å feile — inkludert et public-domain-krav over en forfatter død etter 1955 uten skrevet rightsBasis. Attribusjonslinjen har to porter: enhetstest på setningen for hvert verk, og en e2e vist å bli rød når <p>-en fjernes fra SessionView. Ingen contentHash beveget seg.
 lane: brand-content
 
 acceptance:
