@@ -720,3 +720,54 @@ avhenger av den redaksjonelle lesningen på samme måte som Q-005, og T-21 skal
 ikke gjøres før prosakjeden står. **Ingen av de 25 verkene importeres før Q-009,
 Q-010 og Q-011 er landet** — deretter *Sult*, *Gift*, *Et dukkehjem*, i den
 rekkefølgen.
+
+## Q-012 · En publisert treningsutgave kan ikke bytte original i det stille
+status: ready
+lane: brand-content
+
+acceptance:
+`scripts/import/build-training-edition.ts` skal nekte å skrive en
+`training-edition.vN.json` som allerede finnes, dersom den nye `basedOnEditionId`
+er en annen enn den committede filens — med mindre man ber om det uttrykkelig.
+
+1. **Ny utgave: uendret.** Finnes ikke utfilen, er dagens oppførsel riktig og
+   skal stå — nyeste original er det en ny cut vil ha.
+2. **Eksisterende utgave: `basedOnEditionId` er låst.** Les den committede filen
+   først. Er `basedOnEditionId` en annen enn den `--original` (eller defaulten)
+   ville gi, avbryt med exit 1 og en melding som navngir begge, og som sier at
+   `--original <N>` reproduserer den gamle utgaven.
+3. **Én uttrykkelig vei ut**, for det tilfellet der ombasering faktisk er
+   ønsket: et flagg (`--rebase-original`) som må stå sammen med `--original`.
+   Aldri som default, aldri utledet.
+4. **Meldingen skal si hva som ville skjedd**, ikke bare at noe er galt: antall
+   segmenter som ville endret seg, og at `contentHash` ville flyttet seg.
+
+verify: `pnpm check:originals && pnpm check:fast`
+
+Porten er et nytt tilfelle i `scripts/check-originals_test.ts`, vist å feile før
+fiksen og passere etter: bygg `training-edition.v1.json` på nytt i en temp-kopi
+av en pakke som har to originaler, uten `--original`, og krev exit != 0 og at
+filen på disk er uendret. Filen dekker allerede «originalens tekst redigert i
+stedet for etterfulgt»; dette er søskentilfellet den mangler.
+
+notes:
+- **Dette skjedde 2026-09-09, under Q-010.** `--version 1` uten `--original` på
+  `kielland-noveletter` bygde v1 fra `original.v2` i stedet for
+  `kielland-noveletter.original`: 4 298 endrede linjer, ny `contentHash`, ny
+  `basedOnEditionId`. Reversert samme økt.
+- **`validate:content` fanger det ikke, og kan ikke.** Den bygger fra den
+  `basedOnEditionId` filen *nå* påstår, så den omskrevne filen validerer rent.
+  Det er ikke en feil i validatoren — den sjekker reproduserbarhet, og den
+  omskrevne filen ER reproduserbar. Den påstanden som endret seg, er hvilken
+  original utgaven hviler på, og ingen har den fra før.
+- **`review.json` ville fanget det for en lest utgave** (`reviewedContentHash`
+  går stalt), men ingen pakke har `review.json` ennå — det er Q-005, som er
+  blokkert. Så i praksis er det ingenting.
+- **Flagget finnes allerede.** `--original <N>` er implementert, og kommentaren
+  i skriptet advarer alt mot driften. Det som mangler er at noe håndhever den:
+  en advarsel i en kommentar er ikke en port. Dette er samme form som D8 og
+  D15 — en regel repoet allerede har skrevet ned, men ikke har satt en maskin
+  til å passe på.
+- Oppdaget bare ved å lese `git diff --stat` etter en rebuild. En endring på
+  4 298 linjer som ser ut som en formatering er nøyaktig den formen et
+  menneske scroller forbi.
