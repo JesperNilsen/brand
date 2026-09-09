@@ -157,10 +157,15 @@ export function migrateProgress(raw: unknown): ReadingProgress | null {
   ) {
     return null;
   }
+  // A record written before modules existed has no moduleId, and therefore
+  // recomputes to exactly the key it already carries. That is the whole
+  // migration for the four works that exist today: nothing.
+  const moduleId = typeof r.moduleId === "string" && r.moduleId ? r.moduleId : undefined;
   const key = progressKey({
     languageProfileId: r.languageProfileId,
     gameModeId: r.gameModeId,
     workId: r.workId,
+    moduleId,
   });
   // Missing rather than wrong: a record with no edition names none, the way a
   // pre-versioning session does. It is descriptive, so it is filled, not

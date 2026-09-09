@@ -655,7 +655,7 @@ notes:
 - Se D17 og T-18.
 
 ## Q-011 · T-19: moduler med egen fremdrift
-status: ready
+status: review:queue/q-011-moduler
 lane: brand-ui
 
 acceptance:
@@ -712,6 +712,20 @@ notes:
 - **Ikke-mål:** å innføre moduler i noen eksisterende pakke. De fire som finnes
   skal komme uendret ut på den andre siden; det er halve porten.
 - Se D17 og T-19.
+- **Merkings-e2e-en er utsatt, med operatørens beslutning 2026-09-09.** Posten
+  ber om en e2e som viser at én modul kan være «Skrevet» mens verket ikke er
+  det — men den forbyr samtidig å innføre moduler i noen eksisterende pakke, og
+  ingen modulbærende pakke finnes. De to kan ikke oppfylles samtidig i dag. De
+  tre veiene var: utsette e2e-en, lage en draft-fixturpakke med moduler, eller
+  gjøre Noveletters sju deler til moduler. Valget falt på å utsette.
+  **Gjelden:** e2e-en skrives sammen med det første verket som faktisk har
+  moduler (*Enten–Eller*), der den kan kjøre mot ekte data i stedet for en
+  oppdiktet pakke. Til da er merkingen dekket av enhetstester på
+  `splitIntoModules()` og av `data-module-done` på gruppen, som e2e-en vil
+  kunne gripe uendret.
+  **Regresjonsporten på fremdriftsnøkkelen — den risikable halvdelen — er
+  skrevet og vist å bite:** gjør modulleddet ubetinget, og fem av åtte
+  tilfeller i `tests/domain/progress-key.test.ts` blir røde.
 
 ---
 

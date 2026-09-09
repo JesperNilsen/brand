@@ -51,6 +51,7 @@ type RawEdition = {
   contentHash: string;
   languageProfileId?: string;
   adaptationStatus?: string;
+  modules?: Array<{ id: string; title: string; order: number; difficulty?: number }>;
   basedOnEditionId?: string;
   basedOnContentHash?: string;
   editorialNotes?: string[];
@@ -114,6 +115,10 @@ function editionMeta(edition: RawEdition, reviews: ReviewFile, drills?: DrillBan
   for (const [k, v] of Object.entries(publishedReviewFields(reviews[edition.id]))) {
     meta[k] = v;
   }
+  // Before the counts, and only when the edition has them: the chooser needs
+  // to name the parts of a four-hundred-segment work before deciding whether
+  // to fetch its text at all.
+  if (edition.modules) meta.modules = edition.modules;
   meta.segmentCount = segments.length;
   meta.wordCount = segments.reduce((n, s) => n + s.wordCount, 0);
   meta.file = `${ASSET_URL_PREFIX}/${assetName(edition)}`;

@@ -21,6 +21,9 @@
  *    produces from content/ right now, or an asset file nothing points at
  *  - a shelf in content/shelves.json that names a work the catalogue does not
  *    have, or a work that stands on no shelf at all
+ *  - an edition whose modules contradict its segments: a moduleId naming no
+ *    declared module, a half-modularised edition, modules that are not
+ *    contiguous in reading order, or a declared module with no segments
  *  - a work missing authorDeathYear, rightsStatus or originalLanguage, a
  *    training edition missing adaptationStatus, or a rights claim of public
  *    domain over an author who died after 1955 with no written basis
@@ -45,6 +48,7 @@ import { listOriginals, originalEditionId, readOriginal } from "./lib/originals"
 import { drillProblems } from "./lib/drills";
 import { loadShelves, shelfProblems } from "./lib/shelves";
 import { adaptationProblems, rightsProblems } from "./lib/rights";
+import { moduleProblems } from "./lib/modules";
 import { listLanguageProfiles } from "../src/domain/language/registry";
 import { getBaseRuleSet } from "../src/domain/language/base-rules";
 import { listTextFilters } from "../src/domain/text-filter";
@@ -109,6 +113,7 @@ type Segment = {
   order: number;
   text: string;
   part?: string;
+  moduleId?: string;
   label?: string;
   wordCount: number;
   difficulty?: number;
@@ -252,7 +257,13 @@ async function validatePack(pack: string) {
 
   type OriginalJson = {
     work: Record<string, unknown>;
-    edition: { id: string; workId: string; kind: string; segments: Segment[] };
+    edition: {
+      id: string;
+      workId: string;
+      kind: string;
+      modules?: { id: string; title: string; order: number }[];
+      segments: Segment[];
+    };
   };
   // Every original the pack has, oldest first. There is more than one whenever a
   // work has grown — more of the collection, a longer excerpt — because growing
@@ -293,6 +304,9 @@ async function validatePack(pack: string) {
   for (const problem of rightsProblems(original.work, source)) fail(pack, problem);
   for (const o of originals) {
     checkSegments(pack, o.edition.id, o.edition.segments);
+    for (const problem of moduleProblems(o.edition.id, o.edition.modules, o.edition.segments)) {
+      fail(pack, problem);
+    }
     checkContentHash(pack, o.edition.id, o.edition as unknown as { contentHash?: string; segments: Segment[] });
   }
 
@@ -391,6 +405,7 @@ async function validatePack(pack: string) {
       kind: string;
       languageProfileId?: string;
       adaptationStatus?: string;
+      modules?: { id: string; title: string; order: number }[];
       basedOnEditionId?: string;
       contentHash?: string;
       basedOnContentHash?: string;
@@ -411,6 +426,7 @@ async function validatePack(pack: string) {
     }
     if (!t.editorialNotes || t.editorialNotes.length === 0) fail(pack, `${f}: editorialNotes missing`);
     checkSegments(pack, t.id, t.segments);
+    for (const problem of moduleProblems(t.id, t.modules, t.segments)) fail(pack, problem);
     checkContentHash(pack, f, t);
     const source = originals.find((o) => o.edition.id === t.basedOnEditionId) ?? original;
     const originalHash = (source.edition as unknown as { contentHash?: string }).contentHash;

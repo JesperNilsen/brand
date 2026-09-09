@@ -172,8 +172,41 @@ export type TextSegment = {
    * naming the parts of an existing work does not create a new edition of it.
    */
   part?: string;
+  /**
+   * The module this segment belongs to, when the edition declares modules.
+   *
+   * Stricter than `part`, and for one reason: a module has its own progress.
+   * `part` is a free string with no identity, so two works can spell the same
+   * part differently and nothing can key on it; `moduleId` names a record in
+   * `TextEditionMeta.modules` with an id and an order. Where a pack has both,
+   * `part` stays as the display name.
+   *
+   * Not part of `contentHash`, for the same reason `part` is not: the hash
+   * covers `id`, `order` and `text`, so dividing an existing work into modules
+   * does not create a new edition of it.
+   */
+  moduleId?: string;
   label?: string;
   wordCount: number;
+  difficulty?: 1 | 2 | 3 | 4 | 5;
+};
+
+/**
+ * A named division of a work that carries its own progress.
+ *
+ * The case that forces it is *Enten–Eller*: it is one work in the catalogue,
+ * but Diapsalmata has to be finishable while Forførerens Dagbog is not. D14 put
+ * progress on the work; a module is one more level, and it has to exist before
+ * such a work is imported rather than after — a model widened after text is
+ * imported changes text that has already been written against (D15).
+ *
+ * `difficulty` is optional because it is usually derivable: absent, the module
+ * takes the difficulty of the segments it contains.
+ */
+export type TextModule = {
+  id: string;
+  title: string;
+  order: number;
   difficulty?: 1 | 2 | 3 | 4 | 5;
 };
 
@@ -232,6 +265,14 @@ export type TextEditionMeta = {
    * that changes gets a new name rather than a new copy under an old one.
    */
   file: string;
+  /**
+   * The modules this edition is divided into, in reading order.
+   *
+   * On the catalogue rather than in the asset: a chooser has to name the parts
+   * of a four-hundred-segment work before deciding whether to fetch its text.
+   * Which segment belongs to which module rides with the segment.
+   */
+  modules?: TextModule[];
   /** The drill bank cut from this edition, when it has one. */
   drills?: DrillBankMeta;
   /**
@@ -336,12 +377,20 @@ export type UserPreferences = {
 };
 
 export type ReadingProgress = {
-  /** profile + edition + mode + work, see progressKey(). */
+  /** profile + mode + work (+ module), see progressKey(). */
   key: string;
   workId: string;
   editionId: string;
   languageProfileId: string;
   gameModeId: string;
+  /**
+   * The module this place is inside, when the work has modules.
+   *
+   * Absent for every work that has none, which is all four today — and that
+   * absence is load-bearing: it is what keeps their keys byte-identical to the
+   * ones already on readers' disks. See progressKey().
+   */
+  moduleId?: string;
   nextSegmentId: string;
   completedSegmentIds: string[];
   /** ISO timestamp. */
@@ -432,6 +481,17 @@ export function progressKey(input: {
    * typing and should not have to know it left the key.
    */
   editionId?: string;
+  /**
+   * The module, when the work has them. Appended only when present — a work
+   * without modules must produce the key it produced before modules existed,
+   * because that key is already on readers' disks. An unconditional element
+   * (an empty string, a placeholder) would change every one of those keys and
+   * lose every reader's place at once, which is why the regression test on
+   * this asserts the exact string rather than "a key".
+   */
+  moduleId?: string;
 }): string {
-  return [input.languageProfileId, input.gameModeId, input.workId].join("::");
+  const parts = [input.languageProfileId, input.gameModeId, input.workId];
+  if (input.moduleId) parts.push(input.moduleId);
+  return parts.join("::");
 }

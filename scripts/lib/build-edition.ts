@@ -17,11 +17,13 @@ export type OriginalFile = {
     id: string;
     workId: string;
     contentHash?: string;
+    modules?: Array<{ id: string; title: string; order: number; difficulty?: number }>;
     segments: Array<{
       id: string;
       order: number;
       text: string;
       part?: string;
+      moduleId?: string;
       label?: string;
       difficulty?: number;
     }>;
@@ -73,6 +75,10 @@ export function buildTrainingEdition(original: OriginalFile, rules: Rules): Buil
       version: rules.version,
       contentHash: editionContentHash(segments),
       languageProfileId: rules.languageProfileId,
+      // Modules belong to the work, not to a rule set, so they come across
+      // from the original unchanged — a training edition divides the same text
+      // the same way.
+      ...(original.edition.modules ? { modules: original.edition.modules } : {}),
       // What the rule set does to the text, carried from the rules into the
       // edition so the catalogue can state it without re-reading the rules.
       // Omitted when the rule set does not declare it, so the v1 editions that
