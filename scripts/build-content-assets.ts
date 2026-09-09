@@ -20,6 +20,7 @@ import { editionContentHash } from "./lib/hash";
 import { loadReviews, publishedReviewFields, type ReviewFile } from "./lib/review";
 import { loadDrillBanks, drillAssetItems, type DrillBank } from "./lib/drills";
 import { listOriginals, readOriginal } from "./lib/originals";
+import { loadShelves } from "./lib/shelves";
 
 const contentRoot = path.resolve(process.cwd(), "content");
 const assetsDir = path.resolve(process.cwd(), "public", "content", "editions");
@@ -140,6 +141,11 @@ export async function buildContentAssets(): Promise<BuildOutput> {
     .map((d) => d.name)
     .sort();
 
+  // Shelves span packs, so they are read once rather than per pack. Read
+  // before the loop so a malformed shelves.json fails before any asset bytes
+  // are produced.
+  const shelves = await loadShelves(contentRoot);
+
   const packs: unknown[] = [];
   const works: unknown[] = [];
   const assets: BuiltAsset[] = [];
@@ -231,11 +237,13 @@ export async function buildContentAssets(): Promise<BuildOutput> {
     " * `public/content/editions/` and is fetched per edition, so the bundle does",
     " * not grow with the corpus.",
     " */",
-    'import type { ContentPack, Work } from "../types";',
+    'import type { ContentPack, Shelf, Work } from "../types";',
     "",
     `export const CONTENT_PACKS: ContentPack[] = ${JSON.stringify(packs, null, 2)};`,
     "",
     `export const WORKS: Work[] = ${JSON.stringify(works, null, 2)};`,
+    "",
+    `export const SHELVES: Shelf[] = ${JSON.stringify(shelves, null, 2)};`,
     "",
   ].join("\n")}`;
 

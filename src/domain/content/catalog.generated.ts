@@ -5,7 +5,7 @@
  * `public/content/editions/` and is fetched per edition, so the bundle does
  * not grow with the corpus.
  */
-import type { ContentPack, Work } from "../types";
+import type { ContentPack, Shelf, Work } from "../types";
 
 export const CONTENT_PACKS: ContentPack[] = [
   {
@@ -432,6 +432,40 @@ export const WORKS: Work[] = [
         "wordCount": 25669,
         "file": "/content/editions/kielland-noveletter.training.v3.6f32ade39951.json"
       }
+    ]
+  }
+];
+
+export const SHELVES: Shelf[] = [
+  {
+    "id": "norske-klassikere",
+    "title": "Norske klassikere",
+    "description": "Ibsen, Hamsun, Kielland, Undset, Lie, Collett og beslektede forfattere.",
+    "workIds": [
+      "ibsen-brand",
+      "hamsun-markens-groede",
+      "kielland-gift",
+      "kielland-noveletter"
+    ]
+  },
+  {
+    "id": "danske-klassikere",
+    "title": "Danske klassikere",
+    "description": "Bang, Pontoppidan, Jacobsen, Holberg og beslektede forfattere.",
+    "workIds": []
+  },
+  {
+    "id": "ide-og-tro",
+    "title": "Idé og tro",
+    "description": "Kierkegaard, Grundtvig, Georg Brandes og andre filosofiske, teologiske eller idéhistoriske tekster.",
+    "workIds": []
+  },
+  {
+    "id": "korte-tekster",
+    "title": "Korte tekster",
+    "description": "Noveller, essays, taler, utdrag og utvalgte eventyr — egnet for korte økter.",
+    "workIds": [
+      "kielland-noveletter"
     ]
   }
 ];

@@ -245,6 +245,27 @@ export type ContentPack = {
   status: ContentPackStatus;
 };
 
+/**
+ * A curated selection of works, in curated order.
+ *
+ * A shelf is not an owner. A `ContentPack` owns its works (`workIds`) and a
+ * work belongs to exactly one; a shelf is an editorial grouping the same work
+ * can appear on more than once — Georg Brandes stands on «Idé og tro» and on
+ * «Korte tekster» from the catalogue's first day. That is why membership lives
+ * here, pointing at `workId`, rather than as a field on `Work`: a field would
+ * force a choice the catalogue does not want to make, and a `tags` entry has
+ * neither a display title nor a curated order.
+ *
+ * Adding a work to a second shelf adds a `workId` to a list. It never adds a
+ * second content entry — see `docs/spec/CORPUS.md`, «Hyller», and D17.
+ */
+export type Shelf = {
+  id: string;
+  title: string;
+  description: string;
+  workIds: string[];
+};
+
 // ---------------------------------------------------------------------------
 // User data (persisted)
 // ---------------------------------------------------------------------------

@@ -10,13 +10,14 @@
  */
 import type {
   ContentPack,
+  Shelf,
   TextEdition,
   TextEditionKind,
   TextEditionMeta,
   TextSegment,
   Work,
 } from "../types";
-import { CONTENT_PACKS, WORKS } from "./catalog.generated";
+import { CONTENT_PACKS, SHELVES, WORKS } from "./catalog.generated";
 
 const packs: ContentPack[] = CONTENT_PACKS;
 const works = new Map<string, Work>(WORKS.map((w) => [w.id, w]));
@@ -27,12 +28,53 @@ for (const work of WORKS) {
   packWorks.set(work.contentPackId, list);
 }
 
+const shelvesByWork = new Map<string, Shelf[]>();
+for (const shelf of SHELVES) {
+  for (const workId of shelf.workIds) {
+    const list = shelvesByWork.get(workId) ?? [];
+    list.push(shelf);
+    shelvesByWork.set(workId, list);
+  }
+}
+
 export function listContentPacks(): ContentPack[] {
   return packs.filter((p) => p.status === "active");
 }
 
 export function getContentPack(id: string): ContentPack | undefined {
   return packs.find((p) => p.id === id);
+}
+
+/**
+ * The shelves worth showing, in curated order.
+ *
+ * Filtered the way `listContentPacks()` filters on status, and for the same
+ * kind of reason: «Danske klassikere» and «Idé og tro» are declared before the
+ * first import lands on them, so that the curated order is already settled when
+ * it does — but an empty shelf is a card with nothing behind it. Declaring the
+ * shelf early and hiding it while it is empty are both deliberate; the rule
+ * lives here so no future surface has to remember it.
+ *
+ * `getShelf()` still resolves an empty shelf: it exists, it is just not shown.
+ */
+export function listShelves(): Shelf[] {
+  return SHELVES.filter((s) => s.workIds.length > 0);
+}
+
+export function getShelf(id: string): Shelf | undefined {
+  return SHELVES.find((s) => s.id === id);
+}
+
+/**
+ * Every shelf a work stands on, in catalogue order.
+ *
+ * A work can stand on more than one without its content entry being
+ * duplicated — that is the whole point of the shelf being its own axis rather
+ * than a field on `Work`. Unknown ids get an empty list rather than a throw:
+ * the caller is asking where something is shelved, not asserting it exists.
+ */
+export function listShelvesForWork(workId: string): Shelf[] {
+  return shelvesByWork.get(workId) ?? [];
 }
 
 export function listWorks(packId: string): Work[] {

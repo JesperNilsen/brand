@@ -19,6 +19,8 @@
  *    falls under the per-kind length floor
  *  - a generated catalog or edition asset that is not what `pnpm build:content`
  *    produces from content/ right now, or an asset file nothing points at
+ *  - a shelf in content/shelves.json that names a work the catalogue does not
+ *    have, or a work that stands on no shelf at all
  *
  * Warns (exit 0) on:
  *  - training-edition passages outside the 35-120 word range that
@@ -38,6 +40,7 @@ import { baseOverrides, type Rules } from "./lib/rules";
 import { loadRules } from "./lib/load-rules";
 import { listOriginals, originalEditionId, readOriginal } from "./lib/originals";
 import { drillProblems } from "./lib/drills";
+import { loadShelves, shelfProblems } from "./lib/shelves";
 import { listLanguageProfiles } from "../src/domain/language/registry";
 import { getBaseRuleSet } from "../src/domain/language/base-rules";
 import { listTextFilters } from "../src/domain/text-filter";
@@ -106,6 +109,9 @@ type Segment = {
   wordCount: number;
   difficulty?: number;
 };
+
+/** Every work the packs declare, filled as they are validated. See checkShelves(). */
+const catalogWorkIds: string[] = [];
 
 const problems: string[] = [];
 function fail(pack: string, msg: string) {
@@ -259,6 +265,7 @@ async function validatePack(pack: string) {
     fail(pack, `work ${workId} not listed in pack.workIds`);
   }
   if (original.work.contentPackId !== pack) fail(pack, `work.contentPackId != ${pack}`);
+  catalogWorkIds.push(workId);
   for (const [i, ref] of originalRefs.entries()) {
     const o = originals[i];
     if (o.edition.kind !== "original") fail(pack, `${ref.file} edition.kind must be original`);
@@ -546,6 +553,23 @@ async function checkGeneratedAssets() {
   }
 }
 
+/**
+ * Shelves are the one list in content/ that spans packs, so they cannot be
+ * checked inside validatePack(): «står dette verket på noen hylle» is only
+ * answerable once every pack has been read.
+ */
+async function checkShelves() {
+  const where = "shelves";
+  let shelves;
+  try {
+    shelves = await loadShelves(contentRoot);
+  } catch (e) {
+    fail(where, (e as Error).message);
+    return;
+  }
+  for (const problem of shelfProblems(shelves, catalogWorkIds)) fail(where, problem);
+}
+
 async function main() {
   const entries = await readdir(contentRoot);
   const packs: string[] = [];
@@ -561,6 +585,7 @@ async function main() {
       fail(p, `unreadable: ${(err as Error).message}`);
     }
   }
+  await checkShelves();
   await checkGeneratedAssets();
 
   for (const [key, why] of KNOWN_LENGTH_DEVIATIONS) {
