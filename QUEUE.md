@@ -738,7 +738,7 @@ Q-010 og Q-011 er landet** — deretter *Sult*, *Gift*, *Et dukkehjem*, i den
 rekkefølgen.
 
 ## Q-012 · En publisert treningsutgave kan ikke bytte original i det stille
-status: ready
+status: review:queue/q-012-original-lock
 lane: brand-content
 
 acceptance:
