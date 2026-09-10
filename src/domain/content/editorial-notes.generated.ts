@@ -660,6 +660,11 @@ export const EDITORIAL_NOTES: Record<string, string[]> = {
     "Beholdt: «skulde» — Historisk verbform som bevares i originaltekst (standarden, vedtak 4B); overstyrer grunnreglenes «skulde» → «skulle» (D18).",
     "Beholdt: «blev» — Historisk verbform som bevares i originaltekst (standarden, vedtak 4B); overstyrer grunnreglenes «blev» → «ble» (D18)."
   ],
+  "hamsun-sult.original": [
+    "De fire stykkene er satt sammen til source/sult-komplett.txt i rekkefølge, fordi segments.json/build-original.ts bare støtter én sourceFile per pakke. Delfilene sult-01..04.txt er beholdt uendret ved siden av.",
+    "Stykkene er MODULER, ikke part-strenger: dette er den første utgaven i katalogen der inndelingen bærer egen fremdrift (Q-011).",
+    "Overskriftslinjene «FØRSTE STYKKE» osv. står i kildefilen, men inngår ikke i noe segment — de er modultitler, ikke tekst. build-original.ts søker fra en markør som bare går framover, så linjer mellom segmenter blir stående ubrukt."
+  ],
   "ibsen-brand.original": [
     "Originaltekst etter Gyldendals femtende oplag (1903), Ibsens egen ortografi. Bevart uendret; se work.source for transkripsjonskonvensjoner."
   ],
