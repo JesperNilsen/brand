@@ -788,3 +788,162 @@ notes:
 - Oppdaget bare ved å lese `git diff --stat` etter en rebuild. En endring på
   4 298 linjer som ser ut som en formatering er nøyaktig den formen et
   menneske scroller forbi.
+
+---
+
+## Q-013 · T-02: hva som faktisk går galt, som aggregat
+status: ready
+lane: brand-main
+
+acceptance:
+En lagret økt bærer hvilke **måltegn** som ble skrevet feil, ikke bare hvor
+mange feil det ble. `SessionResult` går til `schemaVersion: 5` og får
+
+```ts
+/** Avvik per måltegn, utledet ved øktslutt. Aldri rå tastetrykk. */
+misses?: CharacterMiss[];   // { expected: string; typed: string; count: number }
+opportunities?: CharacterCount[]; // { char: string; count: number }
+```
+
+1. **Utledet, ikke logget.** Tallene regnes ut ved øktslutt fra `targetText` og
+   `typedText` — de samme to strengene `countCharacters()` alt sammenligner —
+   og **ikke** fra `eventLog`. `DATA_MODEL.md` forbyr å lagre rå tastetrykk for
+   evig; den forbyr ikke aggregater, den sier eksplisitt at aggregerte
+   øktresultater er tilstrekkelig. Denne posten skal derfor **ikke** endre den
+   linjen i spec-en, og en løsning som må lagre `TypingEvent` er feil løsning.
+2. **Både avvik og anledninger.** `opportunities` er antall ganger hvert tegn
+   sto i måltekstene. Uten den er `misses` ubrukelig — se Q-014 punkt 1.
+   Begge telles over de samme segmentene økten faktisk dekket.
+3. **Normalisering, én gang.** Tellingen skjer på `normalizeText`-formen, samme
+   som motoren sammenligner på. Ellers rapporteres avvik leseren aldri gjorde.
+4. **Tekstformen står på posten alt.** `textFilterId` er allerede lagret; en
+   økt skrevet under en form som fjerner tegn har færre anledninger, og det er
+   riktig — ingen egen håndtering trengs, men det skal stå i doc-kommentaren.
+5. **Migrasjon som ikke gjetter.** Poster fra skjema 1–4 har ingen måling.
+   Feltene skal være **fraværende**, ikke tomme lister, og lesesiden må kunne
+   skille «ingen feil» fra «ikke målt» — samme regel som `editionVersion:
+   "unknown"` i D-en over uforanderlige utgaver: aldri gjett proveniens for noe
+   som ikke kan identifiseres.
+
+verify: `pnpm check:fast`
+
+Porten må vises å bite på punkt 5, som er den ene måten dette blir en løgn:
+- en enhetstest som migrerer en ekte skjema-4-post og krever at `misses` er
+  `undefined` — **ikke** `[]`. Testen skal FEILE mot en migrasjon som setter
+  tom liste, og det skal vises i posten når den lukkes.
+- en test som skriver en kjent mål/skrevet-streng med kjente avvik (æ→a, ø→o,
+  komma→punktum) og påstår de eksakte tellingene, ikke bare at det er noen.
+
+notes:
+- Utgangspunktet er `countCharacters()` i `src/domain/engine/metrics.ts`, som
+  alt går posisjon for posisjon gjennom nøyaktig de to strengene dette trenger.
+  Dette er en utvidelse av den løkken, ikke en ny mekanisme.
+- **Hvorfor aggregat holder:** T-02 skrev det selv — «det holder å telle avvik
+  per måltegn ved øktslutt». Det er grunnen til at denne posten ikke er en
+  reversering av en spec-beslutning, slik den ble antatt å være så sent som
+  2026-09-10. Sjekk den antakelsen før noen skriver om `DATA_MODEL.md`.
+- **Skjemabump-formen finnes:** `schemaVersion: 4` la til `pausedMs` og
+  `pauseCount` med kommentaren «Always 0 on records from schema 1 to 3, which is
+  a fact rather than a guess». Her er svaret et annet — fravær, ikke null —
+  fordi null feil er en påstand og «ikke målt» ikke er det. Den forskjellen er
+  hele posten.
+- Ikke vis noe i grensesnittet her. Q-014 eier visningen, og den har sin egen
+  felle.
+
+---
+
+## Q-014 · T-02: vis hva som bør øves, uten å lyve om rangeringen
+status: blocked:Q-013 — feltene finnes ikke ennå
+lane: brand-ui
+
+acceptance:
+Resultatsiden og historikken viser hvilke tegn og former som faktisk går galt.
+
+1. **Rangert på rate, aldri på antall.** Et tegn rangeres på
+   `misses / opportunities`, ikke på `misses`. En ren opptelling setter `e`, `r`
+   og mellomrom øverst i enhver liste fordi de er de vanligste tegnene i norsk —
+   listen ville da vært den samme for alle lesere, i alle økter, uansett hva de
+   gjorde feil. Det er ikke en dårlig sortering, det er en visning som aktivt
+   lærer bort feil ting.
+2. **Gulv på anledninger.** Et tegn med to anledninger og ett avvik er ikke
+   «50 % feil»; det er for lite data. Under gulvet vises tegnet ikke. Gulvet er
+   ett tall, satt ett sted, med begrunnelsen skrevet ved siden av.
+3. **Æ, ø, å og tegnsetting navngis.** Det er den klassen T-02 finnes for, og
+   den skal være lesbar som en klasse, ikke bare som enkelttegn i en liste.
+4. **«Ikke målt» sier «ikke målt».** En økt fra før Q-013 viser at den ikke ble
+   målt. Den viser aldri en tom liste som kan leses som en feilfri økt.
+5. **Rolig.** `docs/spec/PRODUCT.md` sier teksten skal dominere skjermen, og
+   `check:design` holder tallene i DESIGN.md. Dette er en blokk på
+   resultatsiden, ikke et dashbord, og den skal gjennom den porten som alt
+   annet.
+
+verify: `pnpm check:fast`
+
+Porten som må vises å bite er punkt 1:
+- en test der `e` har 20 avvik på 4 000 anledninger og `ø` har 1 på 2 —
+  altså under gulvet — og `å` har 6 på 30. Rangeringen skal gi `å` først, `e`
+  et sted langt nede, og `ø` skal ikke vises i det hele tatt. Den testen skal
+  FEILE mot en sortering på rått antall, og det skal vises når posten lukkes.
+
+notes:
+- Codex' motargument i CEO-reviewen er premisset for både denne og Q-013:
+  appen måler aggregert WPM og viser en flat liste, uten noe som forteller hva
+  du bør øve på — så mer tekst kan være en stedfortreder for at øvingssløyfen
+  mangler. Denne posten er den halvdelen som svarer på det.
+- Uken med faktisk bruk (D10 i CEO-planen) skulle avgjøre om denne eller T-01
+  kom først. Den uken ble aldri felt ned i noen beslutning; operatøren valgte
+  øvingssløyfen først 2026-09-10 uten den. Skriv det ned, ikke lat som porten
+  ble passert.
+
+---
+
+## Q-015 · T-02 + T-12: repetisjonskøen som en tredje kilde til Kortform
+status: blocked:Q-013, Q-014
+lane: brand-main
+
+acceptance:
+Én modus, flere kilder. `drillMode` bygger allerede en økt av `DrillItem[]` som
+kommer inn på `PlanInput`; den skal fortsatt ikke vite hvor de kom fra.
+
+1. **Kildene er tre, modusen er én.** T-12 sier det rett ut: «Bygg dem som én
+   modus med to kilder, ikke som to moduser.» Kildene blir (a) utgavens bank,
+   som i dag, (b) biter utledet av dine egne avvik fra Q-013, (c) passasjer du
+   selv har merket mens du skriver. `src/domain/engine/` skal ikke lære at noen
+   av dem finnes, på samme måte som den ikke vet at kortformer finnes.
+2. **Merking mens du skriver.** En passasje kan merkes i skriveflaten og havner
+   i køen. Merkingen må ikke ta fokus fra skrivefeltet — D13 sier skrivefeltet
+   aldri er tomt, og en merkehandling som stjeler fokus bryter økten.
+3. **Ordrett, som alt annet.** En utledet eller merket bit er fortsatt en
+   ordrett del av utgaven. `validate:content` nekter alt i dag en bank hvis
+   tekst ikke står i utgaven den ligger ved siden av, og det er den regelen
+   rettighetene hviler på — en bit som er satt sammen, forkortet eller
+   omskrevet bryter den. Dette er postens harde grense.
+4. **Én utgave per økt.** `drill.ts` sier hvorfor: en plan bærer én `editionId`
+   og én `editionContentHash`, og en økt som blandet verk kunne ikke ærlig si
+   hvilken tekst den ble skrevet mot. Køen kan inneholde biter fra flere
+   utgaver; én økt kan ikke.
+5. **Køen overlever et utgavebump.** Samme problem som T-10, samme svar: en
+   merket bit peker på verket og segmentet, og posten bærer `editionId` og
+   `contentHash` slik at en bit som ikke lenger står ordrett i den gjeldende
+   utgaven kan **oppdages** og legges bort, ikke skrives mot i det stille.
+
+verify: `pnpm check:fast`
+
+To porter, begge må vises å bite:
+- en test som legger en bit i køen, endrer utgaven under den, og krever at
+  biten blir avvist eller merket foreldet — aldri servert som om ingenting
+  hadde skjedd. Dette er `edition-drift.ts`-formen, som alt finnes.
+- en test som forsøker å legge en ikke-ordrett bit i køen (ett ord byttet) og
+  krever avvisning. Den skal feile mot en implementasjon som stoler på
+  kallstedet.
+
+notes:
+- **Maskineriet finnes nesten helt.** Q-003 bygde kortformbanken, `drill.ts`
+  bygger en økt av den, `drill-loader.ts` henter og hash-verifiserer den, og
+  `scripts/build-drills.ts` utleder biter av en utgave. Denne posten legger til
+  hvor bitene kommer fra, ikke hva de er.
+- **Rekkefølgen er ikke fri.** Q-013 må ligge først, ellers finnes ikke avvikene
+  kilde (b) leses av. Q-014 bør ligge først fordi rate-mot-antall-fellen er den
+  samme her: en kø fylt på rått antall avvik blir en kø full av `e`.
+- Etter denne er korpuslinjen neste: *Sult* (halvferdig på
+  `import/hamsun-sult`), så *Gift*, så *Et dukkehjem*.

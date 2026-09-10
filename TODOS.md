@@ -27,6 +27,11 @@ siste linje fra den arkiverte kildeteksten. Å utvide betyr å hente flere sider
 Ingen kodeendring kreves.
 
 **Avhenger av:** D11 (redaksjonell diff-flyt) og uken med faktisk bruk (D10).
+**Merk 2026-09-10:** T-01 tapte mot øvingssløyfen. Operatøren valgte T-02/T-12
+først (Q-013…Q-015), og korpuslinjen — *Sult*, *Gift*, *Et dukkehjem* — kommer
+etter dem. **Uken med faktisk bruk (D10) ble aldri felt ned i en beslutning**;
+valget ble tatt uten den porten. Ikke let etter den i `DECISIONS.md`.
+
 
 **Merk 2026-09-08:** Q-006 gjør ETT verk komplett (`kielland-noveletter`, hele
 *Noveletter*). T-01 er fortsatt de tre andre — Ibsen, Hamsun og Gift står
@@ -55,6 +60,20 @@ måltegn ved øktslutt.
 
 **Avhenger av:** uken med faktisk bruk (D10) avgjør om denne eller T-01 kommer
 først.
+**Køført 2026-09-10 som Q-013 (måling), Q-014 (visning) og Q-015 (repetisjonskø,
+sammen med T-12).** Operatøren valgte øvingssløyfen foran mer korpus.
+
+**Premisset over er rettet:** posten sa dette var «en bevisst reversering av en
+spec-beslutning». Det er det ikke. `DATA_MODEL.md` forbyr å lagre **rå
+tastetrykk** for evig og sier i samme setning at aggregerte øktresultater er
+tilstrekkelig. Avvik per måltegn utledet ved øktslutt er et aggregat, og T-02
+skrev selv at det holder. Spec-en skal derfor ikke endres — og en løsning som
+må lagre `TypingEvent` for å virke, er feil løsning.
+
+**Porten som ble gitt til Q-014 er den som betyr noe:** rangering på rate
+(avvik / anledninger), aldri på antall. En opptelling setter `e`, `r` og
+mellomrom øverst for enhver leser i enhver økt.
+
 
 ---
 
@@ -228,6 +247,13 @@ igjen til den sitter.
 utvalg ekte utgavesegmenter i stedet for av hele utgaven. Kilden til utvalget
 er det eneste som skiller dem — feil du gjorde, eller passasjer du valgte. Bygg
 dem som én modus med to kilder, ikke som to moduser.
+**Køført 2026-09-10 som Q-015**, sammen med T-02s repetisjonskø, som posten selv
+ba om. Kildene er tre, ikke to — utgavens bank finnes alt (Q-003) — og
+`drillMode` tar allerede `DrillItem[]` inn på `PlanInput`, så modusen slipper å
+lære at det finnes flere kilder. Den harde grensen er punkt 3 i posten: en
+merket bit er fortsatt ordrett utgavetekst, fordi det er den regelen
+rettighetene hviler på.
+
 
 ---
 
