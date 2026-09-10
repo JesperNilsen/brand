@@ -738,7 +738,8 @@ Q-010 og Q-011 er landet** — deretter *Sult*, *Gift*, *Et dukkehjem*, i den
 rekkefølgen.
 
 ## Q-012 · En publisert treningsutgave kan ikke bytte original i det stille
-status: review:queue/q-012-original-lock
+status: done — merged as `23ea68b` (#48)
+result: byggeren nekter å skrive en eksisterende training-edition.vN.json fra en annen original enn den committede filen navngir; --rebase-original (som må stå sammen med --original) er den ene veien ut. Meldingen navngir begge utgavene, antall segmenter som ville fått annen tekst, størrelsesendringen og begge contentHash-ene. Porten er sju tilfeller i check-originals_test.ts som driver BYGGEREN direkte — validate:content er feil instrument for denne feilen, og det er funnet. Fem av sju vist å feile mot byggeren før fiksen.
 lane: brand-content
 
 acceptance:
