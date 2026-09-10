@@ -1,0 +1,8 @@
+# Keep git from guessing. A raw NUL byte in a .ts file once made metrics.ts
+# classify as binary, so its diff printed "Bin ... bytes" and the change merged
+# unreviewed. `text` normalises line endings; `diff` forces a textual diff even
+# if a stray control byte gets in again, so the next one cannot hide.
+*.ts text diff
+*.tsx text diff
+*.json text diff
+*.md text diff
