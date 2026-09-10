@@ -16,7 +16,15 @@
  *
  *   pnpm check:originals
  */
-import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -126,6 +134,104 @@ const cases: { name: string; mutate: (dir: string) => void; expects: RegExp | nu
   },
 ];
 
+/**
+ * The other half: the BUILDER must refuse to rebase a published edition.
+ *
+ * The cases above all run `validate:content`, which is the wrong instrument for
+ * this one — and that is the finding, not an inconvenience. `validate:content`
+ * rebuilds a training edition from whichever original the file names, so a file
+ * rebased onto a newer original validates perfectly clean: it really is
+ * reproducible, from the text it now claims. The claim that changed is which
+ * text that is, and nothing downstream holds the old value to compare against.
+ *
+ * So the gate has to sit in the builder, and these cases drive the builder
+ * directly and then check the file on disk.
+ */
+type BuilderCase = {
+  name: string;
+  /** Arguments after `--pack <pack> --version 1`. */
+  args: string[];
+  /** Refusal expected: the message must match. `null` means it must succeed. */
+  expects: RegExp | null;
+  /** After a refusal the committed file must be byte-identical. */
+  keepsFile?: boolean;
+  /**
+   * Output a SUCCESS case must produce.
+   *
+   * Without it the two success cases pass against the old builder too — it
+   * rebased happily, which is the whole bug. Requiring the builder to announce
+   * the rebase is what makes them discriminate.
+   */
+  says?: RegExp;
+  /** Extra setup beyond the second original, and the file the case writes. */
+  setup?: (dir: string) => void;
+  writes?: string;
+};
+
+/** A rules.v2.json in the temp tree, so a NEW edition can be cut there. */
+function addSecondRules(dir: string) {
+  const file = join(dir, PACK, "rules.v1.json");
+  const rules = JSON.parse(readFileSync(file, "utf8")) as Record<string, unknown>;
+  rules.editionId = "ibsen-brand.training.v2";
+  rules.version = "2.0.0";
+  writeFileSync(join(dir, PACK, "rules.v2.json"), `${JSON.stringify(rules, null, 2)}\n`);
+}
+
+const builderCases: BuilderCase[] = [
+  {
+    // Requirement 1, and the reason the guard is conditional: a NEW cut still
+    // takes the newest original without being asked twice. A lock that also
+    // caught the first build of an edition would make every new cut a
+    // two-command job for no gain.
+    name: "a new edition still takes the newest original with no extra flag",
+    args: [],
+    expects: null,
+    setup: addSecondRules,
+    writes: join(PACK, "training-edition.v2.json"),
+    says: /wrote .*training-edition\.v2\.json.*from original\.v2\.json/,
+  },
+  {
+    // The one that bit on 2026-09-09, in exactly the shape it bit.
+    name: "rebuilding a published edition picks up a newer original by default",
+    args: [],
+    expects: /finnes allerede og hviler på [\s\S]*ville skrevet den fra/,
+    keepsFile: true,
+  },
+  {
+    name: "the refusal says what would have changed, not just that something is wrong",
+    args: [],
+    expects: /segmenter ville fått annen tekst[\s\S]*contentHash ville flyttet seg/,
+    keepsFile: true,
+  },
+  {
+    name: "naming the newer original explicitly is still not consent to rebase",
+    args: ["--original", "2"],
+    expects: /finnes allerede og hviler på/,
+    keepsFile: true,
+  },
+  {
+    name: "--rebase-original without --original is refused",
+    args: ["--rebase-original"],
+    expects: /må stå sammen med --original/,
+    keepsFile: true,
+  },
+  {
+    // The documented way to reproduce a published edition: byte-identical.
+    name: "--original 1 reproduces the committed edition exactly",
+    args: ["--original", "1"],
+    expects: null,
+    keepsFile: true,
+  },
+  {
+    // And the one deliberate way through, for when a rebase is the point.
+    name: "--original 2 --rebase-original rebases, and says so",
+    args: ["--original", "2", "--rebase-original"],
+    expects: null,
+    keepsFile: false,
+    says: /rebaser .*training-edition\.v1\.json: .*original → .*original\.v2/,
+  },
+];
+
 function tempTree(): string {
   const dir = mkdtempSync(join(tmpdir(), "check-originals-"));
   for (const d of ["content", "public", "src", "scripts"]) {
@@ -183,14 +289,73 @@ for (const c of cases) {
   }
 }
 
+// ---------------------------------------------------------------------------
+
+console.log("\ncheck-originals_test: proving a published edition cannot change original\n");
+
+const trainingV1 = join(PACK, "training-edition.v1.json");
+
+for (const c of builderCases) {
+  const dir = tempTree();
+  try {
+    addSecondOriginal(dir);
+    c.setup?.(dir);
+    const target = c.writes ?? trainingV1;
+    const version = /training-edition\.v(\d+)\.json$/.exec(target)![1];
+    const existed = existsSync(join(dir, target));
+    const before = existed ? readFileSync(join(dir, target), "utf8") : null;
+    const tsx = join(ROOT, "node_modules/.bin/tsx");
+    const r = spawnSync(
+      tsx,
+      ["scripts/import/build-training-edition.ts", "--pack", "ibsen-brand", "--version", version, ...c.args],
+      { cwd: dir, encoding: "utf8" },
+    );
+    const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+    const code = r.status ?? -1;
+    const after = existsSync(join(dir, target)) ? readFileSync(join(dir, target), "utf8") : null;
+
+    if (c.expects === null) {
+      if (code !== 0) {
+        note(false, c.name, `builder failed:\n        ${out.trim().split("\n").join("\n        ")}`);
+      } else if (!existed && after === null) {
+        note(false, c.name, "the new edition was not written");
+      } else if (c.keepsFile && after !== before) {
+        note(false, c.name, "the committed edition was rewritten, but should be byte-identical");
+      } else if (c.keepsFile === false && after === before) {
+        note(false, c.name, "the edition is unchanged — the rebase did not happen");
+      } else if (c.says && !c.says.test(out)) {
+        note(false, c.name, `succeeded, but said nothing about it:\n        ${out.trim()}`);
+      } else {
+        note(true, c.name);
+      }
+      continue;
+    }
+    if (code === 0) {
+      note(false, c.name, "builder exited 0 — it does not refuse this");
+    } else if (!c.expects.test(out)) {
+      note(false, c.name, `refused, but not for this reason:\n        ${out.trim().split("\n").join("\n        ")}`);
+    } else if (c.keepsFile && after !== before) {
+      note(false, c.name, "refused, but the file on disk was written anyway");
+    } else {
+      note(true, c.name);
+    }
+  } catch (e) {
+    note(false, c.name, String(e));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+const total = cases.length + builderCases.length;
+
 console.log("");
 if (failures > 0) {
   console.error(
-    `check-originals_test: ${failures} of ${cases.length} case(s) failed.\n\n` +
+    `check-originals_test: ${failures} of ${total} case(s) failed.\n\n` +
       "Either the versioning stopped holding or a case no longer describes the\n" +
       "tree. Fix whichever it is rather than deleting the case: without these,\n" +
       "growing a work silently rewrites the text every earlier session names.\n",
   );
   process.exit(1);
 }
-console.log(`check-originals_test: ${cases.length} case(s) ok — a work can grow safely.`);
+console.log(`check-originals_test: ${total} case(s) ok — a work can grow safely.`);

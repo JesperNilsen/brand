@@ -22,14 +22,20 @@ const source = {
   rightsStatus: "public-domain",
 };
 
+/** The same source with one field taken away — which is the case under test. */
+function without(key: keyof typeof source): Record<string, unknown> {
+  const copy: Record<string, unknown> = { ...source };
+  delete copy[key];
+  return copy;
+}
+
 describe("rightsProblems", () => {
   it("accepts a work whose rights metadata is complete and consistent", () => {
     expect(rightsProblems(work, source)).toEqual([]);
   });
 
   it("fails a work with no authorDeathYear", () => {
-    const { authorDeathYear: _drop, ...without } = source;
-    const problems = rightsProblems(work, without);
+    const problems = rightsProblems(work, without("authorDeathYear"));
     expect(problems).toHaveLength(1);
     expect(problems[0]).toContain("authorDeathYear mangler");
   });
@@ -53,8 +59,7 @@ describe("rightsProblems", () => {
   });
 
   it("fails a missing or unknown rightsStatus", () => {
-    const { rightsStatus: _drop, ...without } = source;
-    expect(rightsProblems(work, without)[0]).toContain("rightsStatus mangler");
+    expect(rightsProblems(work, without("rightsStatus"))[0]).toContain("rightsStatus mangler");
     expect(rightsProblems(work, { ...source, rightsStatus: "probably-fine" })[0]).toContain(
       "probably-fine",
     );
