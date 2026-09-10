@@ -24,7 +24,7 @@ export function makeSession(
 ): SessionResult {
   return {
     id,
-    schemaVersion: 4,
+    schemaVersion: 5,
     startedAt,
     completedAt: startedAt,
     status: "completed",

@@ -16,10 +16,14 @@ import {
 } from "../engine/engine";
 import {
   addCounts,
+  addDeviations,
   computeMetrics,
+  countCharacterDeviations,
   countCharacters,
   EMPTY_COUNTS,
+  EMPTY_DEVIATIONS,
   type CharacterCounts,
+  type CharacterDeviations,
   type Metrics,
 } from "../engine/metrics";
 import type { SessionPlan } from "../modes/types";
@@ -34,6 +38,8 @@ export type RunnerState = {
   engine: TypingSessionState;
   /** Aggregated counts from segments already finished. */
   finishedCounts: CharacterCounts;
+  /** Aggregated character deviations (Q-013) from segments already finished. */
+  finishedDeviations: CharacterDeviations;
   completedSegmentIds: string[];
   startedAt: number | null;
   endedAt: number | null;
@@ -63,6 +69,7 @@ export function createRunner(plan: SessionPlan): RunnerState {
       errorMode: plan.errorMode,
     }),
     finishedCounts: EMPTY_COUNTS,
+    finishedDeviations: EMPTY_DEVIATIONS,
     completedSegmentIds: [],
     startedAt: null,
     endedAt: null,
@@ -120,8 +127,20 @@ function engineCounts(engine: TypingSessionState): CharacterCounts {
   );
 }
 
+/**
+ * The engine's own two strings are already in `normalizeText()` form — see
+ * engine.ts — so this counts on them directly rather than normalising again.
+ */
+function engineDeviations(engine: TypingSessionState): CharacterDeviations {
+  return countCharacterDeviations(engine.targetText, engine.typedText);
+}
+
 export function runnerCounts(state: RunnerState): CharacterCounts {
   return addCounts(state.finishedCounts, engineCounts(state.engine));
+}
+
+export function runnerDeviations(state: RunnerState): CharacterDeviations {
+  return addDeviations(state.finishedDeviations, engineDeviations(state.engine));
 }
 
 export function runnerMetrics(state: RunnerState, now: number): Metrics {
@@ -184,6 +203,10 @@ function advance(state: RunnerState, now: number): RunnerState {
     state.finishedCounts,
     engineCounts(state.engine),
   );
+  const finishedDeviations = addDeviations(
+    state.finishedDeviations,
+    engineDeviations(state.engine),
+  );
   const completedSegmentIds = [
     ...state.completedSegmentIds,
     currentSegment(state).id,
@@ -191,8 +214,9 @@ function advance(state: RunnerState, now: number): RunnerState {
   const next = nextSegment(state);
   if (!next) {
     // Segments exhausted: every end rule counts this as completed. The
-    // current engine stays in place, so its counts are NOT folded into
-    // finishedCounts (runnerCounts adds the current engine itself).
+    // current engine stays in place, so its counts and deviations are NOT
+    // folded into finishedCounts/finishedDeviations (runnerCounts and
+    // runnerDeviations add the current engine's own themselves).
     return {
       ...state,
       completedSegmentIds,
@@ -203,6 +227,7 @@ function advance(state: RunnerState, now: number): RunnerState {
   return {
     ...state,
     finishedCounts,
+    finishedDeviations,
     completedSegmentIds,
     segmentIndex: state.segmentIndex + 1,
     engine: createSession({
@@ -294,6 +319,7 @@ export function toSessionResult(
   id: string,
 ): SessionResult {
   const metrics = runnerMetrics(state, now);
+  const deviations = runnerDeviations(state);
   const startedAt = state.startedAt ?? now;
   const endedAt = state.endedAt ?? now;
   const status: SessionResult["status"] =
@@ -303,7 +329,7 @@ export function toSessionResult(
     .map((s) => s.id);
   return {
     id,
-    schemaVersion: 4,
+    schemaVersion: 5,
     startedAt: new Date(startedAt).toISOString(),
     completedAt: new Date(endedAt).toISOString(),
     status,
@@ -327,6 +353,11 @@ export function toSessionResult(
     grossWpm: metrics.grossWpm,
     netWpm: metrics.netWpm,
     accuracy: metrics.accuracy,
+    // Always present on a freshly built result — even an empty misses list
+    // means "measured, no deviations found", never "not measured". See
+    // SessionResult.misses/opportunities and migrateSession().
+    misses: deviations.misses,
+    opportunities: deviations.opportunities,
   };
 }
 
