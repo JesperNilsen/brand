@@ -792,7 +792,8 @@ notes:
 ---
 
 ## Q-013 · T-02: hva som faktisk går galt, som aggregat
-status: review:queue/q-013-miss-aggregat
+status: done — merged as `f356d28` (#52)
+result: SessionResult → skjema 5 med `misses` (forventet/skrevet/antall) og `opportunities`, utledet ved øktslutt av `countCharacterDeviations(engine.targetText, engine.typedText)`. `eventLog` er ikke nevnt i den nye koden og `DATA_MODEL.md` er uendret — aggregatet var alltid tillatt. Avvik føres på tvers av segmenter gjennom `finishedDeviations`/`addDeviations`, ved siden av `finishedCounts`/`addCounts`, og den gjeldende motoren foldes med vilje ikke inn. Skjema 1–4 får feltene FRAVÆRENDE, ikke tomme. Porten vist å bite for hånd: patch migrasjonen til `misses: … ?? []` og nøyaktig én test blir rød (52 grønne). Testen bruker `Object.hasOwn` i tillegg til `toBeUndefined()`, så `misses: undefined` tilfredsstiller den ikke ved et uhell.
 lane: brand-main
 
 acceptance:
@@ -853,7 +854,7 @@ notes:
 ---
 
 ## Q-014 · T-02: vis hva som bør øves, uten å lyve om rangeringen
-status: blocked:Q-013 — feltene finnes ikke ennå
+status: ready
 lane: brand-ui
 
 acceptance:
@@ -886,6 +887,10 @@ Porten som må vises å bite er punkt 1:
   FEILE mot en sortering på rått antall, og det skal vises når posten lukkes.
 
 notes:
+- **Feltene finnes nå** (`f356d28`): `SessionResult.misses` og
+  `SessionResult.opportunities`, begge valgfrie. En post uten dem er ikke en
+  feilfri økt — den er en økt fra før målingen fantes, og punkt 4 er hele
+  grunnen til at de er fraværende og ikke tomme.
 - Codex' motargument i CEO-reviewen er premisset for både denne og Q-013:
   appen måler aggregert WPM og viser en flat liste, uten noe som forteller hva
   du bør øve på — så mer tekst kan være en stedfortreder for at øvingssløyfen
@@ -898,7 +903,7 @@ notes:
 ---
 
 ## Q-015 · T-02 + T-12: repetisjonskøen som en tredje kilde til Kortform
-status: blocked:Q-013, Q-014
+status: blocked:Q-014 — køen fylles på rate, og raten finnes ikke før Q-014
 lane: brand-main
 
 acceptance:
