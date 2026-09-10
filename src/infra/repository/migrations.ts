@@ -6,7 +6,7 @@ import {
 import { progressKey, type ReadingProgress, type SessionResult, type UserPreferences } from "@/domain/types";
 
 export const PREFERENCES_SCHEMA_VERSION = 1 as const;
-export const SESSION_SCHEMA_VERSION = 4 as const;
+export const SESSION_SCHEMA_VERSION = 5 as const;
 
 /**
  * Stamped on records written before editions carried a version and a hash.
@@ -67,13 +67,19 @@ export function migratePreferences(raw: unknown): UserPreferences {
  * not which version of it, and since editions are immutable from version 3
  * onward there is no way to recover it after the fact. Version 3 predates
  * pausing, so those records get pausedMs 0 — a fact, not a guess like the
- * unknown edition above: there was no way to pause them. All migrate forward
- * to the current version. The version number has to move each time, or one number
- * would denote two different serialized shapes and a later migration could not
- * tell them apart.
+ * unknown edition above: there was no way to pause them. Version 4 predates
+ * character-level measurement (Q-013): those records get no `misses` or
+ * `opportunities` at all, because unlike pausedMs there is no fact to fill in
+ * — a session that was never measured is not the same as one measured with
+ * zero errors, and guessing the difference away would be exactly the kind of
+ * invented provenance `editionVersion: "unknown"` above refuses to do. All
+ * migrate forward to the current version. The version number has to move each
+ * time, or one number would denote two different serialized shapes and a
+ * later migration could not tell them apart.
  *
  * The fields are required when writing and tolerated when reading, which is
- * why the repair below fills rather than rejects.
+ * why the repair below fills rather than rejects — except `misses` and
+ * `opportunities`, which are never filled: absent stays absent.
  */
 export function migrateSession(raw: unknown): SessionResult | null {
   if (!raw || typeof raw !== "object") return null;
@@ -83,7 +89,8 @@ export function migrateSession(raw: unknown): SessionResult | null {
     r.schemaVersion !== 1 &&
     r.schemaVersion !== 2 &&
     r.schemaVersion !== 3 &&
-    r.schemaVersion !== 4
+    r.schemaVersion !== 4 &&
+    r.schemaVersion !== 5
   ) {
     // Written by a newer build, or not a session at all.
     return null;

@@ -13,8 +13,10 @@
  * union would let a rule set be one thing here and another there.
  */
 import type { AdaptationStatus, RuleFamily } from "./language/rules/types";
+import type { CharacterCount, CharacterMiss } from "./engine/metrics";
 
 export type { AdaptationStatus, RuleFamily };
+export type { CharacterCount, CharacterMiss };
 
 export type ErrorMode = "flow" | "stop-on-error";
 
@@ -405,9 +407,9 @@ export type SessionResult = {
    * 1 = before text filters existed; 2 adds the required textFilterId;
    * 3 adds editionVersion and editionContentHash, so a stored result names
    * the exact text it was typed against rather than just the edition id;
-   * 4 adds pausedMs and pauseCount.
+   * 4 adds pausedMs and pauseCount; 5 adds misses and opportunities.
    */
-  schemaVersion: 4;
+  schemaVersion: 5;
   /** ISO timestamp. */
   startedAt: string;
   completedAt?: string;
@@ -446,6 +448,36 @@ export type SessionResult = {
   netWpm: number;
   /** 0..1 */
   accuracy: number;
+  /**
+   * Avvik per måltegn, utledet ved øktslutt. Aldri rå tastetrykk.
+   *
+   * Computed once, at session end, from `targetText` and `typedText` — the
+   * same two strings `countCharacters()` already compares — and never from
+   * `eventLog`. `DATA_MODEL.md` forbids keeping raw keystrokes forever; it
+   * says aggregated session results are enough, and this is one: a count per
+   * target character, not a replay of what was pressed.
+   *
+   * Counted on the `normalizeText()` form, the same form the engine compares
+   * on (targetText/typedText are normalised once, inside the engine, before
+   * any position is ever compared — this does not normalise a second time).
+   * `misses` and `opportunities` are counted over the same positions the
+   * session actually covered: an unfinished segment stops contributing where
+   * typing stopped, the same boundary `countCharacters()` itself stops at.
+   *
+   * `textFilterId` already rides on this record. A session typed under a
+   * filter that strips characters legitimately has fewer opportunities than
+   * one typed as-printed — that is correct, and needs no separate handling
+   * here.
+   *
+   * Absent — not an empty array — on every record migrated from schema 1
+   * through 4: those sessions were never measured, and the read side has to
+   * be able to tell "measured, no errors" apart from "not measured" (see
+   * migrateSession()). An empty list here would silently read as a flawless
+   * session that, in truth, was simply never looked at.
+   */
+  misses?: CharacterMiss[];
+  /** See `misses` above; both are computed together, over the same positions. */
+  opportunities?: CharacterCount[];
 };
 
 export type SessionQuery = {

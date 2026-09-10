@@ -117,6 +117,68 @@ describe("migrations", () => {
     expect(out!.editionVersion).toBe("unknown");
     expect(migrateSession(out)).toEqual(out);
   });
+
+  it("Q-013 point 5: migrates a genuine schema-4 record to absent misses/opportunities, never []", () => {
+    // A real schema-4 record: exactly what the app wrote before Q-013 —
+    // pausedMs/pauseCount present, but no misses/opportunities key at all.
+    const v4 = {
+      ...makeSession("v4-real", "2026-09-04T00:00:00.000Z"),
+      schemaVersion: 4,
+    } as Record<string, unknown>;
+    expect(Object.hasOwn(v4, "misses")).toBe(false);
+    expect(Object.hasOwn(v4, "opportunities")).toBe(false);
+
+    const migrated = migrateSession(v4);
+    expect(migrated).not.toBeNull();
+    expect(migrated!.schemaVersion).toBe(SESSION_SCHEMA_VERSION);
+
+    // The gate: "no measurement" must stay absent, never an empty list that
+    // could be misread as "measured, zero errors". toBeUndefined() alone
+    // already tells [] and undefined apart, and hasOwn makes the intent
+    // impossible to satisfy by accident with `misses: undefined`.
+    expect(migrated!.misses).toBeUndefined();
+    expect(migrated!.opportunities).toBeUndefined();
+    expect(Object.hasOwn(migrated!, "misses")).toBe(false);
+    expect(Object.hasOwn(migrated!, "opportunities")).toBe(false);
+
+    // Idempotent, like every other field this migration touches.
+    expect(migrateSession(migrated)).toEqual(migrated);
+  });
+});
+
+describe("countCharacterDeviations (Q-013 point 2/3)", () => {
+  it("counts exact misses and opportunities over a known target/typed pair", async () => {
+    const { countCharacterDeviations } = await import("@/domain/engine/metrics");
+    // Norwegian-specific deviations: æ→a, ø→o, comma→period. "ø" also appears
+    // correctly once, so its opportunity count (2) must exceed its miss
+    // count (1) — the exact distinction opportunities exist to make.
+    const target = "være, gøy, øl";
+    const typed = "vare. gøy, ol";
+    const result = countCharacterDeviations(target, typed);
+
+    expect(result.misses).toEqual(
+      expect.arrayContaining([
+        { expected: "æ", typed: "a", count: 1 },
+        { expected: ",", typed: ".", count: 1 },
+        { expected: "ø", typed: "o", count: 1 },
+      ]),
+    );
+    expect(result.misses).toHaveLength(3);
+
+    const oppByChar = Object.fromEntries(
+      result.opportunities.map((o) => [o.char, o.count]),
+    );
+    expect(oppByChar["ø"]).toBe(2);
+    expect(oppByChar["æ"]).toBe(1);
+    // "," appears twice in the target ("være," and "gøy,"); only the first
+    // instance is mistyped (as "."), so opportunities (2) must exceed misses (1).
+    expect(oppByChar[","]).toBe(2);
+    expect(oppByChar["v"]).toBe(1);
+    // 13 target characters compared (typed is the same length): 13 distinct
+    // opportunity buckets' counts must sum to the compared length.
+    const totalOpportunities = result.opportunities.reduce((sum, o) => sum + o.count, 0);
+    expect(totalOpportunities).toBe(target.length);
+  });
 });
 
 describe("progress migration (T-10)", () => {

@@ -792,7 +792,7 @@ notes:
 ---
 
 ## Q-013 · T-02: hva som faktisk går galt, som aggregat
-status: ready
+status: review:queue/q-013-miss-aggregat
 lane: brand-main
 
 acceptance:
