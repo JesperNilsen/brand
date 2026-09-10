@@ -63,6 +63,24 @@ versjonerbar først.
 
 Ett verk (`kielland-noveletter`), sju noveller. Segmentetiketter er prefikset med novelletittelen («Haabet er lysegrønt, 1» … «Visne Blade, 1» …). **Spesifikasjonens prioriterte tekst «Ballstemning» finnes på Wikikilden**, korrekturlest, i samme bind — under 1907-utgavens stavemåte **«Balstemning» med én L** (`https://no.wikisource.org/wiki/Balstemning`, ~2 100 ord). Se «Rettet 2026-09-04» under.
 
+## hamsun-sult — Knut Hamsun, *Sult* (1890)
+
+**Under bygging — ikke merget.** Kilde, `segments.json`, `original.json` og
+`pack.json` er på plass; `rules.v1.json` og treningsutgaven gjenstår, så
+`pnpm validate:content` melder «no training edition» inntil de er skrevet.
+
+| Felt | Verdi |
+| --- | --- |
+| Kilde | Wikikilden, `https://no.wikisource.org/wiki/Sult` — transkludert fra `Indeks:Sult (Knut Hamsun).djvu`, fire stykker (`Sult/01`–`Sult/04`). Merk: `Sult/Sult/01`–`04` er en foreløpig, foreldreløs duplikattre på samme wiki og er **ikke** kilden. |
+| Trykt utgave | *Sult.* København: P. G. Philipsens Forlag, 1890. Førsteutgaven, i sin helhet. Transkribert etter Wikikildens skannede utgave, Fremgang V (validert — Wikikildens høyeste korrekturnivå), 345 sider (trykt side 1 = djvu-side 13). |
+| Hentet | 2026-09-10 |
+| Rettighetsgrunnlag | Public domain i Norge (Hamsun d. 1952; vernetiden utløp 2023-01-01, life+70) og i USA (utgitt 1890). Wikikildens transkripsjon er CC BY-SA 4.0; attribusjon beholdt i pakken. |
+| Kontrollstatus | agent-drafted |
+| Ordtall / segmenter | 60 044 ord i 531 segmenter (Første stykke 138 seg./16 051 ord · Andet 112/12 884 · Tredje 165/18 315 · Fjerde 116/12 794). 1 285 linjer i kilden: 1 281 avsnitt pluss fire overskriftslinjer, som er modultitler og ikke inngår i noe segment. Ordtallet er `countWords`, som ikke teller tokens uten bokstav eller tall — Hamsuns lange punktrekker. En naiv whitespace-telling gir 61 228; det er samme tekst, ikke en annen. |
+| Inkludert | Hele verket, firedelt i ekte moduler: Første, Andet, Tredje og Fjerde Stykke — første pakke i katalogen med reell modulstruktur (Q-011). |
+
+Rå HTML arkivert under `source/wikikilden/sult-01.html`–`sult-04.html`; ekstrahert tekst i `source/sult-01.txt`–`sult-04.txt`, satt sammen til `source/sult-komplett.txt` fordi `build-original.ts` bare støtter én `sourceFile` per pakke. Hylle: `norske-klassikere` (lagt til `content/shelves.json`, append-only).
+
 ---
 
 ## Mangler / avgrensninger

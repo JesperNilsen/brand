@@ -46,6 +46,44 @@ export const CONTENT_PACKS: ContentPack[] = [
     ]
   },
   {
+    "id": "hamsun-sult",
+    "title": "Knut Hamsun: Sult",
+    "description": "Firedelt sultroman i naturalistisk jeg-form. V1 rommer hele verket, bygget i fire ekte moduler (Første–Fjerde Stykke) — den første pakken i katalogen med reell modulstruktur.",
+    "languageProfileIds": [
+      "brand-riksmaal"
+    ],
+    "workIds": [
+      "hamsun-sult"
+    ],
+    "tags": [
+      "prosa",
+      "roman",
+      "1800-tallet"
+    ],
+    "status": "active",
+    "sourceAttribution": [
+      {
+        "author": "Knut Hamsun",
+        "title": "Sult",
+        "publishedYear": 1890,
+        "language": "da-NO",
+        "sourceUrl": "https://no.wikisource.org/wiki/Sult",
+        "archiveId": "wikikilden:Sult/01–04",
+        "retrievedAt": "2026-09-10",
+        "provider": "Wikikilden (no.wikisource.org)",
+        "authorDeathYear": 1952,
+        "license": "Public domain i Norge (Hamsun d. 1952; verkets vernetid utløp 2023-01-01, life+70) og i USA (utgitt 1890). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+        "rightsStatus": "public-domain",
+        "digitalEdition": "Sult. København: P. G. Philipsens Forlag, 1890. Førsteutgaven, i sin helhet: Første, Andet, Tredje og Fjerde Stykke. Transkribert etter Wikikildens skannede utgave (Indeks:Sult (Knut Hamsun).djvu, Fremgang V — validert, 345 sider; trykt side 1 = djvu-side 13).",
+        "verificationStatus": "agent-drafted",
+        "editorialNotes": [
+          "Rå HTML arkivert under source/wikikilden/sult-01.html til sult-04.html; ekstrahert tekst i source/sult-01.txt til sult-04.txt.",
+          "Sidene ligger på Wikikilden under Sult/01–Sult/04. Det finnes en foreldreløs duplikattre under Sult/Sult/01–04 på samme wiki — den er ikke kilden og skal ikke brukes."
+        ]
+      }
+    ]
+  },
+  {
     "id": "ibsen-brand",
     "title": "Henrik Ibsen: Brand",
     "description": "Produktets navngivende kjernetekst. Et dramatisk dikt i fem akter (1866); V1 rommer åpningsscenen i første akt.",
@@ -245,6 +283,69 @@ export const WORKS: Work[] = [
         "segmentCount": 8,
         "wordCount": 813,
         "file": "/content/editions/hamsun-markens-groede.training.v2.c23ab5fa6b0d.json"
+      }
+    ]
+  },
+  {
+    "id": "hamsun-sult",
+    "contentPackId": "hamsun-sult",
+    "author": "Knut Hamsun",
+    "title": "Sult",
+    "publishedYear": 1890,
+    "originalLanguage": "da-NO",
+    "source": {
+      "author": "Knut Hamsun",
+      "title": "Sult",
+      "publishedYear": 1890,
+      "language": "da-NO",
+      "sourceUrl": "https://no.wikisource.org/wiki/Sult",
+      "archiveId": "wikikilden:Sult/01-04",
+      "retrievedAt": "2026-09-10",
+      "provider": "Wikikilden (no.wikisource.org)",
+      "authorDeathYear": 1952,
+      "license": "Public domain i Norge (Hamsun d. 1952; verkets vernetid utløp 2023-01-01, life+70) og i USA (utgitt 1890, før 1928-grensen). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "rightsStatus": "public-domain",
+      "digitalEdition": "Sult. København: P. G. Philipsens Forlag, 1890 (førsteutgaven). Hele romanen, alle fire stykker, transkribert etter «Indeks:Sult (Knut Hamsun).djvu» — 345 sider, trykt side 1 = djvu-side 13.",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Indeksen er merket Fremgang=V (validert), Wikikildens høyeste korrekturnivå.",
+        "Wikikilden har to sidetrær for dette verket: Sult/01–04 og Sult/Sult/01–04. Begge transkluderer samme djvu, men Sult/01–04 er det innholdsfortegnelsen på Sult-siden lenker til; Sult/Sult/* er en foreldreløs dublett. Sult/01–04 er brukt.",
+        "Rå HTML arkivert under source/wikikilden/sult-0N.html; ekstrahert tekst i source/sult-0N.txt."
+      ]
+    },
+    "editions": [
+      {
+        "id": "hamsun-sult.original",
+        "workId": "hamsun-sult",
+        "kind": "original",
+        "version": "1.0.0",
+        "contentHash": "sha256:62d0c22f588d2f456282a2ec46eb2a8242cc88156093411b11f9f2a0cd45a3d3",
+        "adaptationStatus": "none",
+        "modules": [
+          {
+            "id": "stykke-1",
+            "title": "Første stykke",
+            "order": 1
+          },
+          {
+            "id": "stykke-2",
+            "title": "Andet stykke",
+            "order": 2
+          },
+          {
+            "id": "stykke-3",
+            "title": "Tredje stykke",
+            "order": 3
+          },
+          {
+            "id": "stykke-4",
+            "title": "Fjerde stykke",
+            "order": 4
+          }
+        ],
+        "segmentCount": 531,
+        "wordCount": 60044,
+        "file": "/content/editions/hamsun-sult.original.62d0c22f588d.json"
       }
     ]
   },
@@ -480,7 +581,8 @@ export const SHELVES: Shelf[] = [
       "ibsen-brand",
       "hamsun-markens-groede",
       "kielland-gift",
-      "kielland-noveletter"
+      "kielland-noveletter",
+      "hamsun-sult"
     ]
   },
   {
