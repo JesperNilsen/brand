@@ -16,6 +16,7 @@ import type { SessionResult, TextEdition } from "@/domain/types";
 import { getRepository, isPersistent } from "@/infra/repository";
 import { getLastSession } from "@/lib/last-session";
 import { Loading } from "./Loading";
+import { PracticeFocus } from "./PracticeFocus";
 import { formatDuration, formatNumber, formatPercent, formatWpm } from "@/lib/format";
 import { editionLabel, nextSegmentAfter, sessionHref } from "@/lib/session-flow";
 
@@ -197,6 +198,8 @@ export function ResultView({ id }: { id: string }) {
           Økten var under fem sekunder; hastighet vises ikke for så korte økter.
         </p>
       )}
+
+      <PracticeFocus misses={result.misses} opportunities={result.opportunities} />
 
       <div className="flex flex-wrap gap-3">
         {next && (
