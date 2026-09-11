@@ -108,14 +108,44 @@ describe("moduleProblems", () => {
   });
 });
 
+/**
+ * The works that declare modules today.
+ *
+ * Q-011 shipped the machinery with the catalogue deliberately empty of it, and
+ * the test here asserted that emptiness — a tripwire meant to fire the day a
+ * work gained modules. hamsun-sult fired it. This list is what replaced it:
+ * modules change how a reader's place is keyed, so a work that gains them is
+ * named here or the test says so out loud, exactly as before.
+ */
+const MODULE_BEARING = ["hamsun-sult"];
+
 describe("the catalogue as it ships", () => {
-  it("declares no modules on any work, and is unchanged by their existence", () => {
-    // Half the gate for Q-011: the four works that exist today come out the
-    // other side identical. The day one of them gains modules, this is the
-    // test that says so out loud.
+  it("declares modules on exactly the works meant to have them", () => {
+    const bearing = WORKS.filter((w) => w.editions.some((e) => e.modules?.length)).map((w) => w.id);
+    expect([...bearing].sort()).toEqual([...MODULE_BEARING].sort());
+  });
+
+  it("declares every module set well-formed: unique ids, titles, order 1..N", () => {
+    // Only what the shipped catalogue carries. The segment-level rules —
+    // all-or-nothing, contiguity, a moduleId resolving to a declared module —
+    // need the segments, which live in the edition files rather than in WORKS,
+    // and `validate:content` already runs moduleProblems over them
+    // (scripts/validate-content.ts:307 for originals, :429 for training
+    // editions). Duplicating them here would be a second gate on the same
+    // invariant that could drift from the first.
     for (const work of WORKS) {
       for (const edition of work.editions) {
-        expect(edition.modules, `${edition.id}`).toBeUndefined();
+        if (!edition.modules) continue;
+        const at = edition.id;
+        const ids = edition.modules.map((m) => m.id);
+        expect(new Set(ids).size, `${at}: en modul-id gjentas`).toBe(ids.length);
+        for (const m of edition.modules) {
+          expect(m.title.trim(), `${at}: modul «${m.id}» mangler tittel`).not.toBe("");
+        }
+        expect(
+          edition.modules.map((m) => m.order).sort((a, b) => a - b),
+          `${at}: modulrekkefølgen må være 1..${edition.modules.length}`,
+        ).toEqual(edition.modules.map((_, i) => i + 1));
       }
     }
   });
