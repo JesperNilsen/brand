@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   FOCUS_LIMIT,
   MIN_OPPORTUNITIES,
+  aggregateMeasured,
   focusCharacterLabel,
   practiceClasses,
   rankPracticeFocus,
@@ -120,5 +121,36 @@ describe("focusCharacterLabel", () => {
     expect(focusCharacterLabel(" ")).toBe("mellomrom");
     expect(focusCharacterLabel("\n")).toBe("linjeskift");
     expect(focusCharacterLabel("æ")).toBe("æ");
+  });
+});
+
+describe("aggregateMeasured (Q-014 point 4, one level up)", () => {
+  it("skips a session that carries no measurement instead of counting it clean", () => {
+    const folded = aggregateMeasured([
+      { misses: [miss("å", "a", 3)], opportunities: [opp("å", 30)] },
+      {},
+      { misses: [miss("å", "a", 3)], opportunities: [opp("å", 30)] },
+    ]);
+    expect(folded.measured).toBe(2);
+    expect(folded.total).toBe(3);
+    // If the unmeasured session were folded in as an empty one, the rate would
+    // be diluted rather than simply absent — that is the lie this guards.
+    expect(folded.misses).toEqual([miss("å", "a", 6)]);
+    expect(folded.opportunities).toEqual([opp("å", 60)]);
+  });
+
+  it("reports zero measured when every session predates the measurement", () => {
+    const folded = aggregateMeasured([{}, {}]);
+    expect(folded.measured).toBe(0);
+    expect(folded.total).toBe(2);
+    expect(folded.misses).toEqual([]);
+  });
+
+  it("treats a half-written session as unmeasured, not as a clean one", () => {
+    // Opportunities without misses is a shape the writer never mints; if it
+    // ever appears it is a truncated record, and reading it as «no misses»
+    // would invent a perfect session out of a broken one.
+    const folded = aggregateMeasured([{ opportunities: [opp("e", 400)] }]);
+    expect(folded.measured).toBe(0);
   });
 });

@@ -130,8 +130,10 @@ Rot er `17px`. Målestokken finnes som tokens i `globals.css`:
 2026).** `@theme inline` gjør hvert `--text-*`-token til et verktøy med samme
 navn, så en visning skriver `text-heading` og navngir aldri variabelen. De sytten
 `text-3xl`/`text-2xl`/`text-xl`/`text-lg` er borte fra `src/`, og `pnpm
-check:design` teller begge deler: et nytt ad hoc-verktøy feiler porten.
-<!-- check:design adoption status=done adhoc=0 files=0 tokens=17 -->
+check:design` teller begge deler: et nytt ad hoc-verktøy feiler porten. Tallet
+i markøren under er dagens antall tokenbruk i `src/`, ikke et tak — det stiger
+når en ny visning tas i bruk, og porten krever bare at det stemmer.
+<!-- check:design adoption status=done adhoc=0 files=0 tokens=22 -->
 
 Ett tall flyttet seg i migreringen, og det er det eneste: forsidens h1 lå på
 `text-3xl` (1,875rem) mens tabellen sa 1,9rem. Nå er tabellen sann — 0,4 px, og

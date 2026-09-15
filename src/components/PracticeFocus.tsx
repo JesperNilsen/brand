@@ -22,10 +22,16 @@ import { formatPercent } from "@/lib/format";
 export function PracticeFocus({
   misses,
   opportunities,
+  scope = "session",
+  coverage,
   testId = "practice-focus",
 }: {
   misses?: readonly CharacterMiss[];
   opportunities?: readonly CharacterCount[];
+  /** Which absent-measurement sentence to use; history speaks of many sessions. */
+  scope?: "session" | "history";
+  /** History only: how many of the listed sessions the numbers were built from. */
+  coverage?: { measured: number; total: number };
   testId?: string;
 }) {
   if (!misses || !opportunities) {
@@ -33,15 +39,40 @@ export function PracticeFocus({
       <section className="mb-10" data-testid={testId} data-measured="no">
         <p className="label mb-2">Verdt å øve på</p>
         <p className="text-meta text-ink-muted">
-          Denne økten ble skrevet før appen begynte å måle hvilke tegn som gikk
-          galt, så det finnes ikke noe å vise her. Det er ikke det samme som at
-          den var feilfri.
+          {scope === "history" ? (
+            <>
+              Ingen av øktene her ble målt. De ble skrevet før appen begynte å
+              registrere hvilke tegn som gikk galt, så det finnes ikke noe å
+              vise. Det er ikke det samme som at de var feilfrie.
+            </>
+          ) : (
+            <>
+              Denne økten ble skrevet før appen begynte å måle hvilke tegn som
+              gikk galt, så det finnes ikke noe å vise her. Det er ikke det
+              samme som at den var feilfri.
+            </>
+          )}
         </p>
       </section>
     );
   }
 
   const ranked = rankPracticeFocus(misses, opportunities);
+  /*
+    Point 4, one level up: an aggregate that quietly drops the sessions it could
+    not measure presents a partial view as the whole one. The count is stated
+    even when every session was measured, so the reader never has to infer it
+    from the absence of a warning.
+  */
+  const coverageNote = coverage ? (
+    <p className="mt-3 text-meta text-ink-muted" data-testid="focus-coverage">
+      Bygget på <span className="tabular-nums">{coverage.measured}</span> av{" "}
+      <span className="tabular-nums">{coverage.total}</span> økter.
+      {coverage.measured < coverage.total
+        ? " Resten ble skrevet før appen målte, og teller ikke med."
+        : ""}
+    </p>
+  ) : null;
   const classes = practiceClasses(misses, opportunities).filter((c) => c.misses > 0);
 
   if (ranked.length === 0 && classes.length === 0) {
@@ -52,6 +83,7 @@ export function PracticeFocus({
           Ingenting peker seg ut ennå. Et tegn vises her først når det har stått
           i teksten ofte nok til at andelen betyr noe.
         </p>
+        {coverageNote}
       </section>
     );
   }
@@ -87,6 +119,7 @@ export function PracticeFocus({
           ))}
         </ul>
       )}
+      {coverageNote}
     </section>
   );
 }
