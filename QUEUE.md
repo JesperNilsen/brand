@@ -854,7 +854,8 @@ notes:
 ---
 
 ## Q-014 · T-02: vis hva som bør øves, uten å lyve om rangeringen
-status: ready
+status: done — merged as `03f157f` (#55)
+result: rangeringen står på rate (avvik/anledninger) med gulv på 20 anledninger, klassene «Æ, ø og å» og «Tegnsetting» summert FØR gulvet, og fraværende måling skilt fra tom måling. Koblet på både resultatsiden og historikken. Deployet til produksjon 2026-09-17 — den første produksjonsdeployen siden 2026-09-10.
 lane: brand-ui
 
 acceptance:
@@ -886,6 +887,8 @@ Porten som må vises å bite er punkt 1:
   et sted langt nede, og `ø` skal ikke vises i det hele tatt. Den testen skal
   FEILE mot en sortering på rått antall, og det skal vises når posten lukkes.
 
+result: historikken er koblet på (`03f157f`, squash av 1201769 oven på WIP 4e56d1a); `pnpm check:fast` exit 0, 314 tester, `check:all` grønn på CI, og porten vist å bite på tre mutasjoner. DESIGN.md-markøren og de to check-design_test-sakene som siterte tokens=17 er oppdatert til 22.
+
 notes:
 - **Feltene finnes nå** (`f356d28`): `SessionResult.misses` og
   `SessionResult.opportunities`, begge valgfrie. En post uten dem er ikke en
@@ -903,7 +906,7 @@ notes:
 ---
 
 ## Q-015 · T-02 + T-12: repetisjonskøen som en tredje kilde til Kortform
-status: blocked:Q-014 — køen fylles på rate, og raten finnes ikke før Q-014
+status: ready
 lane: brand-main
 
 acceptance:
