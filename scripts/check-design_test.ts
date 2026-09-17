@@ -106,14 +106,14 @@ const cases: Case[] = [
         '<h1 className="mb-4 text-heading">Tidligere økter</h1>',
         "<h1 className=\"mb-4\">Tidligere økter</h1>",
       ),
-    expects: /states tokens=17 for the type scale; src\/\*\*\/\*\.tsx has 16/,
+    expects: /states tokens=22 for the type scale; src\/\*\*\/\*\.tsx has 21/,
   },
   {
     // The reverse claim, still gated: the tree is migrated and the document
     // says the work is outstanding. A doc that understates progress sends the
     // next reader to redo it.
     name: "DESIGN.md still saying pending after the migration landed",
-    mutate: (d) => edit(d, DOC, "status=done adhoc=0 files=0 tokens=17", "status=pending adhoc=0 files=0 tokens=17"),
+    mutate: (d) => edit(d, DOC, "status=done adhoc=0 files=0 tokens=22", "status=pending adhoc=0 files=0 tokens=22"),
     expects: /still says the type-scale migration \(T-14\) is pending/,
   },
 ];

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getEditionById, getWork } from "@/domain/content/registry";
 import { getGameMode } from "@/domain/modes/registry";
 import { driftLabel, editionDrift } from "@/domain/content/edition-drift";
+import { aggregateMeasured } from "@/domain/engine/practice-focus";
 import { metricsFromResult } from "@/domain/session/runner";
 import { requireTextFilter } from "@/domain/text-filter";
 import type { SessionResult } from "@/domain/types";
@@ -12,6 +13,7 @@ import { getRepository, isPersistent } from "@/infra/repository";
 import { formatDate, formatDuration, formatPercent, formatWpm } from "@/lib/format";
 import { editionLabel } from "@/lib/session-flow";
 import { DataTransfer } from "./DataTransfer";
+import { PracticeFocus } from "./PracticeFocus";
 import { Loading } from "./Loading";
 
 export function HistoryView() {
@@ -89,6 +91,13 @@ export function HistoryView() {
         </p>
       ) : (
         <>
+        {/*
+          The same block as the result page, folded over every session in the
+          list. It sits above the table because «hva bør jeg øve på» is the
+          question a reader opens the history with; the rows below answer «hva
+          gjorde jeg», which is the slower read.
+        */}
+        <HistoryFocus sessions={sessions} />
         {/*
           Under 640px the nine-column table became a silent horizontal scroll:
           no affordance said it moved, and the columns a reader actually scans
@@ -207,5 +216,28 @@ export function HistoryView() {
       )}
       <DataTransfer onImported={() => setReloadToken((n) => n + 1)} />
     </div>
+  );
+}
+
+/**
+ * «Verdt å øve på» across the whole history.
+ *
+ * `aggregateMeasured` skips sessions written before the measurement existed and
+ * reports how many it actually saw; both numbers are handed to the block so the
+ * reader is told what the ranking rests on rather than left to assume it covers
+ * everything. A history with no measured session at all gets the absent state,
+ * never the empty one.
+ */
+function HistoryFocus({ sessions }: { sessions: readonly SessionResult[] }) {
+  const folded = aggregateMeasured(sessions);
+  const measured = folded.measured > 0;
+  return (
+    <PracticeFocus
+      misses={measured ? folded.misses : undefined}
+      opportunities={measured ? folded.opportunities : undefined}
+      scope="history"
+      coverage={measured ? { measured: folded.measured, total: folded.total } : undefined}
+      testId="history-practice-focus"
+    />
   );
 }
