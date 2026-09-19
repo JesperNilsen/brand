@@ -438,6 +438,11 @@ export const EDITORIAL_NOTES: Record<string, string[]> = {
     "Beholdt: «nogen» — moderne form «noen» innebærer samme type konsonantbortfall som «noget»→«noe»; beholdt av samme grunn.",
     "Beholdt: «været» — perfektum partisipp av «være» er i dag «vært» (e faller bort foran t, æ er uendret); det er en endelsesendring, ikke en æ→e-sak, beholdt."
   ],
+  "hamsun-sult.original": [
+    "De fire stykkene er satt sammen til source/sult-komplett.txt i rekkefølge, fordi segments.json/build-original.ts bare støtter én sourceFile per pakke. Delfilene sult-01..04.txt er beholdt uendret ved siden av.",
+    "Stykkene er MODULER, ikke part-strenger: dette er den første utgaven i katalogen der inndelingen bærer egen fremdrift (Q-011).",
+    "Overskriftslinjene «FØRSTE STYKKE» osv. står i kildefilen, men inngår ikke i noe segment — de er modultitler, ikke tekst. build-original.ts søker fra en markør som bare går framover, så linjer mellom segmenter blir stående ubrukt."
+  ],
   "ibsen-brand.original": [
     "Originaltekst etter Gyldendals femtende oplag (1903), Ibsens egen ortografi. Bevart uendret; se work.source for transkripsjonskonvensjoner."
   ],
