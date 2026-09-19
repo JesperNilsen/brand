@@ -82,7 +82,21 @@ describe("reviewProblems", () => {
   });
 
   it("allows a review still in progress without demanding a reader or date", () => {
-    expect(problems({ "p.training.v1": { reviewStatus: "in-review" } })).toEqual([]);
+    expect(
+      problems({
+        "p.training.v1": { reviewStatus: "in-review", reviewedContentHash: "sha256:bbb" },
+      }),
+    ).toEqual([]);
+  });
+
+  it("refuses a reading in progress that does not name the text it is judging", () => {
+    const found = problems({ "p.training.v1": { reviewStatus: "in-review" } });
+    expect(found).toHaveLength(1);
+    expect(found[0]).toMatch(/in-review, but reviewedContentHash is missing/);
+  });
+
+  it("still says nothing about an unreviewed entry with no hash", () => {
+    expect(problems({ "p.training.v1": { reviewStatus: "unreviewed" } })).toEqual([]);
   });
 });
 

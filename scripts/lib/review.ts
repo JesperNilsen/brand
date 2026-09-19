@@ -19,7 +19,10 @@ import type { ReviewStatus } from "../../src/domain/types";
 
 export type ReviewEntry = {
   reviewStatus: ReviewStatus;
-  /** The contentHash this review certifies. */
+  /**
+   * The contentHash this review certifies. Required from `in-review` onward —
+   * optional in the type only because `unreviewed` entries carry none.
+   */
   reviewedContentHash?: string;
   reviewedBy?: string;
   /** ISO date, YYYY-MM-DD. */
@@ -80,9 +83,19 @@ export function reviewProblems(
     if (entry.reviewStatus === "reviewed") {
       if (!entry.reviewedBy) problems.push(`${where}: reviewed, but reviewedBy is missing`);
       if (!entry.reviewedAt) problems.push(`${where}: reviewed, but reviewedAt is missing`);
+    }
+    // The hash is required the moment a verdict exists, not only when the
+    // reading is finished. A partial reading that names no text is the one
+    // state the format cannot check later: cut a new edition underneath it and
+    // the half-finished verdicts silently re-attach to a text nobody judged.
+    // Absence of a review is still not a problem — only a review that says
+    // something without saying what about.
+    if (entry.reviewStatus === "reviewed" || entry.reviewStatus === "in-review") {
       if (!entry.reviewedContentHash) {
-        problems.push(`${where}: reviewed, but reviewedContentHash is missing — a review that ` +
-          `does not name the text it certifies cannot be checked later`);
+        problems.push(
+          `${where}: ${entry.reviewStatus}, but reviewedContentHash is missing — a verdict that ` +
+            `does not name the text it was made about cannot be checked later`,
+        );
       }
     }
     if (entry.reviewedAt && !ISO_DATE.test(entry.reviewedAt)) {
