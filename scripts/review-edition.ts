@@ -42,24 +42,50 @@ function parseArgs(argv: string[]): Options {
   return opts;
 }
 
-/** Find which pack and which rules version produced an edition id. */
-async function locate(editionId: string): Promise<{ pack: string; dir: string; version: number }> {
+/**
+ * Find which pack and which rules version produced an edition id, and which
+ * edition of that pack the reader is actually served.
+ *
+ * "Current" is derived the same way `validate:content` derives it — the highest
+ * major version among the pack's training editions — because the two must not
+ * be able to disagree about which text is live. Reading a superseded edition is
+ * not a hypothetical: «Noveletter» grew a v3 while a packet for v2 sat waiting
+ * to be read, and nothing in the output said so.
+ */
+async function locate(
+  editionId: string,
+): Promise<{ pack: string; dir: string; version: number; currentId: string }> {
   const packs = (await readdir(contentRoot, { withFileTypes: true }))
     .filter((d) => d.isDirectory())
     .map((d) => d.name)
     .sort();
-  const known: string[] = [];
+  const known: { id: string; current: boolean }[] = [];
+  let found: { pack: string; dir: string; version: number } | undefined;
+
   for (const pack of packs) {
     const dir = path.join(contentRoot, pack);
+    const editions: { id: string; version: number }[] = [];
     for (const f of await readdir(dir)) {
       const m = /^training-edition\.v(\d+)\.json$/.exec(f);
       if (!m) continue;
       const parsed = JSON.parse(await readFile(path.join(dir, f), "utf8")) as { id: string };
-      known.push(parsed.id);
-      if (parsed.id === editionId) return { pack, dir, version: Number(m[1]) };
+      editions.push({ id: parsed.id, version: Number(m[1]) });
+    }
+    if (editions.length === 0) continue;
+    const current = [...editions].sort((a, b) => b.version - a.version)[0];
+    for (const e of editions) known.push({ id: e.id, current: e.id === current.id });
+
+    const hit = editions.find((e) => e.id === editionId);
+    if (hit) found = { pack, dir, version: hit.version };
+    if (found && found.pack === pack) {
+      return { ...found, currentId: current.id };
     }
   }
-  throw new Error(`Ukjent utgave: ${editionId}\nKjente utgaver:\n  ${known.join("\n  ")}`);
+
+  const listing = known
+    .map((k) => `  ${k.id}${k.current ? "  ← gjeldende" : ""}`)
+    .join("\n");
+  throw new Error(`Ukjent utgave: ${editionId}\nKjente utgaver:\n${listing}`);
 }
 
 /**
@@ -94,7 +120,7 @@ function flatten(s: string): string {
 export async function renderReading(opts: Options): Promise<string[]> {
   const out: string[] = [];
   const emit = (line = "") => out.push(line);
-  const { pack, dir, version } = await locate(opts.editionId);
+  const { pack, dir, version, currentId } = await locate(opts.editionId);
 
   const rules = await loadRules(dir, version);
   const rawPack = JSON.parse(
@@ -127,6 +153,11 @@ export async function renderReading(opts: Options): Promise<string[]> {
     `Redaksjonell lesning — ${opts.editionId}\n` +
       `${pack} · original ${original.edition.id} · regler v${version}` +
       `${base ? ` · grunnregler ${base.id} (${base.version})` : " · ingen grunnregler"}\n` +
+      `${
+        currentId === opts.editionId
+          ? "Dette er utgaven leseren skriver."
+          : `MERK: leseren skriver ${currentId}, ikke denne. En dom herfra fester seg til en utgave som er gått ut.`
+      }\n` +
       `Status: ${entry ? `${entry.reviewStatus}${entry.reviewedBy ? ` av ${entry.reviewedBy}` : ""}${entry.reviewedAt ? ` (${entry.reviewedAt})` : ""}` : "ikke ført i review.json"}\n`,
   );
 
