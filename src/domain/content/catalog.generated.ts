@@ -466,6 +466,20 @@ export const WORKS: Work[] = [
         "segmentCount": 264,
         "wordCount": 25669,
         "file": "/content/editions/kielland-noveletter.training.v3.6f32ade39951.json"
+      },
+      {
+        "id": "kielland-noveletter.training.v4",
+        "workId": "kielland-noveletter",
+        "kind": "training-edition",
+        "version": "4.0.0",
+        "contentHash": "sha256:8ff321094721982ec6235574f403efe5a368e4ba3f60aeb01434e496b0a02fe3",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "kielland-noveletter.original.v2",
+        "basedOnContentHash": "sha256:94b143e16d5cb3aa0ffd7c0efafc447327d4d46a05ae038ffaeac60c77b5f0cc",
+        "segmentCount": 264,
+        "wordCount": 25669,
+        "file": "/content/editions/kielland-noveletter.training.v4.8ff321094721.json"
       }
     ]
   }
