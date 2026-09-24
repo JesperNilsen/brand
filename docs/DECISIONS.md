@@ -563,6 +563,11 @@ norm; endringer kommer som ny versjon fra operatøren.
   kontrollert ord for ord mot forrige versjon: 487 endringer, alle blant de
   syv formene, ingen andre. I Brand er byttet metrisk nøytralt, og «nu»
   gjenoppretter rimet på «du».
+- **Drillbanken følger utgaven.** En bank knyttes til én utgave og vises
+  bare når den utgaven er standard, så `ibsen-brand` v2 tok drillen bort fra
+  forsiden. `drills.v2.json` er de samme 59 elementene, bundet til v2; alle står
+  ordrett i v2, fordi ingen av dem inneholder noen av de syv formene. Neste gang
+  en pakke med drillbank får ny utgave, hører en ny bank med.
 - **`brand-riksmaal.base.v3`** er v2 uten de fem parene, og er grunnsettet
   nye pakker (*Sult* først) skal bygge på.
 - **Ikke bygget ennå:** ordlistepakken (`brand-lexicon.yaml`), kontrolltilfellene
