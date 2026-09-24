@@ -906,7 +906,8 @@ notes:
 ---
 
 ## Q-015 · T-02 + T-12: repetisjonskøen som en tredje kilde til Kortform
-status: ready
+status: review:queue/q-015-repetisjonsko-2
+result: [2026-09-19] Rerun gronn pa queue/q-015-repetisjonsko-2 (f00b696). Den avviste stille oversprangen i selectForEdition er borte: bare samme editionId OG contentHash serveres pa stempelet, alt annet omstemples mot utgaven eller legges bort som segment-gone/text-gone, og en regnskapstest krever at hver bit havner i noyaktig en botte. Begge porter mutasjonsbevist (6 rode nar den avviste linjen gjeninnsettes — verifisert av runneren selv; 4 rode nar ordrett-sjekken fjernes). pnpm check:fast gronn, 352 tester.
 result: én modus, tre kilder — bank + avviksutledede biter + merkede passasjer, slått sammen i src/lib/practice-queue-flow.ts så drillMode fortsatt ikke vet hvor bitene kom fra; ordrett-porten står i skriveren (enqueue leser utgaven), køen oppdager et utgavebump og stempler om eller legger bort; merking tar ikke fokus fra skrivefeltet. Begge portene mutasjonsbevist (3 røde hver vei). check:fast grønn.
 lane: brand-main
 
@@ -968,7 +969,8 @@ re-litigate it.
 ---
 
 ## Q-016 · Noveletter v3 gjør egennavn til substantiv og «De» til «de»
-status: ready
+status: done — merged as `9eac6db` (#60)
+result: [2026-09-20] properNames re-utledet maskinelt fra hele original.v2 (2 124 ulike ikke-setningsinnledende ord med stor forbokstav, vurdert enkeltvis), ikke lappet med postens funn: 97 navn mot seks. rules.v4.json + training-edition.v4.json bygget av original.v2 (basedOnEditionId kielland-noveletter.original.v2), 496 ordforekomster i 170 av 264 segmenter. De/Dem/Deres (81) står urørt; personnavnene i alle syv novellene beholder stor forbokstav; gammel 2. person flertall «I» (4) var en fjerde forekomst av samme feil og er lagt inn. Mr fjernet fra listen som eneste tittelord — postens gjetning om Monsieur er overprøvd, begrunnet i rules.v4.json. Sanglisten i «To Venner» kan IKKE rettes via properNames (tittelordet «Alt» er pronomenet «alt» tre andre steder) — egen sak. v1-v3 og Q-012s port urørt. pnpm check:fast exit 0. [2026-09-24] Porten posten krevde manglet i runnerens gren og ble skrevet ved review: tests/content/noveletter-proper-names.test.ts, fikstur som bytes i testfilen (ikke utledet fra rules.v4.json), kjørt mot utgaven leseren serveres så en framtidig v5 faller her også. Vist rød mot v3: 13 av 15 fraser borte, både tiltaleform og navn. check:fast exit 0, 327 tester.
 lane: brand-content
 acceptance: `kielland-noveletter` får en `rules.v4.json` og en v4-utgave der (a) den høflige tiltaleformen `De`/`Dem`/`Deres` står urørt, og (b) personnavnene i alle syv novellene beholder stor forbokstav. `properNames` skal RE-DERIVERES fra hele samlingen, ikke lappes med de navnene denne posten tilfeldigvis navngir — posten lister funnene som bevis, ikke som fasit. Utgave-versjonen er et v4-kutt, så `basedOnEditionId` må peke på `kielland-noveletter.original.v2`, og Q-012s port i byggeren skal stå urørt. CORPUS_STATUS.md oppdateres med hvilken utgave leseren faktisk skriver.
 verify: pnpm check:fast
