@@ -4,6 +4,8 @@ Status per verk i `content/`. Se `docs/spec/CORPUS.md` og `docs/spec/LANGUAGE_PR
 
 Alle fire pakker er bygd med samme pipeline: kildetekst arkiveres verbatim under `content/<pack>/source/`, `original.json` bygges med `scripts/import/build-original.ts` (kopierer tekst ord-for-ord fra det arkiverte kildeutdraget), og `training-edition.v1.json` bygges med `scripts/import/build-training-edition.ts` ut fra den enkelte pakkens `rules.v1.json`. `pnpm validate:content` kontrollerer at alt henger sammen (segmentgrenser, provenance mot kildefilen, ordtelling ±10 % mellom original og treningsutgave).
 
+**D18 (2026-09-24): gjeldende treningsutgaver følger Brand-skrivestandarden v0.1.** `kielland-noveletter` v5, `kielland-gift` v3, `hamsun-markens-groede` v3 og `ibsen-brand` v2 skiller seg fra forrige versjon bare ved at originalens «efter», «nu», «kunde», «skulde» og «blev» (Noveletter også «vilde» og «blive») er beholdt i stedet for normalisert til «etter», «nå», «kunne», «skulle», «ble», «ville» og «bli» — 459, 12, 10 og 6 ord. Kontrollert ord for ord mot forrige utgave: ingen andre endringer. Tidligere utgaver ligger uendret, fordi lagrede økter navngir dem.
+
 ## ibsen-brand — Henrik Ibsen, *Brand* (1866)
 
 | Felt | Verdi |

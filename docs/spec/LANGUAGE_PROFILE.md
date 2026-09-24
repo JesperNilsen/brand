@@ -1,5 +1,7 @@
 # BRAND — språkprofil
 
+> **Underordnet Brand-skrivestandarden.** Fra 2026-09-24 er `standards/brand/brand-skrivestandard-v0.1.md` normgrunnlaget for nye utgaver (D18). Ved uenighet gjelder standarden. Merk at Brand Skrift er kildebevarende: tabellen nedenfor gjelder nyskrevet tekst, mens tillatte originalformer beholdes i utgavene.
+
 ## Formål
 
 `LanguageProfile` er BRANDs språk- og stilkonfigurasjon. V1 har én aktiv profil: `brand-riksmaal`. Den skal gi en moderne og konservativ riksmålstonet treningsutgave uten å utgi seg for å være en offentlig norm eller erstatte originaltekst.
@@ -25,7 +27,7 @@ Bruk den konservative formen når begge former er tilgjengelige og valget ikke f
 | boken | boka |
 | syv | sju |
 | nå | nu |
-| etter | efter |
+| efter | etter |
 | meget | mye |
 | selv | sjøl |
 | bygget | bygd |
