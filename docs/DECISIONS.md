@@ -552,13 +552,19 @@ norm; endringer kommer som ny versjon fra operatøren.
   replikker og dialekt bevares, bare avklart historisk ortografi moderniseres
   (`aa` → `å`, `-hed` → `-het`). Nyskrivingsformene i §5 innføres ikke der
   originalen har en annen tillatt form.
-- **De fire eksisterende utgavene er bygget på motsatt regel.** Regelfilene
-  (`rules.v1.json` i `kielland-noveletter`, `kielland-gift`, `ibsen-brand`,
-  `hamsun-markens-groede`, og videre versjoner) normaliserer `efter`→`etter`,
-  `nu`→`nå`, `kunde`→`kunne`, `skulde`→`skulle`, `blev`→`ble`. Det er nettopp
-  det standarden sier Brand Skrift ikke skal gjøre. De står uendret inntil
-  operatøren avgjør om de skal bygges på nytt; en ny utgaveversjon gir ny
-  `contentHash`, og D14 sørger for at fremdriften følger verket.
+- **De fire eksisterende utgavene er bygget på nytt** (operatørens valg,
+  samme dag). Nye versjoner: `kielland-noveletter` v5, `kielland-gift` v3,
+  `hamsun-markens-groede` v3, `ibsen-brand` v2. De tre pakkene som arver
+  `brand-riksmaal.base.v1`, står fortsatt på v1 og overstyrer de fem
+  ordparene med identitetspar begrunnet i `retained` — å flytte dem til v2
+  ville samtidig innført v2s «-erne» → «-ene» og «sad»/«lod»/«bag», og det er
+  en annen avgjørelse. Noveletter tar i tillegg ut sine egne «vilde» og
+  «blive», Brand sine egne «nu», «kunde», «skulde» og «efter». Utgavene er
+  kontrollert ord for ord mot forrige versjon: 487 endringer, alle blant de
+  syv formene, ingen andre. I Brand er byttet metrisk nøytralt, og «nu»
+  gjenoppretter rimet på «du».
+- **`brand-riksmaal.base.v3`** er v2 uten de fem parene, og er grunnsettet
+  nye pakker (*Sult* først) skal bygge på.
 - **Ikke bygget ennå:** ordlistepakken (`brand-lexicon.yaml`), kontrolltilfellene
   og kontrollmotoren (standardens trinn 2–6). Inntil da anvendes standarden av
   redaktøren og agenten som leser den; ingen port i `check:all` håndhever den.
