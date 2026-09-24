@@ -535,3 +535,30 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   den historiske romanen faller ut av bølgen, og Kielland får to av ni plasser.
   Regelen er ikke at rangeringen aldri viker; den er at den bare viker for
   kilden, og at prisen skrives ned.
+
+## Brand-skrivestandarden v0.1 gjelder for nye utgaver (D18)
+
+2026-09-24. `standards/brand/brand-skrivestandard-v0.1.md` er fra nå av
+normgrunnlaget for alle nye treningsutgaver i Brand Skrift. Filen er lagt inn
+ordrett slik operatøren leverte den, og redigeres ikke som en konkurrerende
+norm; endringer kommer som ny versjon fra operatøren.
+
+- **Forrang.** Der `docs/spec/LANGUAGE_PROFILE.md` og standarden er uenige,
+  gjelder standarden. Tabellen i språkprofilen er rettet der den var direkte
+  i strid (`efter` fremfor `etter`).
+- **Brand Skrift er kildebevarende, ikke nyskriving.** Vedtak 1A, 2B, 3A, 4B
+  og 5A: tillatte originalformer beholdes (også gule som `nu`, `sprog`, `sten`),
+  `kunde`/`skulde`/`vilde`/`blev`/`blive`/`give` bevares fra originalen,
+  replikker og dialekt bevares, bare avklart historisk ortografi moderniseres
+  (`aa` → `å`, `-hed` → `-het`). Nyskrivingsformene i §5 innføres ikke der
+  originalen har en annen tillatt form.
+- **De fire eksisterende utgavene er bygget på motsatt regel.** Regelfilene
+  (`rules.v1.json` i `kielland-noveletter`, `kielland-gift`, `ibsen-brand`,
+  `hamsun-markens-groede`, og videre versjoner) normaliserer `efter`→`etter`,
+  `nu`→`nå`, `kunde`→`kunne`, `skulde`→`skulle`, `blev`→`ble`. Det er nettopp
+  det standarden sier Brand Skrift ikke skal gjøre. De står uendret inntil
+  operatøren avgjør om de skal bygges på nytt; en ny utgaveversjon gir ny
+  `contentHash`, og D14 sørger for at fremdriften følger verket.
+- **Ikke bygget ennå:** ordlistepakken (`brand-lexicon.yaml`), kontrolltilfellene
+  og kontrollmotoren (standardens trinn 2–6). Inntil da anvendes standarden av
+  redaktøren og agenten som leser den; ingen port i `check:all` håndhever den.
