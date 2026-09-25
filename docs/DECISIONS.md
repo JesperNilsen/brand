@@ -535,3 +535,41 @@ linje og at treningsutgaven ikke er skrevet om (samme segmenter, linjetall, ±10
   den historiske romanen faller ut av bølgen, og Kielland får to av ni plasser.
   Regelen er ikke at rangeringen aldri viker; den er at den bare viker for
   kilden, og at prisen skrives ned.
+
+## Brand-skrivestandarden v0.1 gjelder for nye utgaver (D18)
+
+2026-09-24. `standards/brand/brand-skrivestandard-v0.1.md` er fra nå av
+normgrunnlaget for alle nye treningsutgaver i Brand Skrift. Filen er lagt inn
+ordrett slik operatøren leverte den, og redigeres ikke som en konkurrerende
+norm; endringer kommer som ny versjon fra operatøren.
+
+- **Forrang.** Der `docs/spec/LANGUAGE_PROFILE.md` og standarden er uenige,
+  gjelder standarden. Tabellen i språkprofilen er rettet der den var direkte
+  i strid (`efter` fremfor `etter`).
+- **Brand Skrift er kildebevarende, ikke nyskriving.** Vedtak 1A, 2B, 3A, 4B
+  og 5A: tillatte originalformer beholdes (også gule som `nu`, `sprog`, `sten`),
+  `kunde`/`skulde`/`vilde`/`blev`/`blive`/`give` bevares fra originalen,
+  replikker og dialekt bevares, bare avklart historisk ortografi moderniseres
+  (`aa` → `å`, `-hed` → `-het`). Nyskrivingsformene i §5 innføres ikke der
+  originalen har en annen tillatt form.
+- **De fire eksisterende utgavene er bygget på nytt** (operatørens valg,
+  samme dag). Nye versjoner: `kielland-noveletter` v5, `kielland-gift` v3,
+  `hamsun-markens-groede` v3, `ibsen-brand` v2. De tre pakkene som arver
+  `brand-riksmaal.base.v1`, står fortsatt på v1 og overstyrer de fem
+  ordparene med identitetspar begrunnet i `retained` — å flytte dem til v2
+  ville samtidig innført v2s «-erne» → «-ene» og «sad»/«lod»/«bag», og det er
+  en annen avgjørelse. Noveletter tar i tillegg ut sine egne «vilde» og
+  «blive», Brand sine egne «nu», «kunde», «skulde» og «efter». Utgavene er
+  kontrollert ord for ord mot forrige versjon: 487 endringer, alle blant de
+  syv formene, ingen andre. I Brand er byttet metrisk nøytralt, og «nu»
+  gjenoppretter rimet på «du».
+- **Drillbanken følger utgaven.** En bank knyttes til én utgave og vises
+  bare når den utgaven er standard, så `ibsen-brand` v2 tok drillen bort fra
+  forsiden. `drills.v2.json` er de samme 59 elementene, bundet til v2; alle står
+  ordrett i v2, fordi ingen av dem inneholder noen av de syv formene. Neste gang
+  en pakke med drillbank får ny utgave, hører en ny bank med.
+- **`brand-riksmaal.base.v3`** er v2 uten de fem parene, og er grunnsettet
+  nye pakker (*Sult* først) skal bygge på.
+- **Ikke bygget ennå:** ordlistepakken (`brand-lexicon.yaml`), kontrolltilfellene
+  og kontrollmotoren (standardens trinn 2–6). Inntil da anvendes standarden av
+  redaktøren og agenten som leser den; ingen port i `check:all` håndhever den.

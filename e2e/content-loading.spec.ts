@@ -13,9 +13,10 @@ test.describe("The corpus is fetched, so it can fail", () => {
     await expect(page.getByTestId("typing-input")).toBeVisible();
 
     // Exactly the edition being typed, and nothing else: the other three works
-    // stay on the server until someone asks for them.
+    // stay on the server until someone asks for them. The version is left
+    // open: which edition is current is the catalog's business, not this test's.
     expect(requests).toHaveLength(1);
-    expect(requests[0]).toContain("ibsen-brand.training.v1");
+    expect(requests[0]).toMatch(/\/ibsen-brand\.training\.v\d+\.[0-9a-f]{12}\.json$/);
 
     // Cacheable forever, because the filename carries the content hash.
     const response = await page.request.get(requests[0]!);

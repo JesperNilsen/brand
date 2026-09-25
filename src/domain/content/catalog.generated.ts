@@ -245,6 +245,20 @@ export const WORKS: Work[] = [
         "segmentCount": 8,
         "wordCount": 813,
         "file": "/content/editions/hamsun-markens-groede.training.v2.c23ab5fa6b0d.json"
+      },
+      {
+        "id": "hamsun-markens-groede.training.v3",
+        "workId": "hamsun-markens-groede",
+        "kind": "training-edition",
+        "version": "3.0.0",
+        "contentHash": "sha256:6b2bd09a677b1a20d376c495d12cbcf940c0b08bb8f887879ca9619e1e497d09",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "hamsun-markens-groede.original",
+        "basedOnContentHash": "sha256:db67765fc4831f1266973af04debf38a2ea64493a0b6f430d0a9391a0eb572a2",
+        "segmentCount": 8,
+        "wordCount": 813,
+        "file": "/content/editions/hamsun-markens-groede.training.v3.6b2bd09a677b.json"
       }
     ]
   },
@@ -304,6 +318,26 @@ export const WORKS: Work[] = [
           "contentHash": "sha256:1b9f950590f5aa4377f433689fd0c96ca6dad13bb5fc6bb9af84f528c069d007",
           "itemCount": 59,
           "file": "/content/editions/ibsen-brand.training.v1.drills.1b9f950590f5.json"
+        }
+      },
+      {
+        "id": "ibsen-brand.training.v2",
+        "workId": "ibsen-brand",
+        "kind": "training-edition",
+        "version": "2.0.0",
+        "contentHash": "sha256:09e229ebe949ac1dd55807b6d66c1f42d75021f082f8e69d653ac92247a4b7e2",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "ibsen-brand.original",
+        "basedOnContentHash": "sha256:dcca48d310d6dd50dddb91848ffaa169acb4f530d595f017e7198b7db953ac37",
+        "segmentCount": 12,
+        "wordCount": 936,
+        "file": "/content/editions/ibsen-brand.training.v2.09e229ebe949.json",
+        "drills": {
+          "id": "ibsen-brand.drills.v2",
+          "contentHash": "sha256:1b9f950590f5aa4377f433689fd0c96ca6dad13bb5fc6bb9af84f528c069d007",
+          "itemCount": 59,
+          "file": "/content/editions/ibsen-brand.training.v2.drills.1b9f950590f5.json"
         }
       }
     ]
@@ -373,6 +407,20 @@ export const WORKS: Work[] = [
         "segmentCount": 13,
         "wordCount": 858,
         "file": "/content/editions/kielland-gift.training.v2.39525fb2b523.json"
+      },
+      {
+        "id": "kielland-gift.training.v3",
+        "workId": "kielland-gift",
+        "kind": "training-edition",
+        "version": "3.0.0",
+        "contentHash": "sha256:c483a82cfea3591dc541aef65db8427025e326e15703c619a465bb10aadc347c",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "kielland-gift.original",
+        "basedOnContentHash": "sha256:2dff6f05866e1f32ef3c4403a73bd9f268d580f90263c022607f294c2374bfa9",
+        "segmentCount": 13,
+        "wordCount": 858,
+        "file": "/content/editions/kielland-gift.training.v3.c483a82cfea3.json"
       }
     ]
   },
@@ -466,6 +514,34 @@ export const WORKS: Work[] = [
         "segmentCount": 264,
         "wordCount": 25669,
         "file": "/content/editions/kielland-noveletter.training.v3.6f32ade39951.json"
+      },
+      {
+        "id": "kielland-noveletter.training.v4",
+        "workId": "kielland-noveletter",
+        "kind": "training-edition",
+        "version": "4.0.0",
+        "contentHash": "sha256:8ff321094721982ec6235574f403efe5a368e4ba3f60aeb01434e496b0a02fe3",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "kielland-noveletter.original.v2",
+        "basedOnContentHash": "sha256:94b143e16d5cb3aa0ffd7c0efafc447327d4d46a05ae038ffaeac60c77b5f0cc",
+        "segmentCount": 264,
+        "wordCount": 25669,
+        "file": "/content/editions/kielland-noveletter.training.v4.8ff321094721.json"
+      },
+      {
+        "id": "kielland-noveletter.training.v5",
+        "workId": "kielland-noveletter",
+        "kind": "training-edition",
+        "version": "5.0.0",
+        "contentHash": "sha256:284be0537acd738b43efadcd630d96c73070f2b32e6a9a4a472e85d6349fbd5f",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "kielland-noveletter.original.v2",
+        "basedOnContentHash": "sha256:94b143e16d5cb3aa0ffd7c0efafc447327d4d46a05ae038ffaeac60c77b5f0cc",
+        "segmentCount": 264,
+        "wordCount": 25669,
+        "file": "/content/editions/kielland-noveletter.training.v5.284be0537acd.json"
       }
     ]
   }
