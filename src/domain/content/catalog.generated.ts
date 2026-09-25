@@ -360,6 +360,42 @@ export const WORKS: Work[] = [
         "segmentCount": 531,
         "wordCount": 60044,
         "file": "/content/editions/hamsun-sult.original.62d0c22f588d.json"
+      },
+      {
+        "id": "hamsun-sult.training.v1",
+        "workId": "hamsun-sult",
+        "kind": "training-edition",
+        "version": "1.0.0",
+        "contentHash": "sha256:e7baca91a51a0c84c24d559a819d9ed736f871fd9625c9257e485b140d656511",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "hamsun-sult.original",
+        "basedOnContentHash": "sha256:62d0c22f588d2f456282a2ec46eb2a8242cc88156093411b11f9f2a0cd45a3d3",
+        "modules": [
+          {
+            "id": "stykke-1",
+            "title": "Første stykke",
+            "order": 1
+          },
+          {
+            "id": "stykke-2",
+            "title": "Andet stykke",
+            "order": 2
+          },
+          {
+            "id": "stykke-3",
+            "title": "Tredje stykke",
+            "order": 3
+          },
+          {
+            "id": "stykke-4",
+            "title": "Fjerde stykke",
+            "order": 4
+          }
+        ],
+        "segmentCount": 531,
+        "wordCount": 60044,
+        "file": "/content/editions/hamsun-sult.training.v1.e7baca91a51a.json"
       }
     ]
   },
