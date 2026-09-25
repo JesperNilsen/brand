@@ -14,6 +14,7 @@
  */
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { analyzeText, hitCounts, lineColumn, type RuleHit } from "../src/domain/language/rules";
 import { requireBaseRuleSet } from "../src/domain/language/base-rules";
 import { loadRules } from "./lib/load-rules";
@@ -22,7 +23,7 @@ import { originalVersionOf, readOriginal } from "./lib/originals";
 
 const contentRoot = path.resolve(process.cwd(), "content");
 
-type Options = { editionId: string; rule?: string; summary: boolean };
+export type Options = { editionId: string; rule?: string; summary: boolean };
 type Segment = { id: string; order: number; text: string; label?: string };
 
 function parseArgs(argv: string[]): Options {
@@ -41,24 +42,50 @@ function parseArgs(argv: string[]): Options {
   return opts;
 }
 
-/** Find which pack and which rules version produced an edition id. */
-async function locate(editionId: string): Promise<{ pack: string; dir: string; version: number }> {
+/**
+ * Find which pack and which rules version produced an edition id, and which
+ * edition of that pack the reader is actually served.
+ *
+ * "Current" is derived the same way `validate:content` derives it — the highest
+ * major version among the pack's training editions — because the two must not
+ * be able to disagree about which text is live. Reading a superseded edition is
+ * not a hypothetical: «Noveletter» grew a v3 while a packet for v2 sat waiting
+ * to be read, and nothing in the output said so.
+ */
+async function locate(
+  editionId: string,
+): Promise<{ pack: string; dir: string; version: number; currentId: string }> {
   const packs = (await readdir(contentRoot, { withFileTypes: true }))
     .filter((d) => d.isDirectory())
     .map((d) => d.name)
     .sort();
-  const known: string[] = [];
+  const known: { id: string; current: boolean }[] = [];
+  let found: { pack: string; dir: string; version: number } | undefined;
+
   for (const pack of packs) {
     const dir = path.join(contentRoot, pack);
+    const editions: { id: string; version: number }[] = [];
     for (const f of await readdir(dir)) {
       const m = /^training-edition\.v(\d+)\.json$/.exec(f);
       if (!m) continue;
       const parsed = JSON.parse(await readFile(path.join(dir, f), "utf8")) as { id: string };
-      known.push(parsed.id);
-      if (parsed.id === editionId) return { pack, dir, version: Number(m[1]) };
+      editions.push({ id: parsed.id, version: Number(m[1]) });
+    }
+    if (editions.length === 0) continue;
+    const current = [...editions].sort((a, b) => b.version - a.version)[0];
+    for (const e of editions) known.push({ id: e.id, current: e.id === current.id });
+
+    const hit = editions.find((e) => e.id === editionId);
+    if (hit) found = { pack, dir, version: hit.version };
+    if (found && found.pack === pack) {
+      return { ...found, currentId: current.id };
     }
   }
-  throw new Error(`Ukjent utgave: ${editionId}\nKjente utgaver:\n  ${known.join("\n  ")}`);
+
+  const listing = known
+    .map((k) => `  ${k.id}${k.current ? "  ← gjeldende" : ""}`)
+    .join("\n");
+  throw new Error(`Ukjent utgave: ${editionId}\nKjente utgaver:\n${listing}`);
 }
 
 /**
@@ -83,9 +110,17 @@ function flatten(s: string): string {
   return s.replace(/\s+/g, " ");
 }
 
-async function main(): Promise<void> {
-  const opts = parseArgs(process.argv.slice(2));
-  const { pack, dir, version } = await locate(opts.editionId);
+/**
+ * The reading, as lines.
+ *
+ * Built rather than printed so `review-packet.ts` can regroup exactly what the
+ * reader sees. It used to post-process the tool's stdout with regexes from
+ * outside the repository; a shared return value means the two cannot drift.
+ */
+export async function renderReading(opts: Options): Promise<string[]> {
+  const out: string[] = [];
+  const emit = (line = "") => out.push(line);
+  const { pack, dir, version, currentId } = await locate(opts.editionId);
 
   const rules = await loadRules(dir, version);
   const rawPack = JSON.parse(
@@ -114,10 +149,15 @@ async function main(): Promise<void> {
   const reviews = await loadReviews(dir);
   const entry = reviews[opts.editionId];
 
-  console.log(
+  emit(
     `Redaksjonell lesning — ${opts.editionId}\n` +
       `${pack} · original ${original.edition.id} · regler v${version}` +
       `${base ? ` · grunnregler ${base.id} (${base.version})` : " · ingen grunnregler"}\n` +
+      `${
+        currentId === opts.editionId
+          ? "Dette er utgaven leseren skriver."
+          : `MERK: leseren skriver ${currentId}, ikke denne. En dom herfra fester seg til en utgave som er gått ut.`
+      }\n` +
       `Status: ${entry ? `${entry.reviewStatus}${entry.reviewedBy ? ` av ${entry.reviewedBy}` : ""}${entry.reviewedAt ? ` (${entry.reviewedAt})` : ""}` : "ikke ført i review.json"}\n`,
   );
 
@@ -146,46 +186,58 @@ async function main(): Promise<void> {
       : report.hits;
     if (hits.length === 0 || opts.summary) continue;
 
-    console.log(`── ${seg.id}${seg.label ? ` · ${seg.label}` : ""} (${hits.length})`);
+    emit(`── ${seg.id}${seg.label ? ` · ${seg.label}` : ""} (${hits.length})`);
     for (const h of hits) {
       shown += 1;
       const { line, column } = lineColumn(seg.text, h.start);
       const origin = ruleOrigin(h.ruleKey, packReplacements, baseReplacements);
-      console.log(`  ${`${line}:${column}`.padEnd(8)} «${h.from}» → «${h.to}»  [${origin}: ${h.ruleKey}]`);
-      console.log(`  ${" ".repeat(8)} …${flatten(h.context.before)}[${h.from}]${flatten(h.context.after)}…`);
+      emit(`  ${`${line}:${column}`.padEnd(8)} «${h.from}» → «${h.to}»  [${origin}: ${h.ruleKey}]`);
+      emit(`  ${" ".repeat(8)} …${flatten(h.context.before)}[${h.from}]${flatten(h.context.after)}…`);
     }
-    console.log("");
+    emit("");
   }
 
   const counts = hitCounts({ ruleSetId: "", family: "historical-orthography", hits: allHits, silent: [], wouldBe: "" });
-  console.log(
+  emit(
     `${total} endringer i ${original.edition.segments.length} segmenter, ${counts.length} regler` +
       (opts.rule ? ` — ${shown} vist med «${opts.rule}»` : ""),
   );
   for (const c of counts) {
     const origin = ruleOrigin(c.ruleKey, packReplacements, baseReplacements);
-    console.log(`  ${c.ruleKey.padEnd(28)} ${String(c.count).padStart(3)}  [${origin}]`);
+    emit(`  ${c.ruleKey.padEnd(28)} ${String(c.count).padStart(3)}  [${origin}]`);
   }
 
   const unused = Object.keys(rules.replacements ?? {}).filter(
     (k) => !allHits.some((h) => h.ruleKey === k),
   );
   if (unused.length) {
-    console.log(`\nRegler som ikke traff (${unused.length}): ${unused.join(", ")}`);
+    emit(`\nRegler som ikke traff (${unused.length}): ${unused.join(", ")}`);
   }
   const retained = rawPack.retained ?? {};
   if (Object.keys(retained).length) {
-    console.log("\nBevisst beholdt:");
-    for (const [k, why] of Object.entries(retained)) console.log(`  «${k}» — ${why}`);
+    emit("\nBevisst beholdt:");
+    for (const [k, why] of Object.entries(retained)) emit(`  «${k}» — ${why}`);
   }
 
-  console.log(
+  emit(
     `\nFor å føre lesningen: legg inn «${opts.editionId}» i ${path.relative(process.cwd(), path.join(dir, "review.json"))} ` +
       `med reviewedContentHash ${committed.contentHash}`,
   );
+
+  return out;
 }
 
-main().catch((err: unknown) => {
-  console.error(err instanceof Error ? err.message : String(err));
-  process.exitCode = 1;
-});
+async function main(): Promise<void> {
+  const lines = await renderReading(parseArgs(process.argv.slice(2)));
+  for (const line of lines) console.log(line);
+}
+
+// Only when run as a command. `review-packet.ts` imports `renderReading`, and
+// a bare `main()` at module scope would print the whole reading a second time
+// as a side effect of that import — and compute it twice to do it.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err: unknown) => {
+    console.error(err instanceof Error ? err.message : String(err));
+    process.exitCode = 1;
+  });
+}

@@ -16,6 +16,7 @@
     "check:drills": "tsx scripts/check-drills_test.ts",
     "sprakrens": "tsx scripts/sprakrens.ts",
     "review:edition": "tsx scripts/review-edition.ts",
+    "review:packet": "tsx scripts/review-packet.ts",
     "check:css": "tsx scripts/check-css-layers.ts",
     "check:design": "tsx scripts/check-design_test.ts && tsx scripts/check-design.ts",
     "check:fast": "pnpm lint && pnpm typecheck && pnpm test && pnpm validate:content && pnpm check:css && pnpm check:design && pnpm check:drills && pnpm check:originals",
