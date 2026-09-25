@@ -20,6 +20,7 @@ import {
   cpSync,
   existsSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   symlinkSync,
@@ -168,13 +169,27 @@ type BuilderCase = {
   writes?: string;
 };
 
-/** A rules.v2.json in the temp tree, so a NEW edition can be cut there. */
+/**
+ * The first training-edition version not yet in the pack. The case below is
+ * about cutting a NEW edition, so it must not be a number the pack has already
+ * published — ibsen-brand grew a v2 of its own under D18, and a hardcoded «v2»
+ * turned the case into a rebuild of that one.
+ */
+const NEW_VERSION =
+  Math.max(
+    ...readdirSync(join(ROOT, PACK))
+      .map((f) => /^training-edition\.v(\d+)\.json$/.exec(f)?.[1])
+      .filter((v): v is string => v !== undefined)
+      .map(Number),
+  ) + 1;
+
+/** A rules.vN.json in the temp tree, so a NEW edition can be cut there. */
 function addSecondRules(dir: string) {
   const file = join(dir, PACK, "rules.v1.json");
   const rules = JSON.parse(readFileSync(file, "utf8")) as Record<string, unknown>;
-  rules.editionId = "ibsen-brand.training.v2";
-  rules.version = "2.0.0";
-  writeFileSync(join(dir, PACK, "rules.v2.json"), `${JSON.stringify(rules, null, 2)}\n`);
+  rules.editionId = `ibsen-brand.training.v${NEW_VERSION}`;
+  rules.version = `${NEW_VERSION}.0.0`;
+  writeFileSync(join(dir, PACK, `rules.v${NEW_VERSION}.json`), `${JSON.stringify(rules, null, 2)}\n`);
 }
 
 const builderCases: BuilderCase[] = [
@@ -187,8 +202,8 @@ const builderCases: BuilderCase[] = [
     args: [],
     expects: null,
     setup: addSecondRules,
-    writes: join(PACK, "training-edition.v2.json"),
-    says: /wrote .*training-edition\.v2\.json.*from original\.v2\.json/,
+    writes: join(PACK, `training-edition.v${NEW_VERSION}.json`),
+    says: new RegExp(`wrote .*training-edition\\.v${NEW_VERSION}\\.json.*from original\\.v2\\.json`),
   },
   {
     // The one that bit on 2026-09-09, in exactly the shape it bit.

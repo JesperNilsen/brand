@@ -4,6 +4,8 @@ Status per verk i `content/`. Se `docs/spec/CORPUS.md` og `docs/spec/LANGUAGE_PR
 
 Alle fire pakker er bygd med samme pipeline: kildetekst arkiveres verbatim under `content/<pack>/source/`, `original.json` bygges med `scripts/import/build-original.ts` (kopierer tekst ord-for-ord fra det arkiverte kildeutdraget), og `training-edition.v1.json` bygges med `scripts/import/build-training-edition.ts` ut fra den enkelte pakkens `rules.v1.json`. `pnpm validate:content` kontrollerer at alt henger sammen (segmentgrenser, provenance mot kildefilen, ordtelling ±10 % mellom original og treningsutgave).
 
+**D18 (2026-09-24): gjeldende treningsutgaver følger Brand-skrivestandarden v0.1.** `kielland-noveletter` v5, `kielland-gift` v3, `hamsun-markens-groede` v3 og `ibsen-brand` v2 skiller seg fra forrige versjon bare ved at originalens «efter», «nu», «kunde», «skulde» og «blev» (Noveletter også «vilde» og «blive») er beholdt i stedet for normalisert til «etter», «nå», «kunne», «skulle», «ble», «ville» og «bli» — 459, 12, 10 og 6 ord. Kontrollert ord for ord mot forrige utgave: ingen andre endringer. Tidligere utgaver ligger uendret, fordi lagrede økter navngir dem.
+
 ## ibsen-brand — Henrik Ibsen, *Brand* (1866)
 
 | Felt | Verdi |
@@ -51,8 +53,27 @@ Etablert før denne runden; uendret. Se `content/ibsen-brand/rules.v1.json` for 
 | Hentet | 2026-09-04 |
 | Rettighetsgrunnlag | Public domain (Kielland d. 1906, mer enn 70 år siden). Wikikildens transkripsjon er CC BY-SA 4.0; attribusjon beholdt i pakken. |
 | Kontrollstatus | agent-drafted |
-| Ordtall / segmenter | **v2 (gjeldende): 25 664 ord, 264 segmenter** — hele samlingen. v1: 851 ord, 13 segmenter (åpningen av de to første novellene), beholdt uendret. |
+| Ordtall / segmenter | **v2 (gjeldende original): 25 664 ord, 264 segmenter** — hele samlingen. v1: 851 ord, 13 segmenter (åpningen av de to første novellene), beholdt uendret. |
 | Inkludert | **Alle syv novellene**, i bindets egen rekkefølge: «Haabet er lysegrønt» (26 segm.), «Visne Blade» (15), «Erotik og Idyl» (45), «Balstemning» (19), «En Middag» (17), «To Venner» (64), «Slaget ved Waterloo» (78). Rekkefølgen er lest av innholdsfortegnelsen på Wikikildens `Novelletter`-side. |
+
+**Leseren skriver `kielland-noveletter.training.v4`.** Valget er ikke satt noe
+sted: `defaultEdition()` i `src/domain/content/registry.ts` tar den
+treningsutgaven med høyest versjonsnummer for språkprofilen, så en ny
+`training-edition.vN.json` i pakken blir utgaven leseren skriver i samme
+øyeblikk den er bygget. v1, v2 og v3 står urørt ved siden av, fordi en lagret
+økt navngir utgaven den ble skrevet mot.
+
+**v4 (2026-09-20): `properNames` re-utledet fra hele samlingen.** v3-listen
+hadde seks navn, utledet da pakken var én novelle på 13 segmenter, og ble stående
+da Q-006 vokste teksten til syv noveller. Alt som kom inn med de nye novellene
+falt derfor gjennom `lowercaseNouns`: 81 forekomster av høflig tiltale
+(`De`/`Dem`/`Deres`) skiftet betydning, ~245 personnavn mistet stor forbokstav,
+og den gamle 2. person flertall `I` ble til preposisjonen «i». v4 retter alle
+tre — 496 ordforekomster i 170 av 264 segmenter, 93 ulike ord. Utledningen er
+maskinell (hvert ikke-setningsinnledende ord med stor forbokstav i original.v2,
+etter at mønstre og ordoppslag er kjørt: 2 124 ulike ord), og hver avgjørelse er
+begrunnet i `content/kielland-noveletter/rules.v4.json`. Kontrollstatusen er
+fortsatt `agent-drafted`: en redaktør har ikke lest v4.
 
 **Utvidet 2026-09-08 til hele samlingen (D10).** Originalen er versjonert:
 `original.json` (v1) er åpningen av de to første novellene og er utgaven hver

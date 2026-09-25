@@ -14,11 +14,13 @@
 import type { LanguageBaseRuleSet } from "../types";
 import baseV1 from "./brand-riksmaal.base.v1.json";
 import baseV2 from "./brand-riksmaal.base.v2.json";
+import baseV3 from "./brand-riksmaal.base.v3.json";
 
 /** Oldest first: the newest set is the last one, and callers rely on that. */
 export const BASE_RULE_SETS: readonly LanguageBaseRuleSet[] = [
   baseV1 as LanguageBaseRuleSet,
   baseV2 as LanguageBaseRuleSet,
+  baseV3 as LanguageBaseRuleSet,
 ];
 
 export function listBaseRuleSets(languageProfileId: string): readonly LanguageBaseRuleSet[] {

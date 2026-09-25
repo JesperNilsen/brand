@@ -27,6 +27,10 @@
  *  - a work missing authorDeathYear, rightsStatus or originalLanguage, a
  *    training edition missing adaptationStatus, or a rights claim of public
  *    domain over an author who died after 1955 with no written basis
+ *  - a training edition where the polite «De» / «Dem» / «Deres» / «I» of a
+ *    segment do not survive with their capital: lowercaseNouns has turned
+ *    address into the third person, which changes meaning and not spelling
+ *    (Q-016), unless the edition is a registered historical defect
  *
  * Warns (exit 0) on:
  *  - training-edition passages outside the 35-120 word range that
@@ -34,6 +38,8 @@
  *    registered known deviation
  *  - a registered known deviation that is now inside the range, so the list
  *    cannot quietly rot into a permanent exemption
+ *  - a registered polite-address defect that no longer occurs, for the same
+ *    reason
  *
  *   pnpm validate:content
  */
@@ -41,6 +47,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { countWords } from "./lib/text";
 import { editionContentHash } from "./lib/hash";
+import { politeAddressProblems } from "./lib/polite-address";
 import { buildTrainingEdition, serializeEdition, type OriginalFile } from "./lib/build-edition";
 import { baseOverrides, type Rules } from "./lib/rules";
 import { loadRules } from "./lib/load-rules";
@@ -95,6 +102,21 @@ const KNOWN_LENGTH_DEVIATIONS = new Map<string, string>([
   ["kielland-noveletter/waterloo-40", "146 ord; ett avsnitt"],
 ]);
 const seenDeviations = new Set<string>();
+
+/**
+ * Training editions known to have lowercased the polite second person, keyed
+ * by edition id. A written-down decision, not a soft gate: everything else
+ * FAILS. Not "the newest edition only", because a superseded edition is still
+ * the one a reader mid-session is typing against (D7), and its text does not
+ * become less wrong by being old.
+ */
+const KNOWN_POLITE_DEFECTS = new Map<string, string>([
+  [
+    "kielland-noveletter.training.v3",
+    "Q-016: utgaven som lekket 81 høflige former; erstattet av v4 2026-09-24, beholdt som historikk",
+  ],
+]);
+const seenPoliteDefects = new Set<string>();
 
 /**
  * Whether an unreviewed default edition fails the build or only warns.
@@ -433,6 +455,19 @@ async function validatePack(pack: string) {
     if (t.basedOnContentHash !== originalHash) {
       fail(pack, `${f}: basedOnContentHash does not match ${source.edition.id}`);
     }
+    // The polite second person has to come through with its capital. This is
+    // the one damage lowercaseNouns can do without misspelling a word, and the
+    // one a reader cannot see: «Dem» (you) → «dem» (them), still grammatical.
+    const polite = politeAddressProblems(f, source.edition.id, t.id, source.edition.segments, t.segments);
+    const exempt = KNOWN_POLITE_DEFECTS.get(t.id);
+    if (exempt !== undefined) {
+      seenPoliteDefects.add(t.id);
+      if (polite.length === 0) {
+        warn(pack, `${f}: står i KNOWN_POLITE_DEFECTS («${exempt}») men har ingen feil lenger — fjern oppføringen`);
+      }
+    } else {
+      for (const problem of polite) fail(pack, problem);
+    }
     checkPassageLength(pack, t.id, t.segments);
     if (t.segments.length !== source.edition.segments.length) {
       fail(pack, `${f}: segment count differs from ${source.edition.id}`);
@@ -614,6 +649,11 @@ async function main() {
   for (const [key, why] of KNOWN_LENGTH_DEVIATIONS) {
     if (!seenDeviations.has(key)) {
       warn(key.split("/")[0], `kjent lengdeavvik ${key} finnes ikke lenger — fjern unntaket «${why}»`);
+    }
+  }
+  for (const [id, why] of KNOWN_POLITE_DEFECTS) {
+    if (!seenPoliteDefects.has(id)) {
+      warn(id.split(".")[0], `kjent tiltalefeil ${id} finnes ikke lenger som utgave — fjern unntaket «${why}»`);
     }
   }
 

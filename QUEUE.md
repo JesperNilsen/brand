@@ -906,7 +906,9 @@ notes:
 ---
 
 ## Q-015 · T-02 + T-12: repetisjonskøen som en tredje kilde til Kortform
-status: ready
+status: review:queue/q-015-repetisjonsko-2
+result: [2026-09-19] Rerun gronn pa queue/q-015-repetisjonsko-2 (f00b696). Den avviste stille oversprangen i selectForEdition er borte: bare samme editionId OG contentHash serveres pa stempelet, alt annet omstemples mot utgaven eller legges bort som segment-gone/text-gone, og en regnskapstest krever at hver bit havner i noyaktig en botte. Begge porter mutasjonsbevist (6 rode nar den avviste linjen gjeninnsettes — verifisert av runneren selv; 4 rode nar ordrett-sjekken fjernes). pnpm check:fast gronn, 352 tester.
+result: én modus, tre kilder — bank + avviksutledede biter + merkede passasjer, slått sammen i src/lib/practice-queue-flow.ts så drillMode fortsatt ikke vet hvor bitene kom fra; ordrett-porten står i skriveren (enqueue leser utgaven), køen oppdager et utgavebump og stempler om eller legger bort; merking tar ikke fokus fra skrivefeltet. Begge portene mutasjonsbevist (3 røde hver vei). check:fast grønn.
 lane: brand-main
 
 acceptance:
@@ -955,3 +957,73 @@ notes:
   samme her: en kø fylt på rått antall avvik blir en kø full av `e`.
 - Etter denne er korpuslinjen neste: *Sult* (halvferdig på
   `import/hamsun-sult`), så *Gift*, så *Et dukkehjem*.
+
+**Rejected on review 2026-09-18 — reset to `ready` for a re-run.** `src/domain/practice-queue/queue.ts:116` — `selectForEdition` exits before the hash/text checks when `item.editionId !== edition.id`, so entries from a previous published edition are silently skipped rather than revalidated or marked stale. A real v1→v2 bump therefore does not meet the drift gate.
+
+Full verdict with cited evidence: `briefs/queue-review-2026-09-18.md`. The rejected
+work is preserved as branch `rejected/q-015-repetisjonsko` (renamed out of the
+`queue/` namespace so a re-run can create its own branch; an existing `queue/` branch
+blocks the entry instead of running it). A re-run must fix the defect above, not
+re-litigate it.
+
+---
+
+## Q-016 · Noveletter v3 gjør egennavn til substantiv og «De» til «de»
+status: done — merged as `9eac6db` (#60)
+result: [2026-09-20] properNames re-utledet maskinelt fra hele original.v2 (2 124 ulike ikke-setningsinnledende ord med stor forbokstav, vurdert enkeltvis), ikke lappet med postens funn: 97 navn mot seks. rules.v4.json + training-edition.v4.json bygget av original.v2 (basedOnEditionId kielland-noveletter.original.v2), 496 ordforekomster i 170 av 264 segmenter. De/Dem/Deres (81) står urørt; personnavnene i alle syv novellene beholder stor forbokstav; gammel 2. person flertall «I» (4) var en fjerde forekomst av samme feil og er lagt inn. Mr fjernet fra listen som eneste tittelord — postens gjetning om Monsieur er overprøvd, begrunnet i rules.v4.json. Sanglisten i «To Venner» kan IKKE rettes via properNames (tittelordet «Alt» er pronomenet «alt» tre andre steder) — egen sak. v1-v3 og Q-012s port urørt. pnpm check:fast exit 0. [2026-09-24] Porten posten krevde manglet i runnerens gren og ble skrevet ved review: tests/content/noveletter-proper-names.test.ts, fikstur som bytes i testfilen (ikke utledet fra rules.v4.json), kjørt mot utgaven leseren serveres så en framtidig v5 faller her også. Vist rød mot v3: 13 av 15 fraser borte, både tiltaleform og navn. check:fast exit 0, 327 tester.
+lane: brand-content
+acceptance: `kielland-noveletter` får en `rules.v4.json` og en v4-utgave der (a) den høflige tiltaleformen `De`/`Dem`/`Deres` står urørt, og (b) personnavnene i alle syv novellene beholder stor forbokstav. `properNames` skal RE-DERIVERES fra hele samlingen, ikke lappes med de navnene denne posten tilfeldigvis navngir — posten lister funnene som bevis, ikke som fasit. Utgave-versjonen er et v4-kutt, så `basedOnEditionId` må peke på `kielland-noveletter.original.v2`, og Q-012s port i byggeren skal stå urørt. CORPUS_STATUS.md oppdateres med hvilken utgave leseren faktisk skriver.
+verify: pnpm check:fast
+notes:
+- **Funnet 2026-09-17 da lesepakken for v3 endelig ble kuttet.** Pakken finnes nå
+  på `~/dev/brand-review-packets/kielland-noveletter.training.v3.md` (8 239
+  endringer, 2 228 ordpar). Feilen er ikke redaksjonell smak — den er mekanisk
+  og entydig, og den ligger i utgaven leseren skriver i dag.
+
+- **Årsaken, som er verdt mer enn listen:** `lowercaseNouns.properNames` i
+  `content/kielland-noveletter/rules.v3.json` er fortsatt
+  `["Hans","Ole","Maren","Mr","Everton","Sainsbury"]` — seks navn, utledet da
+  pakken var ÉN novelle på 13 segmenter. Q-006 vokste pakken til syv noveller og
+  264 segmenter og lot listen stå. `lowercaseNouns` gjør små bokstaver av hvert
+  stor-forbokstavet ord som ikke står først i setningen og ikke står i
+  `properNames`, så alt som kom inn med de seks nye novellene falt igjennom.
+  Til sammenligning har `kielland-gift` 24 navn for ETT kapittel.
+  **Regelen dette gir: når en pakke vokser, er `properNames` en del av veksten.**
+
+- **Høflig tiltale, 81 forekomster** — `De` 38, `Dem` 31, `Deres` 12. Dette er
+  nøyaktig den loggede fallgruven `polite-De-vs-lowercaseNouns`, som ble skrevet
+  ned for *Sult* (403 forekomster) — men den har allerede rukket å skipe her.
+  Kontekst fra pakken, utvetydig: «„Finder [De]!“ sagde hun tørt», «„Synes [De]
+  ikke om at danse?“», «„De har vist ikke moret [Dem] iaften?“». Små bokstaver
+  gjør *Dem* (høflig «Dem») til *dem* (3. person flertall) — teksten skifter
+  betydning, og leseren har ingen måte å oppdage det på.
+
+- **Personnavn med liten forbokstav, ~245 forekomster.** Fra pakken, med antall:
+  Alphonse 77 (+ Alphonses 10), Charles 52, Søren 20, Fredrik 15, Betty 13,
+  Olsen 13, Schrappe 13, Ludvigsen 9, Marie 7, Bech 5, Wellingtons 5, Hans’s 6.
+  Trolig også `Monsieur` 14 og `Vorherre` 8 — begge egennavn i bruk her.
+  Kontekstlinje: «det flotte og overdaadige Liv, [Alphonse] førte».
+
+- **Hva som IKKE er feil, så ingen «retter» det:** titlene (`Fetter` 68,
+  `Frøken` 35, `Onkel` 28, `Fru` 14, `Kaptein`/`Kapteinen` 41, `Tante` 6) skal
+  ha liten forbokstav på moderne riksmål, og fellesnavnene (`Tid`, `Mann`,
+  `Ord`, `Dag`, `Liv` …) er hele poenget med regelen. Bare navn og tiltale.
+
+- **De tre andre pakkene er rene.** Sjekket: ingen `De`/`Dem`/`Deres`-regel i
+  `kielland-gift.training.v2`, `hamsun-markens-groede.training.v2` eller
+  `ibsen-brand.training.v1`. Feilen er isolert til v3-utvidelsen.
+
+- **Porten må ikke lese det samme feltet byggeren skriver.** Q-012s lærdom
+  gjelder her: en test som henter navnelisten fra `rules.v4.json` beviser bare at
+  filen er lik seg selv. Skriv fikstur-listen i testfilen, uavhengig av reglene,
+  og la den gå rød mot dagens v3 — to uavhengige påstander om samme krav, slik at
+  den ene ikke kan endres stille uten at den andre feiler.
+
+- **Vis at porten biter** ved lukking: kjør den nye testen mot
+  `training-edition.v3.json` og vis at den er rød på både tiltaleformen og minst
+  ett navn, før v4 finnes.
+
+- **Ikke rør framdrift-frykten:** T-10/D14 er løst — `progressKey()` inneholder
+  ikke lenger `editionId`, så et v4-kutt nullstiller ingen lagret fremdrift.
+  Kortformbanken henger på `ibsen-brand.training.v1`, ikke på Noveletter, så den
+  er heller ikke i veien.
