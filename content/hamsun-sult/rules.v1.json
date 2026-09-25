@@ -1,0 +1,95 @@
+{
+  "editionId": "hamsun-sult.training.v1",
+  "version": "1.0.0",
+  "languageProfileId": "brand-riksmaal",
+  "adaptationStatus": "orthography",
+  "baseRules": "brand-riksmaal.base.v3",
+  "notes": [
+    "v1 (2026-09-25, D18): første utgave, bygget etter Brand-skrivestandarden v0.1 på grunnreglene brand-riksmaal.base.v3 — den første pakken på v3. Kilden er førsteutgaven (København 1890) i 1890-tallets dansk-norske ortografi, eldre enn de tre andre pakkene (1903–1917): «ej»/«øj» der de har «ei»/«øy», «-hed» der de har «-het». Derfor bærer denne pakken mønstre de ikke trenger.",
+    "Kildebevarende (standardens 1A/2B/4B/5A): «efter», «nu», «kunde», «skulde», «blev», «vilde», «blive» står som Hamsun skrev dem. Bare avgjort ortografi moderniseres: aa→å, ej→ei, øj→øy, -hed→-het, op→opp, ind→inn.",
+    "Høflig tiltale er halve teksturen i Sult: fortellerens anstrengte formalitet overfor fremmede. «De», «Dem», «Deres» (og gammel 2. person flertall «I») står i properNames og vernes av validatorens høflighetsport; 403 forekomster."
+  ],
+  "patterns": [
+    {
+      "from": "Aa",
+      "to": "Å",
+      "flags": "g",
+      "note": "Store forbokstaver: 'Aa' → 'Å'. Kjøres før 'aa' → 'å'. Også interjeksjonen «Aa» (34 ganger) → «Å». Ingen etternavn med Aa i teksten."
+    },
+    {
+      "from": "aa",
+      "to": "å",
+      "flags": "g",
+      "note": "1890-ortografiens 'aa' er alltid 'å' i denne teksten (paa, saa, gaa, naar, ogsaa, Aar osv.): 3 589 forekomster, 394 ord."
+    },
+    {
+      "from": "øj",
+      "to": "øy",
+      "flags": "g",
+      "note": "Dansk 'øj' → norsk 'øy' (Øjne, højt, Støj, Møje, Fornøjelse). Ingen egennavn med øj i teksten."
+    },
+    {
+      "from": "ej",
+      "to": "ei",
+      "flags": "g",
+      "note": "Dansk 'ej' → norsk 'ei' (Nej, Vej, rejste, Arbejde, Husleje, Lejlighed, Undervejs). Ingen egennavn med ej i teksten; alle stor-forbokstavede treff er fellesnavn."
+    },
+    {
+      "from": "hederne\\b",
+      "to": "hetene",
+      "flags": "g",
+      "note": "Suffikset -hed → -het, bestemt flertall (Nyhederne). Erstatningstekst er bokstavelig — ingen $1 — så hver bøyningsform er sitt eget mønster; lengste først."
+    },
+    {
+      "from": "hedens\\b",
+      "to": "hetens",
+      "flags": "g",
+      "note": "-hed → -het, bestemt entall genitiv (Samvittighedens)."
+    },
+    {
+      "from": "heden\\b",
+      "to": "heten",
+      "flags": "g",
+      "note": "-hed → -het, bestemt entall (Kjærligheden, Sandheden): 21 forekomster."
+    },
+    {
+      "from": "heder\\b",
+      "to": "heter",
+      "flags": "g",
+      "note": "-hed → -het, ubestemt flertall (Nyheder): 20 forekomster."
+    },
+    {
+      "from": "heds\\b",
+      "to": "hets",
+      "flags": "g",
+      "note": "-hed → -het, genitiv (Samvittigheds)."
+    },
+    {
+      "from": "hed\\b",
+      "to": "het",
+      "flags": "g",
+      "note": "-hed → -het, ubestemt entall (Samvittighed, Svaghed, Bevidsthed): 188 forekomster, 127 ord. Treffer også verbet «hed» (han hed Ole) → «het», som er riktig moderne form."
+    }
+  ],
+  "replacements": {
+    "op": "opp",
+    "ind": "inn",
+    "veir": "vær",
+    "veiret": "været",
+    "udvei": "utvei"
+  },
+  "lowercaseNouns": {
+    "properNames": ["De", "Dem", "Deres", "I"]
+  },
+  "retained": {
+    "efter / nu / kunde / skulde / blev": "D18, standardens 1A/2B/4B/5A: kildebevarende. Grunnreglene v3 er nettopp v2 uten disse fem, så de arves ikke og skal ikke gjentas som identitetspar.",
+    "vilde / blive": "samme klasse som de fem over; sto aldri i noe grunnsett, står urørt her (245 + 60 forekomster).",
+    "sagde": "ordvalg/bøyning, ikke ortografi — LANGUAGE_PROFILE forbyr å bytte forfatterens ordvalg (277 forekomster).",
+    "nogle / noget / nogen": "pronomenform, ikke stavemåte; beholdt (≈300 forekomster).",
+    "hende": "objektsform «henne» er bøyning, ikke ortografi; beholdt (179 forekomster).",
+    "meget": "ordvalg; beholdt (99 forekomster).",
+    "-ede (preteritum)": "D12: endelsen flyttes og hvilken endelse varierer med verbet — tretti redaksjonelle avgjørelser forkledd som én regel. Ikke rørt.",
+    "Thi": "konjunksjon uten moderne ettordsform; beholdt som i Noveletter.",
+    "Kristiania": "bynavnet i 1890; ikke «Oslo», som ville vært anakronisme, ikke ortografi."
+  }
+}
