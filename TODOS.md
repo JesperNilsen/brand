@@ -349,7 +349,11 @@ med `LOADING_DELAY_MS = 0` feiler ingen-blink-testen.
 
 ---
 
-## T-17 — Hyller som egen akse (P1, M / S)
+## T-17 — Hyller som egen akse — LØST 2026-09-09
+
+**Løst som Q-009** (`3d3f2f0`, #41): `content/shelves.json` → `SHELVES`, fire
+kuraterte hyller, og *Noveletter* på to av dem — så mange-til-mange er ekte i
+dagens data, ikke bare i modellen.
 
 **Hva:** Fire kuraterte hyller — Norske klassikere, Danske klassikere, Idé og
 tro, Korte tekster — som leseren navigerer etter, og som et verk kan stå på
@@ -374,7 +378,11 @@ valideres mot at hver `workId` finnes. Ingen endring i noen utgave, ingen
 **Port:** `validate:content` feiler når en hylle navngir et verk som ikke
 finnes, og når et verk ikke står på noen hylle.
 
-## T-18 — Verksmetadata rettighetsvurderingen faktisk hviler på (P1, S / S)
+## T-18 — Verksmetadata rettighetsvurderingen faktisk hviler på — LØST 2026-09-09
+
+**Løst som Q-010** (`6659436`, #43): `authorDeathYear`, `originalLanguage`,
+`adaptationStatus` og `rightsStatus` (+ valgfri `rightsBasis`) er verdier, og
+attribusjonslinjen står på skriveflaten, ikke bare på `/om`.
 
 **Hva:** Fire felter som mangler på `Work`/`SourceAttribution`:
 
@@ -399,7 +407,13 @@ finnes på `/om`.
 **Port:** `validate:content` krever feltene på hvert verk, og feiler når
 `authorDeathYear` er senere enn 1955 uten en eksplisitt begrunnelse i pakken.
 
-## T-19 — Moduler med egen fremdrift (P1, L / M)
+## T-19 — Moduler med egen fremdrift — LØST 2026-09-09
+
+**Løst som Q-011** (`a9f6244`, #46): `TextModule`, `moduleId`, og modulen som et
+**valgfritt** ledd i `progressKey`. Leddet legges bare på når det finnes —
+skrives det ubetinget, arkiverer hver lagret fremdriftspost seg under et navn
+appen aldri spør etter. `tests/domain/progress-key.test.ts` hevder derfor den
+EKSAKTE strengen.
 
 **Hva:** Et verk kan deles i moduler som har id, rekkefølge, visningsnavn og
 **egen fremdrift, fullføring og vanskelighet**, samtidig som grensesnittet viser
