@@ -906,7 +906,8 @@ notes:
 ---
 
 ## Q-015 · T-02 + T-12: repetisjonskøen som en tredje kilde til Kortform
-status: review:queue/q-015-repetisjonsko-2
+status: ready
+result: [2026-09-27] AVVIST ved gjennomgang. «Last ned alle data» (DataTransfer.tsx:76) eksporterer bare preferences/sessions/progress (src/lib/data-transfer.ts:43-54); den nye køen (listQueue/saveQueue, IndexedDbRepository.ts:135-143) er verken med i eksport eller import — stille datatap bak et løfte om «alle data». En ny kjøring må legge køen til BrandExport med additiv import. Arbeidet er beholdt som grenen rejected/q-015-repetisjonsko-2. Bevis: briefs/queue-review-2026-09-26.md.
 result: [2026-09-19] Rerun gronn pa queue/q-015-repetisjonsko-2 (f00b696). Den avviste stille oversprangen i selectForEdition er borte: bare samme editionId OG contentHash serveres pa stempelet, alt annet omstemples mot utgaven eller legges bort som segment-gone/text-gone, og en regnskapstest krever at hver bit havner i noyaktig en botte. Begge porter mutasjonsbevist (6 rode nar den avviste linjen gjeninnsettes — verifisert av runneren selv; 4 rode nar ordrett-sjekken fjernes). pnpm check:fast gronn, 352 tester.
 result: én modus, tre kilder — bank + avviksutledede biter + merkede passasjer, slått sammen i src/lib/practice-queue-flow.ts så drillMode fortsatt ikke vet hvor bitene kom fra; ordrett-porten står i skriveren (enqueue leser utgaven), køen oppdager et utgavebump og stempler om eller legger bort; merking tar ikke fokus fra skrivefeltet. Begge portene mutasjonsbevist (3 røde hver vei). check:fast grønn.
 lane: brand-main
