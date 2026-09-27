@@ -64,3 +64,7 @@ En typisk økt varer fra ett til tretti minutter. Brukeren velger en modus og en
 ## Tonen
 
 Språket i produktet skal være nøkternt, varmt og presist. Unngå teknologispråk, poengjag og utropstegn. Eksempler: «Fortsett økten», «2 minutter igjen», «Rolig og presist», «Se resultat».
+
+## Merket
+
+BRANDs merke er `BrandMark`, en monogram-B. Ordmerket er BRAND i sperrede versaler. Begge ligger i repoet, og ingen av dem hentes fra en ekstern ressurs. Se D19 i `docs/DECISIONS.md` og «Identitet» i `DESIGN.md`.

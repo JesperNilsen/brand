@@ -23,6 +23,7 @@
     "check:all": "pnpm check:fast && pnpm build && pnpm check:bundle && pnpm test:e2e",
     "check": "pnpm check:all",
     "build:content": "tsx scripts/build-content-assets.ts",
+    "build:icons": "tsx scripts/build-icons.ts",
     "check:bundle": "tsx scripts/check-client-bundle.ts",
     "check:originals": "tsx scripts/check-originals_test.ts"
   },
@@ -46,6 +47,7 @@
     "eslint-config-next": "16.3.4",
     "fake-indexeddb": "^6.2.5",
     "jsdom": "^30.0.1",
+    "sharp": "0.35.4",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
     "typescript": "^5",

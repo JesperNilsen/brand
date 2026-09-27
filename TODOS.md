@@ -483,3 +483,17 @@ prøven på om replikknavn, sceneanvisninger og dialogstruktur overlever kjeden.
 **Køført 2026-09-08 som Q-011** på operatørens beslutning, med en strengere port
 enn de to postene foran: migrasjonen skal ikke bare passere, den skal vises å
 ikke røre en fremdriftspost for et verk uten moduler.
+
+## T-22 — OG-bilde generert ved bygg med Literata (P3, S / S)
+
+**Hva:** `src/app/opengraph-image.png` erstattes av en `opengraph-image.tsx`
+med `ImageResponse`, så lenkebildet bygges fra den samme `BRAND_TAGLINE` som
+sidebeskrivelsen og manifestet bruker.
+
+**Hvorfor ikke nå:** `ImageResponse` tar bare ttf, otf og woff, ikke woff2 som
+`next/font` serverer. Literata måtte da sjekkes inn en gang til som TTF. For et
+bilde som sjelden endres, er ikke det verdt det. I dag skriver
+`pnpm build:icons` bildet og alt-teksten fra `src/lib/brand-mark.ts`.
+
+**Port:** når slagordet eller merket endres. Til da kjøres `pnpm build:icons`
+på nytt i samme endring.

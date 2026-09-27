@@ -148,6 +148,17 @@ body {
    writing these outside a layer would silently defeat utilities like `flex`
    or `border-accent` wherever they are combined with `.btn` or `.card`. */
 @layer components {
+  /* The wordmark: BRAND in tracked capitals, sized by its context (text-lead in
+     the header). The negative end margin cancels the tracking after the last
+     letter, so the word ends where its ink ends. See «Identitet» in DESIGN.md. */
+  .wordmark {
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    margin-inline-end: -0.18em;
+    text-transform: uppercase;
+    font-optical-sizing: auto;
+  }
+
   /* Small-caps style labels used sparingly for meta information. */
   .label {
     font-size: var(--text-label);
