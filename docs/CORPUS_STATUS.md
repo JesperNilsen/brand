@@ -226,6 +226,28 @@ fra rangeringen begrunnes skriftlig; dette er den begrunnelsen.
   er beholdt der fordi det fortsatt skal besvares — byttet utsetter spørsmålet,
   det avlyser det ikke.
 
+### Avvik 2 — *Amtmandens Døttre* inn i bølgen for *Et dukkehjem*
+
+**Besluttet 2026-09-25 av operatøren.** Samme regel som Avvik 1: `docs/spec/CORPUS.md`
+krever skriftlig begrunnelse for et avvik fra rangeringen.
+
+- **Grunn:** *Et dukkehjem* (nr. 3) har ingen skannbasert fri transkripsjon av
+  1879-teksten. Wikikildens side er en omtasting av Project Runebergs tekst (sidens
+  egen opprydningsbanner sier det), og Wikikildens skann har ingen OCR. Runebergs
+  `dukkhjem` er en modernisert elektronisk utgave, ikke førsteutgaven: første akt
+  inneholder verken «aa», «Börn» eller «faa» — teksten er allerede skrevet om. En
+  kopi av en kopi, eller en modernisert tekst, bryter provenanskravet.
+- **Hva som ble byttet:** bølgens tredje plass i importrekkefølgen. *Amtmandens
+  Døttre* (rangeringens nr. 5) tar den, etter *Sult* og *Gift*.
+- **Hva som IKKE ble byttet:** rangeringen. *Et dukkehjem* står som nr. 3. Byttet
+  faller bort når en skannbasert 1879-kilde finnes; Nasjonalbibliotekets skann av
+  førsteutgaven er kandidaten, med egen transkripsjon som pris.
+- **Port før henting:** *Amtmandens Døttre* skal bekreftes skannbasert på Wikikilden
+  (`Indeks:`-side, ikke bare en tekstside) før én linje hentes — Balstemning-lærdommen.
+- **Hva byttet koster:** det første prosadramaet forsvinner fra bølgen, og T-21s prøve
+  på `speakerLinePattern` (replikknavn, sceneanvisninger) utsettes til et drama med
+  kilde.
+
 Åpne kildespørsmål å ta neste gang, i denne rekkefølgen:
 
 1. **Kierkegaard nr. 4 og 19** — *Frygt og Bæven* og *Sygdommen til Døden*. Søk

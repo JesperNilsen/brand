@@ -130,6 +130,14 @@ describe("isSentenceInitial", () => {
     expect(isSentenceInitial(tokens, tokens.indexOf("Gud"))).toBe(true);
   });
 
+  it("is true after a reversed guillemet — Hamsun 1890 opens dialogue with »", () => {
+    // Without » in OPENING_QUOTE every line of dialogue in Sult began
+    // mid-sentence to the rule, and «Jeg» turned up 20 times as a word to
+    // lowercase. No 1900s pack has » before a capital, so this is free there.
+    const tokens = t("og sagde »Jeg");
+    expect(isSentenceInitial(tokens, tokens.indexOf("Jeg"))).toBe(true);
+  });
+
   it("is false for a word merely following another word", () => {
     const tokens = t("den store Skov");
     expect(isSentenceInitial(tokens, tokens.indexOf("Skov"))).toBe(false);
