@@ -86,9 +86,9 @@ Ett verk (`kielland-noveletter`), sju noveller. Segmentetiketter er prefikset me
 
 ## hamsun-sult — Knut Hamsun, *Sult* (1890)
 
-**Under bygging — ikke merget.** Kilde, `segments.json`, `original.json` og
-`pack.json` er på plass; `rules.v1.json` og treningsutgaven gjenstår, så
-`pnpm validate:content` melder «no training edition» inntil de er skrevet.
+**Ferdig bygget 2026-09-27; merges via PR #50.** Kilde, `segments.json`,
+`original.json`, `pack.json`, `rules.v1.json` og treningsutgaven
+`hamsun-sult.training.v1` er på plass; `pnpm validate:content` reproduserer pakken.
 
 | Felt | Verdi |
 | --- | --- |
@@ -99,6 +99,9 @@ Ett verk (`kielland-noveletter`), sju noveller. Segmentetiketter er prefikset me
 | Kontrollstatus | agent-drafted |
 | Ordtall / segmenter | 60 044 ord i 531 segmenter (Første stykke 138 seg./16 051 ord · Andet 112/12 884 · Tredje 165/18 315 · Fjerde 116/12 794). 1 285 linjer i kilden: 1 281 avsnitt pluss fire overskriftslinjer, som er modultitler og ikke inngår i noe segment. Ordtallet er `countWords`, som ikke teller tokens uten bokstav eller tall — Hamsuns lange punktrekker. En naiv whitespace-telling gir 61 228; det er samme tekst, ikke en annen. |
 | Inkludert | Hele verket, firedelt i ekte moduler: Første, Andet, Tredje og Fjerde Stykke — første pakke i katalogen med reell modulstruktur (Q-011). |
+| Regler / utgave | `rules.v1.json` på grunnreglene `brand-riksmaal.base.v3` (første pakke på v3) → `hamsun-sult.training.v1`, `contentHash` `sha256:3fbb82e817f191f5b12fb4a7ab546a32c29cbe4a7915477712730de84e58ec59`, 2 773 regeltreff. `properNames` = 151, maskinutledet med `propose-proper-names.ts --pack hamsun-sult --rules 1 --min 3` (2 878 kandidater) og avgjort navn for navn; utledningen står i regelfilens `notes`. |
+| Lengdeavvik | 122 segmenter avviker fra lengdenormen og er beholdt hele; alle ført i `KNOWN_LENGTH_DEVIATIONS` i `scripts/validate-content.ts`. |
+| Særtilfeller | «Kuboaa», fortellerens oppfunnede ord, holdes utenfor aa→å med lookbehind. «Karl» beholder stor forbokstav (gatenavnet Karl Johan 11 forekomster mot fellesnavnet 4; se `retained`). Kolon regnes ikke som setningsgrense, så «sagde: Nu» blir «sagde: nu» — likt i alle fem pakkene i dag, rettes samlet som T-22. |
 
 Rå HTML arkivert under `source/wikikilden/sult-01.html`–`sult-04.html`; ekstrahert tekst i `source/sult-01.txt`–`sult-04.txt`, satt sammen til `source/sult-komplett.txt` fordi `build-original.ts` bare støtter én `sourceFile` per pakke. Hylle: `norske-klassikere` (lagt til `content/shelves.json`, append-only).
 

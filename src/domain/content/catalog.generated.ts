@@ -366,7 +366,7 @@ export const WORKS: Work[] = [
         "workId": "hamsun-sult",
         "kind": "training-edition",
         "version": "1.0.0",
-        "contentHash": "sha256:f1fb5775045380e39aa1e5cf4909541e5b12d416fcb1016f77751466bc8ec261",
+        "contentHash": "sha256:3fbb82e817f191f5b12fb4a7ab546a32c29cbe4a7915477712730de84e58ec59",
         "languageProfileId": "brand-riksmaal",
         "adaptationStatus": "orthography",
         "basedOnEditionId": "hamsun-sult.original",
@@ -395,7 +395,7 @@ export const WORKS: Work[] = [
         ],
         "segmentCount": 531,
         "wordCount": 60044,
-        "file": "/content/editions/hamsun-sult.training.v1.f1fb57750453.json"
+        "file": "/content/editions/hamsun-sult.training.v1.3fbb82e817f1.json"
       }
     ]
   },

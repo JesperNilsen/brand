@@ -7,7 +7,10 @@
   "notes": [
     "v1 (2026-09-25, D18): første utgave, bygget etter Brand-skrivestandarden v0.1 på grunnreglene brand-riksmaal.base.v3 — den første pakken på v3. Kilden er førsteutgaven (København 1890) i 1890-tallets dansk-norske ortografi, eldre enn de tre andre pakkene (1903–1917): «ej»/«øj» der de har «ei»/«øy», «-hed» der de har «-het». Derfor bærer denne pakken mønstre de ikke trenger.",
     "Kildebevarende (standardens 1A/2B/4B/5A): «efter», «nu», «kunde», «skulde», «blev», «vilde», «blive» står som Hamsun skrev dem. Bare avgjort ortografi moderniseres: aa→å, ej→ei, øj→øy, -hed→-het, op→opp, ind→inn.",
-    "Høflig tiltale er halve teksturen i Sult: fortellerens anstrengte formalitet overfor fremmede. «De», «Dem», «Deres» (og gammel 2. person flertall «I») står i properNames og vernes av validatorens høflighetsport; 403 forekomster."
+    "Høflig tiltale er halve teksturen i Sult: fortellerens anstrengte formalitet overfor fremmede. «De», «Dem», «Deres» (og gammel 2. person flertall «I») står i properNames og vernes av validatorens høflighetsport; 403 forekomster.",
+    "properNames (151, 2026-09-27): maskinutledet med `propose-proper-names.ts --pack hamsun-sult --rules 1 --min 3` — 2 878 kandidater etter at «»» ble lagt til OPENING_QUOTE i match.ts, slik at ordet etter en replikkåpner regnes som setningsstart (ingen original fra 1900-tallet har » foran stor forbokstav, så de fire andre utgavene er byteidentiske). Listen er kandidater og bare det: ord som nå bare står først i setning (Kommandøren, Hertugen, Emma, Morgenbladet, Aftenposten, Vikingen, Copégoro) står ikke. Øj→Øy og Ej→Ei kom til fordi mønstrene er rå regex uten matchCase og de små tvillingene alene mistet 198 forekomster: hvert lite mønster trenger sin store tvilling.",
+    "Avgjort navn for navn: dialektens høflighetsformer Di/Dere/Demses beholdt; Herrens (Vårherre) beholdt, Herren (herremannen) liten; initialer og romertall H, C, J, X, IX beholdt; gatenavnene Kirkegaden, Storgaden, Torvgaden, Torvegaden, Havnegaden og Ullevoldsveien beholdt; Basarerne, Slotsparken, Smedgangen og Sagene lagt til etter annen gjennomgang av alle kandidatene. Små forbokstaver: Kirken, Mama, Munken, Guddoms, Lushorrik, Domkirke, Fædrelandet, Kirkegården, Baggården, Udlandet, Tobakken, Teatret og jomfruen på spisestedet — kallenavnet »Jomfruen« står alltid i replikktegn og vernes av dem. Karl: se retained.",
+    "Kjent grense: kolon regnes ikke som setningsgrense i isSentenceInitial, så «sagde: Nu taler du» blir «sagde: nu taler du». Likt i alle fem pakkene i dag (Noveletter v5 har 25 slike); rettes samlet som T-22 i egen PR, ikke her, fordi det driver fire utgaver og ibsen-drillene."
   ],
   "patterns": [
     {
@@ -105,6 +108,7 @@
       "Ba'al",
       "Barabas",
       "Bartel",
+      "Basarerne",
       "Bernt",
       "Blomqvists",
       "Bogstadskogen",
@@ -164,7 +168,6 @@
       "Jens",
       "Joachim",
       "Johan",
-      "Jomfruen",
       "Judas",
       "Jærnbanebryggen",
       "Jærnbanetorvet",
@@ -203,11 +206,14 @@
       "Pilestrædet",
       "Renan",
       "Rusland",
+      "Sagene",
       "Satan",
       "Semb",
       "Shakespeare",
       "Slotsbakken",
+      "Slotsparken",
       "Slottet",
+      "Smedgangen",
       "Smyrna",
       "St",
       "Stenersgaden",
@@ -219,7 +225,6 @@
       "Studenterlunden",
       "Sydamerika",
       "Tangen",
-      "Teatret",
       "Tivoli",
       "Toldbodgaden",
       "Tomtegaden",
@@ -252,6 +257,7 @@
     "meget": "ordvalg; beholdt (99 forekomster).",
     "-ede (preteritum)": "D12: endelsen flyttes og hvilken endelse varierer med verbet — tretti redaksjonelle avgjørelser forkledd som én regel. Ikke rørt.",
     "Thi": "konjunksjon uten moderne ettordsform; beholdt som i Noveletter.",
-    "Kristiania": "bynavnet i 1890; ikke «Oslo», som ville vært anakronisme, ikke ortografi."
+    "Kristiania": "bynavnet i 1890; ikke «Oslo», som ville vært anakronisme, ikke ortografi.",
+    "Karl": "Fellesnavnet «Karl» (en Pokkers Karl; Karl for min/sin Hat — 4 forekomster) beholder stor forbokstav fordi gatenavnet «Karl Johan» (11 forekomster) må stå i properNames og listen er ordvis, ikke frasevis. Den minste feilen vinner; en modernisert «karl» ville trengt et unntak per frase."
   }
 }
