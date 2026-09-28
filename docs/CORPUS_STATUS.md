@@ -84,6 +84,27 @@ versjonerbar først.
 
 Ett verk (`kielland-noveletter`), sju noveller. Segmentetiketter er prefikset med novelletittelen («Haabet er lysegrønt, 1» … «Visne Blade, 1» …). **Spesifikasjonens prioriterte tekst «Ballstemning» finnes på Wikikilden**, korrekturlest, i samme bind — under 1907-utgavens stavemåte **«Balstemning» med én L** (`https://no.wikisource.org/wiki/Balstemning`, ~2 100 ord). Se «Rettet 2026-09-04» under.
 
+## hamsun-sult — Knut Hamsun, *Sult* (1890)
+
+**Ferdig bygget 2026-09-27; merges via PR #50.** Kilde, `segments.json`,
+`original.json`, `pack.json`, `rules.v1.json` og treningsutgaven
+`hamsun-sult.training.v1` er på plass; `pnpm validate:content` reproduserer pakken.
+
+| Felt | Verdi |
+| --- | --- |
+| Kilde | Wikikilden, `https://no.wikisource.org/wiki/Sult` — transkludert fra `Indeks:Sult (Knut Hamsun).djvu`, fire stykker (`Sult/01`–`Sult/04`). Merk: `Sult/Sult/01`–`04` er en foreløpig, foreldreløs duplikattre på samme wiki og er **ikke** kilden. |
+| Trykt utgave | *Sult.* København: P. G. Philipsens Forlag, 1890. Førsteutgaven, i sin helhet. Transkribert etter Wikikildens skannede utgave, Fremgang V (validert — Wikikildens høyeste korrekturnivå), 345 sider (trykt side 1 = djvu-side 13). |
+| Hentet | 2026-09-10 |
+| Rettighetsgrunnlag | Public domain i Norge (Hamsun d. 1952; vernetiden utløp 2023-01-01, life+70) og i USA (utgitt 1890). Wikikildens transkripsjon er CC BY-SA 4.0; attribusjon beholdt i pakken. |
+| Kontrollstatus | agent-drafted |
+| Ordtall / segmenter | 60 044 ord i 531 segmenter (Første stykke 138 seg./16 051 ord · Andet 112/12 884 · Tredje 165/18 315 · Fjerde 116/12 794). 1 285 linjer i kilden: 1 281 avsnitt pluss fire overskriftslinjer, som er modultitler og ikke inngår i noe segment. Ordtallet er `countWords`, som ikke teller tokens uten bokstav eller tall — Hamsuns lange punktrekker. En naiv whitespace-telling gir 61 228; det er samme tekst, ikke en annen. |
+| Inkludert | Hele verket, firedelt i ekte moduler: Første, Andet, Tredje og Fjerde Stykke — første pakke i katalogen med reell modulstruktur (Q-011). |
+| Regler / utgave | `rules.v1.json` på grunnreglene `brand-riksmaal.base.v3` (første pakke på v3) → `hamsun-sult.training.v1`, `contentHash` `sha256:3fbb82e817f191f5b12fb4a7ab546a32c29cbe4a7915477712730de84e58ec59`, 2 773 regeltreff. `properNames` = 151, maskinutledet med `propose-proper-names.ts --pack hamsun-sult --rules 1 --min 3` (2 878 kandidater) og avgjort navn for navn; utledningen står i regelfilens `notes`. |
+| Lengdeavvik | 122 segmenter avviker fra lengdenormen og er beholdt hele; alle ført i `KNOWN_LENGTH_DEVIATIONS` i `scripts/validate-content.ts`. |
+| Særtilfeller | «Kuboaa», fortellerens oppfunnede ord, holdes utenfor aa→å med lookbehind. «Karl» beholder stor forbokstav (gatenavnet Karl Johan 11 forekomster mot fellesnavnet 4; se `retained`). Kolon regnes ikke som setningsgrense, så «sagde: Nu» blir «sagde: nu» — likt i alle fem pakkene i dag, rettes samlet som T-22. |
+
+Rå HTML arkivert under `source/wikikilden/sult-01.html`–`sult-04.html`; ekstrahert tekst i `source/sult-01.txt`–`sult-04.txt`, satt sammen til `source/sult-komplett.txt` fordi `build-original.ts` bare støtter én `sourceFile` per pakke. Hylle: `norske-klassikere` (lagt til `content/shelves.json`, append-only).
+
 ---
 
 ## Mangler / avgrensninger
@@ -207,6 +228,28 @@ fra rangeringen begrunnes skriftlig; dette er den begrunnelsen.
   før, og de fire åpne kildespørsmålene nedenfor gjelder uendret. Undset-punktet
   er beholdt der fordi det fortsatt skal besvares — byttet utsetter spørsmålet,
   det avlyser det ikke.
+
+### Avvik 2 — *Amtmandens Døttre* inn i bølgen for *Et dukkehjem*
+
+**Besluttet 2026-09-25 av operatøren.** Samme regel som Avvik 1: `docs/spec/CORPUS.md`
+krever skriftlig begrunnelse for et avvik fra rangeringen.
+
+- **Grunn:** *Et dukkehjem* (nr. 3) har ingen skannbasert fri transkripsjon av
+  1879-teksten. Wikikildens side er en omtasting av Project Runebergs tekst (sidens
+  egen opprydningsbanner sier det), og Wikikildens skann har ingen OCR. Runebergs
+  `dukkhjem` er en modernisert elektronisk utgave, ikke førsteutgaven: første akt
+  inneholder verken «aa», «Börn» eller «faa» — teksten er allerede skrevet om. En
+  kopi av en kopi, eller en modernisert tekst, bryter provenanskravet.
+- **Hva som ble byttet:** bølgens tredje plass i importrekkefølgen. *Amtmandens
+  Døttre* (rangeringens nr. 5) tar den, etter *Sult* og *Gift*.
+- **Hva som IKKE ble byttet:** rangeringen. *Et dukkehjem* står som nr. 3. Byttet
+  faller bort når en skannbasert 1879-kilde finnes; Nasjonalbibliotekets skann av
+  førsteutgaven er kandidaten, med egen transkripsjon som pris.
+- **Port før henting:** *Amtmandens Døttre* skal bekreftes skannbasert på Wikikilden
+  (`Indeks:`-side, ikke bare en tekstside) før én linje hentes — Balstemning-lærdommen.
+- **Hva byttet koster:** det første prosadramaet forsvinner fra bølgen, og T-21s prøve
+  på `speakerLinePattern` (replikknavn, sceneanvisninger) utsettes til et drama med
+  kilde.
 
 Åpne kildespørsmål å ta neste gang, i denne rekkefølgen:
 

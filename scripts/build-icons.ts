@@ -16,7 +16,7 @@
  * The OG image is a screenshot of a small HTML page rendered in Playwright's
  * Chromium, because it sets the wordmark and tagline in Literata and sharp
  * cannot lay out text in a web font. That fetches Literata from Google Fonts
- * at generation time only; the committed PNG makes no request (T-22).
+ * at generation time only; the committed PNG makes no request (T-23).
  */
 import { writeFile } from "node:fs/promises";
 import path from "node:path";

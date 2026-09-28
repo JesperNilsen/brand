@@ -13,8 +13,11 @@ import type { RuleKind, RulePattern } from "./types";
 
 /** Characters that end a sentence, or a dialogue dash that starts one. */
 export const SENTENCE_BOUNDARY = /[.!?…—]/;
-/** Opening quote marks used in the source texts (Danish „…“, guillemets, straight). */
-export const OPENING_QUOTE = /[„«"'‘“]/;
+/**
+ * Opening quote marks used in the source texts: Danish „…“, guillemets in
+ * both directions («…» in the 1900s texts, »…« in Hamsun 1890), straight.
+ */
+export const OPENING_QUOTE = /[„«»"'‘“]/;
 
 /**
  * True if the word token at `tokens[i]` starts a sentence.

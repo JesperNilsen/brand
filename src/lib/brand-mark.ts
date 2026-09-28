@@ -17,7 +17,7 @@
 /**
  * The one-line description that goes with the mark: the page description, the
  * manifest, and the text in the OG image. Change it and rerun
- * `pnpm build:icons`, or the link preview goes on saying the old one (T-22).
+ * `pnpm build:icons`, or the link preview goes on saying the old one (T-23).
  */
 export const BRAND_TAGLINE = "Skriv deg inn i god norsk prosa — med ro, rytme og målbar fremgang.";
 

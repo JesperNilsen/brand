@@ -76,7 +76,7 @@ hånd, ikke av `check:all`.
   plattformen runder hjørnene selv.
 - `src/app/opengraph-image.png` er 1200 × 630: merket ved 256 px, ordmerket og
   slagordet satt i Literata. Siden selv setter fortsatt ordmerket i systemets
-  seriff, se Typografi. Bildet er statisk; T-22 beskriver når det bør bygges.
+  seriff, se Typografi. Bildet er statisk; T-23 beskriver når det bør bygges.
 - `src/app/manifest.ts` gir navnet, papirfargen som bakgrunns- og temafarge og
   ikonene over. Det finnes ingen service worker, og appen virker ikke frakoblet.
 

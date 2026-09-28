@@ -1,0 +1,38 @@
+{
+  "id": "hamsun-sult",
+  "title": "Knut Hamsun: Sult",
+  "description": "Firedelt sultroman i naturalistisk jeg-form. V1 rommer hele verket, bygget i fire ekte moduler (Første–Fjerde Stykke) — den første pakken i katalogen med reell modulstruktur.",
+  "languageProfileIds": [
+    "brand-riksmaal"
+  ],
+  "workIds": [
+    "hamsun-sult"
+  ],
+  "tags": [
+    "prosa",
+    "roman",
+    "1800-tallet"
+  ],
+  "status": "active",
+  "sourceAttribution": [
+    {
+      "author": "Knut Hamsun",
+      "title": "Sult",
+      "publishedYear": 1890,
+      "language": "da-NO",
+      "sourceUrl": "https://no.wikisource.org/wiki/Sult",
+      "archiveId": "wikikilden:Sult/01–04",
+      "retrievedAt": "2026-09-10",
+      "provider": "Wikikilden (no.wikisource.org)",
+      "authorDeathYear": 1952,
+      "license": "Public domain i Norge (Hamsun d. 1952; verkets vernetid utløp 2023-01-01, life+70) og i USA (utgitt 1890). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
+      "rightsStatus": "public-domain",
+      "digitalEdition": "Sult. København: P. G. Philipsens Forlag, 1890. Førsteutgaven, i sin helhet: Første, Andet, Tredje og Fjerde Stykke. Transkribert etter Wikikildens skannede utgave (Indeks:Sult (Knut Hamsun).djvu, Fremgang V — validert, 345 sider; trykt side 1 = djvu-side 13).",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Rå HTML arkivert under source/wikikilden/sult-01.html til sult-04.html; ekstrahert tekst i source/sult-01.txt til sult-04.txt.",
+        "Sidene ligger på Wikikilden under Sult/01–Sult/04. Det finnes en foreldreløs duplikattre under Sult/Sult/01–04 på samme wiki — den er ikke kilden og skal ikke brukes."
+      ]
+    }
+  ]
+}
