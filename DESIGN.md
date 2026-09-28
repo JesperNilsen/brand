@@ -33,6 +33,55 @@ Tre følger av det:
 
 ---
 
+## Identitet
+
+**Merket** er en monogram-B på et rutenett på 32 enheter: stammen og to buer,
+tre strøk med rette ender, tegnet i `currentColor`. Geometrien står ett sted,
+`src/lib/brand-mark.ts`. `BrandMark` tegner den i siden, og `pnpm build:icons`
+skriver ikonfilene fra den. Ingen andre har en kopi. (D19)
+
+**To snitt.** Opp til og med 32 px brukes det tunge snittet, med strek på 4,6
+enheter. Over det brukes standardsnittet på 3,7. Ved 24 og 32 px leste
+standardsnittet for lett. Begge snittene er flyttet til midten av kvadratet
+etter målte blekkgrenser.
+
+| Bruk | Størrelse | Snitt |
+| --- | --- | --- |
+| Topplinjen, foran ordmerket | 22 px | tungt |
+| Favicon | 16–48 px | tungt |
+| `/om`, over overskriften | 96 px | standard |
+| Lenkebildet (OG) | 256 px | standard |
+
+**Ordmerket** er BRAND i sperrede versaler: `.wordmark`, vekt 500, sperring
+0,18 em. Størrelsen kommer fra sammenhengen, `text-lead` i topplinjen. En
+negativ endemarg opphever sperringen etter siste bokstav, så ordet slutter der
+blekket slutter.
+
+**Topplinjen** bærer merket, et mellomrom på 0,6 em og ordmerket i én lenke til
+forsiden. Lenken heter «BRAND – til forsiden», og merket er `aria-hidden`, så
+navnet leses én gang. Ved hover skifter begge til `--accent`: det er blekket som
+skifter, aldri grunnen. Merket står aldri på `--accent`.
+
+**Ikonsettet** skrives av `pnpm build:icons` og sjekkes inn. Skriptet kjøres for
+hånd, ikke av `check:all`.
+
+- `src/app/icon.svg` er gjennomsiktig, med blekk `#221f1b` som byttes til
+  `#e9e3d8` under `prefers-color-scheme: dark`.
+- `src/app/favicon.ico` har 16, 32 og 48 px på en papirflis med avrundede
+  hjørner. Nettlesere som ikke bruker SVG-ikonet, faller tilbake på den, og
+  en ICO kan ikke bytte farge etter tema. Flisen holder merket lesbart på både
+  lys og mørk fanelinje.
+- `src/app/apple-icon.png` (180 px), `public/icon-192.png` og
+  `public/icon-512.png` har papirgrunn, med merket trukket inn fra kanten fordi
+  plattformen runder hjørnene selv.
+- `src/app/opengraph-image.png` er 1200 × 630: merket ved 256 px, ordmerket og
+  slagordet satt i Literata. Siden selv setter fortsatt ordmerket i systemets
+  seriff, se Typografi. Bildet er statisk; T-22 beskriver når det bør bygges.
+- `src/app/manifest.ts` gir navnet, papirfargen som bakgrunns- og temafarge og
+  ikonene over. Det finnes ingen service worker, og appen virker ikke frakoblet.
+
+---
+
 ## Farger
 
 Lys er grunnlaget. Mørkt tema settes enten eksplisitt (`[data-theme="dark"]`)

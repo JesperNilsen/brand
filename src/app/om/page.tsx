@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import { BrandMark } from "@/components/BrandMark";
 import { defaultEdition, listContentPacks, listWorks } from "@/domain/content/registry";
 // A server component, so the notes are rendered to HTML here and never reach
 // the reader as JavaScript. See `editorial-notes.generated.ts`.
 import { EDITORIAL_NOTES } from "@/domain/content/editorial-notes.generated";
 import { brandRiksmaal } from "@/domain/language/brand-riksmaal";
 
-export const metadata: Metadata = { title: "Om BRAND" };
+export const metadata: Metadata = { title: "Om" };
 
 export default function AboutPage() {
   return (
     <article className="prose-measure">
+      <BrandMark size={96} className="mb-8" />
       <p className="label mb-2">Om</p>
       <h1 className="mb-6 text-heading">BRAND og Brand Training Edition</h1>
 
@@ -17,6 +19,11 @@ export default function AboutPage() {
         BRAND er en skrive- og tasteapp for konsentrert trening på norsk prosa. Navnet viser til
         Henrik Ibsens <i>Brand</i>, startverket i biblioteket, og til en tydelig språklig
         identitet. Alt lagres lokalt i nettleseren; det finnes ingen konto og ingen sky.
+      </p>
+      <p className="mb-4">
+        Merket er en B, tegnet av tre strøk: stammen og to buer. Det er et monogram og ikke et
+        bilde, fordi det skal leses som det samme i en nettleserfane på seksten piksler og på
+        denne siden. Ordet BRAND står ved siden av i sperrede versaler.
       </p>
 
       <h2 className="mb-2 mt-8 text-section">Språkprofilen {brandRiksmaal.displayName}</h2>

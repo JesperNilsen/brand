@@ -1,12 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { BrandMark } from "@/components/BrandMark";
+import { BRAND_TAGLINE } from "@/lib/brand-mark";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeSelect } from "@/components/ThemeSelect";
 
+const description = BRAND_TAGLINE;
+
 export const metadata: Metadata = {
-  title: "BRAND",
-  description: "Skriv deg inn i god norsk prosa — med ro, rytme og målbar fremgang.",
+  // Absolute URLs for the OG image and manifest icons are resolved against this;
+  // without it a relative URL in `openGraph` is a build error.
+  metadataBase: new URL("https://brand-skrift.netlify.app"),
+  title: { default: "BRAND", template: "%s · BRAND" },
+  description,
+  applicationName: "BRAND",
+  openGraph: {
+    siteName: "BRAND",
+    title: "BRAND",
+    description,
+    locale: "nb_NO",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 /**
@@ -26,15 +42,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <header className="recedes border-b border-rule">
-            <div className="mx-auto flex w-full max-w-4xl items-baseline justify-between gap-6 px-5 py-4">
+            <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-4 px-5 py-4 sm:gap-6">
               <Link
                 href="/"
-                className="text-lead tracking-[0.18em] no-underline hover:text-accent"
+                className="flex items-center gap-[0.6em] no-underline hover:text-accent"
                 aria-label="BRAND – til forsiden"
               >
-                BRAND
+                <BrandMark size={22} />
+                <span className="wordmark text-lead">BRAND</span>
               </Link>
-              <nav className="flex items-baseline gap-5 text-sm">
+              <nav className="flex items-baseline gap-4 text-sm sm:gap-5">
                 <Link href="/historikk" className="no-underline hover:underline">
                   Historikk
                 </Link>
