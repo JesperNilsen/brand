@@ -573,3 +573,33 @@ norm; endringer kommer som ny versjon fra operatøren.
 - **Ikke bygget ennå:** ordlistepakken (`brand-lexicon.yaml`), kontrolltilfellene
   og kontrollmotoren (standardens trinn 2–6). Inntil da anvendes standarden av
   redaktøren og agenten som leser den; ingen port i `check:all` håndhever den.
+
+## BRAND får et merke (D19)
+
+2026-09-27. BRANDs merke er monogrammet: en B tegnet av tre strøk, stammen og
+to buer, på et rutenett på 32 enheter. Operatøren valgte det fra merkebrettet
+2026-09-23, der det sto sammen med tre nye forslag: F «Anførselen», G
+«Antikva-B» og H «Ilden».
+
+- **Hvorfor monogrammet.** Det var det eneste forslaget kritikken 2026-09-16
+  fant lesbart ved 16 px, og det sier det samme ved 16 som ved 96. De
+  figurative forslagene falt: A «Stigningen» ble lest som en hoppbakke, B
+  «Ibsen-profil» som en tegneseriefigur med monokkel, fordi en profil ikke kan
+  bære både briller og skjegg i ikonstørrelse. D ble lest som et kors, og E
+  mistet korset sitt ved 24 px.
+- **Svakheten er kjent og godtatt.** En B sier ingenting litterært eller norsk
+  i seg selv. Den stemmen skal ordmerket og skriften bære. Merket skal kjennes
+  igjen i en fane.
+- **Planen fra 2026-09-14 er erstattet på ett punkt.** Den forutsatte at A
+  eller B ble valgt, og ga regler for dem. De reglene gjelder ikke. Resten av
+  planen står: Literata, «ild og is» og tre PR-er etter hverandre.
+- **To snitt, én geometri.** Standardsnittet leste for lett ved 24 og 32 px, så
+  alt opp til 32 px bruker et tyngre snitt. Begge står i
+  `src/lib/brand-mark.ts`, og `pnpm build:icons` skriver ikonfilene fra den.
+  Faviconsnittet på brettet var flyttet 2,25 enheter mot høyre ut fra en
+  feilmålt bredde, og sto dermed 1,1 enheter til høyre for midten. Begge
+  snittene er nå sentrert etter målte blekkgrenser, også i høyden.
+- **Hva merket binder UI-et til.** Merket tegnes i `currentColor` og står
+  aldri på `--accent`. Topplinjen bærer merket og ordmerket sammen. Nettlesere
+  som ikke bruker SVG-ikonet, faller tilbake på ICO-en, og den kan ikke bytte
+  farge etter tema. Derfor har ICO-en sin egen papirflis.
