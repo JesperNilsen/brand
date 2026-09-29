@@ -11,6 +11,7 @@ import {
   orderedSegments,
 } from "@/domain/content/registry";
 import { newId } from "@/domain/ids";
+import { drillItemsFor } from "@/lib/practice-queue-flow";
 import { getGameMode } from "@/domain/modes/registry";
 import type { SessionPlan } from "@/domain/modes/types";
 import {
@@ -38,6 +39,7 @@ import {
   resolveWorkAndEdition,
 } from "@/lib/session-flow";
 import { LiveMeter } from "./LiveMeter";
+import { MarkPassage } from "./MarkPassage";
 import { Loading } from "./Loading";
 import { SessionMenu } from "./SessionMenu";
 import { TypingSurface } from "./TypingSurface";
@@ -84,14 +86,24 @@ export function SessionView() {
         // Drill types the bank, not the edition, so it needs a second asset —
         // fetched here rather than inside the mode, because a mode builds a
         // plan and must not be able to block on the network.
+        // The bank is one of three sources (T-12). The other two live in the
+        // reader's own queue, and are merged in here rather than in the mode:
+        // `drillMode` receives a flat DrillItem[] and still does not know that
+        // a piece was marked, derived or authored.
         const drills =
           parsed.mode === "drill"
-            ? await loadDrillBank(
-                resolved.edition.drills ??
-                  (() => {
-                    throw new Error("Denne utgaven har ingen øvingsbiter.");
-                  })(),
-              )
+            ? (
+                await drillItemsFor(
+                  repo,
+                  edition,
+                  await loadDrillBank(
+                    resolved.edition.drills ??
+                      (() => {
+                        throw new Error("Denne utgaven har ingen øvingsbiter.");
+                      })(),
+                  ),
+                )
+              ).items
             : undefined;
         const progress =
           parsed.mode === "nonstop"
@@ -330,6 +342,19 @@ function ActiveSession({ plan, work, edition, progress }: Loaded) {
       />
 
       <div className="recedes mt-12 flex flex-wrap items-center gap-4 text-sm text-ink-muted">
+        {!finished && (
+          <MarkPassage
+            edition={edition}
+            segmentId={segment.id}
+            caret={state.engine.typedText.length}
+            disabled={isDrill || requireTextFilter(plan.textFilterId).altersText}
+            disabledReason={
+              isDrill
+                ? "Kortform skriver biter, ikke avsnitt — merk mens du skriver teksten selv."
+                : "Øvingsformen har endret teksten på skjermen, så en merket bit ville ikke stå ordrett i utgaven."
+            }
+          />
+        )}
         {!finished && (
           <button
             type="button"
