@@ -48,7 +48,10 @@ export function DataTransfer({ onImported }: { onImported: () => void }) {
       const parts = [
         `${report.sessionsImported} økter lest inn`,
         report.progressImported > 0 ? `${report.progressImported} fremdriftspunkt` : null,
-        report.sessionsSkipped > 0 ? `${report.sessionsSkipped} kunne ikke leses` : null,
+        report.queueImported > 0 ? `${report.queueImported} biter i repetisjonskøen` : null,
+        report.sessionsSkipped + report.queueSkipped > 0
+          ? `${report.sessionsSkipped + report.queueSkipped} kunne ikke leses`
+          : null,
       ].filter(Boolean);
       setStatus(`${parts.join(", ")}.`);
       onImported();

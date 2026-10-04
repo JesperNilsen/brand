@@ -8,7 +8,10 @@ import {
   exportFileName,
   importData,
   serializeExport,
+  UNVERIFIED_IMPORT_HASH,
 } from "@/lib/data-transfer";
+import { enqueue, selectForEdition, type QueueItem } from "@/domain/practice-queue";
+import type { TextEdition } from "@/domain/types";
 import { progressKey, type ReadingProgress, type SessionResult } from "@/domain/types";
 import { makeSession } from "../infra/repository-contract";
 
@@ -76,6 +79,8 @@ describe("export / import", () => {
       sessionsSkipped: 0,
       progressImported: 1,
       preferencesImported: true,
+      queueImported: 0,
+      queueSkipped: 0,
     });
     expect(await empty.listSessions()).toEqual(before);
     expect((await empty.getPreferences()).theme).toBe("dark");
@@ -155,5 +160,120 @@ describe("export / import", () => {
     expect(text).toContain('"format": "brand-export"');
     const parsed = JSON.parse(text) as { sessions: SessionResult[] };
     expect(parsed.sessions).toHaveLength(2);
+  });
+});
+
+// Q-015, rejected 2026-09-27: «Last ned alle data» left the repetition queue
+// behind. The queue is the reader's own work — passages they marked, pieces
+// derived from their own deviations — and a cleared browser takes it with it
+// exactly as it takes their sessions.
+describe("export / import: the repetition queue", () => {
+  const SEGMENT = "Hei, fremmedkarl, far ei så fort!";
+  const ed: TextEdition = {
+    id: "w.training.v1",
+    workId: "w",
+    kind: "training-edition",
+    version: "1.0.0",
+    contentHash: "sha256:first",
+    languageProfileId: "brand-riksmaal",
+    adaptationStatus: "orthography",
+    segmentCount: 1,
+    wordCount: 6,
+    file: "/content/editions/w.training.v1.first.json",
+    segments: [{ id: "s1", order: 1, text: SEGMENT, wordCount: 6 }],
+  };
+  const at = (iso: string) => () => new Date(iso);
+  const mark = (q: readonly QueueItem[], text: string, iso: string) =>
+    enqueue(q, { workId: "w", segmentId: "s1", kind: "phrase", text, source: "marked" }, ed, at(iso));
+
+  let source: MemoryRepository;
+  beforeEach(async () => {
+    source = new MemoryRepository();
+    let q = mark([], "far ei så fort", "2026-09-10T10:00:00.000Z");
+    q = mark(q, "fremmedkarl", "2026-09-12T10:00:00.000Z");
+    await source.saveQueue(q);
+  });
+
+  it("round-trips the queue through a file into an emptied store", async () => {
+    const before = await source.listQueue();
+    const file = JSON.parse(serializeExport(await exportData(source)));
+    expect(file.queue).toHaveLength(2);
+
+    const empty = new MemoryRepository();
+    const report = await importData(empty, file);
+    expect(report.queueImported).toBe(2);
+    expect(report.queueSkipped).toBe(0);
+
+    const after = await empty.listQueue();
+    // Everything but the hash comes back as it went out; the hash is withheld
+    // until the edition has been read again (see UNVERIFIED_IMPORT_HASH).
+    const strip = (q: QueueItem) => ({ ...q, editionContentHash: "" });
+    expect(after.map(strip)).toEqual(before.map(strip));
+    expect(after.every((q) => q.editionContentHash === UNVERIFIED_IMPORT_HASH)).toBe(true);
+
+    // And the first selection re-reads the edition and serves them again.
+    const selection = selectForEdition(after, ed);
+    expect(selection.stale).toEqual([]);
+    expect(selection.revalidated.map((q) => q.text)).toEqual(["far ei så fort", "fremmedkarl"]);
+    expect(selection.revalidated.every((q) => q.editionContentHash === "sha256:first")).toBe(true);
+  });
+
+  it("is additive: pieces already in the queue survive the import, and none doubles", async () => {
+    const file = JSON.parse(serializeExport(await exportData(source)));
+    const target = new MemoryRepository();
+    // Marked in this browser after the file was written, and one passage that
+    // was marked here too, under its own id.
+    let local = mark([], "Hei", "2026-09-20T10:00:00.000Z");
+    local = mark(local, "fremmedkarl", "2026-09-11T10:00:00.000Z");
+    await target.saveQueue(local);
+
+    const first = await importData(target, file);
+    expect(first.queueImported).toBe(1);
+    const merged = await target.listQueue();
+    expect(merged.map((q) => q.text)).toEqual(["far ei så fort", "fremmedkarl", "Hei"]);
+    // The local copy of the shared passage is the one kept, stamp and all.
+    const shared = merged.find((q) => q.text === "fremmedkarl");
+    expect(shared?.id).toBe(local[1]!.id);
+    expect(shared?.editionContentHash).toBe("sha256:first");
+
+    const second = await importData(target, file);
+    expect(second.queueImported).toBe(0);
+    expect(await target.listQueue()).toHaveLength(3);
+  });
+
+  it("an import file cannot put words in the queue the edition does not have", async () => {
+    const file = JSON.parse(serializeExport(await exportData(source)));
+    file.queue[0].text = "far ei så sakte"; // one word swapped, stamp untouched
+    const target = new MemoryRepository();
+    await importData(target, file);
+    const selection = selectForEdition(await target.listQueue(), ed);
+    expect(selection.items).toEqual([]);
+    expect(selection.stale.map((s) => [s.item.text, s.reason])).toEqual([
+      ["far ei så sakte", "text-gone"],
+    ]);
+  });
+
+  it("imports a file written before the queue existed, leaving the queue alone", async () => {
+    const target = new MemoryRepository();
+    const local = mark([], "Hei", "2026-09-20T10:00:00.000Z");
+    await target.saveQueue(local);
+    const report = await importData(target, {
+      format: "brand-export",
+      formatVersion: EXPORT_FORMAT_VERSION,
+      exportedAt: "2026-09-05T10:00:00.000Z",
+      preferences: defaultPreferences(),
+      sessions: [],
+      progress: [],
+    });
+    expect(report.queueImported).toBe(0);
+    expect(await target.listQueue()).toEqual(local);
+  });
+
+  it("skips a queue record it cannot read without losing the rest", async () => {
+    const file = JSON.parse(serializeExport(await exportData(source)));
+    file.queue.push({ id: "q-broken", text: 42 });
+    const target = new MemoryRepository();
+    const report = await importData(target, file);
+    expect(report).toMatchObject({ queueImported: 2, queueSkipped: 1 });
   });
 });

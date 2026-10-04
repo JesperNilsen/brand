@@ -1,3 +1,4 @@
+import type { QueueItem } from "@/domain/practice-queue";
 import type {
   ReadingProgress,
   SessionQuery,
@@ -22,6 +23,16 @@ export interface BrandRepository {
   addSession(value: SessionResult): Promise<void>;
   getSession(id: string): Promise<SessionResult | null>;
   listSessions(query?: SessionQuery): Promise<SessionResult[]>;
+  /**
+   * The repetition queue, in the order pieces were added.
+   *
+   * Whole-queue reads only. A piece is selected by edition, and that selection
+   * re-checks the text (see `selectForEdition`), so a store that answered
+   * "the pieces for edition X" would be answering from the stamp rather than
+   * from the text — exactly the shortcut point 5 exists to close.
+   */
+  listQueue(): Promise<QueueItem[]>;
+  saveQueue(items: readonly QueueItem[]): Promise<void>;
 }
 
 /**

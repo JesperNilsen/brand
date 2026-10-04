@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { BrandRepository } from "@/infra/repository/BrandRepository";
 import { defaultPreferences, SESSION_SCHEMA_VERSION } from "@/infra/repository/migrations";
+import type { QueueItem } from "@/domain/practice-queue";
 import type { ReadingProgress, SessionResult } from "@/domain/types";
 import { progressKey } from "@/domain/types";
 
@@ -335,6 +336,48 @@ export function describeRepositoryContract(name: string, make: () => BrandReposi
 
         expect((await repo.listSessions()).map((s) => s.id)).toEqual(["good"]);
         expect(await repo.getSession("unreadable")).toBeNull();
+      });
+    });
+
+    describe("the repetition queue", () => {
+      const piece = (id: string, addedAt: string): QueueItem => ({
+        id,
+        workId: "ibsen-brand",
+        segmentId: "akt1-01",
+        editionId: "ibsen-brand.training.v1",
+        editionContentHash: "sha256:test",
+        kind: "phrase",
+        text: `bit ${id}`,
+        wordCount: 2,
+        source: "marked",
+        addedAt,
+      });
+
+      it("is empty before anything is added", async () => {
+        expect(await repo.listQueue()).toEqual([]);
+      });
+
+      it("comes back in the order pieces were added, not by id", async () => {
+        // Ids descend while addedAt ascends, so a store answering in key order
+        // returns these reversed — which is how a queue stops being a queue.
+        await repo.saveQueue([
+          piece("q-z", "2026-09-01T10:00:00.000Z"),
+          piece("q-a", "2026-09-02T10:00:00.000Z"),
+        ]);
+        expect((await repo.listQueue()).map((q) => q.id)).toEqual(["q-z", "q-a"]);
+      });
+
+      it("replaces the queue wholesale rather than merging into it", async () => {
+        await repo.saveQueue([piece("q-1", "2026-09-01T10:00:00.000Z")]);
+        await repo.saveQueue([piece("q-2", "2026-09-02T10:00:00.000Z")]);
+        expect((await repo.listQueue()).map((q) => q.id)).toEqual(["q-2"]);
+      });
+
+      it("does not hand back a live handle into the store", async () => {
+        await repo.saveQueue([piece("q-1", "2026-09-01T10:00:00.000Z")]);
+        const first = await repo.listQueue();
+        first[0].text = "endret utenfor køen";
+        expect((await repo.listQueue())[0].text).toBe("bit q-1");
       });
     });
   });
