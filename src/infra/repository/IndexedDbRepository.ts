@@ -1,4 +1,5 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+import type { QueueItem } from "@/domain/practice-queue";
 import type {
   ReadingProgress,
   SessionQuery,
@@ -16,7 +17,12 @@ import {
 import { migrateSession } from "./migrations";
 
 export const DB_NAME = "brand";
-export const DB_VERSION = 1;
+/**
+ * Bumped to 2 for the `queue` store (Q-015). The upgrade is additive and every
+ * store is created behind a `contains` check, so a reader arriving with a v1
+ * database keeps their sessions and their place.
+ */
+export const DB_VERSION = 2;
 
 interface BrandDb extends DBSchema {
   sessions: {
@@ -27,6 +33,11 @@ interface BrandDb extends DBSchema {
   progress: {
     key: string;
     value: ReadingProgress;
+  };
+  queue: {
+    key: string;
+    value: QueueItem;
+    indexes: { byAddedAt: string };
   };
 }
 
@@ -53,6 +64,10 @@ export class IndexedDbRepository implements BrandRepository {
           }
           if (!db.objectStoreNames.contains("progress")) {
             db.createObjectStore("progress", { keyPath: "key" });
+          }
+          if (!db.objectStoreNames.contains("queue")) {
+            const queue = db.createObjectStore("queue", { keyPath: "id" });
+            queue.createIndex("byAddedAt", "addedAt");
           }
         },
       });
@@ -112,5 +127,24 @@ export class IndexedDbRepository implements BrandRepository {
       .map((s) => migrateSession(s))
       .filter((s): s is SessionResult => s !== null);
     return applySessionQuery(valid, query);
+  }
+
+  // Insertion order is the queue's order, so it is read through the byAddedAt
+  // index rather than the store's key order, which is by id and therefore
+  // arbitrary.
+  async listQueue(): Promise<QueueItem[]> {
+    const db = await this.db();
+    return db.getAllFromIndex("queue", "byAddedAt");
+  }
+
+  // Written as a whole: `enqueue` and `selectForEdition` both return a new
+  // queue rather than mutating one, and a partial write would leave the stored
+  // queue in a state no function in the domain ever produced.
+  async saveQueue(items: readonly QueueItem[]): Promise<void> {
+    const db = await this.db();
+    const tx = db.transaction("queue", "readwrite");
+    await tx.store.clear();
+    for (const item of items) await tx.store.put(item);
+    await tx.done;
   }
 }

@@ -1,3 +1,4 @@
+import type { QueueItem } from "@/domain/practice-queue";
 import type {
   ReadingProgress,
   SessionQuery,
@@ -18,6 +19,7 @@ export class MemoryRepository implements BrandRepository {
   private preferences: UserPreferences = defaultPreferences();
   private progress = new Map<string, ReadingProgress>();
   private sessions = new Map<string, SessionResult>();
+  private queue: QueueItem[] = [];
 
   async getPreferences(): Promise<UserPreferences> {
     return { ...this.preferences };
@@ -59,5 +61,11 @@ export class MemoryRepository implements BrandRepository {
       .map((s) => migrateSession(s))
       .filter((s): s is SessionResult => s !== null);
     return applySessionQuery(valid, query);
+  }
+  async listQueue(): Promise<QueueItem[]> {
+    return this.queue.map((q) => ({ ...q }));
+  }
+  async saveQueue(items: readonly QueueItem[]): Promise<void> {
+    this.queue = items.map((q) => ({ ...q }));
   }
 }
