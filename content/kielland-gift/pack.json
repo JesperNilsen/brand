@@ -1,7 +1,7 @@
 {
   "id": "kielland-gift",
   "title": "Alexander Kielland: Gift",
-  "description": "Samfunnskritisk roman med variert dialog og fortellende prosa. V1 rommer åpningen av kapittel I (1883/1907-teksten).",
+  "description": "Samfunnskritisk roman om latinskolen i en norsk kystby, med variert dialog og fortellende prosa. Hele verket i tretten moduler (Kapittel I–XIII), 1883/1907-teksten.",
   "languageProfileIds": ["brand-riksmaal"],
   "workIds": ["kielland-gift"],
   "tags": ["prosa", "roman", "1800-tallet", "dialog"],
@@ -13,16 +13,18 @@
       "publishedYear": 1883,
       "language": "da-NO",
       "sourceUrl": "https://no.wikisource.org/wiki/Gift/1",
-      "archiveId": "wikikilden:Gift/1",
-      "retrievedAt": "2026-09-04",
+      "archiveId": "wikikilden:Gift/1–13",
+      "retrievedAt": "2026-10-06",
       "provider": "Wikikilden (no.wikisource.org)",
       "authorDeathYear": 1906,
       "license": "Public domain (Kielland d. 1906; verkets vernetid er utløpt, life+70). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
       "rightsStatus": "public-domain",
-      "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, kapittel I (trykte sider 165–171).",
+      "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, kapittel I–XIII (trykte sider 165–285). Transkribert etter Wikikildens skannede utgave (Indeks:Kielland - Samlede Værker 2.djvu, Fremgang V — korrekturlest; djvu-side 167–287, trykt side = djvu − 2).",
       "verificationStatus": "agent-drafted",
       "editorialNotes": [
-        "Rå HTML arkivert under source/wikikilden/gift-1.html; ekstrahert tekst i source/gift-1.txt."
+        "Rå HTML arkivert under source/wikikilden/gift-1.html til gift-13.html; ekstrahert tekst i source/gift-1.txt til gift-13.txt, sammenstilt med romertallsoverskrifter (I–XIII) i source/gift-komplett.txt.",
+        "Kapittel I ble hentet 2026-09-04 og trukket ut på nytt offline; gift-1.txt er byteidentisk. Kapittel II–XIII hentet 2026-10-06.",
+        "Romanen slutter med «Fra lille Marius.» i kapittel XIII; det finnes ingen Gift/14."
       ]
     }
   ]

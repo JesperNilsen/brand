@@ -117,7 +117,7 @@ describe("moduleProblems", () => {
  * modules change how a reader's place is keyed, so a work that gains them is
  * named here or the test says so out loud, exactly as before.
  */
-const MODULE_BEARING = ["hamsun-sult"];
+const MODULE_BEARING = ["hamsun-sult", "kielland-gift"];
 
 describe("the catalogue as it ships", () => {
   it("declares modules on exactly the works meant to have them", () => {

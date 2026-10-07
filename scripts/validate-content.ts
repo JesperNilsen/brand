@@ -228,6 +228,19 @@ const KNOWN_LENGTH_DEVIATIONS = new Map<string, string>([
   ["hamsun-sult/stykke4-97", "147 ord; ett avsnitt"],
   ["hamsun-sult/stykke4-98", "139 ord; ett avsnitt"],
   ["hamsun-sult/stykke4-110", "168 ord; ett avsnitt"],
+  // Gift, hele romanen (original.v2): ni avsnitt lengre enn taket, lengste 220
+  // ord. Grensene er Kiellands egne avsnitt; samme avgjørelse og samme grunn
+  // som Novelletter og Sult over. Nøklene er pakke/segment, og ingen av de ni
+  // er kap1-segmenter, så de kolliderer ikke med v1s ids.
+  ["kielland-gift/kap3-20", "132 ord; ett avsnitt"],
+  ["kielland-gift/kap4-30", "149 ord; ett avsnitt"],
+  ["kielland-gift/kap6-02", "153 ord; ett avsnitt"],
+  ["kielland-gift/kap6-36", "139 ord; ett avsnitt"],
+  ["kielland-gift/kap6-38", "220 ord; ett avsnitt"],
+  ["kielland-gift/kap9-07", "132 ord; ett avsnitt"],
+  ["kielland-gift/kap9-25", "126 ord; ett avsnitt"],
+  ["kielland-gift/kap10-18", "158 ord; ett avsnitt"],
+  ["kielland-gift/kap13-37", "136 ord; ett avsnitt"],
 ]);
 const seenDeviations = new Set<string>();
 

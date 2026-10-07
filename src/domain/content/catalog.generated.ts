@@ -124,7 +124,7 @@ export const CONTENT_PACKS: ContentPack[] = [
   {
     "id": "kielland-gift",
     "title": "Alexander Kielland: Gift",
-    "description": "Samfunnskritisk roman med variert dialog og fortellende prosa. V1 rommer åpningen av kapittel I (1883/1907-teksten).",
+    "description": "Samfunnskritisk roman om latinskolen i en norsk kystby, med variert dialog og fortellende prosa. Hele verket i tretten moduler (Kapittel I–XIII), 1883/1907-teksten.",
     "languageProfileIds": [
       "brand-riksmaal"
     ],
@@ -145,16 +145,18 @@ export const CONTENT_PACKS: ContentPack[] = [
         "publishedYear": 1883,
         "language": "da-NO",
         "sourceUrl": "https://no.wikisource.org/wiki/Gift/1",
-        "archiveId": "wikikilden:Gift/1",
-        "retrievedAt": "2026-09-04",
+        "archiveId": "wikikilden:Gift/1–13",
+        "retrievedAt": "2026-10-06",
         "provider": "Wikikilden (no.wikisource.org)",
         "authorDeathYear": 1906,
         "license": "Public domain (Kielland d. 1906; verkets vernetid er utløpt, life+70). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her.",
         "rightsStatus": "public-domain",
-        "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, kapittel I (trykte sider 165–171).",
+        "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, kapittel I–XIII (trykte sider 165–285). Transkribert etter Wikikildens skannede utgave (Indeks:Kielland - Samlede Værker 2.djvu, Fremgang V — korrekturlest; djvu-side 167–287, trykt side = djvu − 2).",
         "verificationStatus": "agent-drafted",
         "editorialNotes": [
-          "Rå HTML arkivert under source/wikikilden/gift-1.html; ekstrahert tekst i source/gift-1.txt."
+          "Rå HTML arkivert under source/wikikilden/gift-1.html til gift-13.html; ekstrahert tekst i source/gift-1.txt til gift-13.txt, sammenstilt med romertallsoverskrifter (I–XIII) i source/gift-komplett.txt.",
+          "Kapittel I ble hentet 2026-09-04 og trukket ut på nytt offline; gift-1.txt er byteidentisk. Kapittel II–XIII hentet 2026-10-06.",
+          "Romanen slutter med «Fra lille Marius.» i kapittel XIII; det finnes ingen Gift/14."
         ]
       }
     ]
@@ -491,17 +493,18 @@ export const WORKS: Work[] = [
       "title": "Gift",
       "publishedYear": 1883,
       "language": "da-NO",
-      "sourceUrl": "https://no.wikisource.org/wiki/Gift/1",
-      "archiveId": "wikikilden:Gift/1",
-      "retrievedAt": "2026-09-04",
+      "sourceUrl": "https://no.wikisource.org/wiki/Gift",
+      "archiveId": "wikikilden:Gift/1-13",
+      "retrievedAt": "2026-10-06",
       "provider": "Wikikilden (no.wikisource.org)",
       "authorDeathYear": 1906,
       "license": "Public domain (Kielland d. 1906; verkets vernetid er utløpt, life+70). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her. Wikikilden-siden merker kilden {{PD-old|nb}}.",
       "rightsStatus": "public-domain",
-      "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, kapittel I (trykte sider 165–171).",
+      "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, hele romanen, kapittel I–XIII (trykte sider 165–285), transkribert etter «Indeks:Kielland - Samlede Værker 2.djvu» — trykt side 165 = djvu-side 167.",
       "verificationStatus": "agent-drafted",
       "editorialNotes": [
-        "Rå HTML arkivert under source/wikikilden/gift-1.html; ekstrahert tekst i source/gift-1.txt.",
+        "Indeksen er merket Fremgang=V (validert); alle 121 sidene romanen står på (djvu 167–287) har korrekturnivå 3 (korrekturlest), kontrollert mot Wikikildens API 2026-10-06.",
+        "Rå HTML arkivert under source/wikikilden/gift-1.html … gift-13.html; ekstrahert tekst i source/gift-1.txt … gift-13.txt. Kapittel I ble hentet 2026-09-04, kapittel II–XIII 2026-10-06; gift-1.txt er ekstrahert på nytt fra arkivet (--offline) og er byte-identisk.",
         "Gift ble første gang utgitt 1883; teksten her følger 1907-utgaven i Samlede Værker slik den er transkribert på Wikikilden."
       ]
     },
@@ -516,6 +519,84 @@ export const WORKS: Work[] = [
         "segmentCount": 13,
         "wordCount": 855,
         "file": "/content/editions/kielland-gift.original.2dff6f05866e.json"
+      },
+      {
+        "id": "kielland-gift.original.v2",
+        "workId": "kielland-gift",
+        "kind": "original",
+        "version": "2.0.0",
+        "contentHash": "sha256:ddb17387708b63926065b08ced4fc47651bd98de8f2d1de7bebc4b01853bae03",
+        "adaptationStatus": "none",
+        "modules": [
+          {
+            "id": "kap-1",
+            "title": "Kapittel I",
+            "order": 1
+          },
+          {
+            "id": "kap-2",
+            "title": "Kapittel II",
+            "order": 2
+          },
+          {
+            "id": "kap-3",
+            "title": "Kapittel III",
+            "order": 3
+          },
+          {
+            "id": "kap-4",
+            "title": "Kapittel IV",
+            "order": 4
+          },
+          {
+            "id": "kap-5",
+            "title": "Kapittel V",
+            "order": 5
+          },
+          {
+            "id": "kap-6",
+            "title": "Kapittel VI",
+            "order": 6
+          },
+          {
+            "id": "kap-7",
+            "title": "Kapittel VII",
+            "order": 7
+          },
+          {
+            "id": "kap-8",
+            "title": "Kapittel VIII",
+            "order": 8
+          },
+          {
+            "id": "kap-9",
+            "title": "Kapittel IX",
+            "order": 9
+          },
+          {
+            "id": "kap-10",
+            "title": "Kapittel X",
+            "order": 10
+          },
+          {
+            "id": "kap-11",
+            "title": "Kapittel XI",
+            "order": 11
+          },
+          {
+            "id": "kap-12",
+            "title": "Kapittel XII",
+            "order": 12
+          },
+          {
+            "id": "kap-13",
+            "title": "Kapittel XIII",
+            "order": 13
+          }
+        ],
+        "segmentCount": 477,
+        "wordCount": 47574,
+        "file": "/content/editions/kielland-gift.original.v2.ddb17387708b.json"
       },
       {
         "id": "kielland-gift.training.v1",
@@ -558,6 +639,87 @@ export const WORKS: Work[] = [
         "segmentCount": 13,
         "wordCount": 858,
         "file": "/content/editions/kielland-gift.training.v3.c483a82cfea3.json"
+      },
+      {
+        "id": "kielland-gift.training.v4",
+        "workId": "kielland-gift",
+        "kind": "training-edition",
+        "version": "4.0.0",
+        "contentHash": "sha256:64b5f1dec3448b9876b2aba379d0ab0d674db8c6e71f83bee5a325d6c04be37a",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "kielland-gift.original.v2",
+        "basedOnContentHash": "sha256:ddb17387708b63926065b08ced4fc47651bd98de8f2d1de7bebc4b01853bae03",
+        "modules": [
+          {
+            "id": "kap-1",
+            "title": "Kapittel I",
+            "order": 1
+          },
+          {
+            "id": "kap-2",
+            "title": "Kapittel II",
+            "order": 2
+          },
+          {
+            "id": "kap-3",
+            "title": "Kapittel III",
+            "order": 3
+          },
+          {
+            "id": "kap-4",
+            "title": "Kapittel IV",
+            "order": 4
+          },
+          {
+            "id": "kap-5",
+            "title": "Kapittel V",
+            "order": 5
+          },
+          {
+            "id": "kap-6",
+            "title": "Kapittel VI",
+            "order": 6
+          },
+          {
+            "id": "kap-7",
+            "title": "Kapittel VII",
+            "order": 7
+          },
+          {
+            "id": "kap-8",
+            "title": "Kapittel VIII",
+            "order": 8
+          },
+          {
+            "id": "kap-9",
+            "title": "Kapittel IX",
+            "order": 9
+          },
+          {
+            "id": "kap-10",
+            "title": "Kapittel X",
+            "order": 10
+          },
+          {
+            "id": "kap-11",
+            "title": "Kapittel XI",
+            "order": 11
+          },
+          {
+            "id": "kap-12",
+            "title": "Kapittel XII",
+            "order": 12
+          },
+          {
+            "id": "kap-13",
+            "title": "Kapittel XIII",
+            "order": 13
+          }
+        ],
+        "segmentCount": 477,
+        "wordCount": 47584,
+        "file": "/content/editions/kielland-gift.training.v4.64b5f1dec344.json"
       }
     ]
   },
