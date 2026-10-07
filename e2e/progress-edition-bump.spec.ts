@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import v2 from "../content/kielland-gift/training-edition.v2.json";
+import served from "../content/kielland-gift/training-edition.v4.json";
 
 /**
  * T-10, end to end: a new training edition must not take the reader's place in
@@ -10,8 +10,11 @@ import v2 from "../content/kielland-gift/training-edition.v2.json";
  * 2026-09-07 — profile, EDITION, mode, work — which is the only way to
  * reproduce the failure now that nothing writes that key any more.
  *
- * `kielland-gift` is the work under test because it genuinely has two training
- * editions: the reader below stopped inside v1, and the app serves v2.
+ * `kielland-gift` is the work under test because it genuinely has several
+ * training editions: the reader below stopped inside v1, and the app serves
+ * v4, the whole novel. The count comes from the served edition's own file, so
+ * the next edition bump has to change this import — and fails here until it
+ * does.
  */
 const LEGACY_KEY = "brand-riksmaal::kielland-gift.training.v1::nonstop::kielland-gift";
 const COMPLETED = ["kap1-01", "kap1-02", "kap1-03", "kap1-04", "kap1-05"];
@@ -54,7 +57,7 @@ test("progress written under an older edition survives the bump", async ({ page 
   await page.reload();
 
   await expect(
-    page.getByText(`Du har skrevet ${COMPLETED.length} av ${v2.segments.length} segmenter.`),
+    page.getByText(`Du har skrevet ${COMPLETED.length} av ${served.segments.length} segmenter.`),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Fortsett" })).toBeVisible();
 });
