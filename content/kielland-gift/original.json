@@ -11,17 +11,18 @@
       "title": "Gift",
       "publishedYear": 1883,
       "language": "da-NO",
-      "sourceUrl": "https://no.wikisource.org/wiki/Gift/1",
-      "archiveId": "wikikilden:Gift/1",
-      "retrievedAt": "2026-09-04",
+      "sourceUrl": "https://no.wikisource.org/wiki/Gift",
+      "archiveId": "wikikilden:Gift/1-13",
+      "retrievedAt": "2026-10-06",
       "provider": "Wikikilden (no.wikisource.org)",
       "authorDeathYear": 1906,
       "license": "Public domain (Kielland d. 1906; verkets vernetid er utløpt, life+70). Wikikildens transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikikilden er beholdt her. Wikikilden-siden merker kilden {{PD-old|nb}}.",
       "rightsStatus": "public-domain",
-      "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, kapittel I (trykte sider 165–171).",
+      "digitalEdition": "Samlede Værker, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Gift, hele romanen, kapittel I–XIII (trykte sider 165–285), transkribert etter «Indeks:Kielland - Samlede Værker 2.djvu» — trykt side 165 = djvu-side 167.",
       "verificationStatus": "agent-drafted",
       "editorialNotes": [
-        "Rå HTML arkivert under source/wikikilden/gift-1.html; ekstrahert tekst i source/gift-1.txt.",
+        "Indeksen er merket Fremgang=V (validert); alle 121 sidene romanen står på (djvu 167–287) har korrekturnivå 3 (korrekturlest), kontrollert mot Wikikildens API 2026-10-06.",
+        "Rå HTML arkivert under source/wikikilden/gift-1.html … gift-13.html; ekstrahert tekst i source/gift-1.txt … gift-13.txt. Kapittel I ble hentet 2026-09-04, kapittel II–XIII 2026-10-06; gift-1.txt er ekstrahert på nytt fra arkivet (--offline) og er byte-identisk.",
         "Gift ble første gang utgitt 1883; teksten her følger 1907-utgaven i Samlede Værker slik den er transkribert på Wikikilden."
       ]
     }

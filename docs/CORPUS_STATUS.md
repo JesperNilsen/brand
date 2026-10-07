@@ -34,15 +34,25 @@ Etablert før denne runden; uendret. Se `content/ibsen-brand/rules.v1.json` for 
 
 ## kielland-gift — Alexander L. Kielland, *Gift* (1883)
 
+**Vokst til hele romanen 2026-10-08 (PR 2 i fase 4).** `original.v2.json` og
+`kielland-gift.training.v4` er nye; `original.json` (v1, åpningen av kapittel I) og
+treningsutgavene v1–v3 er urørt (D15), og v1-hashen står. `pnpm validate:content`
+reproduserer pakken.
+
 | Felt | Verdi |
 | --- | --- |
-| Kilde | Wikikilden, `https://no.wikisource.org/wiki/Gift/1` |
-| Trykt utgave | *Samlede Værker*, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Kapittel I (trykte sider 165–171). Merket `{{PD-old|nb}}` på Wikikilden. |
-| Hentet | 2026-09-04 |
+| Kilde | Wikikilden, `https://no.wikisource.org/wiki/Gift` — tretten kapitler (`Gift/1`–`Gift/13`), transkludert fra `Indeks:Kielland - Samlede Værker 2.djvu`, Fremgang V; djvu-side 167–287, alle korrekturlest. Det finnes ingen `Gift/14`; romanen slutter «Fra lille Marius.» |
+| Trykt utgave | *Samlede Værker*, Andet Bind. Kristiania: Gyldendalske Boghandel Nordisk Forlag, 1907. Hele romanen, kapittel I–XIII (trykte sider 165–285; trykt side = djvu-side − 2). Merket `{{PD-old|nb}}` på Wikikilden. |
+| Hentet | Kapittel I 2026-09-04 (trukket ut på nytt offline, byteidentisk); kapittel II–XIII 2026-10-06 |
 | Rettighetsgrunnlag | Public domain (Kielland d. 1906, mer enn 70 år siden). Wikikildens transkripsjon er CC BY-SA 4.0; attribusjon beholdt i pakken. |
 | Kontrollstatus | agent-drafted |
-| Ordtall / segmenter | 855 ord, 13 segmenter |
-| Inkludert | Åpningen av kapittel I: klasserommet, geografitimen, Adjunkt Borring og Aalbom, fram til Adjunktens spørsmål om «Namür». |
+| Ordtall / segmenter | 47 584 ord i 477 segmenter, tretten moduler `kap-1`–`kap-13` («Kapittel I»–«Kapittel XIII»): I 25 seg./2 431 ord · II 41/4 202 · III 44/4 393 · IV 57/5 569 · V 20/1 874 · VI 40/4 279 · VII 21/2 090 · VIII 43/4 275 · IX 40/4 102 · X 32/3 075 · XI 31/3 070 · XII 41/4 130 · XIII 42/4 094. Segmentene er `propose-segments` uten håndjustering. |
+| Inkludert | Hele verket: Abraham Løvdahl og Marius Gottwald gjennom latinskolen, fra geografitimen i kapittel I til kortet «Fra lille Marius.» i kapittel XIII. Andre pakke med reell modulstruktur, etter *Sult*. |
+| Regler / utgave | `rules.v4.json` på grunnreglene `brand-riksmaal.base.v3` (flyttet fra base.v1) → `kielland-gift.training.v4`, `contentHash` `sha256:64b5f1dec3448b9876b2aba379d0ab0d674db8c6e71f83bee5a325d6c04be37a`, 2 864 regeltreff, 13 469 endringer. `properNames` = 155, maskinutledet med `propose-proper-names.ts --pack kielland-gift --rules 4` og avgjort navn for navn. Byttet til base.v3 tar med sad/lod/bag/gad → satt/lot/bak/gadd og grunnsettets navngitte «-erne»-ord; de fem identitetsparene (efter, nu, kunde, skulde, blev) arves ikke lenger. |
+| Lengdeavvik | 9 segmenter (enkeltavsnitt på 126–220 ord) avviker fra lengdenormen og er beholdt hele; alle ført i `KNOWN_LENGTH_DEVIATIONS`. |
+| Særtilfeller | Femten transkripsjonsfeil rettet som erstatninger (adraham, ahraham, wenehe, miohal, nlordtmann, cixeros, gandelsmand, konflrmander, konlirmationen, resolntion, jemplader, slyngekasteme, sovn, dagmarseher, misfomøyet) og tre som smale mønstre (GottWald → Gottwald; «l» → «1» foran sifre; «fra 12 til l;»). Originalen beholder alle verbatim. «hadede» → «hatet» og «gloede» → «glodde» er arvet fra v1 og bryter D12s -ede-linje; ført som åpent spørsmål til Q-005. |
+
+Rå HTML arkivert under `source/wikikilden/gift-1.html`–`gift-13.html`; ekstrahert tekst i `source/gift-1.txt`–`gift-13.txt`, satt sammen med romertallsoverskrifter til `source/gift-komplett.txt`. Hylle: `norske-klassikere` (fra før).
 
 ## kielland-noveletter — Alexander L. Kielland, *Noveletter* (1879)
 
@@ -130,7 +140,7 @@ Rå HTML arkivert under `source/wikikilden/sult-01.html`–`sult-04.html`; ekstr
   «Slaget ved Waterloo» (~8 300). Sammen med de to allerede importerte og «Balstemning»
   utgjør det hele samlingen fra 1879, ~26 000 ord, gjennom samme importer og samme
   regelsett. Ikke importert ennå; se CEO-planen for rekkefølge.
-- **Corpuset er utdrag, ikke hele verk.** Alle fire pakker inneholder bare åpningen av det aktuelle kapittelet/den aktuelle novellen (i tråd med `docs/spec/CORPUS.md`s V1-avgrensning), ikke hele *Markens Grøde*, *Gift* eller de fullstendige novellene.
+- **Corpuset er utdrag, ikke hele verk.** Alle fire pakker inneholder bare åpningen av det aktuelle kapittelet/den aktuelle novellen (i tråd med `docs/spec/CORPUS.md`s V1-avgrensning), ikke hele *Markens Grøde* eller de fullstendige novellene. *Sult* og *Gift* er siden importert hele.
 - **Alle treningsutgaver er agent-utkast (`verificationStatus: "agent-drafted"`).** Ingen av dem er lest av en menneskelig redaktør ennå. `docs/spec/LANGUAGE_PROFILE.md` krever at «en redaktør [skal] kontrollere at tekstens setningsmelodi og litterære særpreg er beholdt» før en pakke regnes som kontrollert — det gjenstår for alle fire pakker (ibsen-brand inkludert, som var ferdig fra før). Se hver pakkes `rules.v1.json`-felt `retained` for ord som bevisst er latt urørt fordi riktig moderne form var usikker, og selve sluttrapporten for denne runden for en kortere liste over de mest tvilsomme enkeltvalgene.
 - **Én dokumentert transkripsjonsrettelse.** I `kielland-gift` er «Abrabam» (åpenbar bokstavfeil på Wikikilden, mot 10+ korrekte forekomster av «Abraham» ellers i samme kapittel) rettet til «Abraham» i treningsutgaven, i tråd med `docs/spec/LANGUAGE_PROFILE.md`s adgang til å rette dokumenterte transkripsjonsfeil. Originalteksten beholder «Abrabam» uendret (verbatim mot kilden).
 
@@ -178,7 +188,7 @@ på Project Runeberg. **Et negativt resultat gjelder søkestrengen, ikke verket*
 | # | Verk | Funnet | Kilde |
 | --- | --- | --- | --- |
 | 1 | *Sult* | **ja, skannbasert** | `no.wikisource.org/wiki/Sult` — transkludert fra `Sult (Knut Hamsun).djvu`, fire stykker (`Sult/01`–`Sult/04`) |
-| 2 | *Gift* (hele) | **ja, skannbasert** | `no.wikisource.org/wiki/Gift` — 13 kapitler (`Gift/1`–`Gift/13`) fra `Kielland - Samlede Værker 2.djvu`, `{{PD-old|nb}}`. Pakken har i dag bare s. 167–173 §1 |
+| 2 | *Gift* (hele) | **ja, skannbasert** | `no.wikisource.org/wiki/Gift` — 13 kapitler (`Gift/1`–`Gift/13`) fra `Kielland - Samlede Værker 2.djvu`, `{{PD-old|nb}}`. Hele romanen importert 2026-10-08 (`kielland-gift.training.v4`) |
 | 3 | *Et dukkehjem* | **ja, men ikke skannbasert der** | `no.wikisource.org/wiki/Et_Dukkehjem` er en elektronisk utgave **kopiert fra Project Runeberg**, med en `opprydning`-merkelapp om at teksten bør flyttes til de skannede sidene (`Side:Samfundets støtter, dukkehjem, gengangere.djvu/225`). `runeberg.org/dukkhjem/` svarer. **Bruk Runeberg direkte eller de skannede sidene — ikke en avskrift av en avskrift.** Runeberg er samme leverandør som `ibsen-brand` allerede bruker |
 | 4 | *Frygt og Bæven* | **ikke funnet** | Ikke på da.wikisource under den tittelen; ikke på gjettet Runeberg-slug |
 | 5 | *Amtmandens Døttre* | **ja** | `no.wikisource.org/wiki/Amtmandens_Døttre._En_Fortælling` |
