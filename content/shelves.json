@@ -16,7 +16,9 @@
       "id": "danske-klassikere",
       "title": "Danske klassikere",
       "description": "Bang, Pontoppidan, Jacobsen, Holberg og beslektede forfattere.",
-      "workIds": []
+      "workIds": [
+        "kierkegaard-enten-eller"
+      ]
     },
     {
       "id": "ide-og-tro",

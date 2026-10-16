@@ -216,6 +216,47 @@ export const CONTENT_PACKS: ContentPack[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "kierkegaard-enten-eller",
+    "title": "Søren Kierkegaard: Enten — Eller",
+    "description": "Kierkegaards aforismer fra første del av Enten — Eller (1843), satt etter Fjerde Udgave (1878). V1 rommer Diapsalmata som én modul; de andre delene av verket kommer som egne moduler. Den første danske teksten i katalogen.",
+    "languageProfileIds": [
+      "brand-riksmaal"
+    ],
+    "workIds": [
+      "kierkegaard-enten-eller"
+    ],
+    "tags": [
+      "prosa",
+      "aforismer",
+      "filosofi",
+      "1800-tallet"
+    ],
+    "status": "active",
+    "sourceAttribution": [
+      {
+        "author": "Søren Kierkegaard",
+        "title": "Enten — Eller. Første Deel: Diapsalmata",
+        "publishedYear": 1878,
+        "language": "da-DK",
+        "sourceUrl": "https://da.wikisource.org/wiki/Enten_%E2%80%94_Eller._F%C3%B8rste_Deel/1",
+        "archiveId": "da.wikisource:Enten — Eller. Første Deel/1",
+        "retrievedAt": "2026-10-16",
+        "provider": "Wikisource (da.wikisource.org)",
+        "authorDeathYear": 1855,
+        "license": "Public domain i Danmark og Norge (Kierkegaard d. 1855; vernetiden utløp 1926-01-01, life+70) og i USA (utgitt før 1931). Wikisources transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikisource er beholdt her.",
+        "rightsStatus": "public-domain",
+        "digitalEdition": "Enten — Eller. Et Livs-Fragment, udgivet af Victor Eremita. Fjerde Udgave. Første Deel. Kjøbenhavn: C. A. Reitzels Forlag, 1878. Diapsalmata transkribert etter «Indeks:Enten-Eller Første Deel.djvu», djvu-side 17–46. Verket kom ut første gang 1843; kildeutgaven er den fjerde (CORPUS_STATUS, Avvik 3).",
+        "verificationStatus": "agent-drafted",
+        "editorialNotes": [
+          "Indeksen er merket Status=V. Av de 30 transkluderte sidene (17–46) er 29 «Korrekturlæst» og 1 «Valideret» (kontrollert 2026-10-16).",
+          "Kildeutgaven er Fjerde Udgave (1878), ikke førsteutgaven (1843): ingen skann av 1843-utgaven finnes på Commons eller da.wikisource. CORPUS.md krever originalutgaven; avviket er skrevet ned som Avvik 3 i docs/CORPUS_STATUS.md og bortfaller når en skannbasert 1843-kilde finnes.",
+          "Rå HTML arkivert under source/wikikilden/diapsalmata.html (hentet med --host da.wikisource.org); ekstrahert tekst i source/diapsalmata.txt.",
+          "Elleve sider åpner et nytt avsnitt etter en skillelinje; der lar ProofreadPage avsnittets første trykte linje stå utenfor <p>. wikikilden.ts setter nå linjen tilbake foran avsnittet (tests/content/wikikilden-extract.test.ts)."
+        ]
+      }
+    ]
   }
 ];
 
@@ -843,6 +884,76 @@ export const WORKS: Work[] = [
         "file": "/content/editions/kielland-noveletter.training.v5.284be0537acd.json"
       }
     ]
+  },
+  {
+    "id": "kierkegaard-enten-eller",
+    "contentPackId": "kierkegaard-enten-eller",
+    "author": "Søren Kierkegaard",
+    "title": "Enten — Eller",
+    "publishedYear": 1843,
+    "originalLanguage": "da-DK",
+    "source": {
+      "author": "Søren Kierkegaard",
+      "title": "Enten — Eller. Første Deel: Diapsalmata",
+      "publishedYear": 1878,
+      "language": "da-DK",
+      "sourceUrl": "https://da.wikisource.org/wiki/Enten_%E2%80%94_Eller._F%C3%B8rste_Deel/1",
+      "archiveId": "da.wikisource:Enten — Eller. Første Deel/1",
+      "retrievedAt": "2026-10-16",
+      "provider": "Wikisource (da.wikisource.org)",
+      "authorDeathYear": 1855,
+      "license": "Public domain i Danmark og Norge (Kierkegaard d. 1855; vernetiden utløp 1926-01-01, life+70) og i USA (utgitt før 1931). Wikisources transkripsjon er en tro gjengivelse av en offentlig tekst og tilbys under CC BY-SA 4.0; attribusjon til Wikisource er beholdt her.",
+      "rightsStatus": "public-domain",
+      "digitalEdition": "Enten — Eller. Et Livs-Fragment, udgivet af Victor Eremita. Fjerde Udgave. Første Deel. Kjøbenhavn: C. A. Reitzels Forlag, 1878. Diapsalmata transkribert etter «Indeks:Enten-Eller Første Deel.djvu», djvu-side 17–46. Verket kom ut første gang 1843; kildeutgaven er den fjerde (CORPUS_STATUS, Avvik 3).",
+      "verificationStatus": "agent-drafted",
+      "editorialNotes": [
+        "Indeksen er merket Status=V. Av de 30 transkluderte sidene (17–46) er 29 «Korrekturlæst» og 1 «Valideret» (kontrollert 2026-10-16).",
+        "Kildeutgaven er Fjerde Udgave (1878), ikke førsteutgaven (1843): ingen skann av 1843-utgaven finnes på Commons eller da.wikisource. CORPUS.md krever originalutgaven; avviket er skrevet ned som Avvik 3 i docs/CORPUS_STATUS.md og bortfaller når en skannbasert 1843-kilde finnes.",
+        "Rå HTML arkivert under source/wikikilden/diapsalmata.html (hentet med --host da.wikisource.org); ekstrahert tekst i source/diapsalmata.txt.",
+        "Elleve sider åpner et nytt avsnitt etter en skillelinje; der lar ProofreadPage avsnittets første trykte linje stå utenfor <p>. wikikilden.ts setter nå linjen tilbake foran avsnittet (tests/content/wikikilden-extract.test.ts)."
+      ]
+    },
+    "editions": [
+      {
+        "id": "kierkegaard-enten-eller.original",
+        "workId": "kierkegaard-enten-eller",
+        "kind": "original",
+        "version": "1.0.0",
+        "contentHash": "sha256:6667084c1b6657b14354349b4e107f52aa0b7ff38a3c31d1e5f28c23bce0cc58",
+        "adaptationStatus": "none",
+        "modules": [
+          {
+            "id": "diapsalmata",
+            "title": "Diapsalmata",
+            "order": 1
+          }
+        ],
+        "segmentCount": 66,
+        "wordCount": 7739,
+        "file": "/content/editions/kierkegaard-enten-eller.original.6667084c1b66.json"
+      },
+      {
+        "id": "kierkegaard-enten-eller.training.v1",
+        "workId": "kierkegaard-enten-eller",
+        "kind": "training-edition",
+        "version": "1.0.0",
+        "contentHash": "sha256:a3eee0565d71d4fe7f1029a0a2b228f53b1b3aa188cb2dd27f6925cdb63c2479",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography-and-morphology",
+        "basedOnEditionId": "kierkegaard-enten-eller.original",
+        "basedOnContentHash": "sha256:6667084c1b6657b14354349b4e107f52aa0b7ff38a3c31d1e5f28c23bce0cc58",
+        "modules": [
+          {
+            "id": "diapsalmata",
+            "title": "Diapsalmata",
+            "order": 1
+          }
+        ],
+        "segmentCount": 66,
+        "wordCount": 7739,
+        "file": "/content/editions/kierkegaard-enten-eller.training.v1.a3eee0565d71.json"
+      }
+    ]
   }
 ];
 
@@ -863,7 +974,9 @@ export const SHELVES: Shelf[] = [
     "id": "danske-klassikere",
     "title": "Danske klassikere",
     "description": "Bang, Pontoppidan, Jacobsen, Holberg og beslektede forfattere.",
-    "workIds": []
+    "workIds": [
+      "kierkegaard-enten-eller"
+    ]
   },
   {
     "id": "ide-og-tro",
