@@ -524,3 +524,25 @@ bilde som sjelden endres, er ikke det verdt det. I dag skriver
 
 **Port:** når slagordet eller merket endres. Til da kjøres `pnpm build:icons`
 på nytt i samme endring.
+
+## T-24 — Førsteutgavekilder for *Diapsalmata* og *Amtmandens Døttre* (P2, M / M)
+
+**Hva:** To kildehull fra PR 3, begge skrevet ned i `docs/CORPUS_STATUS.md`.
+
+**Diapsalmata, 1843.** `kierkegaard-enten-eller` er hentet fra Fjerde Udgave
+(Reitzel, 1878), fordi ingen skann av førsteutgaven finnes på Commons eller
+da.wikisource (Avvik 3). Finn en skannbasert 1843-kilde (Det Kgl. Bibliotek er
+første sted å lete) og hent modulen på nytt fra den.
+Sammenlign så 1843- og 1878-teksten ord for ord: avvikene er det leseren har skrevet
+feil så langt, og de avgjør om utgaven skal ut i en ny versjon.
+
+**Amtmandens Døttre.** Wikikildens tekstside er Winter-Hjelms anmeldelse fra 1855,
+og romanens `Indeks:Amtmandens døttre.djvu` (1860-utgaven, NB
+`URN:NBN:no-nb_digibok_2009072112001`) har 0 transkriberte sider. Verket trenger
+en transkripsjon — enten ved at noen korrekturleser OCR-en på Wikikilden, eller en
+egen transkripsjon fra Nasjonalbibliotekets skann, som er et vesentlig større arbeid.
+1855-anmeldelsen er ikke romanen og skal ikke brukes.
+
+**Port:** Avvik 3 bortfaller først når en skannbasert 1843-kilde finnes. Før én linje
+hentes fra en ny kilde: bekreft `Indeks:`-siden og korrekturnivået per side, som for
+Diapsalmata (Balstemning-lærdommen).

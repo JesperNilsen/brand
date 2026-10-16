@@ -107,6 +107,36 @@ Rå HTML arkivert under `source/wikikilden/sult-01.html`–`sult-04.html`; ekstr
 
 ---
 
+## kierkegaard-enten-eller — Søren Kierkegaard, *Enten — Eller* (1843): Diapsalmata
+
+**Ferdig bygget 2026-10-16; PR åpen, ikke merget.** Kilde, `segments.json`,
+`original.json`, `pack.json`, `rules.v1.json` og treningsutgaven
+`kierkegaard-enten-eller.training.v1` er på plass; `pnpm validate:content` reproduserer pakken. Første
+danske tekst i katalogen, og første pakke hentet fra en annen utgave enn
+førsteutgaven (Avvik 3).
+
+| Felt | Verdi |
+| --- | --- |
+| Kilde | Wikisource (da), `https://da.wikisource.org/wiki/Enten_—_Eller._Første_Deel/1` — transkludert fra `Indeks:Enten-Eller Første Deel.djvu`, djvu-side 17–46. |
+| Trykt utgave | *Enten — Eller. Et Livs-Fragment, udgivet af Victor Eremita.* Fjerde Udgave, Første Deel. Kjøbenhavn: C. A. Reitzels Forlag, 1878. Verket kom ut 1843; ingen skann av førsteutgaven finnes (Avvik 3). Indeksen har `Status=V`; av de 30 transkluderte sidene er 29 «Korrekturlæst» og 1 «Valideret». |
+| Hentet | 2026-10-16 |
+| Rettighetsgrunnlag | Public domain i Danmark og Norge (Kierkegaard d. 1855; vernetiden utløp 1926-01-01, life+70) og i USA (utgitt før 1931). Wikisources transkripsjon er CC BY-SA 4.0; attribusjon beholdt i pakken. |
+| Kontrollstatus | agent-drafted |
+| Ordtall / segmenter | 7 739 ord i 66 segmenter, én modul (`diapsalmata`). 99 avsnitt i kilden; 88 inngår i segmentene, 11 er utelatt (se Inkludert). Ordtallet er `countWords`. |
+| Inkludert | *Diapsalmata* fra «Hvad er en Digter?» til «… det er Dig indrømmet.» Utelatt, men stående ordrett i kilden: det franske mottoet (¶1), et tysk vers (¶60; aforismen foran står alene og er med), Achilles-aforismen med sin tyske linje (¶74–75), Aristophanes-aforismen med sine greske linjer (¶79–84) og undertittelen «Et exstatisk Foredrag.» (¶89). Overskriften ΔΙΑΨΑΛΜΑΤΑ og mottoet «ad se ipsum» hentes ikke ut. Segmentene er foreslått separat for hver sammenhengende rekke av inkluderte avsnitt, så intet segment spenner over et utelatt avsnitt. *Enten — Eller* er ett verk med moduler (CORPUS.md); de neste modulene kommer i egne PR-er, fordi en erklært modul må ha segmenter. |
+| Regler / utgave | `rules.v1.json` på grunnreglene `brand-riksmaal.base.v3`, `adaptationStatus` `orthography-and-morphology` → `kierkegaard-enten-eller.training.v1`, `contentHash` `sha256:a3eee0565d71d4fe7f1029a0a2b228f53b1b3aa188cb2dd27f6925cdb63c2479`. 13 mønstre (aa/Aa, qv/Qv, øi/Øi, -hed-familien, -erne → -ene) og 96 erstatninger, 29 av dem for bindestrek-sammensetninger. `properNames` = 63, maskinutledet med `propose-proper-names.ts --pack kierkegaard-enten-eller --rules 1 --min 3` og avgjort navn for navn; utledningen står i regelfilens `notes`. En egen dansk regelfamilie er T-20 og finnes ikke ennå; pakken står på base.v3 til den gjør det. |
+| Lengdeavvik | 19 segmenter avviker fra lengdenormen og er beholdt hele; alle ført i `KNOWN_LENGTH_DEVIATIONS` i `scripts/validate-content.ts`. diap-38 er for kort (aforismen foran et utelatt tysk vers), diap-14 bærer to aforismer fordi den første er for kort til å stå alene. |
+| Særtilfeller | 1878-teksten binder sammensatte substantiver med bindestrek og stor forbokstav i hvert ledd (Menneske-Livet, Syvmiils-Støvler). Substantivsenkingen rører bare første bokstav i et token, så de skrives sammen etter riksmål med egne erstatningsnøkler (menneskelivet, syvmilsstøvler); «Ikke-» beholder bindestreken. Kierkegaards tyske og greske innskudd (Flögel-sitatet, «Schnur», «Witz», «Μεμαστίγομενος») står i `properNames` så de ikke senkes. Beholdt til T-20: flertallsverb (ere/vare/have), bløte konsonanter, fremmedord med c/ph/ch, ud- i sammensetninger. |
+
+Rå HTML arkivert under `source/wikikilden/diapsalmata.html` (hentet med
+`wikikilden.ts --host da.wikisource.org`); ekstrahert tekst i
+`source/diapsalmata.txt`. `wikikilden.ts` fikk samtidig en ekstraktorrettelse:
+ProofreadPage lar første linje i et avsnitt som åpner en side stå utenfor `<p>`,
+og den linjen ble droppet; nå settes den tilbake foran avsnittet
+(`tests/content/wikikilden-extract.test.ts`). Pakkene som alt er merget
+re-ekstraheres ord for ord. Hylle: `danske-klassikere` (lagt til
+`content/shelves.json`, append-only).
+
 ## Mangler / avgrensninger
 
 - **RETTET 2026-09-04: «Ballstemning» finnes likevel — stavemåten var feilen, ikke kilden.**
@@ -181,8 +211,8 @@ på Project Runeberg. **Et negativt resultat gjelder søkestrengen, ikke verket*
 | 2 | *Gift* (hele) | **ja, skannbasert** | `no.wikisource.org/wiki/Gift` — 13 kapitler (`Gift/1`–`Gift/13`) fra `Kielland - Samlede Værker 2.djvu`, `{{PD-old|nb}}`. Pakken har i dag bare s. 167–173 §1 |
 | 3 | *Et dukkehjem* | **ja, men ikke skannbasert der** | `no.wikisource.org/wiki/Et_Dukkehjem` er en elektronisk utgave **kopiert fra Project Runeberg**, med en `opprydning`-merkelapp om at teksten bør flyttes til de skannede sidene (`Side:Samfundets støtter, dukkehjem, gengangere.djvu/225`). `runeberg.org/dukkhjem/` svarer. **Bruk Runeberg direkte eller de skannede sidene — ikke en avskrift av en avskrift.** Runeberg er samme leverandør som `ibsen-brand` allerede bruker |
 | 4 | *Frygt og Bæven* | **ikke funnet** | Ikke på da.wikisource under den tittelen; ikke på gjettet Runeberg-slug |
-| 5 | *Amtmandens Døttre* | **ja** | `no.wikisource.org/wiki/Amtmandens_Døttre._En_Fortælling` |
-| 6 | *Enten–Eller: Diapsalmata* | **ja, skannbasert, førsteutgaven** | `da.wikisource.org/wiki/Enten_—_Eller._Første_Deel/1` = Diapsalmata, transkludert fra `Enten-Eller Første Deel.djvu` s. 17–46 (1843). Første og Anden Deel finnes begge, med åtte underdeler i Første |
+| 5 | *Amtmandens Døttre* | **nei — treffet er en anmeldelse** (rettet 2026-10-16) | `no.wikisource.org/wiki/Amtmandens_Døttre._En_Fortælling` er Henrik Winter-Hjelms anmeldelse fra 1855, transkludert fra `Indeks:Norsk Tidsskrift for Videnskab og Litteratur VII.djvu` s. 391–403 (avsnitt 22). Romanens egen `Indeks:Amtmandens døttre.djvu` (1860-utgaven, NB `URN:NBN:no-nb_digibok_2009072112001`, 444 s., `Fremgang=OCR`, opprettet 2025-10-09) har 0 `Side:`-sider. Ikke på Runeberg. Se Avvik 3 |
+| 6 | *Enten–Eller: Diapsalmata* | **ja, skannbasert — men Fjerde Udgave 1878, ikke førsteutgaven** (rettet 2026-10-16) | `da.wikisource.org/wiki/Enten_—_Eller._Første_Deel/1` = Diapsalmata, transkludert fra `Enten-Eller Første Deel.djvu` s. 17–46. Indeksen sier `År=1878` (C. A. Reitzel) og tittelbladet «Fjerde Udgave»; raden sa 1843 til 2026-10-16. Ingen skann av 1843-utgaven finnes på Commons eller da.wikisource. Se Avvik 3. Første og Anden Deel finnes begge, med åtte underdeler i Første |
 | 7 | *Pan* | **ikke funnet** | Ikke på no.wikisource; ikke på gjettet Runeberg-slug |
 | 8 | *Kristin Lavransdatter: Kransen* | **ikke funnet** | Ingen treff på «Kristin Lavransdatter» eller «Undset» på no.wikisource. Verket er fritt i Norge fra 2020, men **fri status er ikke det samme som fri transkripsjon** |
 | 9 | *Ved Vejen* | **ikke funnet** | Ikke på da.wikisource; andre Bang-verk finnes der (*Under Aaget*, *Liv og Død*, *De uden Fædreland*) |
@@ -250,6 +280,37 @@ krever skriftlig begrunnelse for et avvik fra rangeringen.
 - **Hva byttet koster:** det første prosadramaet forsvinner fra bølgen, og T-21s prøve
   på `speakerLinePattern` (replikknavn, sceneanvisninger) utsettes til et drama med
   kilde.
+- **Utfall 2026-10-16:** porten stoppet byttet. Wikikildens tekstside er en anmeldelse,
+  ikke romanen, og romanens `Indeks:` har ingen transkriberte sider (rad 5 over).
+  *Amtmandens Døttre* er ikke importert. Den tredje plassen gikk til *Diapsalmata*
+  (nr. 6); se Avvik 3.
+
+### Avvik 3 — *Diapsalmata* fra Fjerde Udgave (1878), ikke førsteutgaven
+
+**Besluttet 2026-10-16 av operatøren.** `docs/spec/CORPUS.md` (Kierkegaard-fellen)
+krever originalutgaven eller en transkripsjon av den; dette er et skriftlig avvik
+fra det kravet for én kilde.
+
+- **Grunn:** Avvik 2s port stoppet *Amtmandens Døttre*. Reserven, *Diapsalmata*,
+  passerte porten på skannstøtte, men skannet er Fjerde Udgave: `Indeks:Enten-Eller
+  Første Deel.djvu` har `År=1878`, `Status=V`, forlag C. A. Reitzel, og tittelbladet
+  (`Side:…/1`, «Valideret») sier «Fjerde Udgave». Ingen skann av 1843-utgaven finnes
+  på Commons eller da.wikisource.
+- **Portbevis (Gate 0, kontrollert 2026-10-16 via MediaWiki-API-et):**
+  `Enten — Eller. Første Deel/1` transkluderer djvu-side 17–46; av de 30 sidene er
+  29 «Korrekturlæst» og 1 «Valideret». For *Amtmandens Døttre*: se rad 5.
+- **Hva som ble byttet:** bølgens tredje importplass går til *Diapsalmata*, hentet
+  fra 1878-utgaven. Verket er datert 1843 (`work.publishedYear`), kildeutgaven 1878
+  (`source.publishedYear`), så katalogen sier begge deler.
+- **Hva som IKKE ble byttet:** rangeringen og kravet. *Et dukkehjem* står som nr. 3 og
+  *Amtmandens Døttre* som nr. 5. Fjerde Udgave er en 1800-tallsutgave fra samme
+  forlag, ikke en moderne kritisk utgave — men den er ikke originalutgaven, og
+  avviket sier det høyt i stedet for å late som.
+- **Hva avviket koster:** 1843- og 1878-teksten er ikke sammenlignet. Fjerde Udgave
+  kan ha rettet trykkfeil eller ortografi, så leseren kan skrive en tekst som avviker
+  fra førsteutgaven på enkeltord.
+- **Bortfaller:** når en skannbasert 1843-kilde finnes (T-24). Da hentes
+  *Diapsalmata* på nytt fra den, og utgaven fra 1878 erstattes av en ny versjon.
 
 Åpne kildespørsmål å ta neste gang, i denne rekkefølgen:
 

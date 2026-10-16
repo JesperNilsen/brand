@@ -1,5 +1,6 @@
 /**
- * Fetch a chapter/page from Wikikilden (no.wikisource.org), archive the raw
+ * Fetch a chapter/page from Wikikilden (no.wikisource.org, or another
+ * Wikisource via --host, e.g. da.wikisource.org), archive the raw
  * HTML verbatim under content/<pack>/source/wikikilden/ and extract its
  * paragraph text into a plain-text file: one paragraph per line, paragraphs
  * separated by a blank line (the same convention build-original.ts expects
@@ -25,6 +26,8 @@
  *     --title "Markens_Grøde/1/01" --slug markens-groede-1-01
  *   pnpm tsx scripts/import/wikikilden.ts --pack hamsun-markens-groede \
  *     --title "Markens_Grøde/1/01" --slug markens-groede-1-01 --offline
+ *   pnpm tsx scripts/import/wikikilden.ts --pack kierkegaard-enten-eller \
+ *     --host da.wikisource.org --title "Enten_—_Eller._Første_Deel/1" --slug diapsalmata
  */
 import { JSDOM } from "jsdom";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -59,6 +62,37 @@ export function extractWikikildenParagraphs(html: string): string[] {
   // Footnote reference markers / reference lists, where present.
   root.querySelectorAll("sup.reference, ol.references").forEach((el: Element) => el.remove());
 
+  // When a printed page opens a new paragraph right after a block (an
+  // aphorism separator, a poem), ProofreadPage leaves that paragraph's first
+  // printed line as bare inline text beside the page marker and wraps only
+  // the remaining lines in <p> (seen in Enten — Eller, da.wikisource). Join
+  // such an orphan run onto the <p> that follows it, or give it its own <p>.
+  const BLOCK = new Set(["P", "DL", "BLOCKQUOTE", "DIV", "TABLE", "UL", "OL", "H1", "H2", "H3", "H4", "H5", "H6", "HR", "CENTER"]);
+  let run: ChildNode[] = [];
+  const flush = (next: ChildNode | null) => {
+    // Only a run carrying bare text is an orphaned line; a run of inline
+    // elements alone (Parsoid's <span><center>III.</center></span> chapter
+    // numerals) stays out of the text, as before.
+    const bare = run.some((n) => n.nodeType === 3 && (n.textContent ?? "").trim());
+    const text = run.map((n) => n.textContent ?? "").join("").replace(/\s+/g, " ").trim();
+    if (bare && text) {
+      if (next && next.nodeName === "P") {
+        next.insertBefore(doc.createTextNode(`${text} `), next.firstChild);
+      } else {
+        const p = doc.createElement("p");
+        p.textContent = text;
+        root.insertBefore(p, run[0]);
+      }
+      run.forEach((n) => n.remove());
+    }
+    run = [];
+  };
+  for (const node of Array.from(root.childNodes)) {
+    if (node.nodeType === 1 && BLOCK.has(node.nodeName)) flush(node);
+    else if (node.nodeName !== "BR") run.push(node);
+  }
+  flush(null);
+
   const paragraphs: string[] = [];
   root.querySelectorAll("p, dl, blockquote").forEach((el: Element) => {
     // Skip nested matches (e.g. a <p> inside a <blockquote>) so a paragraph
@@ -75,6 +109,7 @@ async function main() {
   const title = arg("title"); // Wikikilden page title, e.g. "Markens_Grøde/1/01"
   const slug = arg("slug"); // filename-safe id for the archived HTML, e.g. "markens-groede-1-01"
   const outName = arg("out", slug); // basename (no extension) for the extracted .txt
+  const host = arg("host", "no.wikisource.org"); // da.wikisource.org for Danish works
   const offline = process.argv.includes("--offline");
   const dir = path.resolve(process.cwd(), "content", pack, "source", "wikikilden");
   await mkdir(dir, { recursive: true });
@@ -84,7 +119,7 @@ async function main() {
   if (offline) {
     html = await readFile(file, "utf8");
   } else {
-    const url = `https://no.wikisource.org/w/index.php?title=${encodeURIComponent(title)}&action=render`;
+    const url = `https://${host}/w/index.php?title=${encodeURIComponent(title)}&action=render`;
     const res = await fetch(url, { headers: { "user-agent": USER_AGENT } });
     if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
     html = await res.text();

@@ -228,6 +228,28 @@ const KNOWN_LENGTH_DEVIATIONS = new Map<string, string>([
   ["hamsun-sult/stykke4-97", "147 ord; ett avsnitt"],
   ["hamsun-sult/stykke4-98", "139 ord; ett avsnitt"],
   ["hamsun-sult/stykke4-110", "168 ord; ett avsnitt"],
+  // Diapsalmata (Enten — Eller): 19 segmenter utenfor rekkevidden. Aforismene
+  // er Kierkegaards egne avsnitt, og samme avgjørelse som for Sult og
+  // Novelletter gjelder: et avsnitt deles ikke for å treffe et tall.
+  ["kierkegaard-enten-eller/diap-01", "177 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-10", "128 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-13", "175 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-14", "148 ord; to aforismer; den første (33 ord) er for kort til å stå alene"],
+  ["kierkegaard-enten-eller/diap-15", "123 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-18", "130 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-26", "171 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-27", "158 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-34", "256 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-38", "26 ord; aforismen foran et utelatt tysk vers"],
+  ["kierkegaard-enten-eller/diap-43", "242 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-46", "173 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-48", "214 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-50", "129 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-53", "208 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-57", "637 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-59", "223 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-61", "218 ord; ett avsnitt"],
+  ["kierkegaard-enten-eller/diap-66", "142 ord; ett avsnitt"],
 ]);
 const seenDeviations = new Set<string>();
 
