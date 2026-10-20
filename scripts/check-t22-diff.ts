@@ -17,7 +17,11 @@
  *    `colonEndsSentence`;
  *  - the generated editorial notes are the old ones, except that each
  *    «Substantiv (stor → liten forbokstav)» count falls by exactly the number
- *    of words that kept their capital.
+ *    of words that kept their capital;
+ *  - the old versions on disk are still what the branch base (`--base`,
+ *    default origin/main) published, no pack outside PACKS gained an edition,
+ *    the new id, version and contentHash are the ones expected, and the rules
+ *    notes only gain a T-22 note in front and lose notes about the colon.
  *
  * Anything else fails, with the token and its context. `--pack <p> --new
  * <file>` checks one pack against a different new edition, which is how the
@@ -28,10 +32,12 @@
  * those are judged by reading and recorded in LISTS; the gate fails if an
  * entry there no longer names a change it found.
  */
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { isWordToken, tokenize } from "../src/domain/language/rules";
+import { editionContentHash } from "./lib/hash";
 import { loadRules } from "./lib/load-rules";
 
 type Segment = { id: string; text: string } & Record<string, unknown>;
@@ -80,6 +86,13 @@ function arg(name: string): string | undefined {
   return i === -1 ? undefined : process.argv[i + 1];
 }
 
+/** Files under `paths` that differ from `base` on disk, committed or not. */
+function changedSince(base: string, paths: string[]): string[] {
+  return execFileSync("git", ["diff", "--name-only", base, "--", ...paths], { encoding: "utf8" })
+    .split("\n")
+    .filter(Boolean);
+}
+
 async function json<T>(file: string): Promise<T> {
   return JSON.parse(await readFile(file, "utf8")) as T;
 }
@@ -122,7 +135,7 @@ function compareTexts(segId: string, before: string, after: string, result: Pack
       isWordToken(now) &&
       old.length === now.length &&
       old.slice(1) === now.slice(1) &&
-      now[0] !== now[0].toLowerCase() &&
+      /^\p{Lu}/u.test(now) &&
       old[0] === now[0].toLowerCase();
     if (!caseOnly) {
       result.problems.push(`${where}: «${old}» → «${now}» er ikke en stor forbokstav: ${context(after, start, now.length)}`);
@@ -144,7 +157,7 @@ function capitalsAfterColon(text: string): number {
   const tokens = tokenize(text);
   let n = 0;
   tokens.forEach((tok, i) => {
-    if (i > 0 && isWordToken(tok) && tok[0] !== tok[0].toLowerCase() && AFTER_COLON.test(tokens[i - 1])) n += 1;
+    if (i > 0 && isWordToken(tok) && /^\p{Lu}/u.test(tok) && AFTER_COLON.test(tokens[i - 1])) n += 1;
   });
   return n;
 }
@@ -171,13 +184,28 @@ function expectedGeneratedNotes(old: string[], changes: Change[]): string[] {
   return out;
 }
 
-async function checkPack(pack: string, from: number, to: number, newFile?: string): Promise<PackResult> {
+async function checkPack(pack: string, from: number, to: number, base: string, newFile?: string): Promise<PackResult> {
   const dir = path.join(process.cwd(), "content", pack);
   const before = await json<Edition>(path.join(dir, `training-edition.v${from}.json`));
   const after = await json<Edition>(newFile ?? path.join(dir, `training-edition.v${to}.json`));
   const rulesBefore = await json<RulesFile>(path.join(dir, `rules.v${from}.json`));
   const rulesAfter = await json<RulesFile>(path.join(dir, `rules.v${to}.json`));
   const result: PackResult = { changes: [], alreadyCapital: 0, problems: [], notesAdded: [], notesRemoved: [] };
+
+  // The old versions are read from disk, so disk must still hold what the base
+  // published: in the pack, only the two new files may differ from it.
+  const allowed = new Set([`training-edition.v${to}.json`, `rules.v${to}.json`].map((f) => `content/${pack}/${f}`));
+  for (const f of changedSince(base, [`content/${pack}`])) {
+    if (!allowed.has(f)) result.problems.push(`${f} er endret siden ${base.slice(0, 7)}`);
+  }
+  const id = `${pack}.training.v${to}`;
+  const version = `${to}.0.0`;
+  if (after.id !== id) result.problems.push(`id er «${String(after.id)}», ventet «${id}»`);
+  if (after.version !== version) result.problems.push(`version er «${String(after.version)}», ventet «${version}»`);
+  if (rulesAfter.editionId !== id) result.problems.push(`rules.v${to}.json: editionId er ikke «${id}»`);
+  if (rulesAfter.version !== version) result.problems.push(`rules.v${to}.json: version er ikke «${version}»`);
+  const segs = after.segments as unknown as { id: string; order: number; text: string }[];
+  if (after.contentHash !== editionContentHash(segs)) result.problems.push("contentHash stemmer ikke med segmentene");
 
   const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
   for (const k of keys) {
@@ -226,6 +254,24 @@ async function checkPack(pack: string, from: number, to: number, newFile?: strin
   if (!isDeepStrictEqual(after.editorialNotes.slice(0, ownAfter.length), ownAfter)) {
     result.problems.push(`v${to}: editorialNotes begynner ikke med notene i rules.v${to}.json`);
   }
+  // The rules notes: one new T-22 note in front, then the old ones in order,
+  // minus notes about the colon limit. A sentence kept from one may stay.
+  const notesBefore = rulesBefore.notes ?? [];
+  const [lead = "", ...notesRest] = rulesAfter.notes ?? [];
+  if (notesBefore.includes(lead) || !lead.includes("T-22")) {
+    result.problems.push(`rules.v${to}.json: første note er ikke en ny T-22-note`);
+  }
+  const dropped = notesBefore.filter((n) => !notesRest.includes(n));
+  for (const n of dropped) {
+    if (!/T-22|kolon/i.test(n)) result.problems.push(`rules.v${to}.json fjerner en note som ikke gjelder kolon: «${n.slice(0, 80)}»`);
+  }
+  for (const n of notesRest.filter((x) => !notesBefore.includes(x))) {
+    if (!dropped.some((d) => d.includes(n))) result.problems.push(`rules.v${to}.json har en ny note utenom T-22-noten: «${n.slice(0, 80)}»`);
+  }
+  const common = (a: string[], b: string[]) => a.filter((n) => b.includes(n));
+  if (!isDeepStrictEqual(common(notesBefore, notesRest), common(notesRest, notesBefore))) {
+    result.problems.push(`rules.v${to}.json endrer rekkefølgen på notene`);
+  }
   result.notesAdded = ownAfter.filter((n) => !ownBefore.includes(n));
   result.notesRemoved = ownBefore.filter((n) => !ownAfter.includes(n));
   const expected = expectedGeneratedNotes(before.editorialNotes.slice(ownBefore.length), result.changes);
@@ -253,10 +299,21 @@ async function main() {
   const packs = only ? PACKS.filter(([p]) => p === only) : PACKS;
   if (packs.length === 0) throw new Error(`ukjent pakke: ${only}`);
 
+  const base = execFileSync("git", ["merge-base", "HEAD", arg("base") ?? "origin/main"], { encoding: "utf8" }).trim();
   let failed = false;
+  if (!only) {
+    // A pack outside PACKS that gained an edition would pass unseen.
+    const checked = new Set(PACKS.map(([p, , to]) => `content/${p}/training-edition.v${to}.json`));
+    for (const f of changedSince(base, ["content"]).filter((x) => /training-edition\.v\d+\.json$/.test(x))) {
+      if (!checked.has(f)) {
+        console.log(`  FEIL ${f} er endret eller ny, men porten sjekker den ikke`);
+        failed = true;
+      }
+    }
+  }
   console.log("pakke · utgaver · endrede ord · beholdt stor (oppramsing) · stor etter kolon fra før");
   for (const [pack, from, to] of packs) {
-    const r = await checkPack(pack, from, to, newFile);
+    const r = await checkPack(pack, from, to, base, newFile);
     const lists = (LISTS[pack] ?? []).length;
     console.log(`${pack} · v${from}→v${to} · ${r.changes.length} · ${lists} · ${r.alreadyCapital}`);
     for (const n of r.notesRemoved) console.log(`  − note: ${n.slice(0, 120)}`);
