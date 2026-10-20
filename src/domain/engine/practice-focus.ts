@@ -20,6 +20,7 @@
  * because a confident wrong answer is the failure mode this module exists to
  * avoid.
  */
+import type { KeyMeasurement } from "@/domain/types";
 import type { CharacterCount, CharacterMiss } from "./metrics";
 
 /**
@@ -241,4 +242,64 @@ export function aggregateMeasured(
     measured,
     total: sessions.length,
   };
+}
+
+
+export type SlowKeyItem = {
+  /** The expected character, as the measurement counts it. */
+  char: string;
+  /** flowMsSum / flowCount: the key's mean interval, in ms. */
+  meanMs: number;
+  flowCount: number;
+  /** The session's mean interval over every key, thin ones included. */
+  sessionMeanMs: number;
+  /** meanMs / sessionMeanMs. The number the list is ordered by; above 1 is slower. */
+  ratio: number;
+};
+
+/**
+ * The keys that go slowest, against the reader's own pace (Måling).
+ *
+ * The same rule as rankPracticeFocus, for time instead of misses: **rank on a
+ * rate, never on a count.** Summed flow time is again a frequency table — `e`
+ * and the space collect the most milliseconds because they come up most — so
+ * each key's mean interval is divided by the session's mean, and only a key
+ * slower than the session (ratio above 1) is listed at all.
+ *
+ * The floor is MIN_OPPORTUNITIES flow intervals: a mean of two intervals is
+ * one hesitation, not a slow key. A key under the floor is left out of the
+ * list but its intervals stay in the session's mean, which is the session's
+ * and not the mean of whatever happened to clear the floor.
+ *
+ * Ordered by ratio descending; ties by interval count, then by the character,
+ * so the list is stable.
+ */
+export function rankSlowKeys(
+  keys: readonly KeyMeasurement[],
+  limit: number = FOCUS_LIMIT,
+): SlowKeyItem[] {
+  let sum = 0;
+  let count = 0;
+  for (const k of keys) {
+    sum += k.flowMsSum;
+    count += k.flowCount;
+  }
+  if (count === 0 || !(sum > 0)) return [];
+  const sessionMeanMs = sum / count;
+
+  const items: SlowKeyItem[] = [];
+  for (const k of keys) {
+    if (k.flowCount < MIN_OPPORTUNITIES) continue;
+    const meanMs = k.flowMsSum / k.flowCount;
+    const ratio = meanMs / sessionMeanMs;
+    if (!(ratio > 1)) continue;
+    items.push({ char: k.char, meanMs, flowCount: k.flowCount, sessionMeanMs, ratio });
+  }
+  items.sort(
+    (a, b) =>
+      b.ratio - a.ratio ||
+      b.flowCount - a.flowCount ||
+      (a.char < b.char ? -1 : a.char > b.char ? 1 : 0),
+  );
+  return items.slice(0, limit);
 }
