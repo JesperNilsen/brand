@@ -263,6 +263,40 @@ body {
   .placeholder-line:nth-child(3) {
     width: 64%;
   }
+
+  /* Keyboard map (Måling). A grid of quarter-key columns, so each key spans
+     its width in quarters and each row starts at its own stagger. Under 640px
+     the stagger is dropped and the enter key narrowed — 13 keys across instead
+     of 14 — because three digits have to fit on a key at --text-label. The
+     keys are not controls, so their edge is --rule, not --rule-strong. */
+  .kbd {
+    display: grid;
+    grid-template-columns: repeat(52, minmax(0, 1fr));
+    row-gap: 3px;
+  }
+  .kbd-key {
+    grid-column: var(--col) / span var(--span);
+    margin-inline: 1.5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding-block: 0.2rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface);
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  @media (min-width: 640px) {
+    .kbd {
+      grid-template-columns: repeat(56, minmax(0, 1fr));
+    }
+    .kbd-key {
+      grid-column: var(--col-sm) / span var(--span-sm);
+    }
+  }
 }
 
 /* ---------------------------------------------------------------------------
