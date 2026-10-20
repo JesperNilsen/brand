@@ -138,6 +138,14 @@ describe("isSentenceInitial", () => {
     expect(isSentenceInitial(tokens, tokens.indexOf("Jeg"))).toBe(true);
   });
 
+  it("is true after a colon — what follows is speech or a whole clause (T-22)", () => {
+    // Without : in SENTENCE_BOUNDARY «sagde: Nu taler du» became «sagde: nu
+    // taler du». A list after a colon («følgende: Brød, Smør») keeps its
+    // capital as the price; each pack's rules note counts those.
+    const tokens = t("han sagde: Nu");
+    expect(isSentenceInitial(tokens, tokens.indexOf("Nu"))).toBe(true);
+  });
+
   it("is false for a word merely following another word", () => {
     const tokens = t("den store Skov");
     expect(isSentenceInitial(tokens, tokens.indexOf("Skov"))).toBe(false);
@@ -168,6 +176,20 @@ describe("applyLowercaseNouns", () => {
   it("leaves a word starting a new sentence alone", () => {
     expect(applyLowercaseNouns("Det var sent. Skoven var mørk", none, new Map())).toBe(
       "Det var sent. Skoven var mørk",
+    );
+  });
+
+  it("leaves the word after a colon alone when the rule set says colonEndsSentence", () => {
+    expect(applyLowercaseNouns("han sagde: Nu taler du", none, new Map(), true)).toBe(
+      "han sagde: Nu taler du",
+    );
+  });
+
+  it("still lowercases after a colon without colonEndsSentence — editions cut before T-22", () => {
+    // Every rule set published before T-22 omits the flag, and validate:content
+    // rebuilds each of their editions byte for byte. This is that default.
+    expect(applyLowercaseNouns("han sagde: Nu taler du", none, new Map())).toBe(
+      "han sagde: nu taler du",
     );
   });
 
