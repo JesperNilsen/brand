@@ -7,10 +7,10 @@
  * lære Jer» becomes «jeg skal lære jer» and «Abraham» becomes «abraham» —
  * grammatical, or nearly, and wrong hundreds of times.
  *
- * The phrases are stated as BYTES, independently of `rules.v4.json` (Q-012:
+ * The phrases are stated as BYTES, independently of `rules.v5.json` (Q-012:
  * a fixture read from the rules file passes for any list, including an empty
- * one). They run against the edition the READER IS SERVED, so a future v5
- * that loses a name fails here too. A legitimate v5 that changes one of these
+ * one). They run against the edition the READER IS SERVED, so a future version
+ * that loses a name fails here too. A legitimate version that changes one of these
  * phrases is meant to fail: re-read it and restate the bytes.
  *
  * Gift-specific and deliberately pinned:
@@ -56,7 +56,9 @@ const NAMES: [string, string][] = [
   ["kap8-01", "til fru Wenche"],
   ["kap9-02", "vi får lade Abraham indskrive"],
   ["kap10-07", "den unge Løvdahl"],
-  ["kap10-11", "fader, søn og Helligånd,"],
+  // «Fader» after «væsen:» keeps its capital since v5 (T-22): a list after a
+  // colon, one of the eight the v5 note lists.
+  ["kap10-11", "Fader, søn og Helligånd,"],
   ["kap11-01", "noget til Mordtmann"],
   ["kap12-03", "fru professorinde Løvdahl"],
   ["kap13-01", "invitere Broch og andre"],
@@ -88,7 +90,7 @@ describe("kielland-gift: the edition the reader is served", () => {
   };
 
   it("serves the whole-novel edition", () => {
-    expect(edition.id).toBe("kielland-gift.training.v4");
+    expect(edition.id).toBe("kielland-gift.training.v5");
   });
 
   it.each(POLITE)("keeps the polite address in %s", (id, phrase) => check([id, phrase]));
