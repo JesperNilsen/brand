@@ -167,11 +167,15 @@ export function runnerResume(state: RunnerState, now: number): RunnerState {
   };
 }
 
-/** Close the runner at the exact limit time when the clock has run out. */
+/**
+ * Close the runner at the exact limit time when the clock has run out. The
+ * limit is in active time, so the wall-clock end lies the paused total later:
+ * without it a paused Timed run would store limit − pause as its duration.
+ */
 function closeAtLimit(state: RunnerState): RunnerState {
   const limitMs =
     state.plan.endRule.kind === "time" ? state.plan.endRule.limitMs : 0;
-  const endAt = (state.startedAt ?? 0) + limitMs;
+  const endAt = (state.startedAt ?? 0) + state.pausedMs + limitMs;
   return finish(state, endAt, "completed");
 }
 

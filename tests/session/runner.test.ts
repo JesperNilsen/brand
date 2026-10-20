@@ -251,6 +251,10 @@ describe("Pause", () => {
     // would have without the pause.
     const late = runnerInsert(resumed, "c", a.now + 30_000 + 60_000);
     expect(late.status).toBe("completed");
+    // The close happens at the limit in ACTIVE time: the pause is added to the
+    // wall-clock end, so the stored duration is the whole limit, not limit − pause.
+    expect(late.endedAt).toBe((late.startedAt ?? 0) + 30_000 + 60_000);
+    expect(toSessionResult(late, a.now + 30_000 + 60_000, "s3").durationMs).toBe(60_000);
   });
 
   it("a session that was never paused records nothing", () => {
