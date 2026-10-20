@@ -179,6 +179,29 @@ describe("Timed (time rule)", () => {
   });
 });
 
+describe("toSessionResult (schema 6)", () => {
+  it("writes schema 6 and copies the plan's settings", () => {
+    const r0 = createRunner(
+      plan({
+        gameModeId: "timed",
+        segments: [seg("a", "abc", 1)],
+        endRule: { kind: "time", limitMs: 60_000 },
+        settings: { limitMs: 60_000 },
+      }),
+    );
+    const { state, now } = typeString(r0, "ab", 0);
+    const result = toSessionResult(runnerStop(state, now), now, "s6");
+    expect(result.schemaVersion).toBe(6);
+    expect(result.settings).toEqual({ limitMs: 60_000 });
+    expect(result.measurement).toBeDefined();
+  });
+
+  it("writes no settings when the plan has none", () => {
+    const { state, now } = typeString(createRunner(plan({})), "nå", 0);
+    expect(Object.hasOwn(toSessionResult(state, now, "s"), "settings")).toBe(false);
+  });
+});
+
 describe("Pause", () => {
   it("stops the clock, so paused time is not counted as slow typing", () => {
     const r0 = createRunner(plan({ segments: [seg("a", "abcdef", 1)] }));

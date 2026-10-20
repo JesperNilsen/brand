@@ -383,7 +383,7 @@ export function toSessionResult(
     .map((s) => s.id);
   return {
     id,
-    schemaVersion: 5,
+    schemaVersion: 6,
     startedAt: new Date(startedAt).toISOString(),
     completedAt: new Date(endedAt).toISOString(),
     status,
@@ -397,6 +397,7 @@ export function toSessionResult(
     segmentIds: touchedSegmentIds,
     errorMode: state.plan.errorMode,
     textFilterId: state.plan.textFilterId,
+    ...(state.plan.settings ? { settings: { ...state.plan.settings } } : {}),
     durationMs: metrics.durationMs,
     pausedMs: state.pausedMs,
     pauseCount: state.pauseCount,

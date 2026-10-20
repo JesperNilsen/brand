@@ -402,6 +402,20 @@ export type ReadingProgress = {
 export type SessionStatus = "completed" | "abandoned";
 
 /**
+ * What makes two sessions of one mode comparable, beyond the fields every
+ * result already carries (mode, error mode, text filter, edition, segments).
+ * Each mode's buildPlan writes it, and toSessionResult copies it from the plan.
+ *
+ * `{}` is a statement — this mode has nothing further to compare by — and is
+ * what Passage, Nonstop and Drill write. Absent means the record predates
+ * schema 6 and nobody wrote down what it was.
+ */
+export type SessionSettings = {
+  /** Timed: the limit in active ms. A 60 s run and a 300 s run are different exercises. */
+  limitMs?: number;
+};
+
+/**
  * One key over one session, counted per EXPECTED character: a wrong keystroke
  * is charged to the key the target wanted, not to the one that came.
  *
@@ -469,9 +483,10 @@ export type SessionResult = {
    * 1 = before text filters existed; 2 adds the required textFilterId;
    * 3 adds editionVersion and editionContentHash, so a stored result names
    * the exact text it was typed against rather than just the edition id;
-   * 4 adds pausedMs and pauseCount; 5 adds misses and opportunities.
+   * 4 adds pausedMs and pauseCount; 5 adds misses and opportunities;
+   * 6 adds settings and measurement.
    */
-  schemaVersion: 5;
+  schemaVersion: 6;
   /** ISO timestamp. */
   startedAt: string;
   completedAt?: string;
@@ -492,6 +507,11 @@ export type SessionResult = {
   errorMode: ErrorMode;
   /** Which practice-form transform the target text was typed under. */
   textFilterId: TextFilterId;
+  /**
+   * The mode's settings, as the plan had them. Absent on records from schema
+   * 1 to 5, and on a stored value that cannot be read (see migrateSession()).
+   */
+  settings?: SessionSettings;
   /** Time typing, with any paused time already subtracted. */
   durationMs: number;
   /**
@@ -545,8 +565,10 @@ export type SessionResult = {
    * derived while typing and kept as aggregates: buckets and per-key sums,
    * never the keystrokes themselves.
    *
-   * Absent on records written before it existed: those sessions were not
-   * measured this way, and nothing about them can be filled in after the fact.
+   * Absent on records from schema 1 to 5: those sessions were not measured
+   * this way, and nothing about them can be filled in after the fact. Absent,
+   * too, when a stored measurement cannot be read — the session itself is
+   * still good (see migrateSession()).
    */
   measurement?: SessionMeasurement;
 };

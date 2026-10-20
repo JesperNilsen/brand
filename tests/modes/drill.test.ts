@@ -136,6 +136,7 @@ describe("drill mode", () => {
     const plan = drillMode.buildPlan(input(42, bank()));
     expect(plan.gameModeId).toBe("drill");
     expect(plan.endRule).toEqual({ kind: "all-segments" });
+    expect(plan.settings).toEqual({});
     expect(plan.segments).toHaveLength(DRILL_ITEM_COUNT);
     // One edition per session: the plan can name exactly the text it was cut
     // from, which is what makes a stored result honest.

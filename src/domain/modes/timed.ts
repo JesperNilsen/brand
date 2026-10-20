@@ -74,6 +74,7 @@ export const timedMode: GameModeDefinition = {
       textFilterId: input.textFilterId,
       segments,
       endRule: { kind: "time", limitMs },
+      settings: { limitMs },
     };
   },
 };
