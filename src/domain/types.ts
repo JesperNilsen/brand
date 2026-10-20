@@ -401,6 +401,68 @@ export type ReadingProgress = {
 
 export type SessionStatus = "completed" | "abandoned";
 
+/**
+ * One key over one session, counted per EXPECTED character: a wrong keystroke
+ * is charged to the key the target wanted, not to the one that came.
+ *
+ * A first try is the first keystroke ever made at a position of a segment;
+ * retyping after a backspace is not one. `flowMsSum / flowCount` is the key's
+ * speed: the interval before each first-try-correct keystroke that followed
+ * another first-try-correct keystroke within 2 000 ms. Every field is a sum,
+ * so the same key adds up across sessions without weighting.
+ */
+export type KeyMeasurement = {
+  char: string;
+  firstTries: number;
+  firstTryCorrect: number;
+  flowMsSum: number;
+  flowCount: number;
+};
+
+/**
+ * What the measurement (src/domain/session/measure.ts) keeps of a session:
+ * time buckets for the graph, keystroke totals, jevnhet and the per-key
+ * record. Definitions in docs/spec/TYPING_ENGINE.md.
+ *
+ * The buckets cover active time (pauses excluded) and are right-closed:
+ * bucket i holds what happened in (i·bucketMs, (i+1)·bucketMs], with time 0 in
+ * bucket 0. There are exactly ceil(durationMs / bucketMs) of them, never more
+ * than 600: a longer session doubles bucketMs instead.
+ */
+export type SessionMeasurement = {
+  bucketMs: number;
+  /** Character keystrokes per bucket, including ones rejected or later corrected. */
+  keystrokes: number[];
+  /** Keystrokes per bucket that were not the expected character. */
+  errors: number[];
+  /**
+   * Characters standing correct at the end of each bucket, in the final-text
+   * sense: a backspaced correct character comes off again. The last entry is
+   * the session's correctCharacterCount.
+   */
+  correct: number[];
+  keystrokeCount: number;
+  incorrectKeystrokeCount: number;
+  /** keystrokeCount / 5 per minute. */
+  rawWpm: number;
+  /** (keystrokeCount − incorrectKeystrokeCount) / keystrokeCount, 0..1; 0 without keystrokes. */
+  keystrokeAccuracy: number;
+  /**
+   * Jevnhet, 0..100: kogasa of the coefficient of variation of the raw
+   * keystroke count per second. Absent for sessions under 5 s and for a
+   * session without keystrokes.
+   */
+  consistency?: number;
+  /**
+   * «Ikke nådd»: target characters the session never reached. Present only
+   * when the session's end rule was `all-segments`; for every other rule
+   * there is no fixed end to fall short of, and it is absent rather than 0.
+   */
+  missedCharacterCount?: number;
+  /** Sorted by char. */
+  keys: KeyMeasurement[];
+};
+
 export type SessionResult = {
   id: string;
   /**
@@ -478,6 +540,15 @@ export type SessionResult = {
   misses?: CharacterMiss[];
   /** See `misses` above; both are computed together, over the same positions. */
   opportunities?: CharacterCount[];
+  /**
+   * The keystroke-level measurement of the session (Måling). Like `misses`,
+   * derived while typing and kept as aggregates: buckets and per-key sums,
+   * never the keystrokes themselves.
+   *
+   * Absent on records written before it existed: those sessions were not
+   * measured this way, and nothing about them can be filled in after the fact.
+   */
+  measurement?: SessionMeasurement;
 };
 
 export type SessionQuery = {
