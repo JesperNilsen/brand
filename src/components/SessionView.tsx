@@ -27,6 +27,7 @@ import type { ReadingProgress, TextEdition, UserPreferences, Work } from "@/doma
 import { requireTextFilter } from "@/domain/text-filter";
 import { getRepository } from "@/infra/repository";
 import { rememberLastSession } from "@/lib/last-session";
+import { useRepositoryValue } from "@/hooks/useRepositoryValue";
 import { useTypingSession } from "@/hooks/useTypingSession";
 import {
   attributionLine,
@@ -56,7 +57,6 @@ type Failure = { message: string; retryable: boolean };
 
 export function SessionView() {
   const params = useSearchParams();
-  const [loaded, setLoaded] = useState<Loaded | null>(null);
   const [failure, setFailure] = useState<Failure | null>(null);
   /** Bumped by «Prøv igjen»; re-runs the effect without touching the URL. */
   const [attempt, setAttempt] = useState(0);
@@ -67,61 +67,62 @@ export function SessionView() {
     if (failure) errorRef.current?.focus();
   }, [failure]);
 
-  useEffect(() => {
-    let alive = true;
-    const q = new URLSearchParams(paramString);
-    const parsed = parseSessionParams((k) => q.get(k));
-    (async () => {
-      try {
-        if (!parsed) throw new Error("Ingen økt valgt.");
-        const repo = getRepository();
-        const prefs = await repo.getPreferences();
-        const resolved = resolveWorkAndEdition(parsed, prefs.languageProfileId);
-        if (!resolved) throw new Error("Fant ikke verket.");
-        // The text is fetched, so this is the one step that can fail for a
-        // reason the reader can do something about. Nothing is rendered until
-        // it succeeds: a writing surface with no text to type against would
-        // take focus and record keystrokes against nothing.
-        const edition = await loadEditionText(resolved.edition);
-        // Drill types the bank, not the edition, so it needs a second asset —
-        // fetched here rather than inside the mode, because a mode builds a
-        // plan and must not be able to block on the network.
-        // The bank is one of three sources (T-12). The other two live in the
-        // reader's own queue, and are merged in here rather than in the mode:
-        // `drillMode` receives a flat DrillItem[] and still does not know that
-        // a piece was marked, derived or authored.
-        const drills =
-          parsed.mode === "drill"
-            ? (
-                await drillItemsFor(
-                  repo,
-                  edition,
-                  await loadDrillBank(
-                    resolved.edition.drills ??
-                      (() => {
-                        throw new Error("Denne utgaven har ingen øvingsbiter.");
-                      })(),
-                  ),
-                )
-              ).items
-            : undefined;
-        const progress =
-          parsed.mode === "nonstop"
-            ? await repo.getProgress(
-                nonstopProgressKey(edition, resolved.work, prefs.languageProfileId),
+  const loaded = useRepositoryValue(
+    async (repo): Promise<Loaded> => {
+      const q = new URLSearchParams(paramString);
+      const parsed = parseSessionParams((k) => q.get(k));
+      if (!parsed) throw new Error("Ingen økt valgt.");
+      const prefs = await repo.getPreferences();
+      const resolved = resolveWorkAndEdition(parsed, prefs.languageProfileId);
+      if (!resolved) throw new Error("Fant ikke verket.");
+      // The text is fetched, so this is the one step that can fail for a
+      // reason the reader can do something about. Nothing is rendered until
+      // it succeeds: a writing surface with no text to type against would
+      // take focus and record keystrokes against nothing.
+      const edition = await loadEditionText(resolved.edition);
+      // Drill types the bank, not the edition, so it needs a second asset —
+      // fetched here rather than inside the mode, because a mode builds a
+      // plan and must not be able to block on the network.
+      // The bank is one of three sources (T-12). The other two live in the
+      // reader's own queue, and are merged in here rather than in the mode:
+      // `drillMode` receives a flat DrillItem[] and still does not know that
+      // a piece was marked, derived or authored.
+      const drills =
+        parsed.mode === "drill"
+          ? (
+              await drillItemsFor(
+                repo,
+                edition,
+                await loadDrillBank(
+                  resolved.edition.drills ??
+                    (() => {
+                      throw new Error("Denne utgaven har ingen øvingsbiter.");
+                    })(),
+                ),
               )
-            : null;
-        const plan = buildPlan(parsed, prefs, progress, {
-          work: resolved.work,
-          edition,
-          drills,
-        });
-        await repo.savePreferences(rememberChoice(prefs, plan));
-        if (!alive) return;
-        setFailure(null);
-        setLoaded({ plan, work: resolved.work, edition, prefs, progress });
-      } catch (e) {
-        if (!alive) return;
+            ).items
+          : undefined;
+      const progress =
+        parsed.mode === "nonstop"
+          ? await repo.getProgress(
+              nonstopProgressKey(edition, resolved.work, prefs.languageProfileId),
+            )
+          : null;
+      const plan = buildPlan(parsed, prefs, progress, {
+        work: resolved.work,
+        edition,
+        drills,
+      });
+      await repo.savePreferences(rememberChoice(prefs, plan));
+      return { plan, work: resolved.work, edition, prefs, progress };
+    },
+    // `attempt` re-runs the read without being part of it; the rule only
+    // exempts hooks named like effects, so it calls the token unnecessary.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [paramString, attempt],
+    {
+      onValue: () => setFailure(null),
+      onError: (e) =>
         setFailure(
           e instanceof EditionLoadError || e instanceof DrillLoadError
             ? {
@@ -129,13 +130,9 @@ export function SessionView() {
                 retryable: true,
               }
             : { message: (e as Error).message, retryable: false },
-        );
-      }
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [paramString, attempt]);
+        ),
+    },
+  );
 
   if (failure) {
     return (
