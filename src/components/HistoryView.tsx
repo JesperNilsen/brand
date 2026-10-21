@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getEditionById, getWork } from "@/domain/content/registry";
 import { getGameMode } from "@/domain/modes/registry";
 import { driftLabel, editionDrift } from "@/domain/content/edition-drift";
@@ -9,7 +9,8 @@ import { aggregateMeasured } from "@/domain/engine/practice-focus";
 import { metricsFromResult } from "@/domain/session/runner";
 import { requireTextFilter } from "@/domain/text-filter";
 import type { SessionResult } from "@/domain/types";
-import { getRepository, isPersistent } from "@/infra/repository";
+import { isPersistent } from "@/infra/repository";
+import { useRepositoryValue } from "@/hooks/useRepositoryValue";
 import { formatDate, formatDuration, formatPercent, formatWpm } from "@/lib/format";
 import { editionLabel } from "@/lib/session-flow";
 import { DataTransfer } from "./DataTransfer";
@@ -17,28 +18,18 @@ import { PracticeFocus } from "./PracticeFocus";
 import { Loading } from "./Loading";
 
 export function HistoryView() {
-  const [sessions, setSessions] = useState<SessionResult[] | null>(null);
   const [failed, setFailed] = useState(false);
   /** Bumped after an import, and by «Prøv igjen», so the list re-reads storage. */
   const [reloadToken, setReloadToken] = useState(0);
-
-  useEffect(() => {
-    let alive = true;
-    getRepository()
-      .listSessions({ limit: 200 })
-      .then((s) => {
-        if (alive) setSessions(s);
-      })
-      // Without this the page stayed blank forever when the read threw: no
-      // message, no way out. ChooseView and SessionView already model this
-      // failure; History was the one screen that did not.
-      .catch(() => {
-        if (alive) setFailed(true);
-      });
-    return () => {
-      alive = false;
-    };
-  }, [reloadToken]);
+  // `reloadToken` re-runs the read without being part of it; the rule only exempts
+  // hooks named like effects, so it calls the token unnecessary.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const sessions = useRepositoryValue((repo) => repo.listSessions({ limit: 200 }), [reloadToken], {
+    // Without this the page stayed blank forever when the read threw: no
+    // message, no way out. ChooseView and SessionView already model this
+    // failure; History was the one screen that did not.
+    onError: () => setFailed(true),
+  });
 
   if (failed) {
     return (
