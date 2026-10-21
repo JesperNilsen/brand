@@ -23,10 +23,10 @@ import type {
   TextModule,
   TextSegment,
   TextFilterId,
-  UserPreferences,
   Work,
 } from "@/domain/types";
 import { getRepository } from "@/infra/repository";
+import { useRepositoryValue } from "@/hooks/useRepositoryValue";
 import { formatClock } from "@/lib/format";
 import {
   clampTimedLimit,
@@ -258,12 +258,9 @@ export function ChooseView({ modeId }: Props) {
   const router = useRouter();
   const workId = params.get("work");
   const work = workId ? getWork(workId) : undefined;
-  const [prefs, setPrefs] = useState<UserPreferences | null>(null);
-  const [progress, setProgress] = useState<ReadingProgress | null>(null);
   const [limitMs, setLimitMs] = useState<number>(clampTimedLimit(undefined));
   const [textFilterId, setTextFilterId] =
     useState<TextFilterId>(DEFAULT_TEXT_FILTER_ID);
-  const [prefsLoaded, setPrefsLoaded] = useState(false);
   /** Passage and Nonstop both list individual segments, so both need the text. */
   const [fetchedText, setFetchedText] = useState<TextEdition | null>(null);
   const [textFailed, setTextFailed] = useState(false);
@@ -274,38 +271,26 @@ export function ChooseView({ modeId }: Props) {
   /** Serialises preference writes so two quick choices cannot settle out of order. */
   const writeQueueRef = useRef<Promise<unknown>>(Promise.resolve());
 
-  useEffect(() => {
-    let alive = true;
-    getRepository()
-      .getPreferences()
-      .then((p) => {
-        if (!alive) return;
-        setPrefs(p);
-        setPrefsLoaded(true);
-        // A choice made while this read was in flight is newer than the stored
-        // value; adopting the stored value here would silently undo it.
-        if (chosenRef.current) return;
-        setLimitMs(clampTimedLimit(p.lastTimedLimitMs));
-        setTextFilterId(p.textFilterId ?? DEFAULT_TEXT_FILTER_ID);
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
+  const prefs = useRepositoryValue((repo) => repo.getPreferences(), [], {
+    onValue: (p) => {
+      // A choice made while this read was in flight is newer than the stored
+      // value; adopting the stored value here would silently undo it.
+      if (chosenRef.current) return;
+      setLimitMs(clampTimedLimit(p.lastTimedLimitMs));
+      setTextFilterId(p.textFilterId ?? DEFAULT_TEXT_FILTER_ID);
+    },
+  });
+  /** `getPreferences` never resolves to null, so a value means the read has landed. */
+  const prefsLoaded = prefs !== null;
 
-  useEffect(() => {
-    if (!work || !prefs || mode.id !== "nonstop") return;
-    let alive = true;
-    const edition = defaultEdition(work, prefs.languageProfileId);
-    getRepository()
-      .getProgress(nonstopProgressKey(edition, work, prefs.languageProfileId))
-      .then((p) => {
-        if (alive) setProgress(p);
-      });
-    return () => {
-      alive = false;
-    };
-  }, [work, prefs, mode.id]);
+  const progress = useRepositoryValue(
+    (repo) => {
+      if (!work || !prefs || mode.id !== "nonstop") return null;
+      const edition = defaultEdition(work, prefs.languageProfileId);
+      return repo.getProgress(nonstopProgressKey(edition, work, prefs.languageProfileId));
+    },
+    [work, prefs, mode.id],
+  );
 
   useEffect(() => {
     if (!work || !prefs || !LISTS_SEGMENTS.has(mode.id)) return;

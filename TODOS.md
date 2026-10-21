@@ -108,18 +108,9 @@ hele kjeden til `SessionResult`.
 
 ---
 
-## T-06 — Samle de åtte repository-lastene i én hook (P3, S / S)
+## T-06 — Siste kopierte repository-last (P3, S / S)
 
-**Hva:** `useEffect` + `getRepository()` + `setState`-mønsteret er kopiert åtte
-steder i `src/components` og `src/app`.
-
-**Hvorfor:** Hver ny side gjentar det, og hver kopi kan glemme opprydding.
-
-**Fordeler:** Fjerner en voksende duplisering.
-**Ulemper:** Kosmetisk mens tallet er åtte.
-
-**Kontekst:** En liten `useRepositoryValue(load, deps)` som håndterer
-avmontering dekker alle åtte.
+ResultView.tsx gjenstår til feat/maling er inne.
 
 ---
 
