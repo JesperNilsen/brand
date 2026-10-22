@@ -6,6 +6,8 @@ Alle fire pakker er bygd med samme pipeline: kildetekst arkiveres verbatim under
 
 **D18 (2026-09-24): gjeldende treningsutgaver følger Brand-skrivestandarden v0.1.** `kielland-noveletter` v5, `kielland-gift` v3, `hamsun-markens-groede` v3 og `ibsen-brand` v2 skiller seg fra forrige versjon bare ved at originalens «efter», «nu», «kunde», «skulde» og «blev» (Noveletter også «vilde» og «blive») er beholdt i stedet for normalisert til «etter», «nå», «kunne», «skulle», «ble», «ville» og «bli» — 459, 12, 10 og 6 ord. Kontrollert ord for ord mot forrige utgave: ingen andre endringer. Tidligere utgaver ligger uendret, fordi lagrede økter navngir dem.
 
+**T-22 (2026-10-20): kolon er setningsgrense.** `kielland-noveletter` v6, `kielland-gift` v5, `hamsun-sult` v2, `hamsun-markens-groede` v4 og `kierkegaard-enten-eller` v2 skiller seg fra forrige versjon bare ved at stor forbokstav rett etter kolon står i stedet for å bli gjort liten — 26, 23, 46, 1 og 4 ord. Grensen er valgfri per regelfil (`colonEndsSentence`), fordi eldre utgaver ellers ikke lenger ville reprodusere. Kontrollert ord for ord mot forrige utgave med `scripts/check-t22-diff.ts`: ingen andre endringer. `ibsen-brand` har ingen `lowercaseNouns`, ble ikke berørt og har ingen ny versjon.
+
 ## ibsen-brand — Henrik Ibsen, *Brand* (1866)
 
 | Felt | Verdi |

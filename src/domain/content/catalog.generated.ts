@@ -340,6 +340,20 @@ export const WORKS: Work[] = [
         "segmentCount": 8,
         "wordCount": 813,
         "file": "/content/editions/hamsun-markens-groede.training.v3.6b2bd09a677b.json"
+      },
+      {
+        "id": "hamsun-markens-groede.training.v4",
+        "workId": "hamsun-markens-groede",
+        "kind": "training-edition",
+        "version": "4.0.0",
+        "contentHash": "sha256:941abbaba2679beaf0bc5adf40bfb10ae67b665e179bbb5f0fa46c0f5e65682d",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "hamsun-markens-groede.original",
+        "basedOnContentHash": "sha256:db67765fc4831f1266973af04debf38a2ea64493a0b6f430d0a9391a0eb572a2",
+        "segmentCount": 8,
+        "wordCount": 813,
+        "file": "/content/editions/hamsun-markens-groede.training.v4.941abbaba267.json"
       }
     ]
   },
@@ -439,6 +453,42 @@ export const WORKS: Work[] = [
         "segmentCount": 531,
         "wordCount": 60044,
         "file": "/content/editions/hamsun-sult.training.v1.3fbb82e817f1.json"
+      },
+      {
+        "id": "hamsun-sult.training.v2",
+        "workId": "hamsun-sult",
+        "kind": "training-edition",
+        "version": "2.0.0",
+        "contentHash": "sha256:b76c5cad42db342335108e03675ee15d5ec4d27cbbb5acc1f7eb8780aa4720d1",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "hamsun-sult.original",
+        "basedOnContentHash": "sha256:62d0c22f588d2f456282a2ec46eb2a8242cc88156093411b11f9f2a0cd45a3d3",
+        "modules": [
+          {
+            "id": "stykke-1",
+            "title": "Første stykke",
+            "order": 1
+          },
+          {
+            "id": "stykke-2",
+            "title": "Andet stykke",
+            "order": 2
+          },
+          {
+            "id": "stykke-3",
+            "title": "Tredje stykke",
+            "order": 3
+          },
+          {
+            "id": "stykke-4",
+            "title": "Fjerde stykke",
+            "order": 4
+          }
+        ],
+        "segmentCount": 531,
+        "wordCount": 60044,
+        "file": "/content/editions/hamsun-sult.training.v2.b76c5cad42db.json"
       }
     ]
   },
@@ -761,6 +811,87 @@ export const WORKS: Work[] = [
         "segmentCount": 477,
         "wordCount": 47584,
         "file": "/content/editions/kielland-gift.training.v4.64b5f1dec344.json"
+      },
+      {
+        "id": "kielland-gift.training.v5",
+        "workId": "kielland-gift",
+        "kind": "training-edition",
+        "version": "5.0.0",
+        "contentHash": "sha256:d3cc7a6c1d4baa6febb70b3cc9462fe89e91d71be074e98f69d6cc994761b974",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "kielland-gift.original.v2",
+        "basedOnContentHash": "sha256:ddb17387708b63926065b08ced4fc47651bd98de8f2d1de7bebc4b01853bae03",
+        "modules": [
+          {
+            "id": "kap-1",
+            "title": "Kapittel I",
+            "order": 1
+          },
+          {
+            "id": "kap-2",
+            "title": "Kapittel II",
+            "order": 2
+          },
+          {
+            "id": "kap-3",
+            "title": "Kapittel III",
+            "order": 3
+          },
+          {
+            "id": "kap-4",
+            "title": "Kapittel IV",
+            "order": 4
+          },
+          {
+            "id": "kap-5",
+            "title": "Kapittel V",
+            "order": 5
+          },
+          {
+            "id": "kap-6",
+            "title": "Kapittel VI",
+            "order": 6
+          },
+          {
+            "id": "kap-7",
+            "title": "Kapittel VII",
+            "order": 7
+          },
+          {
+            "id": "kap-8",
+            "title": "Kapittel VIII",
+            "order": 8
+          },
+          {
+            "id": "kap-9",
+            "title": "Kapittel IX",
+            "order": 9
+          },
+          {
+            "id": "kap-10",
+            "title": "Kapittel X",
+            "order": 10
+          },
+          {
+            "id": "kap-11",
+            "title": "Kapittel XI",
+            "order": 11
+          },
+          {
+            "id": "kap-12",
+            "title": "Kapittel XII",
+            "order": 12
+          },
+          {
+            "id": "kap-13",
+            "title": "Kapittel XIII",
+            "order": 13
+          }
+        ],
+        "segmentCount": 477,
+        "wordCount": 47584,
+        "file": "/content/editions/kielland-gift.training.v5.d3cc7a6c1d4b.json"
       }
     ]
   },
@@ -882,6 +1013,20 @@ export const WORKS: Work[] = [
         "segmentCount": 264,
         "wordCount": 25669,
         "file": "/content/editions/kielland-noveletter.training.v5.284be0537acd.json"
+      },
+      {
+        "id": "kielland-noveletter.training.v6",
+        "workId": "kielland-noveletter",
+        "kind": "training-edition",
+        "version": "6.0.0",
+        "contentHash": "sha256:cbad7865cd40fbc51f781d84dd5b586b6d7ce74da59df65e96e5ba4cda18b691",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography",
+        "basedOnEditionId": "kielland-noveletter.original.v2",
+        "basedOnContentHash": "sha256:94b143e16d5cb3aa0ffd7c0efafc447327d4d46a05ae038ffaeac60c77b5f0cc",
+        "segmentCount": 264,
+        "wordCount": 25669,
+        "file": "/content/editions/kielland-noveletter.training.v6.cbad7865cd40.json"
       }
     ]
   },
@@ -952,6 +1097,27 @@ export const WORKS: Work[] = [
         "segmentCount": 66,
         "wordCount": 7739,
         "file": "/content/editions/kierkegaard-enten-eller.training.v1.a3eee0565d71.json"
+      },
+      {
+        "id": "kierkegaard-enten-eller.training.v2",
+        "workId": "kierkegaard-enten-eller",
+        "kind": "training-edition",
+        "version": "2.0.0",
+        "contentHash": "sha256:b01efb1dcaf4eab713f15c8aa2ad3eb1fa7cbcb3c8671403d3af115862f3c80b",
+        "languageProfileId": "brand-riksmaal",
+        "adaptationStatus": "orthography-and-morphology",
+        "basedOnEditionId": "kierkegaard-enten-eller.original",
+        "basedOnContentHash": "sha256:6667084c1b6657b14354349b4e107f52aa0b7ff38a3c31d1e5f28c23bce0cc58",
+        "modules": [
+          {
+            "id": "diapsalmata",
+            "title": "Diapsalmata",
+            "order": 1
+          }
+        ],
+        "segmentCount": 66,
+        "wordCount": 7739,
+        "file": "/content/editions/kierkegaard-enten-eller.training.v2.b01efb1dcaf4.json"
       }
     ]
   }

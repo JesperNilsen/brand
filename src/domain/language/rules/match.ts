@@ -11,8 +11,17 @@
 import { isWordToken, matchCase, tokenize } from "./text";
 import type { RuleKind, RulePattern } from "./types";
 
-/** Characters that end a sentence, or a dialogue dash that starts one. */
-export const SENTENCE_BOUNDARY = /[.!?…—]/;
+/**
+ * Characters that end a sentence, a dialogue dash that starts one, or a colon
+ * that opens speech or a whole clause («sagde: Nu taler du»). The colon is T-22.
+ */
+export const SENTENCE_BOUNDARY = /[.!?…—:]/;
+/**
+ * The boundary before T-22, without the colon. Every edition cut before it was
+ * built with this one, and a published edition has to rebuild byte for byte,
+ * so a rule set selects it by leaving `colonEndsSentence` unset.
+ */
+export const SENTENCE_BOUNDARY_BEFORE_T22 = /[.!?…—]/;
 /**
  * Opening quote marks used in the source texts: Danish „…“, guillemets in
  * both directions («…» in the 1900s texts, »…« in Hamsun 1890), straight.
@@ -28,10 +37,14 @@ export const OPENING_QUOTE = /[„«»"'‘“]/;
  * a true sentence break. Both limits are tested rather than hidden, because
  * the failure they cause is a wrongly-cased word in a literary text.
  */
-export function isSentenceInitial(tokens: string[], i: number): boolean {
+export function isSentenceInitial(
+  tokens: string[],
+  i: number,
+  boundary: RegExp = SENTENCE_BOUNDARY,
+): boolean {
   if (i === 0) return true;
   const between = tokens[i - 1];
-  return SENTENCE_BOUNDARY.test(between) || OPENING_QUOTE.test(between);
+  return boundary.test(between) || OPENING_QUOTE.test(between);
 }
 
 /**
@@ -42,7 +55,7 @@ export function isSentenceInitial(tokens: string[], i: number): boolean {
 export type Stage =
   | { kind: "pattern"; pattern: RulePattern }
   | { kind: "replacement"; dict: Record<string, string> }
-  | { kind: "lowercase"; properNames: ReadonlySet<string> };
+  | { kind: "lowercase"; properNames: ReadonlySet<string>; colonEndsSentence?: boolean };
 
 /** A match within one stage's own input text. */
 export type StageHit = {
@@ -61,10 +74,11 @@ export function stagesFor(
   patterns: readonly RulePattern[] | undefined,
   replacements: Record<string, string> | undefined,
   properNames?: ReadonlySet<string>,
+  colonEndsSentence?: boolean,
 ): Stage[] {
   const stages: Stage[] = (patterns ?? []).map((pattern) => ({ kind: "pattern", pattern }) as const);
   stages.push({ kind: "replacement", dict: replacements ?? {} });
-  if (properNames) stages.push({ kind: "lowercase", properNames });
+  if (properNames) stages.push({ kind: "lowercase", properNames, colonEndsSentence });
   return stages;
 }
 
@@ -120,7 +134,12 @@ function replacementHits(text: string, dict: Record<string, string>): StageHit[]
   return hits;
 }
 
-function lowercaseHits(text: string, properNames: ReadonlySet<string>): StageHit[] {
+function lowercaseHits(
+  text: string,
+  properNames: ReadonlySet<string>,
+  colonEndsSentence = false,
+): StageHit[] {
+  const boundary = colonEndsSentence ? SENTENCE_BOUNDARY : SENTENCE_BOUNDARY_BEFORE_T22;
   const tokens = tokenize(text);
   const hits: StageHit[] = [];
   let at = 0;
@@ -131,7 +150,7 @@ function lowercaseHits(text: string, properNames: ReadonlySet<string>): StageHit
     const first = tok[0];
     if (!first || first === first.toLowerCase()) return;
     if (properNames.has(tok)) return;
-    if (isSentenceInitial(tokens, i)) return;
+    if (isSentenceInitial(tokens, i, boundary)) return;
     hits.push({
       ruleKind: "lowercase",
       ruleKey: `lowercase:${tok}`,
@@ -152,7 +171,7 @@ export function stageHits(text: string, stage: Stage): StageHit[] {
     case "replacement":
       return replacementHits(text, stage.dict);
     case "lowercase":
-      return lowercaseHits(text, stage.properNames);
+      return lowercaseHits(text, stage.properNames, stage.colonEndsSentence);
   }
 }
 
