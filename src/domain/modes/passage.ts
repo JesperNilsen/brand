@@ -6,6 +6,7 @@ export const passageMode: GameModeDefinition = {
   description: "Velg et avgrenset utdrag og skriv det ferdig.",
   availableInV1: true,
   hasChooser: true,
+  exerciseKind: "transcription",
   defaultErrorMode: "flow",
   settingsSchema: {
     segmentId: { type: "string", required: true },

@@ -35,6 +35,7 @@ import {
   sessionHref,
 } from "@/lib/session-flow";
 import { Loading } from "./Loading";
+import { EditionNormNote } from "./EditionNormNote";
 import { TextFilterChooser } from "./TextFilterChooser";
 
 type Props = { modeId: string };
@@ -413,6 +414,9 @@ export function ChooseView({ modeId }: Props) {
           om utgaven
         </Link>
       </p>
+      <EditionNormNote
+        editionProfileId={edition.kind === "training-edition" ? edition.languageProfileId : undefined}
+      />
 
       <TextFilterChooser
         value={textFilterId}

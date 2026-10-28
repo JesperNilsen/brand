@@ -4,6 +4,7 @@ import "./globals.css";
 import { BrandMark } from "@/components/BrandMark";
 import { BRAND_TAGLINE } from "@/lib/brand-mark";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageMenu } from "@/components/LanguageMenu";
 import { ThemeSelect } from "@/components/ThemeSelect";
 
 const description = BRAND_TAGLINE;
@@ -42,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <header className="recedes border-b border-rule">
-            <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-4 px-5 py-4 sm:gap-6">
+            <div className="relative mx-auto flex w-full max-w-4xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-4 sm:gap-x-6">
               <Link
                 href="/"
                 className="flex items-center gap-[0.6em] no-underline hover:text-accent"
@@ -51,13 +52,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <BrandMark size={22} />
                 <span className="wordmark text-lead">BRAND</span>
               </Link>
-              <nav className="flex items-baseline gap-4 text-sm sm:gap-5">
+              <nav className="ml-auto flex items-baseline gap-4 text-sm sm:gap-5">
                 <Link href="/historikk" className="no-underline hover:underline">
                   Historikk
                 </Link>
                 <Link href="/om" className="no-underline hover:underline">
                   Om
                 </Link>
+                <LanguageMenu />
                 <ThemeSelect />
               </nav>
             </div>

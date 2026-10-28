@@ -43,6 +43,7 @@ export const timedMode: GameModeDefinition = {
   description: "Skriv mot en tidsgrense med en rolig strøm av utdrag.",
   availableInV1: true,
   hasChooser: true,
+  exerciseKind: "transcription",
   defaultErrorMode: "flow",
   settingsSchema: {
     limitMs: {

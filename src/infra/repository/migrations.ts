@@ -1,5 +1,11 @@
 import { DEFAULT_LANGUAGE_PROFILE_ID } from "@/domain/language/registry";
 import {
+  DEFAULT_WRITING_LANGUAGE_ID,
+  belongsTo,
+  isWritingLanguageId,
+  listWritingLanguages,
+} from "@/domain/orthography/registry";
+import {
   DEFAULT_TEXT_FILTER_ID,
   isTextFilterId,
 } from "@/domain/text-filter";
@@ -20,6 +26,8 @@ export function defaultPreferences(): UserPreferences {
     schemaVersion: PREFERENCES_SCHEMA_VERSION,
     theme: "system",
     languageProfileId: DEFAULT_LANGUAGE_PROFILE_ID,
+    writingLanguageId: DEFAULT_WRITING_LANGUAGE_ID,
+    orthographyByLanguage: {},
     defaultErrorMode: "flow",
     textFilterId: DEFAULT_TEXT_FILTER_ID,
   };
@@ -44,6 +52,10 @@ export function migratePreferences(raw: unknown): UserPreferences {
       typeof r.languageProfileId === "string"
         ? r.languageProfileId
         : base.languageProfileId,
+    writingLanguageId: isWritingLanguageId(r.writingLanguageId)
+      ? r.writingLanguageId
+      : base.writingLanguageId,
+    orthographyByLanguage: migrateOrthographyByLanguage(r.orthographyByLanguage),
     defaultErrorMode:
       r.defaultErrorMode === "stop-on-error" ? "stop-on-error" : "flow",
     textFilterId: isTextFilterId(r.textFilterId)
@@ -56,6 +68,23 @@ export function migratePreferences(raw: unknown): UserPreferences {
     lastTimedLimitMs:
       typeof r.lastTimedLimitMs === "number" ? r.lastTimedLimitMs : undefined,
   };
+}
+
+/**
+ * Keeps only a known norm under the language that offers it. A norm id this
+ * build does not know — removed, renamed, or written by a newer build — is
+ * dropped, and the language falls back to its default rather than to a norm
+ * it never offered.
+ */
+function migrateOrthographyByLanguage(raw: unknown): Record<string, string> {
+  if (!raw || typeof raw !== "object") return {};
+  const r = raw as Record<string, unknown>;
+  const out: Record<string, string> = {};
+  for (const language of listWritingLanguages()) {
+    const id = r[language.id];
+    if (typeof id === "string" && belongsTo(id, language.id)) out[language.id] = id;
+  }
+  return out;
 }
 
 /**

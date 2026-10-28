@@ -10,12 +10,14 @@
  * None of these types import from each other's modules; they only share ids.
  * The exceptions are RuleFamily and AdaptationStatus, which the rule engine
  * owns and this file re-exports rather than restating — two spellings of either
- * union would let a rule set be one thing here and another there.
+ * union would let a rule set be one thing here and another there — and
+ * ExerciseKind, which the orthography judge owns for the same reason.
  */
 import type { AdaptationStatus, RuleFamily } from "./language/rules/types";
 import type { CharacterCount, CharacterMiss } from "./engine/metrics";
+import type { ExerciseKind } from "./orthography/judge";
 
-export type { AdaptationStatus, RuleFamily };
+export type { AdaptationStatus, ExerciseKind, RuleFamily };
 export type { CharacterCount, CharacterMiss };
 
 export type ErrorMode = "flow" | "stop-on-error";
@@ -80,6 +82,12 @@ export type GameMode = {
    * choose would be the feature undone.
    */
   hasChooser: boolean;
+  /**
+   * Every mode today is transcription: the engine compares against the exact
+   * edition shown, and the reader's chosen norm never changes what is right
+   * (D21). An orthography exercise lives at /rettskrivning, not here.
+   */
+  exerciseKind: ExerciseKind;
   defaultErrorMode: ErrorMode;
   /** Declarative description of the mode's settings; UI-agnostic. */
   settingsSchema: Record<string, unknown>;
@@ -370,6 +378,17 @@ export type UserPreferences = {
   schemaVersion: 1;
   theme: ThemePreference;
   languageProfileId: string;
+  /**
+   * The writing language chosen in the language menu (D21). Not the same as
+   * `languageProfileId`, which picks the edition typed and keys progress; see
+   * src/domain/orthography/types.ts.
+   */
+  writingLanguageId: string;
+  /**
+   * The norm last chosen per language, so tapping Bokmål returns to the norm
+   * the reader left it on. A language missing here is on its default.
+   */
+  orthographyByLanguage: Record<string, string>;
   defaultErrorMode: ErrorMode;
   textFilterId: TextFilterId;
   lastModeId?: string;

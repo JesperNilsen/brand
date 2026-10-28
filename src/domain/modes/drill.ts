@@ -120,6 +120,7 @@ export const drillMode: GameModeDefinition = {
   availableInV1: true,
   // No chooser: not choosing is the mode. See GameMode.hasChooser.
   hasChooser: false,
+  exerciseKind: "transcription",
   defaultErrorMode: "flow",
   settingsSchema: {},
   buildPlan(input): SessionPlan {

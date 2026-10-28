@@ -7,6 +7,7 @@ export const nonstopMode: GameModeDefinition = {
     "Skriv deg gjennom et verk, segment for segment. Fremdriften lagres, og du fortsetter der du slapp.",
   availableInV1: true,
   hasChooser: true,
+  exerciseKind: "transcription",
   defaultErrorMode: "flow",
   settingsSchema: {
     startSegmentId: { type: "string", required: false },

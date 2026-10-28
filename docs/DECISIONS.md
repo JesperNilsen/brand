@@ -603,3 +603,48 @@ to buer, på et rutenett på 32 enheter. Operatøren valgte det fra merkebrettet
   aldri på `--accent`. Topplinjen bærer merket og ordmerket sammen. Nettlesere
   som ikke bruker SVG-ikonet, faller tilbake på ICO-en, og den kan ikke bytte
   farge etter tema. Derfor har ICO-en sin egen papirflis.
+
+## Skrivenorm er en egen akse: Brandmål, bokmål og historiske normaler (D21)
+
+2026-10-28. Leseren velger nå skrivespråk i topplinjen: **Brandmål** eller
+**Bokmål**. Ved Bokmål står et tannhjul som åpner bokmålsnormene: Moderne
+bokmål (standard), Riksmål 1907, Riksmål 1917, Bokmål 1938, Bokmål 1959,
+Bokmål 1981 og Bokmål 2005. Et vanlig trykk på Bokmål velger språket med den
+normen det sist sto på.
+
+- **En ny akse, ikke en ny `LanguageProfile`.** `languageProfileId` velger
+  utgaven som skrives, og står i hver framgangsnøkkel på lesernes disker. Hadde
+  menyen flyttet den, ville et trykk på Bokmål ha skjult hver lesers plass og
+  falt tilbake til originalutgavene. Valget lagres derfor i to nye felt,
+  `writingLanguageId` og `orthographyByLanguage`, og `languageProfileId` står
+  urørt. `OrthographyProfile` (`src/domain/orthography/`) er spesifikasjonens
+  «språkprofil»: `languageId`, `orthographyId`, `displayName`,
+  `historicalPeriod`, `authority`, `isCurrent`, `implementationStatus`,
+  `sources` og `ruleset`, pluss `officialStatus`.
+- **Preferanseskjemaet blir på versjon 1.** En post uten de nye feltene leses
+  som Brandmål uten husket bokmålsnorm, og det er nøyaktig hva den leseren
+  hadde. Ingen form betyr to ting, så tallet trenger ikke flytte seg.
+  Ukjente språk- og norm-id-er droppes ved lesing i stedet for å gjettes.
+- **Avskrivning dømmes aldri etter normen.** Alle fire modusene er
+  `exerciseKind: "transcription"`; motoren sammenligner med utgaven som vises.
+  Normen kan forklare et avvik («efter er foretrukket i Brandmål, men i
+  avskrivning gjengis teksten nøyaktig»), aldri unnskylde det.
+  Rettskrivningsøvelsen på `/rettskrivning` er den eneste som godkjenner flere
+  former, og den sier hvilken status formen har.
+- **Ingen tekst er normert etter en bokmålsnorm.** Alle treningsutgaver er
+  Brandmål. Velgeren sier det når leseren står på en annen norm, i stedet for
+  å la det se ut som om teksten fulgte valget.
+- **Offisiell status og Brands støtte er to felt.** `officialStatus` sier hva
+  normen er (gjeldende, historisk, husnorm); `implementationStatus` sier hva
+  Brand kan kontrollere (`metadata-only` eller `partial`). Det finnes bevisst
+  ingen «complete»: ingen lisensiert, maskinlesbar ordliste er lastet for noen
+  av normene.
+- **Bare kildebelagte regler.** Hver regel peker på en kilde med sidetall eller
+  paragraf og en `confidence`. En form ingen kilde nevner, dømmes som «ikke
+  dokumentert», ikke som feil. `tests/orthography/registry.test.ts` er porten.
+  Kildegrunnlaget og hullene står i `docs/spec/ORTHOGRAPHY_NORMS.md`.
+- **Brandmål arver ingenting fra bokmål.** Ordene kommer fra
+  `standards/brand/brand-skrivestandard-v0.1.md` § 2, 4 og 5, og bare det
+  standarden kaller vedtatt. Der standarden sier «ikke fastsatt» (fram, sju),
+  står alternativet ikke i dataene, så det dømmes som udokumentert og ikke som
+  forbudt (§ 4: «Ikke vedtatt» er ikke det samme som «forbudt»).

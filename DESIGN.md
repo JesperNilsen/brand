@@ -182,7 +182,7 @@ navn, så en visning skriver `text-heading` og navngir aldri variabelen. De sytt
 check:design` teller begge deler: et nytt ad hoc-verktøy feiler porten. Tallet
 i markøren under er dagens antall tokenbruk i `src/`, ikke et tak — det stiger
 når en ny visning tas i bruk, og porten krever bare at det stemmer.
-<!-- check:design adoption status=done adhoc=0 files=0 tokens=22 -->
+<!-- check:design adoption status=done adhoc=0 files=0 tokens=25 -->
 
 Ett tall flyttet seg i migreringen, og det er det eneste: forsidens h1 lå på
 `text-3xl` (1,875rem) mens tabellen sa 1,9rem. Nå er tabellen sann — 0,4 px, og
@@ -227,7 +227,8 @@ begrunnelse.
 | `.btn-primary` | **én per skjerm.** Handlingen leseren kom for |
 | `.card` | kun når kortet *er* interaksjonen — et verk, en passasje, panelet |
 | `.label` | små kapitéler til metainformasjon; sparsomt |
-| `.control` | `select` og `input` |
+| `.control` | `select`, `input` og språkmenyens knapp |
+| `.lang-menu` / `.lang-option` / `.lang-gear` | språkmenyen i topplinjen (D21): panel, radiorad, tannhjul ved et språk med flere normer |
 | `.placeholder` / `.placeholder-line` | venting, se under |
 | `.prose-measure` | låser bredden til `--measure` |
 

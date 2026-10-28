@@ -234,13 +234,75 @@ body {
   }
 
   select.control,
-  input.control {
+  input.control,
+  button.control {
     font: inherit;
     color: var(--ink);
     background: var(--surface);
     border: 1px solid var(--rule-strong);
     border-radius: 4px;
     padding: 0.35rem 0.6rem;
+  }
+
+  /* The language menu (D21): a panel under its trigger in the header. Rows
+     are labels around visually hidden radios, like the segmented choice
+     above, so the checked state is styled with :has() here for the same
+     cascade reason. The gear sits beside its row, not inside the label: a tap
+     on the language chooses it, a tap on the gear opens its norms. */
+  .lang-menu {
+    position: absolute;
+    right: 1.25rem;
+    top: calc(100% + 0.5rem);
+    z-index: 40;
+    width: min(19rem, calc(100vw - 2.5rem));
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    background: var(--paper);
+    padding: 0.85rem 0.9rem;
+  }
+  @media (min-width: 640px) {
+    .lang-menu {
+      right: 0;
+    }
+  }
+  .lang-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0.35rem;
+  }
+  .lang-option {
+    display: block;
+    flex: 1;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+  }
+  .lang-option:hover {
+    border-color: var(--rule-strong);
+  }
+  .lang-option:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .lang-option:has(input:focus-visible) {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .lang-gear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.4rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--ink-muted);
+    cursor: pointer;
+  }
+  .lang-gear:hover {
+    color: var(--ink);
+    border-color: var(--ink-faint);
   }
 
   /* Waiting. Since the corpus moved out of the bundle a slow network is a
