@@ -1,0 +1,2360 @@
+{
+  "sources": [
+    {
+      "id": "aars-hofgaard-1907",
+      "title": "Norske retskrivnings-regler med alfabetiske ordlister (godkjendte av Kirkedepartementet ved skrivelse av 25de juni 1907)",
+      "authors": "J. Aars og S. W. Hofgaard",
+      "year": 1907,
+      "kind": "primary",
+      "url": "https://www.nb.no/items/b176c37f0137b6a7ebd1e032eadf43ee",
+      "nbItemId": "b176c37f0137b6a7ebd1e032eadf43ee",
+      "urn": "URN:NBN:no-nb_digibok_2006081600014",
+      "access": "Fetched ALTO XML OCR for all 93 canvases via api.nb.no (IIIF manifest -> @seeAlso altos), 88 printed pages, locators below are PRINTED page numbers. OCR is noisy in word lists, so key entries (gate, kake, dyp, hester) were checked against the page images (JPEG from nb.no image service). Pages 44-54 reprint items 1-3 of the royal resolution appendix (hard consonants, double consonants, shortened forms); item 4 (inflection) is NOT reprinted (forord p. 4).",
+      "copyright": "NB metadata flags the item isPublicDomain=true, license=publicdomain, accessAllowedFrom=EVERYWHERE. Authors Aars (1837-1908) and Hofgaard (d. 1908 per NB authority record) died more than 70 years ago. The rules are also an official orthography. Treat spellings as free to encode; quote only short snippets."
+    },
+    {
+      "id": "aars-1892",
+      "title": "Norske retskrivnings-regler med alfabetisk ordliste (pre-1907 baseline edition)",
+      "authors": "J. Aars",
+      "year": 1892,
+      "kind": "primary",
+      "url": "https://www.nb.no/items/3d22831f5550a55c0c6d3e50fd05f0c3",
+      "nbItemId": "3d22831f5550a55c0c6d3e50fd05f0c3",
+      "access": "ALTO OCR via api.nb.no. Used ONLY to confirm pre-1907 spellings (gade, bog, mand, fjeld, haand). Index entries and prose, not the full word list.",
+      "copyright": "NB flag publicdomain, EVERYWHERE; author d. 1908."
+    },
+    {
+      "id": "ny-rettskrivning-riksmaal-1918",
+      "title": "Den nye rettskrivning. Regler og ordlister utarbeidet ved den Departementale rettskrivningskomite. I. Riksmål (efter kgl. resol. av 21 desember 1917)",
+      "authors": "Den departementale rettskrivningskomite (Kirkedepartementet)",
+      "year": 1918,
+      "kind": "primary",
+      "url": "https://www.nb.no/items/7c810cb2510e5454433266c698b8808e",
+      "nbItemId": "7c810cb2510e5454433266c698b8808e",
+      "urn": "URN:NBN:no-nb_digibok_2008062600035",
+      "access": "ALTO OCR for all 97 canvases via api.nb.no; page images checked for the word-list legend (p. 27). Same URN that Språkrådet's rettskrivingsvedtak page links to. Printed pages used. IMPORTANT: the word list (pp. 27-58) only contains 'de viktigste av de ord som berøres av de nye regler' (legend p. 27) - it is NOT a complete word list.",
+      "copyright": "NB flag publicdomain, EVERYWHERE. Official government publication (committee text under royal resolution); I did not verify the legal basis (åndsverkloven §9 on public decisions) in this session, so rely on NB's flag."
+    },
+    {
+      "id": "ny-rettskrivning-1938-bokmal",
+      "title": "Ny rettskrivning 1938. Bokmål. Regler og ordliste (utarbeidd etter tiltak av Kirke- og undervisningsdepartementet)",
+      "authors": "Kirke- og undervisningsdepartementet (Olaf Norlis forlag, Oslo 1938)",
+      "year": 1938,
+      "kind": "primary",
+      "url": "https://www.nb.no/items/f38dba23d26db5816758c6d48686eea9",
+      "nbItemId": "f38dba23d26db5816758c6d48686eea9",
+      "urn": "URN:NBN:no-nb_digibok_2010062906036",
+      "access": "ALTO OCR for all 87 canvases via api.nb.no; page images for pp. 36-37 checked (bok / Valgfrie a-ord / kake). OCR of multi-column lists is scrambled; only entries I could read reliably are used. Forord p. 3: ordlista only takes 'først og fremst de ordene' that were changed - NOT a full word list. NB holds other digitisations of the same book with different rights flags (326b7e35... NORWAY-only, ab0b94ba... flagged copyrighted) - the flags are per-digitisation, not per-work.",
+      "copyright": "This digitisation: NB flag publicdomain, EVERYWHERE. Official ministry publication. Another digitisation of the same title is flagged 'copyrighted' by NB, so do not assume a blanket status; verify before redistributing any bulk text."
+    },
+    {
+      "id": "ny-laereboknormal-1959",
+      "title": "Ny læreboknormal 1959. Bokmål, regler og ordliste / Nynorsk, reglar og ordliste",
+      "authors": "Kirke- og undervisningsdepartementet; utarbeidet av Norsk språknemnd",
+      "year": 1959,
+      "kind": "primary",
+      "url": "https://www.nb.no/items/59128586f3a97b94fba4bfb90f8e4559",
+      "nbItemId": "59128586f3a97b94fba4bfb90f8e4559",
+      "urn": "URN:NBN:no-nb_digibok_2014050624002",
+      "access": "ALTO OCR for all 93 canvases via api.nb.no. Same URN as Språkrådet's link. Printed pages used. Forord p. 3: only words with changed spelling/inflection are treated; everything else follows 1938.",
+      "copyright": "NB flag publicdomain, EVERYWHERE. Official ministry publication; verify NB terms before bulk redistribution."
+    },
+    {
+      "id": "stmeld-100-1980-81",
+      "title": "St.meld. nr. 100 (1980-81) Endringer i rettskrivningen og læreboknormalen for bokmål (tilråding fra Kirke- og undervisningsdepartementet av 30. april 1981)",
+      "authors": "Kirke- og undervisningsdepartementet (inneholder Norsk språkråds forslag som vedlegg)",
+      "year": 1981,
+      "kind": "primary",
+      "url": "https://www.nb.no/items/718ebcc48692079fe692150156b2f484",
+      "nbItemId": "718ebcc48692079fe692150156b2f484",
+      "urn": "URN:NBN:no-nb_digibok_2016042209535",
+      "access": "ALTO OCR for all 41 canvases via api.nb.no; page 30 (single-word table Gjeldende form / Foreslått form) checked against the image. Contains the PROPOSAL; the department states on p. 10 that it does not propose changes to it, and Stortinget adopted it unanimously (SNL, Guttu). Språkrådet's own list page also points to this document and to Innst. S. nr. 306 (1980-81) on stortinget.no (JS viewer, not read).",
+      "copyright": "NB flag publicdomain, EVERYWHERE (government white paper)."
+    },
+    {
+      "id": "rettskrivningsendringer-2005",
+      "title": "Rettskrivningsendringer fra 1. juli 2005. Fastsatt ved brev fra Kultur- og kirkedepartementet 16. februar 2005",
+      "authors": "Norsk språkråd (mai 2005), med departementets brev",
+      "year": 2005,
+      "kind": "primary",
+      "url": "https://sprakradet.no/wp-content/uploads/rettskriving2005.pdf",
+      "access": "55-page PDF, listed on Språkrådet's rettskrivingsvedtak page ('Reform 2005 [pdf]'). sprakradet.no returns HTTP 403 to scripted clients, so I read a Wayback Machine copy (web.archive.org/web/2026/https://sprakradet.no/wp-content/uploads/rettskriving2005.pdf) with pdftotext. PDF page = printed page.",
+      "copyright": "No rights statement inside the PDF. Official normative decision text from the public language authority; legal status not verified here (unknown)."
+    },
+    {
+      "id": "sprakradet-vedtak-etter-2012",
+      "title": "Rettskrivningsvedtak etter 2012 (Språkrådet)",
+      "authors": "Språkrådet",
+      "year": 2026,
+      "kind": "primary",
+      "url": "https://sprakradet.no/nyord-og-rettskrivingsendringer/normering-av-norsk/rettskrivingsvedtak/rettskrivningsvedtak-etter-2012/",
+      "access": "HTML table (Før / Endring / Nå / Vedtatt) read from a Wayback Machine copy (live site 403). Lists decisions 2014-2024 (bokmål and common).",
+      "copyright": "Unknown (no licence text seen on the copy). Facts only; do not copy the table wholesale."
+    },
+    {
+      "id": "sprakradet-vedtak-index",
+      "title": "Rettskrivingsvedtak - oversyn (Språkrådet)",
+      "authors": "Språkrådet",
+      "year": 2026,
+      "kind": "secondary",
+      "url": "https://sprakradet.no/nyord-og-rettskrivingsendringer/normering-av-norsk/rettskrivingsvedtak/",
+      "access": "Link index only (Wayback copy, snapshot 2026-09-23). Used to confirm which nb.no items Språkrådet treats as the original documents (1907, 1918, 1938 x3, 1959, 2005 pdf, St.meld. 100).",
+      "copyright": "Unknown."
+    },
+    {
+      "id": "snytt-2005-3-guttu",
+      "title": "Rettskrivningsendringene i 2005 (Språknytt 3/2005)",
+      "authors": "Tor Guttu (Norsk språkråd)",
+      "year": 2005,
+      "kind": "secondary",
+      "url": "https://www.nb.no/items/fed01d223cb5980ebb86d0c373dbf4a1",
+      "nbItemId": "fed01d223cb5980ebb86d0c373dbf4a1",
+      "access": "ALTO OCR via api.nb.no, printed pp. 1-8. Confirms the decision letter date 16 Feb 2005 and the title of the decision document.",
+      "copyright": "NB metadata: license ccbyncnd (CC BY-NC-ND). Quote sparingly; do not redistribute text."
+    },
+    {
+      "id": "snl-vikor-1907",
+      "title": "Rettskrivingsreforma av 1907",
+      "authors": "Lars S. Vikør (Store norske leksikon)",
+      "year": 2025,
+      "kind": "secondary",
+      "url": "https://snl.no/Rettskrivingsreforma_av_1907",
+      "access": "Full HTML read (curl). Gives before/after word pairs.",
+      "copyright": "Article marked 'fri gjenbruk' = CC BY-SA 3.0 per snl.no/.licenses/free (per article, attribution + share-alike). Images in the article have separate (mostly restricted) licences."
+    },
+    {
+      "id": "snl-vikor-1917",
+      "title": "Rettskrivingsreforma av 1917",
+      "authors": "Lars S. Vikør (Store norske leksikon)",
+      "year": 2025,
+      "kind": "secondary",
+      "url": "https://snl.no/Rettskrivingsreforma_av_1917",
+      "access": "Full HTML read (curl).",
+      "copyright": "CC BY-SA 3.0 if marked 'fri gjenbruk' on the article page (I did not re-check this specific footer; same SNL scheme as 1907/1981/2005)."
+    },
+    {
+      "id": "snl-vikor-1938",
+      "title": "Rettskrivingsreforma av 1938",
+      "authors": "Lars S. Vikør (Store norske leksikon)",
+      "year": 2025,
+      "kind": "secondary",
+      "url": "https://snl.no/Rettskrivingsreforma_av_1938",
+      "access": "HTML read (curl): Prosedyre + Innhaldet i reforma.",
+      "copyright": "CC BY-SA 3.0 if marked 'fri gjenbruk' (SNL scheme; per-article footer not re-checked)."
+    },
+    {
+      "id": "snl-vikor-1959",
+      "title": "Rettskrivingsreforma av 1959",
+      "authors": "Lars S. Vikør (Store norske leksikon)",
+      "year": 2025,
+      "kind": "secondary",
+      "url": "https://snl.no/Rettskrivingsreforma_av_1959",
+      "access": "HTML read (curl).",
+      "copyright": "CC BY-SA 3.0 if marked 'fri gjenbruk' (SNL scheme; per-article footer not re-checked)."
+    },
+    {
+      "id": "snl-vikor-1981",
+      "title": "Rettskrivingsreforma av 1981",
+      "authors": "Lars S. Vikør (Store norske leksikon)",
+      "year": 2022,
+      "kind": "secondary",
+      "url": "https://snl.no/Rettskrivingsreforma_av_1981",
+      "access": "Full HTML read (curl). Footer: 'VILKÅR FOR GJENBRUK: fri gjenbruk'.",
+      "copyright": "fri gjenbruk = CC BY-SA 3.0 (snl.no/.licenses/free)."
+    },
+    {
+      "id": "snl-vikor-2005",
+      "title": "Rettskrivingsreforma av 2005",
+      "authors": "Lars S. Vikør (Store norske leksikon)",
+      "year": 2025,
+      "kind": "secondary",
+      "url": "https://snl.no/Rettskrivingsreforma_av_2005",
+      "access": "Full HTML read (curl).",
+      "copyright": "CC BY-SA 3.0 if marked 'fri gjenbruk' (SNL scheme; per-article footer not re-checked)."
+    },
+    {
+      "id": "snl-vikor-riksmal",
+      "title": "riksmål (Store norske leksikon)",
+      "authors": "Lars S. Vikør og Ernst Håkon Jahr",
+      "year": 2025,
+      "kind": "secondary",
+      "url": "https://snl.no/riksm%C3%A5l",
+      "access": "Full HTML read (curl).",
+      "copyright": "SNL scheme; per-article footer not re-checked."
+    },
+    {
+      "id": "guttu-akademi-normeringshistorie",
+      "title": "Riksmålets/bokmålets normeringshistorie siden 1814 (fuller version in Norsk grammatikk. Riksmål og moderat bokmål, Kunnskapsforlaget 2014)",
+      "authors": "Tor Guttu (Det Norske Akademi, publisert 03.07.2015)",
+      "year": 2015,
+      "kind": "secondary",
+      "url": "https://www.detnorskeakademi.no/tor-guttu-riksmaletsbokmalets-normeringshistorie-siden-1814/",
+      "access": "Full HTML read (curl, 330 text lines). Sections 1907, 1917, 1938, 1959, 1981, 2005, Riksmålsnormeringen. The Riksmålsforbundet copy of this chapter (riksmalsforbundet.no/grammatikk/kapittel-18-...) only returns a 912-byte stub page to every client I tried (curl, browser pane).",
+      "copyright": "Unknown (no licence statement on the page). Derived from a published book; do not copy text."
+    },
+    {
+      "id": "loland-1997-sprakradet",
+      "title": "Bokmålsrettskrivningen på 1900-tallet (orig. Språknytt 1/1997)",
+      "authors": "Ståle Løland",
+      "year": 1997,
+      "kind": "secondary",
+      "url": "https://sprakradet.no/nyord-og-rettskrivingsendringer/normering-av-norsk/rettskrivingsvedtak/bokmalsrettskrivningen-pa-1900-tallet/",
+      "access": "Read via Wayback copy (live 403). Contains a clean 1907 before/after sentence and a parallel-text sample (Jacob B. Bull 'Vesleblakken' in Rolfsens lesebok 1896/1909/1920/1939/1955) usable as test fixture.",
+      "copyright": "Unknown. Article text is Språkrådet/Løland; the underlying prose is by J. B. Bull (1853-1930), likely public domain but not verified."
+    },
+    {
+      "id": "ivar-berg-ntnu",
+      "title": "Ivar Berg, NTNU - Språkhistorie (undervisningsmateriale)",
+      "authors": "Ivar Berg",
+      "year": 2019,
+      "kind": "secondary",
+      "url": "https://ivar.folk.ntnu.no/maalsoge/index.html",
+      "access": "HTML read. The page is a teaching-resource index; it contains NO spelling rules, only a pointer to SNL 'Rettskrivingsreformer i norsk' (Vikør) and the textbook 'Språket som vart norsk' (Universitetsforlaget 2019). Not used for any rule.",
+      "copyright": "Not relevant (no content used)."
+    },
+    {
+      "id": "ordbank-bokmal-2005-sprakbanken",
+      "title": "Norsk ordbank - bokmål 2005 (Språkbanken ressurskatalog)",
+      "authors": "Språkbanken, Nasjonalbiblioteket",
+      "year": 2022,
+      "kind": "secondary",
+      "url": "https://www.nb.no/sprakbanken/ressurskatalog/oai-nb-no-sbr-5/",
+      "access": "Catalogue page read; dataset itself NOT downloaded.",
+      "copyright": "Page shows Lisens: CC BY (link to creativecommons.org/licenses/by/4.0/), rettighetshaver Nasjonalbiblioteket."
+    }
+  ],
+  "norms": [
+    {
+      "id": "bokmal-1907",
+      "officialName": "Riksmålsrettskrivningen av 1907 (læreboka: Aars og Hofgaard, Norske retskrivnings-regler)",
+      "officialStatusNote": "Resolution of 19 Feb 1907 (1907-source p. 3 'den kongelige resolution av 19de februar'; Guttu and SNL agree: kgl. res. februar 1907, gjeldende i statstjenesten og den høyere skole). Aars/Hofgaard's lærebok godkjent av Kirkedepartementet ved skrivelse av 25 juni 1907 (title page, printed p. 1). Folkeskolen: lokale skolestyrer bestemte, men reformen var gjennomført i hele landet etter kort tid (SNL).",
+      "rules": [
+        {
+          "id": "hard-p-t-k-obligatory",
+          "summary": "Harde konsonanter (p, t, k) i stedet for bløte (b, d, g) i en navngitt ordliste på godt over 200 ord; avledninger og sammensetninger kan beholde bløt konsonant (oppgitt i klammer).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "gade",
+              "after": "gate",
+              "formStatus": "obligatory",
+              "note": "after: 1907 p. 45 (image-checked). before: gade in Aars 1892 p. 5 ('Kongens gade'); Løland 1997 gives 'gaden -> gaten'."
+            },
+            {
+              "before": "kage",
+              "after": "kake",
+              "formStatus": "obligatory",
+              "note": "after: 1907 p. 46 (image-checked). before from SNL 1907 ('dansk: kage')."
+            },
+            {
+              "before": "dræbe",
+              "after": "dræpe",
+              "formStatus": "obligatory",
+              "note": "after: 1907 p. 45. before from SNL 1907."
+            },
+            {
+              "before": "aaben",
+              "after": "aapen",
+              "formStatus": "obligatory",
+              "note": "after: 1907 p. 44 (aapen, aapne, aapning); aaben survives only in the bracketed derivations. before from SNL 1907."
+            },
+            {
+              "before": "dyb",
+              "after": "dyp",
+              "formStatus": "obligatory",
+              "note": "after: 1907 p. 45 'dyp (fordype sig) [dybde]'; dybde keeps soft consonant. before from SNL 1907."
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "Tillæg A. Haarde konsonanter, I., s. 44-49 (ordlisten er alfabetisk); gate s. 45, kake s. 46, dyp s. 45",
+          "quote": "bør der skrives «haard konsonant» (k, p, t) i de nedenfor anførte ord",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1907",
+            "guttu-akademi-normeringshistorie",
+            "loland-1997-sprakradet",
+            "aars-1892"
+          ],
+          "notes": "Listen kaller formene 'bør'. Words listed under II (s. 49-50) are optional (see hard-soft-optional). Ordlisten dekker ikke bøyningsformer - bare grunnformene som er oppført."
+        },
+        {
+          "id": "hard-soft-optional",
+          "summary": "Ved vaklende uttale kunne både hard og bløt konsonant skrives 'indtil videre' (valgfrie par).",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "bog",
+              "after": "bok",
+              "formStatus": "optional",
+              "note": "1907 p. 50: 'bok — bog (fl. bøker)'"
+            },
+            {
+              "before": "æble",
+              "after": "eple",
+              "formStatus": "optional",
+              "note": "p. 50: 'eple — æble'"
+            },
+            {
+              "before": "klog",
+              "after": "klok",
+              "formStatus": "optional",
+              "note": "p. 50: 'klok — klog'"
+            },
+            {
+              "before": "pige",
+              "after": "pike",
+              "formStatus": "optional",
+              "note": "p. 50: 'pike — pige'"
+            },
+            {
+              "before": "haab",
+              "after": "haap",
+              "formStatus": "optional",
+              "note": "p. 50: 'haap, haape — haab, haabe'"
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "Tillæg A. II, s. 49-50",
+          "quote": "kan der indtil videre skrives baade haard og bløt konsonant",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1907"
+          ],
+          "notes": "Samme pars status endres i 1917 (bok, eple blir eneformer)."
+        },
+        {
+          "id": "soft-consonant-kept",
+          "summary": "En del ord og avledninger beholder bløt konsonant i 1907 (helvede, vaaben, vidne, sogn, spyd ...; avledninger som kjøbmand, videnskab; endelsene -het/-hed og -skap/-skab er valgfrie).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "vaaben",
+              "after": "vaaben",
+              "formStatus": "obligatory",
+              "note": "p. 51 list III (bløt konsonant)"
+            },
+            {
+              "before": "helvede",
+              "after": "helvede",
+              "formStatus": "obligatory",
+              "note": "p. 51 list III"
+            },
+            {
+              "before": "kjøbmand",
+              "after": "kjøbmand",
+              "formStatus": "main",
+              "note": "p. 46, in brackets after 'kjøp, kjøpe ...': kjøpstad also allowed"
+            },
+            {
+              "before": "videnskab",
+              "after": "videnskab",
+              "formStatus": "main",
+              "note": "p. 49 under 'at vite' (bracket: viden, videnskab, videnskabelig)"
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "Tillæg A. III-IV, s. 50-52; avledninger i klammer s. 44-49",
+          "quote": null,
+          "confidence": "verified-primary",
+          "notes": "Disse formene er ofte de som endres i 1917 (våpen, vitenskap ...). OCR-lister er skadet noen steder; bruk bare oppføringer sjekket mot bildet."
+        },
+        {
+          "id": "double-consonant-final-disambiguating",
+          "summary": "Dobbelt konsonant i utlyd etter kort vokal, men bare i norske egennavn og 'for at forebygge tvetydighet eller feillæsning' (ikke gjennomført konsekvent).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "buk",
+              "after": "bukk",
+              "formStatus": "obligatory",
+              "note": "1907 p. 52 'en bukk'; before from SNL ('hop, hat, buk')"
+            },
+            {
+              "before": "gran",
+              "after": "grann",
+              "formStatus": "obligatory",
+              "note": "p. 52 'grann' (adj.); before from Guttu ('buk, sur, gran, hvit')"
+            },
+            {
+              "before": "sur",
+              "after": "surr",
+              "formStatus": "obligatory",
+              "note": "p. 53 'surr'; before from Guttu"
+            },
+            {
+              "before": "naaede",
+              "after": "naadd",
+              "formStatus": "obligatory",
+              "note": "p. 14/53: 'naadd, trodd, sydd'; SNL: naadde (for naaede)"
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "§ 11-12 s. 13-14; Tillæg B. Konsonantfordobling s. 52-53",
+          "quote": "Dobbeltkonsonant skrives i utlyd efter kort vokal:",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1907",
+            "guttu-akademi-normeringshistorie"
+          ],
+          "notes": "Systematisk først i 1917 (jf. SNL 1907: 'tak' kunne bety både tak og takk)."
+        },
+        {
+          "id": "aa-or-å-optional",
+          "summary": "Bokstaven å var tillatt i stedet for aa, men man måtte velge ett av tegnene og holde seg til det.",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "haand",
+              "after": "hånd",
+              "formStatus": "optional",
+              "note": "aa/å free choice; 'haand' is the 1907 default spelling in the text"
+            },
+            {
+              "before": "aarsak",
+              "after": "årsak",
+              "formStatus": "optional",
+              "note": "p. 50 lists 'aarsak — aarsag'"
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "§ 1 Anm., s. 5",
+          "quote": "Istedenfor aa kan man ogsaa bruke tegnet å",
+          "confidence": "verified-primary",
+          "notes": "Boka selv bruker aa gjennomgående. Obligatorisk å først i 1938 (s. 47) / bør i 1917."
+        },
+        {
+          "id": "nd-ld-retained",
+          "summary": "Danske ld/nd beholdes (også 'uegte d'): fjeld, mand, haand, land, fuld, guld; ll/nn kommer først i 1917.",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "fjeld",
+              "after": "fjeld",
+              "formStatus": "obligatory",
+              "note": "§ 15 p. 16 'fjeld'; 1917 -> fjell"
+            },
+            {
+              "before": "mand",
+              "after": "mand",
+              "formStatus": "obligatory",
+              "note": "§ 17 p. 17 (nd for nn: 'mand'); 1917 -> mann"
+            },
+            {
+              "before": "haand",
+              "after": "haand",
+              "formStatus": "obligatory",
+              "note": "§ 17 p. 17; 1917 -> hånd (aa->å)"
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "§ 15 s. 16-17 (ld), § 17 s. 17 (nd)",
+          "quote": "For nn skrives ogsaa nd:",
+          "confidence": "verified-primary",
+          "notes": "Dokumenterer bare utgangspunktet for 1917-endringene."
+        },
+        {
+          "id": "plural-er-masculine-and-neuter-bare",
+          "summary": "Hankjønnssubstantiv får flertall på -er (hester, ikke heste); intetkjønn uten endelse (hus, ikke huse), valgfritt både blad og blade.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "heste",
+              "after": "hester",
+              "formStatus": "obligatory",
+              "note": "list of -er plurals in 'Eksempler til bøiningslæren' p. 85 includes hester (image-checked)"
+            },
+            {
+              "before": "huse",
+              "after": "hus",
+              "formStatus": "obligatory",
+              "note": "p. 86 neuter list: nouns without ending (e.g. fjeld, hav, land, navn). SNL 1907: 'flere hus'"
+            },
+            {
+              "before": "blade",
+              "after": "blad",
+              "formStatus": "optional",
+              "note": "SNL 1907: både blad og blade tillatne"
+            }
+          ],
+          "sourceId": "snl-vikor-1907",
+          "locator": "Bøyingssystemet",
+          "quote": null,
+          "confidence": "verified-secondary",
+          "corroboratedBy": [
+            "aars-hofgaard-1907 s. 85-86",
+            "loland-1997-sprakradet"
+          ],
+          "notes": "1907-kilden s. 4 sier at royal-resolution item 4 om bøyingsformer IKKE er gjengitt; s. 85-86 viser bare eksempellister (hester, katter, ... og intetkjønn uten ending). Rule text is from SNL; the listed after-forms are confirmed in the primary."
+        },
+        {
+          "id": "shortened-forms",
+          "summary": "Forkortede former: fjær, for, glo, kule, pryl, præken, pæl, skevand, smie, spar er obligatoriske; fader/far, broder/bror, hoved/hode, læder/lær, moder/mor og verbene blive/bli, drage/dra, give/gi, have/ha, tage/ta er valgfrie par.",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "fjæder",
+              "after": "fjær",
+              "formStatus": "obligatory",
+              "note": "1907 p. 53: 'ikke fjæder, foder, kugle, smedje'"
+            },
+            {
+              "before": "kugle",
+              "after": "kule",
+              "formStatus": "obligatory",
+              "note": "p. 53"
+            },
+            {
+              "before": "fader",
+              "after": "far",
+              "formStatus": "optional",
+              "note": "p. 53 'broder og bror / fader — far'"
+            },
+            {
+              "before": "blive",
+              "after": "bli",
+              "formStatus": "optional",
+              "note": "p. 54: 'Istedenfor blive, bliver, blevet ... kan ogsaa skrives: bli, blir, blit'"
+            },
+            {
+              "before": "have",
+              "after": "ha",
+              "formStatus": "optional",
+              "note": "p. 54: have, havde, havt -> ha, hadde, hat"
+            },
+            {
+              "before": "sagde",
+              "after": "sa",
+              "formStatus": "optional",
+              "note": "p. 54 'istedenfor lagde og sagde — la og sa'"
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "Tillæg C. Forkortede former, s. 53-54; § 32 s. 25",
+          "quote": "kan ogsaa skrives : bli, blir, blit — dra — gi, gir, git",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1907"
+          ],
+          "notes": "Presens/imperfektum passiv av forkortede verb bruker de fulle formene (tages, droges), s. 54 Anm."
+        },
+        {
+          "id": "weak-verb-preterite-et",
+          "summary": "Svake verb får preteritum og perfektum partisipp på -et i stedet for dansk -ede.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "kastede",
+              "after": "kastet",
+              "formStatus": "obligatory",
+              "note": "after: 1907 p. 86 (kaste — kastet — har kastet). before: SNL/Løland."
+            },
+            {
+              "before": "fiskede",
+              "after": "fisket",
+              "formStatus": "obligatory",
+              "note": "SNL 1907 examples"
+            },
+            {
+              "before": "svarede",
+              "after": "svarte",
+              "formStatus": "obligatory",
+              "note": "SNL 1907 examples"
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "Eksempler til bøiningslæren, C. Svake verber, s. 86",
+          "quote": "Imperfektum og perfektum participium paa -et (kaste — kastet — har kastet)",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1907",
+            "loland-1997-sprakradet"
+          ]
+        },
+        {
+          "id": "adjective-ig-no-t-neuter",
+          "summary": "Adjektiv på -ig/-lig får ikke -t i intetkjønn (et rigtig svar).",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "rigtigt",
+              "after": "rigtig",
+              "formStatus": "obligatory",
+              "note": "after: 1907 p. 86 ('et rigtig svar'); before from SNL ('heldigt, ærligt')"
+            }
+          ],
+          "sourceId": "aars-hofgaard-1907",
+          "locator": "Eksempler til bøiningslæren, adjektiv, s. 86",
+          "quote": "svare rigtig, svaret var rigtig, et rigtig svar",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1907"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bokmal-1917",
+      "officialName": "Riksmålsrettskrivningen av 1917 (Den nye rettskrivning. I. Riksmål, 1918)",
+      "officialStatusNote": "Kgl. res. 21 desember 1917 (document p. 2: 'Regler og ordlister for riksmål efter kgl. resol. av 21 desember 1917'; SNL: 'rett før jul 1917'). Normen har to nivåer: obligatoriske endringer (moderat) og 'valgfrie' (radikale) former i klammer (p. 4: 'De andre forandringer i de gamle regler er obligatoriske'). Navnet 'bokmål' kommer først i 1929 (SNL riksmål). Aviser tok de moderate formene i bruk 1919-1932 (Guttu).",
+      "rules": [
+        {
+          "id": "aa-to-å",
+          "summary": "å innføres i stedet for aa.",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "haand",
+              "after": "hånd",
+              "formStatus": "obligatory",
+              "note": "1917 p. 5 'hender (hånd)', p. 36 'hånd, hender'; before: 1907 p. 17 'haand'"
+            },
+            {
+              "before": "aarsag",
+              "after": "årsak",
+              "formStatus": "obligatory",
+              "note": "1917 p. 9 'årsak'; before: 1907 p. 50 'aarsak — aarsag'"
+            },
+            {
+              "before": "aabenbar",
+              "after": "åpenbar",
+              "formStatus": "obligatory",
+              "note": "1917 p. 10 'åpenbar, -e, -ing'; before: 1907 p. 44 (bracket 'aabenbare') - combines aa->å and hard consonant"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "A. II 'o — å', s. 7; ordlisten",
+          "quote": "For aa bør skrives å.",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1917"
+          ],
+          "notes": "Formuleringen er 'bør'. Gjennomført som 'skal' i 1938 (s. 47)."
+        },
+        {
+          "id": "hard-consonants-completed",
+          "summary": "Sideformen med bløt konsonant sløyfes i en rekke ord (eneformer med p/t/k), og hard konsonant innføres i flere ord der bare bløt var tillatt.",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "bog",
+              "after": "bok",
+              "formStatus": "obligatory",
+              "note": "1917 p. 9 'bok, boklig'; 1907 p. 50 'bok — bog' (valgfri)"
+            },
+            {
+              "before": "æble",
+              "after": "eple",
+              "formStatus": "obligatory",
+              "note": "1917 p. 9 'eple'; 1907 p. 50 valgfri"
+            },
+            {
+              "before": "klog",
+              "after": "klok",
+              "formStatus": "obligatory",
+              "note": "1917 p. 9 'klok, klokskap'"
+            },
+            {
+              "before": "saglig",
+              "after": "saklig",
+              "formStatus": "obligatory",
+              "note": "1917 p. 9 'saklig'; 1907 p. 47 'sak [saglig]'"
+            },
+            {
+              "before": "tillid",
+              "after": "tillit",
+              "formStatus": "obligatory",
+              "note": "1917 p. 9 'tillit'; SNL 1917"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "B. I. Hårde konsonanter, a., s. 9-10",
+          "quote": "Sideformen med bløt konsonant sløifes i en rekke ord",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1917"
+          ]
+        },
+        {
+          "id": "hard-consonants-new-optional",
+          "summary": "Nye valgfrie sideformer med hard konsonant ved siden av bløt (ordet står med bløt form først i listen).",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "blegne",
+              "after": "blekne",
+              "formStatus": "optional",
+              "note": "p. 10 'blegne — blekne'"
+            },
+            {
+              "before": "kjøbmann",
+              "after": "kjøpmann",
+              "formStatus": "optional",
+              "note": "p. 10 'kjøbmann — kjøpmann'; p. 9 intro nevner kjøpmann"
+            },
+            {
+              "before": "våben",
+              "after": "våpen",
+              "formStatus": "optional",
+              "note": "p. 11 'våben — våpen'"
+            },
+            {
+              "before": "vidne",
+              "after": "vitne",
+              "formStatus": "optional",
+              "note": "p. 11 'vidne — vitne'"
+            },
+            {
+              "before": "skib",
+              "after": "skip",
+              "formStatus": "optional",
+              "note": "p. 11 'skib — skip'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "B. I. b., s. 10-11 ('Hård konsonant er tillatt i følgende ord')",
+          "quote": null,
+          "confidence": "verified-primary",
+          "notes": "OCR i flerspalteliste er delvis ødelagt; bare entydige par er tatt med. I 1938 blir mange av disse obligatoriske (ustemt konsonant, s. 16-18)."
+        },
+        {
+          "id": "double-consonant-final-consistent",
+          "summary": "Dobbelt konsonant skrives konsekvent i utlyd etter kort vokal (unntatt småord som at, den, nok, op).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "tak",
+              "after": "takk",
+              "formStatus": "obligatory",
+              "note": "1917 p. 13 'takk'; 1907 'tak' dekket både tak og takk (SNL 1907)"
+            },
+            {
+              "before": "sæk",
+              "after": "sekk",
+              "formStatus": "obligatory",
+              "note": "Løland 1997 ('læse lese, sæk sekk'); kombinerer æ->e og dobbelt konsonant; 1917 p. 13 lister bekk, blekk, bygg, rygg, takk, tørr"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "B. II. a. s. 13-14; b. innlyd s. 14",
+          "quote": "Dobbeltkonsonant skal skrives overalt i utlyd efter kort vokal",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1917"
+          ],
+          "notes": "NB: ikke 'bek' -> 'bekk' - bek (tjære) og bekk (liten elv) er ulike ord; bek forblir enkelt (1917 p. 13)."
+        },
+        {
+          "id": "ld-nd-to-ll-nn",
+          "summary": "Uhistorisk d etter l og n fjernes: ld -> ll og nd -> nn der norrønt/nynorsk har ll/nn; historisk d beholdes (kveld, land, holde, sende, ild).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "fjeld",
+              "after": "fjell",
+              "formStatus": "obligatory",
+              "note": "1917 p. 16 'fjell'; 1907 p. 16 'fjeld'"
+            },
+            {
+              "before": "mand",
+              "after": "mann",
+              "formStatus": "obligatory",
+              "note": "1917 p. 16 'mann, menn (mandig)'; 1907 p. 17 'mand'"
+            },
+            {
+              "before": "fuld",
+              "after": "full",
+              "formStatus": "obligatory",
+              "note": "1917 p. 16 'full, fyll, fylle'; SNL 1917"
+            },
+            {
+              "before": "land",
+              "after": "land",
+              "formStatus": "obligatory",
+              "note": "1917 p. 18 (nd beholdes: 'hund, land, ...')"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "B. III. Stum d, -ld, -nd, s. 15-18",
+          "quote": null,
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1917",
+            "loland-1997-sprakradet"
+          ],
+          "notes": "almindelig/alminnelig, blandt/blant og kunde/kunne kommer først i 1938."
+        },
+        {
+          "id": "e-for-æ",
+          "summary": "Kort e-/æ-lyd skrives e; æ beholdes foran r og i en liste (være, lære, fæl, hæl, ...).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "mænd",
+              "after": "menn",
+              "formStatus": "obligatory",
+              "note": "1917 p. 5 'menn (mann)'; before: Aars 1892 (index: 'fjeld, nomme, mænd, hænge, seng')"
+            },
+            {
+              "before": "væg",
+              "after": "vegg",
+              "formStatus": "obligatory",
+              "note": "1917 p. 5 'vegg'; SNL 1917"
+            },
+            {
+              "before": "læse",
+              "after": "lese",
+              "formStatus": "obligatory",
+              "note": "1917 p. 5 'lese, drepe, glede ...'"
+            },
+            {
+              "before": "dræpe",
+              "after": "drepe",
+              "formStatus": "obligatory",
+              "note": "1917 p. 5-6; 1907 p. 45 'dræpe'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "A. I. e og æ, s. 5-6",
+          "quote": "Kort e- og æ-lyd skrives regelmessig med e",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1917"
+          ]
+        },
+        {
+          "id": "gt-to-kt",
+          "summary": "gt skrives kt (unntatt bøyningsendelsen -t etter g-stamme: trygt, lagt, bragt).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "magt",
+              "after": "makt",
+              "formStatus": "obligatory",
+              "note": "1917 p. 12 'makt'; 1907 p. 21 'magt'"
+            },
+            {
+              "before": "rigtig",
+              "after": "riktig",
+              "formStatus": "obligatory",
+              "note": "1917 p. 12 'riktig'; 1907 p. 21 'rigtig'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "B. I. Tillegg, s. 12",
+          "quote": "Istedenfor den eldre skrivemåte gt skal",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1917"
+          ]
+        },
+        {
+          "id": "feminine-a-forms-optional",
+          "summary": "Hunkjønnsformen -a i bestemt form entall: obligatorisk i særnorske ord for dyr, planter, natur og bygdeliv (kua, geita), ellers tillatt som sideform i klammer (bok [boka], gate [gata], pike [pika]).",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "(kuen)",
+              "after": "kua",
+              "formStatus": "obligatory",
+              "note": "p. 19-20: for ord av dette slag med særnorsk form er hunkjønnsbøyingen den eneste brukelige; before-form is inferred, not documented"
+            },
+            {
+              "before": "(bikkjen)",
+              "after": "bikkja",
+              "formStatus": "obligatory",
+              "note": "legend p. 27: 'Obligatoriske hunkjønnsformer som bikkja er opført uten klammer'; before-form inferred"
+            },
+            {
+              "before": "gaten",
+              "after": "gata",
+              "formStatus": "optional",
+              "note": "ordliste p. 34 'gate [gata]' (bracketed = tillatt)"
+            },
+            {
+              "before": "boken",
+              "after": "boka",
+              "formStatus": "optional",
+              "note": "ordliste p. 29 'bok [boka]'"
+            },
+            {
+              "before": "piken",
+              "after": "pika",
+              "formStatus": "optional",
+              "note": "ordliste p. 46 'pike [pika]'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "C. I. Hunkjønnsformen, s. 19-21; ordlistens forklaring s. 27",
+          "quote": "Den bestemte hunkjønnsform med artikkelen -a brukes i særnorske ord",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1917"
+          ],
+          "notes": "Legend p. 27: 'Tillatte hunkjønnsformer på -a er satt i klammer ved siden av den ubestemte form, f. eks. bygd [bygda]. Obligatoriske hunkjønnsformer som bikkja er opført uten klammer.' Indefinite article ei/e likewise tillatt (p. 8, p. 21)."
+        },
+        {
+          "id": "weak-preterite-a-optional",
+          "summary": "Preteritum av svake verb er -et (kastet); -a (kasta) er godkjent som tillatt sideform avhengig av emne og stil.",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "kastet",
+              "after": "kasta",
+              "formStatus": "optional",
+              "note": "p. 23 'III. Fortid av svake verber' (i klammer)"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "C. III, s. 23",
+          "quote": "han kasta steinen; han hadde kasta steinen",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1917"
+          ]
+        },
+        {
+          "id": "norwegian-forms-optional-pairs",
+          "summary": "Norske ordformer som tillatte sideformer ved siden av de tradisjonelle: efter [etter], meget [mye], nu [nå], sne [snø], sprog [språk], syv [sju], tyve (20) [tjuge]; formen med stjerne i ordlisten er den tillatte.",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "efter",
+              "after": "etter",
+              "formStatus": "optional",
+              "note": "p. 19 '[For efter kan skrives etter]'; ordliste p. 31 'efter [etter]'"
+            },
+            {
+              "before": "meget",
+              "after": "mye",
+              "formStatus": "optional",
+              "note": "ordliste p. 42 'meget [mye]'; p. 43 'mye* (meget)'"
+            },
+            {
+              "before": "nu",
+              "after": "nå",
+              "formStatus": "optional",
+              "note": "ordliste p. 44 'nu [nå]'; p. 7 '[Tillatt sideform: språk og nå]'"
+            },
+            {
+              "before": "sne",
+              "after": "snø",
+              "formStatus": "optional",
+              "note": "ordliste p. 51 'sne [snø]'; p. 24 liste over norske sideformer"
+            },
+            {
+              "before": "sprog",
+              "after": "språk",
+              "formStatus": "optional",
+              "note": "ordliste p. 52 'sprog [språk]'"
+            },
+            {
+              "before": "syv",
+              "after": "sju",
+              "formStatus": "optional",
+              "note": "ordliste p. 53 'syv [sju]'; p. 49 'sju* (syv)'"
+            },
+            {
+              "before": "tyve",
+              "after": "tjuge",
+              "formStatus": "optional",
+              "note": "ordliste p. 55 'tyve (20) [tjuge]'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-riksmaal-1918",
+          "locator": "A. II s. 7; B. V s. 19; D s. 23-24; ordlisten s. 27-58 (legend s. 27)",
+          "quote": "[For efter kan skrives etter]",
+          "confidence": "verified-primary",
+          "notes": "Hovedformen er den danske/tradisjonelle; den norske formen er tillatt. 'tjuge' (ikke 'tjue') er sideformen som står i 1917-ordlisten."
+        }
+      ]
+    },
+    {
+      "id": "bokmal-1938",
+      "officialName": "Rettskrivningen av 1938 (Ny rettskrivning 1938. Bokmål. Regler og ordliste)",
+      "officialStatusNote": "Utredet av nemnd 1934 (Iversen), tilråding jan 1936; Stortinget behandlet saken 1937 (Guttu: vedtatt 25 juni 1937 mot 37 stemmer); vedtatt i regjeringen rett over nyttår 1938 og gjort gjeldende sommeren 1938, i statsforvaltningen fra nyttår 1939 (SNL). Systemet: hovedformer (læreboknormal) + sideformer i klammer, tillatt for elever (Forord p. 3). Riksmålet het 'bokmål' fra 1929.",
+      "rules": [
+        {
+          "id": "hovedform-sideform-system",
+          "summary": "Hovedformer er læreboknormalen; sideformer står i klammer og er tillatt til valgfritt bruk i elevers skriftlige arbeid, men faller utenfor lærebokformene.",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "fikk",
+              "after": "fekk",
+              "formStatus": "side",
+              "note": "p. 7: 'Fikk (impf.), gi (v.), si(e) (v.) [sideformer fekk, gje, seie]'"
+            },
+            {
+              "before": "gi",
+              "after": "gje",
+              "formStatus": "side",
+              "note": "p. 7"
+            },
+            {
+              "before": "si(e)",
+              "after": "seie",
+              "formStatus": "side",
+              "note": "p. 7"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Forord s. 3; vokaler s. 7 (hv/kv-sideformene s. 23 er OCR-uleselige og ikke gjengitt)",
+          "quote": "Sideformer er oftest satt i klammer, således alltid i ordlista.",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1938",
+            "guttu-akademi-normeringshistorie"
+          ],
+          "notes": "Dobbeltformer ('el.') er jamstilte hovedformer; klammeformer er sideformer. Forord: bare 'først og fremst' ord med endring er tatt med - ordlista er ikke komplett."
+        },
+        {
+          "id": "aa-å-oy-obligatory",
+          "summary": "Skrivemåtene å (ikke aa) og øy (ikke øi) skal gjennomføres.",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "haand",
+              "after": "hånd",
+              "formStatus": "obligatory",
+              "note": "1938 p. 37 'hånd (men hand, -a)'"
+            },
+            {
+              "before": "høi",
+              "after": "høy",
+              "formStatus": "obligatory",
+              "note": "1938 p. 19 'høyt'; before 1917 p. 8 'høi (s.)'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Forskjellige regler IV, s. 47",
+          "quote": "Skrivemåtene øy og å skal gjennomføres.",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1938"
+          ]
+        },
+        {
+          "id": "efter-to-etter",
+          "summary": "Preposisjonen efter skrives etter.",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "efter",
+              "after": "etter",
+              "formStatus": "obligatory",
+              "note": "p. 24; 1917 p. 31 'efter [etter]'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Lydverket III.13 Særskilte ord og former, s. 24",
+          "quote": "«efter» skrives etter",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1938"
+          ],
+          "notes": "Teksten: 'så nær som i enkelte ufolkelige sammensetninger der den gamle skrivemåten er tillatt'."
+        },
+        {
+          "id": "nu-sne-sprog-to-nå-snø-språk",
+          "summary": "nå, snø og språk blir hovedformer; nu, sne og sprog har ingen egen oppføring (ordlista viser videre til de nye).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "nu",
+              "after": "nå",
+              "formStatus": "obligatory",
+              "note": "ordliste p. 68 '(nu, adv.; se: nå)'"
+            },
+            {
+              "before": "sne",
+              "after": "snø",
+              "formStatus": "obligatory",
+              "note": "ordliste p. 74 '(sne, s. og v. se: snø)'"
+            },
+            {
+              "before": "sprog",
+              "after": "språk",
+              "formStatus": "obligatory",
+              "note": "p. 11 'Med å: nå (adv.) ... språk'; SNL 1938 names sne/sprog as replaced"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Vokaler s. 11 ('Med å'); ordlista s. 68, 74",
+          "quote": null,
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1938",
+            "loland-1997-sprakradet"
+          ],
+          "notes": "Ordlistens parentesoppføringer '(nu ... se: nå)' viser at gamle former ikke er hovedform; 'sprog' har ingen oppføring i ordlista. SNL 1938 bekrefter eksplisitt."
+        },
+        {
+          "id": "syv-tyve-to-sju-tjue",
+          "summary": "sju og tjue erstatter syv og tyve; de gamle formene er inntil videre tillatt i skriftlig arbeid i skolen.",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "syv",
+              "after": "sju",
+              "formStatus": "main",
+              "note": "p. 42; ordliste p. 77 '(syv, se: sju)'"
+            },
+            {
+              "before": "tyve",
+              "after": "tjue",
+              "formStatus": "main",
+              "note": "p. 42; ordliste p. 79 '(tyve (20)) se: tjue'"
+            },
+            {
+              "before": "syv",
+              "after": "syv",
+              "formStatus": "side",
+              "note": "p. 42: tillatt i skriftlig arbeid i skolen"
+            },
+            {
+              "before": "tyve",
+              "after": "tyve",
+              "formStatus": "side",
+              "note": "p. 42"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Formverket V. Tallord, s. 42",
+          "quote": "De norske formene sju og tjue trer istf. de eldre (syv og tyve)",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1938"
+          ]
+        },
+        {
+          "id": "ld-nd-extended-ll-nn",
+          "summary": "Flere ord får ll/nn i stedet for ld/nd: blant, alminnelig, kvinnelig, opprinnelig, funn, foll/snill; også preteritum kunne/skulle/ville.",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "blandt",
+              "after": "blant",
+              "formStatus": "obligatory",
+              "note": "1938 p. 20 'blant'; before 1917 p. 29 'blandt'"
+            },
+            {
+              "before": "almindelig",
+              "after": "alminnelig",
+              "formStatus": "obligatory",
+              "note": "1938 p. 20; before 1917 p. 17 (almindelig)"
+            },
+            {
+              "before": "fold",
+              "after": "foll",
+              "formStatus": "obligatory",
+              "note": "1938 p. 20 'foll (s.)'; before 1917 p. 17 'fold'"
+            },
+            {
+              "before": "snild",
+              "after": "snill",
+              "formStatus": "obligatory",
+              "note": "1938 p. 20 'snill'; before 1917 p. 17 'snild' (d-listen)"
+            },
+            {
+              "before": "kunde",
+              "after": "kunne",
+              "formStatus": "obligatory",
+              "note": "SNL 1938: kunde/skulde/vilde -> kunne/skulle/ville"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Lydverket III.3 Stum d, s. 19-21",
+          "quote": null,
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1938",
+            "guttu-akademi-normeringshistorie"
+          ],
+          "notes": "Rule text 'også for tidsformene av kunne, skulle, ville' står i 1938 p. 20 (OCR delvis ødelagt), derfor står kunde/kunne med SNL som kilde for 'før'-formen."
+        },
+        {
+          "id": "hva-ble-meg-deg-seg",
+          "summary": "d strykes i hva; blev -> ble; mig/dig/sig -> meg/deg/seg; nogen -> noen.",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "hvad",
+              "after": "hva",
+              "formStatus": "obligatory",
+              "note": "1938 p. 19 'Her er d strøket i hva (pron.)'; before: Guttu/SNL"
+            },
+            {
+              "before": "blev",
+              "after": "ble",
+              "formStatus": "obligatory",
+              "note": "1938 p. 22 'Uten v skal en skrive: ble el. blei'; before: 1917 p. 29 'bli, blev [blei]'"
+            },
+            {
+              "before": "sig",
+              "after": "seg",
+              "formStatus": "obligatory",
+              "note": "1938 p. 7 'deg, meg, seg (pron.)'; before: 1917 p. 8 'bre (sig)'"
+            },
+            {
+              "before": "nogen",
+              "after": "noen",
+              "formStatus": "obligatory",
+              "note": "1938 p. 41 'noen'; before: 1917 p. 7 ('nogen side form')"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Lydverket I (e og i) s. 7; III.3 s. 19; III.7 s. 22; pronomen s. 41",
+          "quote": "Her er d strøket i hva (pron.).",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "guttu-akademi-normeringshistorie",
+            "snl-vikor-1938"
+          ],
+          "notes": "'hvad' i 1917-boka ble ikke funnet i OCR-ordlista; før-formen er fra Guttu (secondary)."
+        },
+        {
+          "id": "feminine-a-obligatory",
+          "summary": "Hunkjønnsendingen -a er obligatorisk i bestemt form entall i rundt 1000 ord (13 grupper: dyr/planter, natur, arbeid, bygg, mat, kropp ...); -en er bare tillatt 'i ufolkelig bruk'.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "gaten",
+              "after": "gata",
+              "formStatus": "obligatory",
+              "note": "p. 28 (group 2 naturskildrende ord), ordliste p. 57 'gate, -a'"
+            },
+            {
+              "before": "boken",
+              "after": "boka",
+              "formStatus": "obligatory",
+              "note": "p. 36 'bok (i ufolk. bruk -en)' (image-checked)"
+            },
+            {
+              "before": "solen",
+              "after": "sola",
+              "formStatus": "obligatory",
+              "note": "p. 29 'sol (i ufolk. bruk -en)'"
+            },
+            {
+              "before": "sengen",
+              "after": "senga",
+              "formStatus": "obligatory",
+              "note": "p. 32 'seng'"
+            },
+            {
+              "before": "jenten",
+              "after": "jenta",
+              "formStatus": "obligatory",
+              "note": "p. 34 'jente' (gruppe 10 ord for personer); ordliste p. 61 'jente, -a'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Formverket I.A.a) Obligatoriske a-ord, s. 24-36",
+          "quote": "Den etterhengte artikkelen for substantiv i entall er -(e)n, -a, -(e)t.",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1938",
+            "guttu-akademi-normeringshistorie"
+          ],
+          "notes": "p. 26: -en er tillatt i faste vendinger (holde en stangen, slå en av marken). Guttu: antall obligatoriske hunkjønnsord økt fra ca. 400 til ca. 1000 i tilleggstilrådingen 1936."
+        },
+        {
+          "id": "feminine-a-optional",
+          "summary": "For mange andre ord er -a eller -en valgfritt 'inntil videre' (kake, pike, hånd, ...).",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "kaken",
+              "after": "kaka",
+              "formStatus": "optional",
+              "note": "p. 37 (Valgfrie a-ord) 'kake'"
+            },
+            {
+              "before": "piken",
+              "after": "pika",
+              "formStatus": "optional",
+              "note": "p. 37 'pike'; ordliste p. 69 'pike, -en el. -a'"
+            },
+            {
+              "before": "hånden",
+              "after": "hånda",
+              "formStatus": "optional",
+              "note": "p. 37 'hånd (men hand, -a)'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Formverket I.A.b) Valgfrie a-ord, s. 36-38",
+          "quote": "det inntil videre tillatt å bruke a-ending el. en-ending",
+          "confidence": "verified-primary",
+          "notes": "Image-checked p. 36-37. Pronomen mi/di/si og artikkelen ei kommer i tillegg (s. 41-42)."
+        },
+        {
+          "id": "neuter-plural-a-obligatory",
+          "summary": "Bestemt form flertall av en rekke intetkjønnsord (barn, dyr, garn, troll ...) har obligatorisk -a; alle andre sterke intetkjønnsord kan valgfritt få -a.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "barnene",
+              "after": "barna",
+              "formStatus": "obligatory",
+              "note": "p. 40 'barn' i listen over obligatorisk a-form"
+            },
+            {
+              "before": "dyrene",
+              "after": "dyra",
+              "formStatus": "obligatory",
+              "note": "p. 40 'dyr'"
+            },
+            {
+              "before": "garnene",
+              "after": "garna",
+              "formStatus": "obligatory",
+              "note": "p. 40 'garn'"
+            },
+            {
+              "before": "trollene",
+              "after": "trolla",
+              "formStatus": "obligatory",
+              "note": "p. 40 'troll'"
+            },
+            {
+              "before": "bordene",
+              "after": "borda",
+              "formStatus": "optional",
+              "note": "p. 40: 'alle andre sterke intetkjønnsord valgfritt få -a'"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Formverket I.B.2 Intetkjønnsord, s. 39-40",
+          "quote": "Utenom disse ord med obligatorisk -a kan også alle andre sterke intetkjønnsord valgfritt få -a",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1938",
+            "guttu-akademi-normeringshistorie"
+          ]
+        },
+        {
+          "id": "pronoun-possessive-and-article-ei",
+          "summary": "mi/di/si er obligatorisk etter et a-ord (hytta mi); i lesebøker gjennomføres ei ved obligatoriske a-ord i eventyr og folkelig fortelling; adjektivet lita etter ei.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "hytten min",
+              "after": "hytta mi",
+              "formStatus": "obligatory",
+              "note": "p. 41 'hytta mi'"
+            },
+            {
+              "before": "en liten bok",
+              "after": "ei lita bok",
+              "formStatus": "optional",
+              "note": "p. 40: lita er obligatorisk etter ei; p. 42: ei/en fritt valg i elevarbeid, men ei skal gjennomføres i lesebøkenes eventyr/folkelige fortelling"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Pronomen s. 41; Artiklene s. 41-42; Adjektiv s. 40",
+          "quote": "Pronominalformene mi, di, si skal alltid brukes når de står etter et a-ord",
+          "confidence": "verified-primary"
+        },
+        {
+          "id": "verb-sideforms-and-split-infinitive",
+          "summary": "Sideformer i verbbøyning: fant [fann], vant [vann], fikk [fekk]; kløyvd infinitiv (kaste, men [fara]) tillatt som sideform; a-fortid (kasta) obligatorisk i verb med særnorsk lydform.",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "fant",
+              "after": "fann",
+              "formStatus": "side",
+              "note": "p. 42 'fant — [fann]'"
+            },
+            {
+              "before": "vant",
+              "after": "vann",
+              "formStatus": "side",
+              "note": "p. 42"
+            },
+            {
+              "before": "fare",
+              "after": "fara",
+              "formStatus": "side",
+              "note": "p. 43: kløyvd infinitiv ('kaste, men fara'), i klammer"
+            }
+          ],
+          "sourceId": "ny-rettskrivning-1938-bokmal",
+          "locator": "Formverket VI. Verb, s. 42-44",
+          "quote": "Foruten den hittil brukte e-ending i infinitiv kan en heretter også nytte a-ending",
+          "confidence": "verified-primary",
+          "notes": "Kløyvd infinitiv tas ut i 2005. De fulle listene over a-verb (s. 42-43) er OCR-ødelagt og ikke gjengitt her."
+        }
+      ]
+    },
+    {
+      "id": "bokmal-1959",
+      "officialName": "Ny læreboknormal 1959 (bokmål)",
+      "officialStatusNote": "Utarbeidet av Norsk språknemnd (nedsatt 1952); Stortinget høsten 1958 (mot Høyres stemmer); vedtatt våren 1959 og gjeldende fra høstsemesteret 1959 (SNL). Gjelder også i statstjenesten. Formelt en læreboknormal; 'Det som ikke er behandlet i læreboknormalen, følger rettskrivningen av 1938' (Forord p. 3). Klammer [ ] = former som ikke kan brukes i lærebøker.",
+      "rules": [
+        {
+          "id": "klammer-system-laereboknormal",
+          "summary": "Former som ikke kan brukes i lærebøker står i skarpe klammer og er tillatt i elevenes skriftlige arbeid; 'jamstilte lærebokformer' står alfabetisk uten rangering.",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "gikk",
+              "after": "gjekk",
+              "formStatus": "side",
+              "note": "p. 7 'Lærebokform [med sideform]: gikk [gjekk]'"
+            },
+            {
+              "before": "leppe",
+              "after": "lippe",
+              "formStatus": "side",
+              "note": "p. 7"
+            },
+            {
+              "before": "beksel",
+              "after": "bissel",
+              "formStatus": "side",
+              "note": "p. 7"
+            }
+          ],
+          "sourceId": "ny-laereboknormal-1959",
+          "locator": "Forord s. 3; Lydverket, Vokaler s. 7",
+          "quote": "De formene som ikke kan brukes i lærebøker, står i skarpe klammer [ ].",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1959"
+          ],
+          "notes": "Forord: 'Rekkefølgen sier altså ingenting om at den ene eller den andre formen bør foretrekkes' (jamstilte former)."
+        },
+        {
+          "id": "feminine-a-hovedregel",
+          "summary": "Konkreter som er hunkjønn i folkemålet har obligatorisk -a i bestemt form entall (bok, dør, gate, jord, seng, sol, stue); abstrakter har valgfritt -a/-en.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "boken",
+              "after": "boka",
+              "formStatus": "obligatory",
+              "note": "p. 20 Hovedregel A"
+            },
+            {
+              "before": "gaten",
+              "after": "gata",
+              "formStatus": "obligatory",
+              "note": "p. 20 Hovedregel A"
+            },
+            {
+              "before": "solen",
+              "after": "sola",
+              "formStatus": "obligatory",
+              "note": "p. 20 Hovedregel A (sol)"
+            },
+            {
+              "before": "kraften",
+              "after": "krafta",
+              "formStatus": "optional",
+              "note": "p. 20 Hovedregel B (abstrakter: evne, hjelp, kraft, makt, sjel, synd)"
+            },
+            {
+              "before": "hjelpen",
+              "after": "hjelpa",
+              "formStatus": "optional",
+              "note": "p. 20 Hovedregel B"
+            }
+          ],
+          "sourceId": "ny-laereboknormal-1959",
+          "locator": "Bøyningsverket, Substantiv, Hunkjønn, s. 19-21 (Hovedregel s. 20)",
+          "quote": "skal i sin alminnelighet ha obligatorisk -a",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1959"
+          ],
+          "notes": "Faste vendinger (slå en av marken, holde en stangen) og høytidelig/retorisk stil tillater -en også i obligatoriske hunkjønnsord (s. 19-20). Pedagogisk: ustøhet i hunkjønn skal ikke regnes som feil i barneskolen (s. 19)."
+        },
+        {
+          "id": "feminine-woman-words-optional",
+          "summary": "Ord for kvinnelige vesener (dame, datter, hustru, kvinne, pike) og noen litterære ord har valgfritt -a/-en; jente, kone, kjerring, budeie har obligatorisk -a.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "piken",
+              "after": "pika",
+              "formStatus": "optional",
+              "note": "p. 20 punkt 1 'pike'"
+            },
+            {
+              "before": "kvinnen",
+              "after": "kvinna",
+              "formStatus": "optional",
+              "note": "p. 20 'kvinne'"
+            },
+            {
+              "before": "jenten",
+              "after": "jenta",
+              "formStatus": "obligatory",
+              "note": "p. 20 'Obligatorisk -a har ... jente, kjerring, kone, møy'"
+            }
+          ],
+          "sourceId": "ny-laereboknormal-1959",
+          "locator": "Hunkjønn A. Konkreter 1-5, s. 20-21",
+          "quote": null,
+          "confidence": "verified-primary"
+        },
+        {
+          "id": "pronoun-mi-di-si-and-genitive",
+          "summary": "mi/di/si er obligatorisk etter et a-ord (boka mi), men fritt foran (mi/min bok); genitiv på -s også ved -a-form (solas, jordas).",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "boken min",
+              "after": "boka mi",
+              "formStatus": "obligatory",
+              "note": "p. 22"
+            },
+            {
+              "before": "jordens",
+              "after": "jordas",
+              "formStatus": "optional",
+              "note": "p. 22 'solas, jordas osv.'"
+            }
+          ],
+          "sourceId": "ny-laereboknormal-1959",
+          "locator": "Bøyningsverket, s. 22",
+          "quote": "boka mi, men mi eller min bok",
+          "confidence": "verified-primary"
+        },
+        {
+          "id": "neuter-plural-a-reduced",
+          "summary": "Obligatorisk -a i bestemt form flertall begrenses til barn, bein, beist, dyr, felæger, garn, hol, kje, lik (på seil), krøtter, naut, reis, segl, sev, troll; ellers er -a og -ene jamstilt (ikke etter trykklett -e).",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "barnene",
+              "after": "barna",
+              "formStatus": "obligatory",
+              "note": "p. 25"
+            },
+            {
+              "before": "dyrene",
+              "after": "dyra",
+              "formStatus": "obligatory",
+              "note": "p. 25 (obligatorisk i 1959, jamstilt først i 1981)"
+            },
+            {
+              "before": "eplene",
+              "after": "eplene",
+              "formStatus": "main",
+              "note": "p. 25: ord på trykklett -e får -ene (eplene)"
+            }
+          ],
+          "sourceId": "ny-laereboknormal-1959",
+          "locator": "Bøyningsverket, Substantiv, Bestemt form flertall, s. 25",
+          "quote": "som før skal -a være obligatorisk ved barn, bein, beist, dyr",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1959",
+            "stmeld-100-1980-81"
+          ]
+        },
+        {
+          "id": "meget-mye-parallel",
+          "summary": "meget og mye er jamstilte; mye er obligatorisk foran komparativ og der ordet svarer til tysk viel.",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "meget",
+              "after": "mye",
+              "formStatus": "optional",
+              "note": "ordliste p. 40 'meget el. mye (mye obl. foran komparativ ...)'"
+            }
+          ],
+          "sourceId": "ny-laereboknormal-1959",
+          "locator": "Særskilte ord og former s. 17-18; ordlisten s. 40",
+          "quote": null,
+          "confidence": "verified-primary",
+          "notes": "1938 hadde 'meget — mye' som dobbeltform (1938 p. 24)."
+        },
+        {
+          "id": "hv-to-v-and-side-forms-out",
+          "summary": "h faller i valp, virvel, verken (ikke hvalp, hvirvel, hverken); sideformene [hoss(en), ka, kem, koss] og [gje], [seie] går ut.",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "hvalp",
+              "after": "valp",
+              "formStatus": "obligatory",
+              "note": "p. 16 'valp, valpe ... virvel, virvle'; before from SNL 1959"
+            },
+            {
+              "before": "hvirvel",
+              "after": "virvel",
+              "formStatus": "obligatory",
+              "note": "p. 16; SNL 1959"
+            },
+            {
+              "before": "hverken",
+              "after": "verken",
+              "formStatus": "obligatory",
+              "note": "p. 17 'verken'; SNL 1959; 2005 gir hverken el. verken (p. 31)"
+            },
+            {
+              "before": "gje",
+              "after": "gi",
+              "formStatus": "obligatory",
+              "note": "p. 7 'Formene [gje], [seie] går ut' - sideformene fjernes"
+            }
+          ],
+          "sourceId": "ny-laereboknormal-1959",
+          "locator": "Lydverket, hv/kv s. 16-17; vokaler s. 7",
+          "quote": "Formene [gje], [seie] går ut.",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1959"
+          ]
+        },
+        {
+          "id": "weak-verbs-a-et-parallel",
+          "summary": "I de fleste svake verb er preteritum -a og -et jamstilt; en del verb (dansa/danset, grøssa/grøsset, stønna/stønnet) fikk -et tilbake, og -te-formene (danste, grøste, stønte) ble tatt ut.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "danste",
+              "after": "danset",
+              "formStatus": "obligatory",
+              "note": "p. 26 'danse, -a/-et'; before from SNL 1959"
+            },
+            {
+              "before": "kaste",
+              "after": "kasta",
+              "formStatus": "optional",
+              "note": "p. 25: 'Verb med fortid på -a og -et ... i de fleste er -et og -a jamstilt'"
+            }
+          ],
+          "sourceId": "ny-laereboknormal-1959",
+          "locator": "Bøyningsverket, Verb, Svake verb, s. 25-27",
+          "quote": "Verb med fortid på -a og -et regnes til samme klasse",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1959"
+          ],
+          "notes": "Verblista s. 26-27 er lang (flere hundre verb) og delvis OCR-skadet; hent verbene fra bildene hvis de skal kodes."
+        }
+      ]
+    },
+    {
+      "id": "bokmal-1981",
+      "officialName": "Endringer i rettskrivningen og læreboknormalen for bokmål ('liberaliseringsvedtaket for bokmål')",
+      "officialStatusNote": "KUD-tilråding 30 april 1981 (St.meld. nr. 100 1980-81); Innst. S. nr. 306 (1980-81); Stortinget enstemmig 1 juni 1981; kgl. res. 24 juli 1981 (Guttu); gjort gjeldende fra sommeren 1982 (SNL). Hovedform/sideform og læreboknormal beholdes. (Et midlertidig 'liberaliseringsvedtak' for elever kom allerede 1972: -en ved siden av -a, -ene ved siden av -a, -et i fortid - SNL 1981.)",
+      "rules": [
+        {
+          "id": "feminine-a-en-optional",
+          "summary": "I rettskrivningen får alle hunkjønnsord valgfritt -a/-en; i læreboknormalen forblir ca. 640 ord med obligatorisk -a, mens ca. 440 ord (St.meld. Liste 1; SNL: 450) - bl.a. bok, dør, gate, seng, sol - får valgfritt -a/-en. Obligatorisk -a-ord kan få -en i overført betydning.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "boka",
+              "after": "boken",
+              "formStatus": "optional",
+              "note": "p. 7 (listet blant ord som får jamstilt -en); SNL 1981: 'boka og boken, sola og solen'"
+            },
+            {
+              "before": "gata",
+              "after": "gaten",
+              "formStatus": "optional",
+              "note": "p. 7 og p. 19 (Liste 1)"
+            },
+            {
+              "before": "sola",
+              "after": "solen",
+              "formStatus": "optional",
+              "note": "p. 21 (Liste 1); SNL 1981"
+            },
+            {
+              "before": "kua",
+              "after": "kuen",
+              "formStatus": "side",
+              "note": "SNL 1981: 'kua [kuen]' - ku beholder -a som hovedform i læreboknormalen"
+            }
+          ],
+          "sourceId": "stmeld-100-1980-81",
+          "locator": "St.meld. s. 7 (sammendrag), s. 16-17 (2.5 Hunkjønnsord), Liste 1 s. 19-21, Liste 2 s. 22-25",
+          "quote": "bok, dør, gate, gås, hesje, regle, seng, ugle",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1981",
+            "guttu-akademi-normeringshistorie"
+          ],
+          "notes": "s. 7: 'I læreboknormalen skal om lag 640 ord ha obligatorisk -a, mot tidligere om lag 1100 ord.' Fixed expressions keep only -a (i blinda, på fylla, få dilla ... s. 17)."
+        },
+        {
+          "id": "indefinite-article-ei-or-en",
+          "summary": "Alle hunkjønnsord kan valgfritt ha ei eller en som ubestemt artikkel.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "ei bok",
+              "after": "en bok",
+              "formStatus": "optional",
+              "note": "p. 17 (vedtatt 9.10.76 med 16 av 19 stemmer)"
+            }
+          ],
+          "sourceId": "stmeld-100-1980-81",
+          "locator": "s. 17 (2.2)",
+          "quote": "Alle hunkjønnsord kan valgfritt ha ei eller en som ubestemt artikkel.",
+          "confidence": "verified-primary"
+        },
+        {
+          "id": "neuter-plural-a-ene-optional",
+          "summary": "Alle intetkjønnsord har valgfritt -a/-ene i bestemt form flertall (unntatt kvantum/tema-typen); i læreboknormalen forblir -a obligatorisk bare for barn, bein, beist, hol, kol, naut, segl, sev, krøtter.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "dyra",
+              "after": "dyrene",
+              "formStatus": "optional",
+              "note": "p. 17 'dyr — b.fl. dyra el. dyrene'"
+            },
+            {
+              "before": "barna",
+              "after": "barnene",
+              "formStatus": "side",
+              "note": "p. 17 'barn b.fl. -a [-ene]' (læreboknormal: -a obligatorisk, [-ene] sideform i rettskrivningen)"
+            },
+            {
+              "before": "eplene",
+              "after": "epla",
+              "formStatus": "optional",
+              "note": "p. 17 'eple — b.fl. epla el. eplene'"
+            }
+          ],
+          "sourceId": "stmeld-100-1980-81",
+          "locator": "s. 17 (2.1 Nye regler)",
+          "quote": "Alle intetkjønnsord har valgfritt -a/-ene",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1981"
+          ]
+        },
+        {
+          "id": "possessive-and-genitive-feminine",
+          "summary": "mi/di/si er obligatoriske etter bestemt form hunkjønn på -a (boka mi); foran er mi/min valgfritt; genitiv på -s tillatt også med -a (bokas, bygdas) og -ens uansett.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "boka min",
+              "after": "boka mi",
+              "formStatus": "obligatory",
+              "note": "p. 17 (2.3)"
+            },
+            {
+              "before": "bokens",
+              "after": "bokas",
+              "formStatus": "optional",
+              "note": "p. 17 (2.4) 'bokas, bygdas'"
+            }
+          ],
+          "sourceId": "stmeld-100-1980-81",
+          "locator": "s. 17 (2.3-2.4)",
+          "quote": "Formene mi, di, si er obligatoriske etter bestemt form hunkjønn på -a.",
+          "confidence": "verified-primary"
+        },
+        {
+          "id": "weak-verbs-a-et-de-parallel",
+          "summary": "Preteritum på -a og -et skal være mest mulig jamstilt (ofte også -de/-te); en del verb ble regulert tilbake mot riksmål.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "bana",
+              "after": "banet",
+              "formStatus": "optional",
+              "note": "SNL 1981: bana – banet – bante (tidligere bare bana – bante)"
+            },
+            {
+              "before": "dryppet",
+              "after": "drypte",
+              "formStatus": "optional",
+              "note": "SNL 1981: dryppa – dryppet – drypte"
+            },
+            {
+              "before": "stanste",
+              "after": "stanset",
+              "formStatus": "obligatory",
+              "note": "SNL 1981: stanste tatt ut, stansa – stanset"
+            }
+          ],
+          "sourceId": "stmeld-100-1980-81",
+          "locator": "s. 7 (sammendrag), 2.6 s. 26-28 (verblisten - ikke lest)",
+          "quote": "Preteritum (fortidsform) på -a og -et skal være mest mulig jamstilt",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1981"
+          ],
+          "notes": "Rule from the primary (p. 7); the concrete verb examples are from SNL 1981 (secondary). Verblisten s. 26-28 ble ikke gjennomgått."
+        },
+        {
+          "id": "single-words-readmitted",
+          "summary": "Tradisjonelle riksmålsformer jamstilles med de eksisterende formene (frem, kilde, gress, gulv, hugg, grøt, krave, lyve).",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "fram",
+              "after": "frem",
+              "formStatus": "optional",
+              "note": "p. 30 'fram -> fram/frem'"
+            },
+            {
+              "before": "kjelde",
+              "after": "kilde",
+              "formStatus": "optional",
+              "note": "p. 30 'kjelde -> kjelde/kilde'"
+            },
+            {
+              "before": "gras",
+              "after": "gress",
+              "formStatus": "optional",
+              "note": "p. 30 'gras [gress] -> gras/gress' (sideform oppgraderes)"
+            },
+            {
+              "before": "golv",
+              "after": "gulv",
+              "formStatus": "optional",
+              "note": "p. 30 'golv [gulv] -> golv/gulv'"
+            },
+            {
+              "before": "hogg",
+              "after": "hugg",
+              "formStatus": "optional",
+              "note": "p. 30"
+            },
+            {
+              "before": "graut",
+              "after": "grøt",
+              "formStatus": "optional",
+              "note": "p. 30 'graut [grøt] -> graut/grøt'"
+            },
+            {
+              "before": "krage",
+              "after": "krave",
+              "formStatus": "optional",
+              "note": "p. 30 'krage -> krage/krave'"
+            },
+            {
+              "before": "lyve",
+              "after": "lyve",
+              "formStatus": "optional",
+              "note": "p. 31 'ljuge/lyge [lyve] -> ljuge/lyge/lyve'"
+            }
+          ],
+          "sourceId": "stmeld-100-1980-81",
+          "locator": "Vedlegg 2.7 Enkeltord, tabell 'Gjeldende form / Foreslått form', s. 29-31 (s. 30 image-checked)",
+          "quote": null,
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1981",
+            "guttu-akademi-normeringshistorie"
+          ],
+          "notes": "Tabellen er Språkrådets forslag; departementet foreslår ingen endringer (s. 10: 'finner departementet imidlertid ikke å ville antyde konkrete endringer i forslagene'), og Stortinget vedtok enstemmig (SNL, Guttu). fra/frå: frå blir sideform [frå] i 1981 (s. 30 'fra [frå]'), fjernet først 2005."
+        },
+        {
+          "id": "faneforms-not-readmitted",
+          "summary": "Sentrale 'faneformer' fra riksmålsbevegelsen tas IKKE inn: det heter fortsatt nå (ikke nu), snø (ikke sne), sju og tjue (ikke syv/tyve), etter (ikke efter), språk (ikke sprog).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "nu",
+              "after": "nå",
+              "formStatus": "obligatory",
+              "note": "p. 29: enstemmig vedtatt å ikke foreslå endring av 'nå'"
+            },
+            {
+              "before": "sne",
+              "after": "snø",
+              "formStatus": "obligatory",
+              "note": "p. 29: ikke endring av 'snø' (11-14 stemmer)"
+            },
+            {
+              "before": "syv",
+              "after": "sju",
+              "formStatus": "obligatory",
+              "note": "p. 29: ikke endring av 'sju, tjue'"
+            },
+            {
+              "before": "tyve",
+              "after": "tjue",
+              "formStatus": "obligatory",
+              "note": "p. 29"
+            },
+            {
+              "before": "efter",
+              "after": "etter",
+              "formStatus": "obligatory",
+              "note": "SNL 1981 / Løland 1997 (ikke funnet i St.meld. 100-teksten jeg leste)"
+            },
+            {
+              "before": "sprog",
+              "after": "språk",
+              "formStatus": "obligatory",
+              "note": "SNL 1981 / Løland 1997"
+            }
+          ],
+          "sourceId": "stmeld-100-1980-81",
+          "locator": "Vedlegg 2.7, s. 29 ('Det ble enstemmig vedtatt ikke å foreslå endringer av bl.a.: hage, kjøkemester, nå, snok, vipe')",
+          "quote": null,
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-1981",
+            "loland-1997-sprakradet"
+          ],
+          "notes": "etter/språk er bare dokumentert via SNL/Løland (secondary)."
+        }
+      ]
+    },
+    {
+      "id": "bokmal-2005",
+      "officialName": "Rettskrivningsendringer fra 1. juli 2005 (bokmål)",
+      "officialStatusNote": "Fastsatt ved brev fra Kultur- og kirkedepartementet 16. februar 2005 (PDF title page; Språknytt 3/2005 s. 8); gjeldende fra 1. juli 2005. Norsk språkråds forslag fra 2003 (med noen suppleringer 2004) godkjent med ett unntak (tyve/tredve ikke godkjent). Stortinget ikke involvert (SNL: første gang på nesten hundre år). Nynorsk-endringene ble ikke godkjent (PDF p. 3).",
+      "rules": [
+        {
+          "id": "hovedform-sideform-abolished",
+          "summary": "Skillet mellom hovedformer og sideformer faller bort: gamle sideformer blir likestilte, eneformer eller tas ut. Alle former er jamstilte i alle sammenhenger.",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "frå (sideform)",
+              "after": "fra",
+              "formStatus": "main",
+              "note": "p. 5 'fra (frå)'"
+            },
+            {
+              "before": "ba [side]",
+              "after": "ba/bad",
+              "formStatus": "optional",
+              "note": "p. 4: ba/bad (gammel sideform før skråstreken, hovedform etter)"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.1 s. 4 (og Forord s. 3)",
+          "quote": "Skillet mellom hovedformer og sideformer faller bort",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-2005",
+            "snytt-2005-3-guttu"
+          ],
+          "notes": "Forord p. 3 definerer: 'Sideformer er former som står oppført i klammeparentes i ordlistene, og som ikke kan brukes i lærebøker og i statstjenesten.'"
+        },
+        {
+          "id": "feminine-a-en-all-optional",
+          "summary": "Alle hunkjønnsord som før hadde -a [-en] i bestemt form entall får nå valgfritt -a/-en (også tidligere sideform -en).",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "bygden [sideform]",
+              "after": "bygden",
+              "formStatus": "optional",
+              "note": "SNL 2005: 'bygda og bygden' - -en oppgradert fra sideform"
+            },
+            {
+              "before": "hytten [sideform]",
+              "after": "hytten",
+              "formStatus": "optional",
+              "note": "SNL 2005: 'hytta og hytten'"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.1.1 s. 4",
+          "quote": "Alle hunkjønnsord som før hadde -a [-en] i bestemt form entall, får nå valgfritt -a/-en.",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-2005"
+          ],
+          "notes": "Word examples are from SNL 2005 (secondary); the primary states the rule without examples."
+        },
+        {
+          "id": "ning-words-feminine-optional",
+          "summary": "Ord med suffikset -ning får valgfritt hunkjønn eller hankjønn (legninga/legningen); personbetegnelser (flyktningen, slektningen) og noen ord (allmenning, presenning, terning) forblir hankjønn.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "legningen",
+              "after": "legninga",
+              "formStatus": "optional",
+              "note": "p. 7 'legninga el. legningen (før: legningen)'"
+            },
+            {
+              "before": "festningen",
+              "after": "festninga",
+              "formStatus": "optional",
+              "note": "p. 7 'festninga el. festningen'"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.2.1.2 Genus, s. 7-8",
+          "quote": "Ord med suffikset -ning får valgfritt hunkjønn eller hankjønn",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-2005"
+          ]
+        },
+        {
+          "id": "neuter-plural-a-ene-all-optional",
+          "summary": "barn, bein, beist, (av)hol, kol, krøtter, naut, segl får valgfritt -a/-ene i bestemt form flertall (før: -a [-ene]).",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "barna [-ene]",
+              "after": "barna/barnene",
+              "formStatus": "optional",
+              "note": "p. 4"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.1.1 s. 4",
+          "quote": null,
+          "confidence": "verified-primary"
+        },
+        {
+          "id": "side-forms-removed",
+          "summary": "Tidligere sideformer tas ut av rettskrivningen: fra (frå), hun (ho), hvor (kor), hvorfor (korfor), mandag (måndag), løk (lauk), høst (haust), gikk (gjekk), fikk (fekk), nese (nase), så (såg), snaut (snautt), greit (greitt), død (daude) m.fl.",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "frå",
+              "after": "fra",
+              "formStatus": "obligatory",
+              "note": "p. 5"
+            },
+            {
+              "before": "ho",
+              "after": "hun",
+              "formStatus": "obligatory",
+              "note": "p. 6"
+            },
+            {
+              "before": "måndag",
+              "after": "mandag",
+              "formStatus": "obligatory",
+              "note": "p. 6"
+            },
+            {
+              "before": "lauk",
+              "after": "løk",
+              "formStatus": "obligatory",
+              "note": "p. 6"
+            },
+            {
+              "before": "greitt",
+              "after": "greit",
+              "formStatus": "obligatory",
+              "note": "p. 5"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.1.3 Sideformer som tas ut av rettskrivningen, s. 5-7",
+          "quote": "Sideformene som går ut av rettskrivningen, følger etter i parentes.",
+          "confidence": "verified-primary",
+          "notes": "Listen (50-60 enkeltord) står i PDF p. 5-7; bare noen er gjengitt her. Guttu 2005: 'ca. 70 enkeltord og enkeltformer'."
+        },
+        {
+          "id": "side-forms-promoted-and-readmitted",
+          "summary": "Gamle sideformer og tradisjonelle former blir jamstilte: ba/bad, dro/drog, ga/gav, sto/stod, viss/hvis; sju el. syv; mer el. mere; fler el. flere; hverken el. verken (tyve og tredve ikke godkjent).",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "ba",
+              "after": "bad",
+              "formStatus": "optional",
+              "note": "p. 4 'ba/bad'"
+            },
+            {
+              "before": "sju",
+              "after": "syv",
+              "formStatus": "optional",
+              "note": "p. 26 'sju el. syv (før: sju)'"
+            },
+            {
+              "before": "mer",
+              "after": "mere",
+              "formStatus": "optional",
+              "note": "p. 26 'mer el. mere (før: mer)'"
+            },
+            {
+              "before": "flere",
+              "after": "fler",
+              "formStatus": "optional",
+              "note": "p. 26 'fler el. flere (før: flere)'"
+            },
+            {
+              "before": "verken",
+              "after": "hverken",
+              "formStatus": "optional",
+              "note": "p. 31 'hverken el. verken (før: verken)'"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.1.1 s. 4; 1.2.4 Tallord s. 26; 1.2.5.1 s. 26; hverken s. 31",
+          "quote": "sju el. syv (før: sju)",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-2005"
+          ],
+          "notes": "Departementets brev (s. 48 ff.) begrunner at tyve/tredve ikke godkjennes, syv godkjennes."
+        },
+        {
+          "id": "strong-verbs-au-to-øy",
+          "summary": "Sterke verb med au/ø i preteritum får nå ø/øy: brøt/brøyt (før braut/brøt), frøs/frøys, krøp/krøyp, skjøt/skøyt, strøk/strøyk; fløy og løy bare med -øy.",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "braut",
+              "after": "brøyt",
+              "formStatus": "obligatory",
+              "note": "p. 18 'brøt/brøyt (før: braut/brøt)'"
+            },
+            {
+              "before": "skaut",
+              "after": "skøyt",
+              "formStatus": "obligatory",
+              "note": "p. 18 'skjøt/skøyt (før: skaut/skjøt)'"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.2.2.1 Sterke verb, s. 16-19 (Fra -au- til -øy-, s. 18)",
+          "quote": "Verb som tidligere har hatt valgfri vokalisme au/ø i preteritum, får nå valgfritt ø/øy.",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-2005"
+          ]
+        },
+        {
+          "id": "kloyvd-infinitiv-erer-dde-removed",
+          "summary": "Kløyvd infinitiv tas ut; sideformer [lærerer], [beverer] tas ut (lærere); sideformer [-dde]/[-dd] i preteritum (greidde, greidd) og [-d] i gleid-typen tas ut.",
+          "kind": "main-vs-side-form",
+          "examples": [
+            {
+              "before": "lærerer",
+              "after": "lærere",
+              "formStatus": "obligatory",
+              "note": "p. 5 + SNL 2005"
+            },
+            {
+              "before": "greidde",
+              "after": "greide",
+              "formStatus": "obligatory",
+              "note": "p. 5 liste over verb (greie ...); SNL 2005 'greit, greide og greid eineformer'"
+            },
+            {
+              "before": "fara (kløyvd infinitiv)",
+              "after": "fare",
+              "formStatus": "obligatory",
+              "note": "p. 5 'Kløyvd infinitiv tas ut.'; 1938 p. 43 gir mønsteret 'kaste, men fara'"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.1.3 s. 5",
+          "quote": "Kløyvd infinitiv tas ut.",
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-2005"
+          ]
+        },
+        {
+          "id": "weak-verbs-et-readmitted",
+          "summary": "Mange svake verb får -et tilbake i preteritum og perfektum partisipp (jamstilt med -de/-te, noen også -a).",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "bygde",
+              "after": "bygget",
+              "formStatus": "optional",
+              "note": "p. 20 'bygge – bygget/bygde – bygget/bygd'"
+            },
+            {
+              "before": "krevde",
+              "after": "krevet",
+              "formStatus": "optional",
+              "note": "p. 21 'kreve – krevet/krevde – krevet/krevd'"
+            },
+            {
+              "before": "sprikte",
+              "after": "spriket",
+              "formStatus": "optional",
+              "note": "p. 22 'sprike – sprika/spriket/sprikte'"
+            }
+          ],
+          "sourceId": "rettskrivningsendringer-2005",
+          "locator": "1.2.2.2 Svake verb, s. 19-23",
+          "quote": null,
+          "confidence": "verified-primary",
+          "corroboratedBy": [
+            "snl-vikor-2005",
+            "snytt-2005-3-guttu"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bokmal-current",
+      "officialName": "Gjeldende bokmål (2005-normen + Språkrådets løpende vedtak)",
+      "officialStatusNote": "Systemet fra 2005 (ingen hovedform/sideform, ingen læreboknormal) er uendret; Språkrådet gjør løpende enkeltvedtak, listet pr. år på siden 'Rettskrivningsvedtak etter 2012' (2014-2024). Jeg fant ingen bokmål-systemendring etter 2005 (nynorsk gjennomførte tilsvarende reform 2012: SNL 'Rettskrivingsreforma av 2012').",
+      "rules": [
+        {
+          "id": "hen-pronoun-2022",
+          "summary": "hen kommer inn som kjønnsnøytralt pronomen (vedtatt 2022).",
+          "kind": "spelling",
+          "examples": [
+            {
+              "before": "(unormert)",
+              "after": "hen",
+              "formStatus": "main",
+              "note": "Språkrådet 2022"
+            }
+          ],
+          "sourceId": "sprakradet-vedtak-etter-2012",
+          "locator": "tabell 'Vedtak som gjelder både bokmål og nynorsk', år 2022",
+          "quote": null,
+          "confidence": "verified-primary"
+        },
+        {
+          "id": "internett-and-kviss-2015",
+          "summary": "Internett/internett får valgfri stor eller liten forbokstav; quiz får fornorsket kviss ved siden av quiz (2015).",
+          "kind": "optional-form",
+          "examples": [
+            {
+              "before": "Internett",
+              "after": "internett",
+              "formStatus": "optional",
+              "note": "Språkrådet 2015"
+            },
+            {
+              "before": "quiz",
+              "after": "kviss",
+              "formStatus": "optional",
+              "note": "Språkrådet 2015 'kviss eller quiz'"
+            }
+          ],
+          "sourceId": "sprakradet-vedtak-etter-2012",
+          "locator": "tabell, år 2015",
+          "quote": null,
+          "confidence": "verified-primary"
+        },
+        {
+          "id": "neuter-el-er-no-contraction-2023",
+          "summary": "Intetkjønnsord på trykklett -el/-er har bare full form uten sammentrekking i bestemt form entall (eksempelet, teateret).",
+          "kind": "inflection",
+          "examples": [
+            {
+              "before": "eksempelet",
+              "after": "eksempelet",
+              "formStatus": "main",
+              "note": "tabell 2023 punkt 2: 'eksempel – eksempelet (før: eksemp(e)let)'"
+            },
+            {
+              "before": "teatret",
+              "after": "teateret",
+              "formStatus": "main",
+              "note": "tabell 2023 punkt 2"
+            }
+          ],
+          "sourceId": "sprakradet-vedtak-etter-2012",
+          "locator": "tabell 'Vedtak som bare gjelder bokmål', år 2023 (punkt 2)",
+          "quote": null,
+          "confidence": "verified-primary"
+        }
+      ]
+    }
+  ],
+  "modernRiksmaal": {
+    "authority": "Det Norske Akademi for Språk og Litteratur har fastlagt riksmålets skriftnorm privat siden 1953 (Riksmålsforbundet: 'Fra 1953 har riksmålets skriftnorm vært fastlagt av Det Norske Akademi'); Riksmålsordlisten 9. utg. (2024) utgis av Riksmålsforbundet og er godkjent av Akademiet; NAOB (Det Norske Akademis ordbok, ferdig des. 2017) bruker moderat bokmål som redaksjonsspråk (Guttu: vedtatt 2008-10). Riksmål har ingen offisiell status (SNL riksmål).",
+    "recommendation": "Offer it, if at all, as one clearly labelled profile ('Riksmål (Akademiets norm, uoffisiell)') under the bokmål submenu - NOT as its own language: the orthography is the same bokmål tradition, Riksmålsforbundet itself says the distance to moderate bokmål 'ikke lenger [er] betydelig' after 2005, and it is a private norm without official status. Do not ship it until the delta is sourced: I could not open riksmalsforbundet.no (stub page) or find a licence for Riksmålsordlisten/NAOB, and SNL claims nu/sne/efter/sprog are no longer part of Riksmålsforbundet's norm (unverified against the word list). Keep it separate from the historical 'Riksmål 1907/1917' profiles, which are the official norms of those years.",
+    "sources": [
+      "snl-vikor-riksmal",
+      "guttu-akademi-normeringshistorie",
+      "snl-vikor-1981"
+    ],
+    "evidence": [
+      "Riksmålsforbundet 'Hva er riksmål?' (Wayback copy, read): 'etter de siste rettskrivningsendringene i bokmålet i juli 2005 er avstanden mellom bokmålets moderate variant og riksmålet ikke lenger betydelig'; Riksmålsordlisten 9. utg. 2024 'fritt tilgjengelig som søkbar nettordliste'; NAOB gratis på naob.no.",
+      "SNL riksmål: 'Etter rettskrivingsvedtakene i Språkrådet omkring 2000 og justeringer av riksmålsnormen er det få betydelige normative forskjeller mellom riksmålet og den moderate formen av bokmål.' and the claim that nu, sne, efter, sprog are no longer part of Riksmålsforbundets norm.",
+      "Guttu: Akademiet vedtok 1983 valgfrihet snø/språk/farge/hage/nemnd/etter/gruve ved siden av sne osv.; i 1981 var 'frem, kilde, svelge' forbudte former som kom inn i læreboknormalen."
+    ]
+  },
+  "dictionaryData": [
+    {
+      "name": "Norsk ordbank - bokmål 2005 (Språkbanken, Nasjonalbiblioteket)",
+      "covers": "Current bokmål norm (reflects the 1 July 2005 reform and later adjustments); dump of 1 Feb 2022 has 154,824 lemmas (page text). Does NOT cover 1907-1981.",
+      "format": "tar.gz (14.6 MB for 20220201, 14.0 MB for 20191010) with seven tables: lemma, fullform list, lemma_paradigme, paradigme, paradigme_boying, boying_grupper, boying, plus leddanalyse; documentation norsk_ordbank.pdf. NOT downloaded or inspected by me.",
+      "url": "https://www.nb.no/sprakbanken/ressurskatalog/oai-nb-no-sbr-5/",
+      "licence": "CC BY (page links to https://creativecommons.org/licenses/by/4.0/); rightsholder Nasjonalbiblioteket. ordbokene.no confirms 'Norsk ordbank ... CC-BY 4.0'.",
+      "canRedistribute": "yes, with attribution (CC BY 4.0). Caveat: the fullform list also contains 'tenkelige, men i praksis sjelden brukte' forms (page text), so it over-generates for a typing app; and it carries no per-norm history (I did not check whether it flags hovedform/sideform)."
+    },
+    {
+      "name": "Bokmålsordboka / Nynorskordboka (ordbokene.no; UiB + Språkrådet)",
+      "covers": "Current bokmål (and nynorsk) dictionary; inflection tables come from Norsk ordbank.",
+      "format": "REST API at ord.uib.no / api.ordbokene.no (bulk download file not described on the pages I read; ordbokene.no says content is 'openly available for download').",
+      "url": "https://ordbokene.no/eng/about/open-data",
+      "licence": "CC-BY 4.0 per UiB licence page (read through a fetch summary; attribution line 'Bokmålsordboka/Nynorskordboka, Universitetet i Bergen og Språkrådet, ordbøkene.no, CC-BY 4.0.') and ordbokene.no copyright page ('may be used for any purpose, including commercial use'). An SNL page about Bokmålsordboka shows a 'CC BY NC SA 3.0' line, but that is SNL's licence for its own image/article, not the dictionary data.",
+      "canRedistribute": "yes with attribution if CC BY 4.0 holds for the data you use; confirm the exact download location and re-read the UiB licence page directly (I only saw a summary of it)."
+    },
+    {
+      "name": "Digitised historical rule books and word lists at nb.no (Aars & Hofgaard 1907; Den nye rettskrivning 1918; Ny rettskrivning 1938; Ny læreboknormal 1959; St.meld. 100 1980-81)",
+      "covers": "1907 (alphabetical word lists pp. 55-84 plus inflection examples pp. 85-88: the most complete), 1917/1938/1959 only the words changed by each reform (legends: 1918 p. 27, 1938 forord p. 3, 1959 forord p. 3), 1981 lists in the white paper (Liste 1 -a/-en words, single-word table, verbs).",
+      "format": "Scanned pages + ALTO XML OCR via api.nb.no (IIIF manifest /catalog/v1/iiif/{id}/manifest -> canvas @seeAlso altos; page images at www.nb.no/services/image/resolver/{urn}_{nnnn}/full/full/0/native.jpg). OCR is noisy in multi-column lists (letters garbled, columns interleaved), so every encoded entry needs checking against the image.",
+      "url": "https://www.nb.no/items/b176c37f0137b6a7ebd1e032eadf43ee (1907); ids for the others in sources[].nbItemId",
+      "licence": "NB item metadata flags 'publicdomain' (EVERYWHERE) for the digitisations listed in sources[]; I did not find NB's terms of use for API/bulk use (api.nb.no root is a Swagger UI only). Other digitisations of the same titles carry different flags (e.g. one 1938 copy 'copyrighted', one NORWAY-only).",
+      "canRedistribute": "unclear for bulk OCR text (check NB terms); the underlying spellings/rules are public-domain official orthography and can be encoded with page citations. Do not republish the OCR dump."
+    },
+    {
+      "name": "Complete wordlists for 1938/1959: Krogsrud & Seip, Norsk rettskrivningsordliste (Ny rettskrivning 1938); Bakke & Dalene, Ordliste etter ny læreboknormal 1959; Riksmålsvernets ordliste 1921/1950",
+      "covers": "Full word lists for the 1938 and 1959 norms (exist as books).",
+      "format": "Scans at nb.no (found via the catalogue API); not downloaded.",
+      "url": "https://www.nb.no/search?q=Norsk%20rettskrivningsordliste%201938",
+      "licence": "NB flags in the catalogue: several editions 'copyrighted' or 'bokhylla' (NORWAY only); none seen as publicdomain.",
+      "canRedistribute": "no (treat as all rights reserved unless NB/rightsholders say otherwise)."
+    },
+    {
+      "name": "Det Norske Akademis Store Ordbok (NAOB, naob.no)",
+      "covers": "Riksmål/moderat bokmål, written language from the early 1800s (c. 200,000 entries per search-result summary, not verified on the site).",
+      "format": "Web dictionary; no API or dump found.",
+      "url": "https://www.naob.no/",
+      "licence": "unknown - no licence/terms text found on the landing page or /kontakt (contact: redaksjonen@naob.no).",
+      "canRedistribute": "no / unclear - assume all rights reserved (Akademiet owns the work per Guttu)."
+    },
+    {
+      "name": "Riksmålsordlisten (9. utg. 2024, Riksmålsforbundet, approved by Det Norske Akademi)",
+      "covers": "Current riksmål norm (modern, unofficial).",
+      "format": "Searchable online word list at riksmalsforbundet.no (per Riksmålsforbundet's own page via Wayback); not accessible to me live.",
+      "url": "https://www.riksmalsforbundet.no/",
+      "licence": "unknown (site returns a 912-byte stub to every client I tried; no licence seen).",
+      "canRedistribute": "unclear - ask Riksmålsforbundet."
+    },
+    {
+      "name": "Språkbanken 'Public Domain Texts from NBdigital' (possible frequency/usage corpus)",
+      "covers": "OCR texts from public-domain NB books (c. 26,000 texts per a search-result snippet).",
+      "format": "Via NB's dhlab API; may need registration/API key (per a data.norge.no listing snippet).",
+      "url": "https://nb.no/sprakbanken/?p=21376",
+      "licence": "unknown - seen only in a search-result snippet, resource page not read.",
+      "canRedistribute": "unclear."
+    }
+  ],
+  "extras": {
+    "testCorpora": [
+      {
+        "id": "bull-vesleblakken-parallel",
+        "what": "Same passage (Jacob B. Bull, Vesleblakken) printed in Nordahl Rolfsens lesebok under 1891/1896 (pre-1907), 1909 (1907 rules), 1920 (1917, moderate forms), 1939 (1938, radical forms), 1955 (1938, moderate forms). Ideal as acceptance fixtures for converter profiles.",
+        "sourceId": "loland-1997-sprakradet",
+        "note": "Not copied into this file. Rights of the Språkrådet page unknown; the prose is by J. B. Bull (1853-1930)."
+      },
+      {
+        "id": "loland-1907-sentence",
+        "what": "'løp ut paa gaten efter en kake' (1907) vs 'løb ud paa gaden efter en kage' (before)",
+        "sourceId": "loland-1997-sprakradet",
+        "note": "Consistent with primary p. 45/46 (gate, kake) and Aars 1892 (gade)."
+      }
+    ],
+    "caveats": [
+      "All page locators are PRINTED page numbers of the NB digitisation named in sources[].",
+      "formStatus semantics: obligatory = no alternative in that norm; main/side = hovedform/sideform (1938-2005 era; bracketed = side); optional = equal alternative ('el.'/'jamstilt', or 1917's bracketed 'tillatte' forms).",
+      "1917 bracketed 'tillatte' forms are the radical/valgfrie tier; the 1918 word list is incomplete by its own legend (p. 27).",
+      "Before-forms for several 1907/1938 examples come from SNL/Guttu/Løland (secondary); each example note says where."
+    ]
+  }
+}
