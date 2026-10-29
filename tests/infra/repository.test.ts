@@ -12,7 +12,7 @@ import {
   SESSION_SCHEMA_VERSION,
 } from "@/infra/repository/migrations";
 import { progressKey } from "@/domain/types";
-import { describeRepositoryContract, makeSession } from "./repository-contract";
+import { describeRepositoryContract, makeMeasurement, makeSession } from "./repository-contract";
 
 let dbCounter = 0;
 
@@ -143,6 +143,124 @@ describe("migrations", () => {
 
     // Idempotent, like every other field this migration touches.
     expect(migrateSession(migrated)).toEqual(migrated);
+  });
+});
+
+describe("schema 6: settings and measurement (Måling)", () => {
+  const v6 = (extra: Record<string, unknown> = {}) =>
+    ({
+      ...makeSession("v6", "2026-10-20T00:00:00.000Z"),
+      schemaVersion: 6,
+      settings: { limitMs: 60_000 },
+      measurement: makeMeasurement(),
+      ...extra,
+    }) as Record<string, unknown>;
+
+  it("is the current version", () => {
+    expect(SESSION_SCHEMA_VERSION).toBe(6);
+  });
+
+  it("keeps a well-formed schema-6 record as the very same object", () => {
+    const current = v6();
+    expect(migrateSession(current)).toBe(current);
+  });
+
+  it("migrates a genuine schema-5 record with both fields absent, never empty", () => {
+    const v5 = {
+      ...makeSession("v5", "2026-09-04T00:00:00.000Z"),
+      schemaVersion: 5,
+      misses: [],
+      opportunities: [],
+    } as Record<string, unknown>;
+    expect(Object.hasOwn(v5, "settings")).toBe(false);
+    expect(Object.hasOwn(v5, "measurement")).toBe(false);
+
+    const migrated = migrateSession(v5);
+    expect(migrated!.schemaVersion).toBe(6);
+    expect(Object.hasOwn(migrated!, "settings")).toBe(false);
+    expect(Object.hasOwn(migrated!, "measurement")).toBe(false);
+    // Twice is a no-op, by identity.
+    expect(migrateSession(migrated)).toBe(migrated);
+  });
+
+  it("migrates every older version, 1 to 5, the same way", () => {
+    for (const version of [1, 2, 3, 4, 5]) {
+      const old = { ...makeSession(`v${version}`, "2026-09-04T00:00:00.000Z"), schemaVersion: version };
+      const migrated = migrateSession(old);
+      expect(migrated, `v${version}`).not.toBeNull();
+      expect(migrated!.schemaVersion).toBe(6);
+      expect(Object.hasOwn(migrated!, "measurement"), `v${version}`).toBe(false);
+      expect(Object.hasOwn(migrated!, "settings"), `v${version}`).toBe(false);
+      expect(migrateSession(migrated)).toBe(migrated);
+    }
+  });
+
+  it("does not let a pre-6 record claim a measurement it could not have had", () => {
+    const v5 = { ...v6(), schemaVersion: 5 };
+    const migrated = migrateSession(v5);
+    expect(migrated!.schemaVersion).toBe(6);
+    expect(Object.hasOwn(migrated!, "measurement")).toBe(false);
+    expect(Object.hasOwn(migrated!, "settings")).toBe(false);
+  });
+
+  it("drops a malformed measurement to absent without rejecting the session", () => {
+    const good = makeMeasurement();
+    const malformed: unknown[] = [
+      null,
+      "fast",
+      [],
+      {},
+      { ...good, bucketMs: 0 },
+      { ...good, keystrokes: "3,2" },
+      { ...good, correct: [3] },
+      { ...good, keystrokes: new Array(601).fill(0), errors: new Array(601).fill(0), correct: new Array(601).fill(0) },
+      { ...good, errors: [0, -1] },
+      { ...good, keystrokes: [3, Number.NaN] },
+      { ...good, keystrokeCount: "5" },
+      { ...good, rawWpm: Infinity },
+      { ...good, keystrokeAccuracy: 1.5 },
+      { ...good, consistency: "even" },
+      { ...good, consistency: 101 },
+      { ...good, missedCharacterCount: -1 },
+      { ...good, keys: {} },
+      { ...good, keys: [{ char: 1, firstTries: 1, firstTryCorrect: 1, flowMsSum: 0, flowCount: 0 }] },
+      { ...good, keys: [{ char: "a", firstTries: 1 }] },
+    ];
+    for (const [i, measurement] of malformed.entries()) {
+      const migrated = migrateSession(v6({ measurement }));
+      expect(migrated, `case ${i}`).not.toBeNull();
+      expect(Object.hasOwn(migrated!, "measurement"), `case ${i}`).toBe(false);
+      expect(migrated!.settings, `case ${i}`).toEqual({ limitMs: 60_000 });
+      expect(migrated!.netWpm, `case ${i}`).toBe(117.6);
+      expect(migrateSession(migrated), `case ${i}`).toBe(migrated);
+    }
+  });
+
+  it("keeps a measurement whose optional fields are absent", () => {
+    const measurement = makeMeasurement();
+    delete measurement.consistency;
+    delete measurement.missedCharacterCount;
+    const current = v6({ measurement });
+    expect(migrateSession(current)).toBe(current);
+  });
+
+  it("drops malformed settings to absent without rejecting the session", () => {
+    for (const [i, settings] of [null, 5, "60s", [], { limitMs: "60000" }, { limitMs: -1 }].entries()) {
+      const migrated = migrateSession(v6({ settings }));
+      expect(migrated, `case ${i}`).not.toBeNull();
+      expect(Object.hasOwn(migrated!, "settings"), `case ${i}`).toBe(false);
+      expect(migrated!.measurement, `case ${i}`).toEqual(makeMeasurement());
+      expect(migrateSession(migrated), `case ${i}`).toBe(migrated);
+    }
+  });
+
+  it("keeps empty settings: a mode with nothing to compare by says so", () => {
+    const current = v6({ settings: {} });
+    expect(migrateSession(current)).toBe(current);
+  });
+
+  it("rejects version 7", () => {
+    expect(migrateSession(v6({ schemaVersion: 7 }))).toBeNull();
   });
 });
 

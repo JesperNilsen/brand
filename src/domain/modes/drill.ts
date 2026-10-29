@@ -145,6 +145,8 @@ export const drillMode: GameModeDefinition = {
       textFilterId: input.textFilterId,
       segments,
       endRule: { kind: "all-segments" },
+      // The recipe is fixed and the pieces are the result's segmentIds.
+      settings: {},
     };
   },
 };

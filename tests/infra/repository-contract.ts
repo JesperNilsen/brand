@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import type { BrandRepository } from "@/infra/repository/BrandRepository";
 import { defaultPreferences, SESSION_SCHEMA_VERSION } from "@/infra/repository/migrations";
 import type { QueueItem } from "@/domain/practice-queue";
-import type { ReadingProgress, SessionResult } from "@/domain/types";
+import type { ReadingProgress, SessionMeasurement, SessionResult } from "@/domain/types";
 import { progressKey } from "@/domain/types";
 
 /**
@@ -25,7 +25,7 @@ export function makeSession(
 ): SessionResult {
   return {
     id,
-    schemaVersion: 5,
+    schemaVersion: 6,
     startedAt,
     completedAt: startedAt,
     status: "completed",
@@ -49,6 +49,24 @@ export function makeSession(
     grossWpm: 120,
     netWpm: 117.6,
     accuracy: 0.98,
+    ...extra,
+  };
+}
+
+/** A small, well-formed schema-6 measurement. */
+export function makeMeasurement(extra: Partial<SessionMeasurement> = {}): SessionMeasurement {
+  return {
+    bucketMs: 1000,
+    keystrokes: [3, 2],
+    errors: [0, 1],
+    correct: [3, 4],
+    keystrokeCount: 5,
+    incorrectKeystrokeCount: 1,
+    rawWpm: 30,
+    keystrokeAccuracy: 0.8,
+    consistency: 71.2,
+    missedCharacterCount: 0,
+    keys: [{ char: "a", firstTries: 2, firstTryCorrect: 2, flowMsSum: 300, flowCount: 1 }],
     ...extra,
   };
 }

@@ -10,7 +10,7 @@ import {
   backspace as engineBackspace,
   complete as engineComplete,
   createSession,
-  insertText as engineInsert,
+  insertTextDetailed as engineInsert,
   rejectPaste as engineRejectPaste,
   type TypingSessionState,
 } from "../engine/engine";
@@ -26,8 +26,16 @@ import {
   type CharacterDeviations,
   type Metrics,
 } from "../engine/metrics";
+import { normalizeText } from "../engine/normalize";
 import type { SessionPlan } from "../modes/types";
 import type { SessionResult } from "../types";
+import {
+  createMeasure,
+  finalizeMeasure,
+  measureBackspace,
+  measureKeystrokes,
+  type MeasureState,
+} from "./measure";
 
 export type RunnerStatus = "idle" | "active" | "paused" | "completed" | "abandoned";
 
@@ -55,6 +63,12 @@ export type RunnerState = {
   pausedAt: number | null;
   /** How many times the session was paused. Recorded, because it is not nothing. */
   pauseCount: number;
+  /**
+   * The keystroke-level measurement (Måling), fed on every insert and
+   * backspace with the event's active time. It lives here rather than on the
+   * engine because a session's measurement spans its segments.
+   */
+  measure: MeasureState;
 };
 
 export function createRunner(plan: SessionPlan): RunnerState {
@@ -78,6 +92,7 @@ export function createRunner(plan: SessionPlan): RunnerState {
     pausedMs: 0,
     pausedAt: null,
     pauseCount: 0,
+    measure: createMeasure(),
   };
 }
 
@@ -167,11 +182,15 @@ export function runnerResume(state: RunnerState, now: number): RunnerState {
   };
 }
 
-/** Close the runner at the exact limit time when the clock has run out. */
+/**
+ * Close the runner at the exact limit time when the clock has run out. The
+ * limit is in active time, so the wall-clock end lies the paused total later:
+ * without it a paused Timed run would store limit − pause as its duration.
+ */
 function closeAtLimit(state: RunnerState): RunnerState {
   const limitMs =
     state.plan.endRule.kind === "time" ? state.plan.endRule.limitMs : 0;
-  const endAt = (state.startedAt ?? 0) + limitMs;
+  const endAt = (state.startedAt ?? 0) + state.pausedMs + limitMs;
   return finish(state, endAt, "completed");
 }
 
@@ -245,8 +264,8 @@ export function runnerInsert(
   if (!acceptsInput(state)) return state;
   if (timeIsUp(state, now)) return closeAtLimit(state);
 
-  const engine = engineInsert(state.engine, text, now);
-  if (engine === state.engine) return state;
+  const { state: engine, keystrokes } = engineInsert(state.engine, text, now);
+  if (engine === state.engine && keystrokes.length === 0) return state;
 
   let next: RunnerState = {
     ...state,
@@ -254,6 +273,20 @@ export function runnerInsert(
     startedAt: state.startedAt ?? engine.startedAt ?? now,
     status: "active",
   };
+  // Every examined character is measured, including a stop-on-error
+  // rejection that leaves the typed text as it was. The segment is the one
+  // typed in, before any advance.
+  if (keystrokes.length > 0) {
+    next = {
+      ...next,
+      measure: measureKeystrokes(
+        next.measure,
+        keystrokes,
+        runnerElapsedMs(next, now),
+        state.segmentIndex,
+      ),
+    };
+  }
   if (engine.status === "completed") {
     next = advance(next, now);
   }
@@ -263,8 +296,17 @@ export function runnerInsert(
 export function runnerBackspace(state: RunnerState, now: number): RunnerState {
   if (!acceptsInput(state)) return state;
   if (timeIsUp(state, now)) return closeAtLimit(state);
+  // Read what is about to be removed before the engine removes it.
+  const { typedText, targetText } = state.engine;
+  const last = typedText.length - 1;
+  const removedWasCorrect = last >= 0 && typedText[last] === targetText[last];
   const engine = engineBackspace(state.engine, now);
-  return engine === state.engine ? state : { ...state, engine };
+  if (engine === state.engine) return state;
+  return {
+    ...state,
+    engine,
+    measure: measureBackspace(state.measure, removedWasCorrect, runnerElapsedMs(state, now)),
+  };
 }
 
 export function runnerRejectPaste(state: RunnerState, now: number): RunnerState {
@@ -313,6 +355,18 @@ export function runnerResumeSegmentId(state: RunnerState): string | null {
   return currentSegment(state).id;
 }
 
+/**
+ * Target characters the session never reached: the rest of the current
+ * segment and every later one, counted in the engine's normalised form.
+ */
+function untypedCharacterCount(state: RunnerState): number {
+  let untyped = state.engine.targetText.length - state.engine.typedText.length;
+  for (const segment of state.plan.segments.slice(state.segmentIndex + 1)) {
+    untyped += normalizeText(segment.text).length;
+  }
+  return untyped;
+}
+
 export function toSessionResult(
   state: RunnerState,
   now: number,
@@ -329,7 +383,7 @@ export function toSessionResult(
     .map((s) => s.id);
   return {
     id,
-    schemaVersion: 5,
+    schemaVersion: 6,
     startedAt: new Date(startedAt).toISOString(),
     completedAt: new Date(endedAt).toISOString(),
     status,
@@ -343,6 +397,7 @@ export function toSessionResult(
     segmentIds: touchedSegmentIds,
     errorMode: state.plan.errorMode,
     textFilterId: state.plan.textFilterId,
+    ...(state.plan.settings ? { settings: { ...state.plan.settings } } : {}),
     durationMs: metrics.durationMs,
     pausedMs: state.pausedMs,
     pauseCount: state.pauseCount,
@@ -358,6 +413,12 @@ export function toSessionResult(
     // SessionResult.misses/opportunities and migrateSession().
     misses: deviations.misses,
     opportunities: deviations.opportunities,
+    measurement: finalizeMeasure(
+      state.measure,
+      metrics.durationMs,
+      state.plan.endRule,
+      untypedCharacterCount(state),
+    ),
   };
 }
 

@@ -6,8 +6,10 @@ import {
   focusCharacterLabel,
   practiceClasses,
   rankPracticeFocus,
+  rankSlowKeys,
 } from "@/domain/engine/practice-focus";
 import type { CharacterCount, CharacterMiss } from "@/domain/engine/metrics";
+import type { KeyMeasurement } from "@/domain/types";
 
 const miss = (expected: string, typed: string, count: number): CharacterMiss => ({
   expected,
@@ -152,5 +154,65 @@ describe("aggregateMeasured (Q-014 point 4, one level up)", () => {
     // would invent a perfect session out of a broken one.
     const folded = aggregateMeasured([{ opportunities: [opp("e", 400)] }]);
     expect(folded.measured).toBe(0);
+  });
+});
+
+describe("rankSlowKeys (Måling)", () => {
+  /** A key whose flow intervals average `meanMs` over `count` intervals. */
+  const flow = (char: string, meanMs: number, count: number): KeyMeasurement => ({
+    char,
+    firstTries: count + 2,
+    firstTryCorrect: count + 1,
+    flowMsSum: meanMs * count,
+    flowCount: count,
+  });
+
+  /**
+   * Written so it FAILS against a ranking on count or on summed time: by
+   * flowCount or flowMsSum the order is e, n, k; by the key's mean against the
+   * session's mean it is k, n — and e, faster than the session, is not slow.
+   */
+  it("ranks on the key's mean against the session's mean, never on count", () => {
+    const keys = [flow("e", 180, 400), flow("n", 260, 120), flow("k", 420, 25)];
+    const sessionMean = (180 * 400 + 260 * 120 + 420 * 25) / (400 + 120 + 25);
+
+    const ranked = rankSlowKeys(keys);
+
+    expect(ranked.map((r) => r.char)).toEqual(["k", "n"]);
+    expect(ranked[0].meanMs).toBe(420);
+    expect(ranked[0].flowCount).toBe(25);
+    expect(ranked[0].sessionMeanMs).toBeCloseTo(sessionMean, 9);
+    expect(ranked[0].ratio).toBeCloseTo(420 / sessionMean, 9);
+  });
+
+  it("withholds keys with fewer than MIN_OPPORTUNITIES intervals, however slow", () => {
+    const keys = [flow("e", 200, 300), flow("q", 2000, MIN_OPPORTUNITIES - 1), flow("v", 450, MIN_OPPORTUNITIES)];
+    const ranked = rankSlowKeys(keys);
+    expect(ranked.map((r) => r.char)).toEqual(["v"]);
+  });
+
+  it("still counts a withheld key's intervals in the session's mean", () => {
+    // The session's mean is the session's: dropping the thin keys from the
+    // denominator would make it a mean over whatever happened to clear the floor.
+    const keys = [flow("e", 200, 100), flow("q", 2000, 1), flow("v", 300, 30)];
+    const [v] = rankSlowKeys(keys);
+    expect(v.sessionMeanMs).toBeCloseTo((200 * 100 + 2000 + 300 * 30) / 131, 9);
+  });
+
+  it("returns at most FOCUS_LIMIT keys, slowest first, ties by count then char", () => {
+    const keys = [
+      flow("a", 100, 400),
+      ...["b", "c", "d", "f", "g", "h"].map((ch, i) => flow(ch, 300 + i * 10, 30)),
+      flow("x", 350, 40),
+      flow("w", 350, 40),
+    ];
+    const ranked = rankSlowKeys(keys);
+    expect(ranked).toHaveLength(FOCUS_LIMIT);
+    expect(ranked.map((r) => r.char)).toEqual(["w", "x", "h", "g", "f"]);
+  });
+
+  it("is empty when nothing was measured", () => {
+    expect(rankSlowKeys([])).toEqual([]);
+    expect(rankSlowKeys([{ char: "a", firstTries: 40, firstTryCorrect: 40, flowMsSum: 0, flowCount: 0 }])).toEqual([]);
   });
 });
