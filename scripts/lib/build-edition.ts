@@ -43,7 +43,9 @@ export function buildTrainingEdition(original: OriginalFile, rules: Rules): Buil
 
   const segments = original.edition.segments.map((s) => {
     let text = applyRules(s.text, rules, usage);
-    if (rules.lowercaseNouns) text = applyLowercaseNouns(text, properNames, usage);
+    if (rules.lowercaseNouns) {
+      text = applyLowercaseNouns(text, properNames, usage, rules.lowercaseNouns.colonEndsSentence);
+    }
     return { ...s, text, wordCount: countWords(text) };
   });
 

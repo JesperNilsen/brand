@@ -37,8 +37,9 @@ export function applyLowercaseNouns(
   text: string,
   properNames: ReadonlySet<string>,
   usage: Map<string, number>,
+  colonEndsSentence?: boolean,
 ): string {
-  const hits = stageHits(text, { kind: "lowercase", properNames });
+  const hits = stageHits(text, { kind: "lowercase", properNames, colonEndsSentence });
   count(usage, hits);
   return applyHits(text, hits);
 }

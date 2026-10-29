@@ -108,18 +108,9 @@ hele kjeden til `SessionResult`.
 
 ---
 
-## T-06 — Samle de åtte repository-lastene i én hook (P3, S / S)
+## T-06 — Siste kopierte repository-last (P3, S / S)
 
-**Hva:** `useEffect` + `getRepository()` + `setState`-mønsteret er kopiert åtte
-steder i `src/components` og `src/app`.
-
-**Hvorfor:** Hver ny side gjentar det, og hver kopi kan glemme opprydding.
-
-**Fordeler:** Fjerner en voksende duplisering.
-**Ulemper:** Kosmetisk mens tallet er åtte.
-
-**Kontekst:** En liten `useRepositoryValue(load, deps)` som håndterer
-avmontering dekker alle åtte.
+ResultView.tsx gjenstår til feat/maling er inne.
 
 ---
 
@@ -483,33 +474,6 @@ prøven på om replikknavn, sceneanvisninger og dialogstruktur overlever kjeden.
 **Køført 2026-09-08 som Q-011** på operatørens beslutning, med en strengere port
 enn de to postene foran: migrasjonen skal ikke bare passere, den skal vises å
 ikke røre en fremdriftspost for et verk uten moduler.
-
-## T-22 — Kolon som setningsgrense i `isSentenceInitial` (P2, S / S)
-
-**Hva:** `SENTENCE_BOUNDARY` i `src/domain/language/rules/match.ts` kjenner `.!?…—`,
-ikke kolon. Et ord med stor forbokstav etter kolon regnes derfor som midt i
-setningen, og `lowercaseNouns` gjør det lite: «Jeg sagde til mig selv: Nu taler du
-usammenhængende» → «… selv: nu taler du …», «sagde: Se, se» → «sagde: se, se».
-
-**Hvorfor det er feil:** norsk rettskrivning bruker stor forbokstav etter kolon når
-det som følger er en helsetning eller direkte tale, liten ved oppramsing. Nesten
-alle kolontilfellene i prosaen er innledning til tale eller tanke.
-
-**Målt 2026-09-27 (kolon fulgt av stor bokstav i originalen):** Sult 54, Noveletter
-(`original.v2`) 28 — hvorav 25 er gjort små i den serverte v5 — Markens Grøde 2,
-Brand 1, Gift 1.
-
-**Hvorfor utsatt:** matcheren er delt. Å legge `:` i `SENTENCE_BOUNDARY` endrer bytes
-i fire publiserte utgaver, som hver trenger ny versjon i samme PR (Noveletter v6,
-Markens v4, Brand v3 **med `drills.v3.json`** — en ny standardutgave tar drillbanken
-med seg — og Gift v4). Sult v1 er bevisst bygget med dagens matcher for å være
-konsistent med de fire andre; posten retter alle fem sammen.
-
-**Port:** `rule-builder.test.ts` får «han sagde: Nu» → setningsinitial. Deretter
-byte-diff av alle fem treningsutgaver mot forrige versjon — hver endring skal være et
-ord rett etter kolon, ingenting annet. Oppramsinger etter kolon («følgende: Brød,
-Smør») vil beholde stor forbokstav; tell dem i diffen og skriv antallet inn i hver
-pakkes `rules`-notat.
 
 ## T-23 — OG-bilde generert ved bygg med Literata (P3, S / S)
 

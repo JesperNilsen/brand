@@ -45,7 +45,9 @@
  * first word of the segment, or a word immediately preceded (skipping only
  * whitespace/quote characters) by one of `. ! ? … —` or by an opening quote
  * mark (the run of characters between it and the previous word contains one
- * of those). Kept deliberately simple: it does not parse abbreviations or
+ * of those). With `"colonEndsSentence": true` a colon counts too (T-22), so
+ * «sagde: Nu» keeps its capital; rule sets cut before T-22 leave it unset and
+ * rebuild as they were. Kept deliberately simple: it does not parse abbreviations or
  * disambiguate a mid-sentence parenthetical dash from a true sentence break.
  * The transforms themselves live in scripts/lib/rules.ts, where they are unit
  * tested; this module is the CLI around them.

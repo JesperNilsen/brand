@@ -38,7 +38,12 @@ export function analyzeText(text: string, rules: Rules, options: AnalyzeOptions 
   const properNames = rules.lowercaseNouns
     ? new Set(rules.lowercaseNouns.properNames)
     : undefined;
-  const stages = stagesFor(rules.patterns, rules.replacements, properNames);
+  const stages = stagesFor(
+    rules.patterns,
+    rules.replacements,
+    properNames,
+    rules.lowercaseNouns?.colonEndsSentence,
+  );
 
   let cur = text;
   // For each character of `cur`, the span of `text` it came from.

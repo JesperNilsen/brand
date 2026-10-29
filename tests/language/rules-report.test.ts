@@ -47,7 +47,12 @@ function rewrite(text: string, rules: Rules): string {
   const usage = new Map<string, number>();
   let out = applyRules(text, rules, usage);
   if (rules.lowercaseNouns) {
-    out = applyLowercaseNouns(out, new Set(rules.lowercaseNouns.properNames), usage);
+    out = applyLowercaseNouns(
+      out,
+      new Set(rules.lowercaseNouns.properNames),
+      usage,
+      rules.lowercaseNouns.colonEndsSentence,
+    );
   }
   return out;
 }

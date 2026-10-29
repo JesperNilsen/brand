@@ -1,27 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { getWork, worksWithDrills } from "@/domain/content/registry";
 import { listChoosableModes, listGameModes } from "@/domain/modes/registry";
-import type { UserPreferences } from "@/domain/types";
-import { getRepository } from "@/infra/repository";
+import { useRepositoryValue } from "@/hooks/useRepositoryValue";
 import { continueHref, sessionHref } from "@/lib/session-flow";
 
 export function HomeView() {
-  const [prefs, setPrefs] = useState<UserPreferences | null>(null);
-
-  useEffect(() => {
-    let alive = true;
-    getRepository()
-      .getPreferences()
-      .then((p) => {
-        if (alive) setPrefs(p);
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
+  const prefs = useRepositoryValue((repo) => repo.getPreferences(), []);
 
   const href = prefs ? continueHref(prefs) : null;
   const lastWork = prefs?.lastWorkId ? getWork(prefs.lastWorkId) : undefined;

@@ -67,7 +67,15 @@ export type Rules = {
   notes?: string[];
   patterns?: RulePattern[];
   replacements?: Record<string, string>;
-  lowercaseNouns?: { properNames: string[] };
+  lowercaseNouns?: {
+    properNames: string[];
+    /**
+     * A colon ends a sentence, so the capital in «sagde: Nu» survives (T-22).
+     * Optional only so the rule sets cut before T-22 still rebuild byte for
+     * byte; every edition cut since sets it.
+     */
+    colonEndsSentence?: boolean;
+  };
   retained?: Record<string, string>;
 };
 
