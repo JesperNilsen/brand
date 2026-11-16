@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: { card: "summary_large_image" },
+  // Not for search engines. The same directive goes out as X-Robots-Tag (see
+  // next.config.ts and netlify.toml); robots.txt must stay absent so a crawler
+  // can reach the page and read the noindex.
+  robots: { index: false, follow: false },
 };
 
 /**
@@ -66,7 +70,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <footer className="recedes mx-auto w-full max-w-4xl px-5 py-6 text-sm text-ink-muted">
-            Lokal lagring i nettleseren. Ingen konto, ingen sky.
+            Lokal lagring i nettleseren. Ingen konto, ingen sky. ·{" "}
+            <a href="https://jespernilsen.com/">jespernilsen.com</a>
           </footer>
         </ThemeProvider>
       </body>
