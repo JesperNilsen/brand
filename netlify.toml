@@ -22,6 +22,7 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "no-referrer"
     X-Frame-Options = "DENY"
+    X-Robots-Tag = "noindex, nofollow"
 
 # Edition texts carry their contentHash in the filename, so a cached copy is
 # always the text its name claims. Set at the edge as well as in next.config.ts:
