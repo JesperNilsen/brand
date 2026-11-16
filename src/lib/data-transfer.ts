@@ -29,6 +29,11 @@ export type BrandExport = {
   formatVersion: typeof EXPORT_FORMAT_VERSION;
   exportedAt: string;
   preferences: UserPreferences;
+  /**
+   * Verbatim, so schema-6 `settings` and `measurement` ride inside each
+   * record and need nothing here: the session schema moved, the file format
+   * did not.
+   */
   sessions: SessionResult[];
   progress: ReadingProgress[];
   /**

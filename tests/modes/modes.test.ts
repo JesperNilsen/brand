@@ -94,6 +94,8 @@ describe("passage", () => {
     expect(p.segments.map((s) => s.id)).toEqual(["s2"]);
     expect(p.endRule).toEqual({ kind: "all-segments" });
     expect(p.editionId).toBe("w.training.v1");
+    // The segment is already in segmentIds; nothing else tells two apart.
+    expect(p.settings).toEqual({});
   });
   it("throws for an unknown segment", () => {
     expect(() => passageMode.buildPlan(input({ segmentId: "nope" }))).toThrow();
@@ -105,6 +107,7 @@ describe("nonstop", () => {
     const p = nonstopMode.buildPlan(input({ startSegmentId: "s2" }));
     expect(p.segments.map((s) => s.id)).toEqual(["s2", "s3"]);
     expect(p.endRule).toEqual({ kind: "user-stop" });
+    expect(p.settings).toEqual({});
   });
   it("starts from the beginning when no start segment is given", () => {
     const p = nonstopMode.buildPlan(input({}));
@@ -130,5 +133,7 @@ describe("timed", () => {
     const p = timedMode.buildPlan(input({ limitMs: 60_000, seed: 1 }));
     expect(p.endRule).toEqual({ kind: "time", limitMs: 60_000 });
     expect(p.segments.length).toBeGreaterThan(1);
+    // A 60 s run and a 300 s run are different exercises.
+    expect(p.settings).toEqual({ limitMs: 60_000 });
   });
 });

@@ -13,7 +13,7 @@ import {
 import { enqueue, selectForEdition, type QueueItem } from "@/domain/practice-queue";
 import type { TextEdition } from "@/domain/types";
 import { progressKey, type ReadingProgress, type SessionResult } from "@/domain/types";
-import { makeSession } from "../infra/repository-contract";
+import { makeMeasurement, makeSession } from "../infra/repository-contract";
 
 /** The key an ibsen-brand nonstop record has today; see progressKey(). */
 const PROGRESS_KEY = progressKey({
@@ -97,6 +97,21 @@ describe("export / import", () => {
     await importData(target, file);
     await importData(target, file);
     expect(await target.listSessions()).toHaveLength(2);
+  });
+
+  it("carries settings and measurement through a round trip, format unchanged", async () => {
+    const measured = makeSession("measured", "2026-10-20T10:00:00.000Z", {
+      schemaVersion: 6,
+      gameModeId: "timed",
+      settings: { limitMs: 60_000 },
+      measurement: makeMeasurement(),
+    });
+    await repo.addSession(measured);
+    const file = JSON.parse(serializeExport(await exportData(repo)));
+    expect(file.formatVersion).toBe(1);
+    const target = new MemoryRepository();
+    await importData(target, file);
+    expect(await target.getSession("measured")).toEqual(measured);
   });
 
   it("keeps sessions that are already there", async () => {

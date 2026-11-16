@@ -2,6 +2,7 @@ import type {
   DrillItem,
   ErrorMode,
   GameMode,
+  SessionSettings,
   TextEdition,
   TextFilterId,
   TextSegment,
@@ -34,6 +35,12 @@ export type SessionPlan = {
   textFilterId: TextFilterId;
   segments: TextSegment[];
   endRule: EndRule;
+  /**
+   * What makes this session comparable with another of the same mode; copied
+   * onto the result. Every mode's buildPlan writes it, `{}` when the mode has
+   * nothing beyond the fields a result already carries. See SessionSettings.
+   */
+  settings?: SessionSettings;
 };
 
 export type PlanSelection = {

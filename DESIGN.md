@@ -182,7 +182,7 @@ navn, så en visning skriver `text-heading` og navngir aldri variabelen. De sytt
 check:design` teller begge deler: et nytt ad hoc-verktøy feiler porten. Tallet
 i markøren under er dagens antall tokenbruk i `src/`, ikke et tak — det stiger
 når en ny visning tas i bruk, og porten krever bare at det stemmer.
-<!-- check:design adoption status=done adhoc=0 files=0 tokens=22 -->
+<!-- check:design adoption status=done adhoc=0 files=0 tokens=38 -->
 
 Ett tall flyttet seg i migreringen, og det er det eneste: forsidens h1 lå på
 `text-3xl` (1,875rem) mens tabellen sa 1,9rem. Nå er tabellen sann — 0,4 px, og
@@ -230,9 +230,57 @@ begrunnelse.
 | `.control` | `select` og `input` |
 | `.placeholder` / `.placeholder-line` | venting, se under |
 | `.prose-measure` | låser bredden til `--measure` |
+| `.kbd` / `.kbd-key` | tastaturkartet, se «Diagrammer» |
 
 **Kort fortjener plassen sin.** Et kort er ikke en dekorasjon rundt tekst. Er
 det ingen interaksjon, er det en liste eller et avsnitt.
+
+---
+
+## Diagrammer
+
+Et diagram kommer i tillegg til tallene, aldri i stedet for dem. Det ligger
+under «Detaljer» på resultatsiden, foldet inn under tallene leseren kom for, og
+det samme gjelder tastaturkartet. Ingen merker, ingen jubel: tallene står, og
+leseren tolker dem.
+
+**Tre veier inn, fra de samme tallene.** `LineChart`
+(`src/components/charts/LineChart.tsx`) er en `<figure>` med `<svg role="img">`,
+en `<title>` og en `<desc>` som sier dataene med ord — start og slutt, høyeste
+og laveste punkt, antall feil. Under ligger «Som tabell» med hvert punkt. Tabellen
+er fasit og formaterer tallene slik siden ellers gjør, så siste rad og «Netto
+WPM» over diagrammet er samme tall i samme form.
+
+**Seriene skilles uten farge.** Heltrukket mot stiplet, og en etikett ved enden
+av hver linje. Fargen gjentar bare det:
+
+| Element | Token |
+| --- | --- |
+| netto WPM, heltrukket | `--accent` |
+| rå WPM, stiplet | `--ink-muted` |
+| feil, «×» under plottet | `--error` |
+| rutenett | `--rule` |
+
+Linjene er ikke tekst, men de bærer informasjon, så de skal holde 3:1 (WCAG
+1.4.11) mot begge flater i begge temaer. Rutenettet er dekor, som tabellstreker,
+og er fritatt; det beholder `--rule`. «×» er et tegn og holder tekstkravet, som
+`--error` allerede har.
+
+<!-- check:design role token=--accent role=boundary -->
+<!-- check:design role token=--ink-muted role=boundary -->
+
+**Diagrammet tegnes i den bredden det faktisk har**, ikke skalert fra en fast
+`viewBox`. Skalert ville teksten i det krympet med tegningen og blitt uleselig
+på telefon; slik står akser og etiketter på `--text-label` overalt.
+
+**Tastaturkartet viser et tall på hver tast**, aldri en fargeskala: «Treff» er
+andelen riktige første forsøk, «Fart» gjennomsnittlig tid mellom riktige
+tastetrykk. Under `MIN_OPPORTUNITIES` (20) viser tasten «–», av samme grunn som
+listen over hva som er verdt å øve på holder tilbake tegn under samme gulv. Store
+bokstaver og Shift-tegn regnes til tasten de skrives med; tegn ingen enkelt tast
+gir («» –) står for seg under «Andre tegn». Tastene er ikke kontroller, så kanten
+er `--rule`. Under 640px faller forskyvningen mellom radene bort og linjeskift
+blir én tast bred, slik at tre sifre får plass på en tast i `--text-label`.
 
 ---
 

@@ -401,15 +401,92 @@ export type ReadingProgress = {
 
 export type SessionStatus = "completed" | "abandoned";
 
+/**
+ * What makes two sessions of one mode comparable, beyond the fields every
+ * result already carries (mode, error mode, text filter, edition, segments).
+ * Each mode's buildPlan writes it, and toSessionResult copies it from the plan.
+ *
+ * `{}` is a statement — this mode has nothing further to compare by — and is
+ * what Passage, Nonstop and Drill write. Absent means the record predates
+ * schema 6 and nobody wrote down what it was.
+ */
+export type SessionSettings = {
+  /** Timed: the limit in active ms. A 60 s run and a 300 s run are different exercises. */
+  limitMs?: number;
+};
+
+/**
+ * One key over one session, counted per EXPECTED character: a wrong keystroke
+ * is charged to the key the target wanted, not to the one that came.
+ *
+ * A first try is the first keystroke ever made at a position of a segment;
+ * retyping after a backspace is not one. `flowMsSum / flowCount` is the key's
+ * speed: the interval before each first-try-correct keystroke that followed
+ * another first-try-correct keystroke within 2 000 ms. Every field is a sum,
+ * so the same key adds up across sessions without weighting.
+ */
+export type KeyMeasurement = {
+  char: string;
+  firstTries: number;
+  firstTryCorrect: number;
+  flowMsSum: number;
+  flowCount: number;
+};
+
+/**
+ * What the measurement (src/domain/session/measure.ts) keeps of a session:
+ * time buckets for the graph, keystroke totals, jevnhet and the per-key
+ * record. Definitions in docs/spec/TYPING_ENGINE.md.
+ *
+ * The buckets cover active time (pauses excluded) and are right-closed:
+ * bucket i holds what happened in (i·bucketMs, (i+1)·bucketMs], with time 0 in
+ * bucket 0. There are exactly ceil(durationMs / bucketMs) of them, never more
+ * than 600: a longer session doubles bucketMs instead.
+ */
+export type SessionMeasurement = {
+  bucketMs: number;
+  /** Character keystrokes per bucket, including ones rejected or later corrected. */
+  keystrokes: number[];
+  /** Keystrokes per bucket that were not the expected character. */
+  errors: number[];
+  /**
+   * Characters standing correct at the end of each bucket, in the final-text
+   * sense: a backspaced correct character comes off again. The last entry is
+   * the session's correctCharacterCount.
+   */
+  correct: number[];
+  keystrokeCount: number;
+  incorrectKeystrokeCount: number;
+  /** keystrokeCount / 5 per minute. */
+  rawWpm: number;
+  /** (keystrokeCount − incorrectKeystrokeCount) / keystrokeCount, 0..1; 0 without keystrokes. */
+  keystrokeAccuracy: number;
+  /**
+   * Jevnhet, 0..100: kogasa of the coefficient of variation of the raw
+   * keystroke count per second. Absent for sessions under 5 s and for a
+   * session without keystrokes.
+   */
+  consistency?: number;
+  /**
+   * «Ikke nådd»: target characters the session never reached. Present only
+   * when the session's end rule was `all-segments`; for every other rule
+   * there is no fixed end to fall short of, and it is absent rather than 0.
+   */
+  missedCharacterCount?: number;
+  /** Sorted by char. */
+  keys: KeyMeasurement[];
+};
+
 export type SessionResult = {
   id: string;
   /**
    * 1 = before text filters existed; 2 adds the required textFilterId;
    * 3 adds editionVersion and editionContentHash, so a stored result names
    * the exact text it was typed against rather than just the edition id;
-   * 4 adds pausedMs and pauseCount; 5 adds misses and opportunities.
+   * 4 adds pausedMs and pauseCount; 5 adds misses and opportunities;
+   * 6 adds settings and measurement.
    */
-  schemaVersion: 5;
+  schemaVersion: 6;
   /** ISO timestamp. */
   startedAt: string;
   completedAt?: string;
@@ -430,6 +507,11 @@ export type SessionResult = {
   errorMode: ErrorMode;
   /** Which practice-form transform the target text was typed under. */
   textFilterId: TextFilterId;
+  /**
+   * The mode's settings, as the plan had them. Absent on records from schema
+   * 1 to 5, and on a stored value that cannot be read (see migrateSession()).
+   */
+  settings?: SessionSettings;
   /** Time typing, with any paused time already subtracted. */
   durationMs: number;
   /**
@@ -478,6 +560,17 @@ export type SessionResult = {
   misses?: CharacterMiss[];
   /** See `misses` above; both are computed together, over the same positions. */
   opportunities?: CharacterCount[];
+  /**
+   * The keystroke-level measurement of the session (Måling). Like `misses`,
+   * derived while typing and kept as aggregates: buckets and per-key sums,
+   * never the keystrokes themselves.
+   *
+   * Absent on records from schema 1 to 5: those sessions were not measured
+   * this way, and nothing about them can be filled in after the fact. Absent,
+   * too, when a stored measurement cannot be read — the session itself is
+   * still good (see migrateSession()).
+   */
+  measurement?: SessionMeasurement;
 };
 
 export type SessionQuery = {

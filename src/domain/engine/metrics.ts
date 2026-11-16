@@ -198,10 +198,12 @@ export const EMPTY_COUNTS: CharacterCounts = {
   errorCount: 0,
 };
 
-function round1(n: number): number {
+/** One decimal: how WPM is stored. */
+export function round1(n: number): number {
   return Math.round(n * 10) / 10;
 }
 
-function round4(n: number): number {
+/** Four decimals: how a 0..1 ratio such as accuracy is stored. */
+export function round4(n: number): number {
   return Math.round(n * 10000) / 10000;
 }

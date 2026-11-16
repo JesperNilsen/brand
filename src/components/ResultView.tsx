@@ -9,15 +9,25 @@ import {
   loadEditionText,
 } from "@/domain/content/registry";
 import { getGameMode } from "@/domain/modes/registry";
+import { round1, type Metrics } from "@/domain/engine/metrics";
+import { measurementSeries } from "@/domain/session/measure";
 import { metricsFromResult } from "@/domain/session/runner";
 import { requireTextFilter } from "@/domain/text-filter";
 import { editionDrift, isDrifted } from "@/domain/content/edition-drift";
 import type { SessionResult, TextEdition } from "@/domain/types";
 import { getRepository, isPersistent } from "@/infra/repository";
 import { getLastSession } from "@/lib/last-session";
+import { LineChart } from "./charts/LineChart";
+import { KeyboardMap } from "./KeyboardMap";
 import { Loading } from "./Loading";
 import { PracticeFocus } from "./PracticeFocus";
-import { formatDuration, formatNumber, formatPercent, formatWpm } from "@/lib/format";
+import {
+  formatClock,
+  formatDuration,
+  formatNumber,
+  formatPercent,
+  formatWpm,
+} from "@/lib/format";
 import { editionLabel, nextSegmentAfter, sessionHref } from "@/lib/session-flow";
 
 export function ResultView({ id }: { id: string }) {
@@ -199,7 +209,13 @@ export function ResultView({ id }: { id: string }) {
         </p>
       )}
 
-      <PracticeFocus misses={result.misses} opportunities={result.opportunities} />
+      <Details result={result} metrics={metrics} />
+
+      <PracticeFocus
+        misses={result.misses}
+        opportunities={result.opportunities}
+        keys={result.measurement?.keys}
+      />
 
       <div className="flex flex-wrap gap-3">
         {next && (
@@ -260,6 +276,121 @@ export function ResultView({ id }: { id: string }) {
           on every page, already. */}
       </div>
     </div>
+  );
+}
+
+const DASH = "–";
+
+/**
+ * «Detaljer» (Måling): the second row of figures, the course of the session
+ * and the keyboard, folded away under the numbers the reader came for.
+ *
+ * A record written before schema 6, or one whose stored measurement could not
+ * be read, has none of this, and says so rather than showing zeros: an empty
+ * chart would read as a session where nothing happened.
+ */
+function Details({ result, metrics }: { result: SessionResult; metrics: Metrics }) {
+  const m = result.measurement;
+  return (
+    <details className="mb-10" data-testid="result-details">
+      <summary className="label cursor-pointer py-1">Detaljer</summary>
+      {!m ? (
+        <p className="mt-3 text-meta text-ink-muted" data-testid="details-unmeasured">
+          Ikke målt for denne økten.
+        </p>
+      ) : (
+        <div className="mt-4">
+          <dl className="mb-8 grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3">
+            <Stat
+              label="Rå WPM"
+              value={metrics.provisional ? DASH : formatNumber(m.rawWpm)}
+              testId="raw-wpm"
+            />
+            {/* The soft hyphen lets the one long word break on a phone's half
+                column, where it would otherwise run out of its cell. */}
+            <Stat
+              label={"Taste\u00adnøyaktighet"}
+              value={m.keystrokeCount === 0 ? DASH : formatPercent(m.keystrokeAccuracy)}
+              testId="keystroke-accuracy"
+            />
+            <Stat
+              label="Jevnhet"
+              value={m.consistency === undefined ? DASH : formatNumber(m.consistency)}
+              testId="consistency"
+            />
+            <Stat
+              label="Riktige"
+              value={formatNumber(result.correctCharacterCount)}
+              testId="chars-correct"
+            />
+            <Stat
+              label="Feil som sto"
+              value={formatNumber(result.typedCharacterCount - result.correctCharacterCount)}
+              testId="chars-wrong"
+            />
+            {m.missedCharacterCount !== undefined && (
+              <Stat
+                label="Ikke nådd"
+                value={formatNumber(m.missedCharacterCount)}
+                testId="chars-missed"
+              />
+            )}
+          </dl>
+          {metrics.provisional ? (
+            <p className="text-meta text-ink-muted">
+              Økten var under fem sekunder, for kort til å vise et forløp.
+            </p>
+          ) : (
+            <SessionChart result={result} />
+          )}
+          <KeyboardMap keys={m.keys} />
+        </div>
+      )}
+    </details>
+  );
+}
+
+function SessionChart({ result }: { result: SessionResult }) {
+  const m = result.measurement!;
+  const points = measurementSeries(m, result.durationMs);
+  const seconds = m.bucketMs / 1000;
+  // Values are rounded as the stored netWpm is, so the table's last row and
+  // «Netto WPM» above are the same number in the same form.
+  return (
+    <LineChart
+      title="Hastighet gjennom økten"
+      x={points.map((p) => p.t)}
+      xLabel="Tid"
+      formatX={formatClock}
+      formatY={(v) => formatNumber(v)}
+      series={[
+        {
+          id: "net",
+          label: "Netto WPM",
+          endLabel: "Netto",
+          tone: "accent",
+          values: points.map((p) => round1(p.wpm)),
+        },
+        {
+          id: "raw",
+          label: "Rå WPM",
+          endLabel: "Rå",
+          tone: "muted",
+          dashed: true,
+          values: points.map((p) => round1(p.rawWpm)),
+        },
+      ]}
+      marks={{ label: "Feil", values: points.map((p) => p.errors) }}
+      caption={
+        <>
+          Heltrukket: netto WPM så langt i økten. Stiplet: rå WPM i hvert målepunkt,
+          alle tastetrykk medregnet. × markerer målepunkter med feil. Ett målepunkt
+          per {seconds === 1 ? "sekund" : `${formatNumber(seconds)} sekunder`}, pauser
+          ikke medregnet.
+        </>
+      }
+      testId="result-chart"
+    />
   );
 }
 

@@ -3,8 +3,10 @@ import {
   focusCharacterLabel,
   practiceClasses,
   rankPracticeFocus,
+  rankSlowKeys,
 } from "@/domain/engine/practice-focus";
-import { formatPercent } from "@/lib/format";
+import type { KeyMeasurement } from "@/domain/types";
+import { formatNumber, formatPercent } from "@/lib/format";
 
 /**
  * «Verdt å øve på» — the ranked answer to what actually goes wrong (Q-014).
@@ -24,10 +26,17 @@ export function PracticeFocus({
   opportunities,
   scope = "session",
   coverage,
+  keys,
   testId = "practice-focus",
 }: {
   misses?: readonly CharacterMiss[];
   opportunities?: readonly CharacterCount[];
+  /**
+   * Session only: the per-key measurement (Måling), for the second list — the
+   * keys that go slowest against the session's own pace. Absent on records
+   * before schema 6, and then the list is simply not there.
+   */
+  keys?: readonly KeyMeasurement[];
   /** Which absent-measurement sentence to use; history speaks of many sessions. */
   scope?: "session" | "history";
   /** History only: how many of the listed sessions the numbers were built from. */
@@ -74,8 +83,9 @@ export function PracticeFocus({
     </p>
   ) : null;
   const classes = practiceClasses(misses, opportunities).filter((c) => c.misses > 0);
+  const slow = keys ? rankSlowKeys(keys) : [];
 
-  if (ranked.length === 0 && classes.length === 0) {
+  if (ranked.length === 0 && classes.length === 0 && slow.length === 0) {
     return (
       <section className="mb-10" data-testid={testId} data-measured="yes">
         <p className="label mb-2">Verdt å øve på</p>
@@ -118,6 +128,30 @@ export function PracticeFocus({
             </li>
           ))}
         </ul>
+      )}
+      {slow.length > 0 && (
+        <>
+          <p
+            className={`${ranked.length > 0 || classes.length > 0 ? "mt-4 " : ""}mb-2 text-meta text-ink-muted`}
+            data-testid="slow-intro"
+          >
+            Tregest mot øktens snitt på{" "}
+            <span className="tabular-nums">{formatNumber(slow[0].sessionMeanMs)}</span> ms
+            mellom riktige tastetrykk:
+          </p>
+          <ul className="flex flex-col gap-1" data-testid="slow-list">
+            {slow.map((k) => (
+              <li key={k.char} className="text-meta" data-testid="slow-row">
+                <span className="font-medium">{focusCharacterLabel(k.char)}</span>{" "}
+                <span className="text-ink-muted">
+                  <span className="tabular-nums">{formatNumber(k.meanMs)}</span> ms —{" "}
+                  <span className="tabular-nums">{formatNumber(k.ratio, 1)}</span> ganger
+                  snittet, av <span className="tabular-nums">{k.flowCount}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
       {coverageNote}
     </section>

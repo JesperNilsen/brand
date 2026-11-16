@@ -41,6 +41,8 @@ export const nonstopMode: GameModeDefinition = {
       textFilterId: input.textFilterId,
       segments,
       endRule: { kind: "user-stop" },
+      // Where it started is the result's first segmentId; nothing else differs.
+      settings: {},
     };
   },
 };

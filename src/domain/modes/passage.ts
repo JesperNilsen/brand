@@ -33,6 +33,8 @@ export const passageMode: GameModeDefinition = {
       textFilterId: input.textFilterId,
       segments: [segment],
       endRule: { kind: "all-segments" },
+      // The chosen segment is the result's segmentIds; nothing else differs.
+      settings: {},
     };
   },
 };

@@ -71,6 +71,19 @@ function withEvent(
 }
 
 /**
+ * One character the engine examined on an insert: where it was typed, what
+ * the target wanted there, what came, and whether the error-mode strategy let
+ * it in. A rejected character (stop-on-error) is a keystroke too; a character
+ * past the end of the target is not, because nothing examined it.
+ */
+export type Keystroke = {
+  index: number;
+  expected: string;
+  typed: string;
+  accepted: boolean;
+};
+
+/**
  * Insert text typed by the user. Handles multi-character input (IME, dead
  * keys, a pasted-in composition is still rejected elsewhere). Starts the
  * clock on the first accepted character and completes the session exactly
@@ -82,10 +95,24 @@ export function insertText(
   input: string,
   now: number,
 ): TypingSessionState {
-  if (!isOpen(state) || input.length === 0) return state;
+  return insertTextDetailed(state, input, now).state;
+}
+
+/**
+ * insertText, plus the keystrokes it examined, in order. The measurement
+ * (src/domain/session/measure.ts) needs to see each one, including the ones
+ * the strategy rejected, which leave no trace in the typed text.
+ */
+export function insertTextDetailed(
+  state: TypingSessionState,
+  input: string,
+  now: number,
+): { state: TypingSessionState; keystrokes: Keystroke[] } {
+  if (!isOpen(state) || input.length === 0) return { state, keystrokes: [] };
 
   const strategy = getErrorModeStrategy(state.errorMode);
   const chars = Array.from(normalizeText(input));
+  const keystrokes: Keystroke[] = [];
   let typed = state.typedText;
   let incorrect = state.incorrectInsertCount;
   let rejected = state.rejectedInsertCount;
@@ -93,20 +120,25 @@ export function insertText(
 
   for (const ch of chars) {
     if (typed.length >= state.targetText.length) break;
-    const expected = state.targetText[typed.length];
+    const index = typed.length;
+    const expected = state.targetText[index];
     if (!strategy.accept(expected, ch)) {
+      keystrokes.push({ index, expected, typed: ch, accepted: false });
       rejected += 1;
       continue;
     }
+    keystrokes.push({ index, expected, typed: ch, accepted: true });
     if (ch !== expected) incorrect += 1;
     typed += ch;
     accepted += 1;
   }
 
   if (accepted === 0) {
-    return rejected === state.rejectedInsertCount
-      ? state
-      : { ...state, rejectedInsertCount: rejected };
+    const next =
+      rejected === state.rejectedInsertCount
+        ? state
+        : { ...state, rejectedInsertCount: rejected };
+    return { state: next, keystrokes };
   }
 
   let next: TypingSessionState = {
@@ -123,7 +155,7 @@ export function insertText(
   if (typed.length === state.targetText.length) {
     next = complete(next, now);
   }
-  return next;
+  return { state: next, keystrokes };
 }
 
 /** Remove the last typed character. No-op when nothing is typed or the session is closed. */

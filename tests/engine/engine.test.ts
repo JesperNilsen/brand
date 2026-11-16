@@ -6,6 +6,7 @@ import {
   createSession,
   elapsedMs,
   insertText,
+  insertTextDetailed,
   rejectPaste,
 } from "@/domain/engine/engine";
 import { deriveCharStates } from "@/domain/engine/render";
@@ -237,5 +238,53 @@ describe("cursorIndex", () => {
     s = insertText(s, target + "og mere til", 1_000);
     expect(s.cursorIndex).toBe(target.length);
     expect(s.cursorIndex).toBe(s.typedText.length);
+  });
+});
+
+describe("insertTextDetailed", () => {
+  it("reports every character it examined, accepted or not", () => {
+    const s0 = createSession({ targetText: "nå", errorMode: "stop-on-error" });
+    const r1 = insertTextDetailed(s0, "x", 0);
+    expect(r1.keystrokes).toEqual([{ index: 0, expected: "n", typed: "x", accepted: false }]);
+    expect(r1.state.typedText).toBe("");
+    expect(r1.state.rejectedInsertCount).toBe(1);
+
+    const r2 = insertTextDetailed(r1.state, "nå", 10);
+    expect(r2.keystrokes).toEqual([
+      { index: 0, expected: "n", typed: "n", accepted: true },
+      { index: 1, expected: "å", typed: "å", accepted: true },
+    ]);
+    expect(r2.state.status).toBe("completed");
+  });
+
+  it("accepts a wrong character in flow, and says it was wrong", () => {
+    const r = insertTextDetailed(createSession({ targetText: "nå" }), "nx", 0);
+    expect(r.keystrokes).toEqual([
+      { index: 0, expected: "n", typed: "n", accepted: true },
+      { index: 1, expected: "å", typed: "x", accepted: true },
+    ]);
+  });
+
+  it("does not count characters past the target as keystrokes", () => {
+    const r = insertTextDetailed(createSession({ targetText: "ab" }), "abcd", 0);
+    expect(r.keystrokes).toHaveLength(2);
+    expect(r.state.typedText).toBe("ab");
+  });
+
+  it("reports nothing on a closed session or empty input", () => {
+    const done = insertText(createSession({ targetText: "a" }), "a", 0);
+    expect(insertTextDetailed(done, "b", 10)).toEqual({ state: done, keystrokes: [] });
+    const idle = createSession({ targetText: "a" });
+    expect(insertTextDetailed(idle, "", 10)).toEqual({ state: idle, keystrokes: [] });
+  });
+
+  it("insertText is exactly its state", () => {
+    let s = createSession({ targetText: "frem og", errorMode: "stop-on-error" });
+    for (const [ch, t] of [["f", 0], ["x", 100], ["rem", 200], [" og!", 300]] as const) {
+      const detailed = insertTextDetailed(s, ch, t).state;
+      const plain = insertText(s, ch, t);
+      expect(plain).toEqual(detailed);
+      s = plain;
+    }
   });
 });

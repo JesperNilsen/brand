@@ -1,12 +1,20 @@
 import { DEFAULT_LANGUAGE_PROFILE_ID } from "@/domain/language/registry";
+import { MAX_BUCKETS } from "@/domain/session/measure";
 import {
   DEFAULT_TEXT_FILTER_ID,
   isTextFilterId,
 } from "@/domain/text-filter";
-import { progressKey, type ReadingProgress, type SessionResult, type UserPreferences } from "@/domain/types";
+import {
+  progressKey,
+  type ReadingProgress,
+  type SessionMeasurement,
+  type SessionResult,
+  type SessionSettings,
+  type UserPreferences,
+} from "@/domain/types";
 
 export const PREFERENCES_SCHEMA_VERSION = 1 as const;
-export const SESSION_SCHEMA_VERSION = 5 as const;
+export const SESSION_SCHEMA_VERSION = 6 as const;
 
 /**
  * Stamped on records written before editions carried a version and a hash.
@@ -58,6 +66,67 @@ export function migratePreferences(raw: unknown): UserPreferences {
   };
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/** A finite, non-negative number: every count and sum in a measurement. */
+function isAmount(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+function isAmounts(value: unknown): value is number[] {
+  return Array.isArray(value) && value.every(isAmount);
+}
+
+/** Schema-6 `settings`: an object; `{}` is valid, a known field of the wrong kind is not. */
+export function isSessionSettings(value: unknown): value is SessionSettings {
+  if (!isPlainObject(value)) return false;
+  return value.limitMs === undefined || (isAmount(value.limitMs) && value.limitMs > 0);
+}
+
+/**
+ * Schema-6 `measurement`, checked as deeply as the read side relies on: the
+ * three bucket arrays line up and fit the cap, every number is a finite
+ * amount, the bounded ones are in bounds, and the optional fields are either
+ * absent or right.
+ */
+export function isSessionMeasurement(value: unknown): value is SessionMeasurement {
+  if (!isPlainObject(value)) return false;
+  const m = value;
+  if (!(isAmount(m.bucketMs) && m.bucketMs > 0)) return false;
+  if (!isAmounts(m.keystrokes) || !isAmounts(m.errors) || !isAmounts(m.correct)) return false;
+  if (m.keystrokes.length > MAX_BUCKETS) return false;
+  if (m.errors.length !== m.keystrokes.length || m.correct.length !== m.keystrokes.length) {
+    return false;
+  }
+  if (
+    !isAmount(m.keystrokeCount) ||
+    !isAmount(m.incorrectKeystrokeCount) ||
+    !isAmount(m.rawWpm) ||
+    !(isAmount(m.keystrokeAccuracy) && m.keystrokeAccuracy <= 1)
+  ) {
+    return false;
+  }
+  if (m.consistency !== undefined && !(isAmount(m.consistency) && m.consistency <= 100)) {
+    return false;
+  }
+  if (m.missedCharacterCount !== undefined && !isAmount(m.missedCharacterCount)) return false;
+  return (
+    Array.isArray(m.keys) &&
+    m.keys.every(
+      (k: unknown) =>
+        isPlainObject(k) &&
+        typeof k.char === "string" &&
+        k.char.length > 0 &&
+        isAmount(k.firstTries) &&
+        isAmount(k.firstTryCorrect) &&
+        isAmount(k.flowMsSum) &&
+        isAmount(k.flowCount),
+    )
+  );
+}
+
 /**
  * Returns null when a stored session cannot be understood.
  *
@@ -72,14 +141,22 @@ export function migratePreferences(raw: unknown): UserPreferences {
  * `opportunities` at all, because unlike pausedMs there is no fact to fill in
  * — a session that was never measured is not the same as one measured with
  * zero errors, and guessing the difference away would be exactly the kind of
- * invented provenance `editionVersion: "unknown"` above refuses to do. All
- * migrate forward to the current version. The version number has to move each
+ * invented provenance `editionVersion: "unknown"` above refuses to do.
+ * Version 5 predates Måling, and for the same reason gets no `settings` and no
+ * `measurement`: absent, never an empty object. All migrate forward to the
+ * current version. The version number has to move each
  * time, or one number would denote two different serialized shapes and a
  * later migration could not tell them apart.
  *
  * The fields are required when writing and tolerated when reading, which is
  * why the repair below fills rather than rejects — except `misses` and
  * `opportunities`, which are never filled: absent stays absent.
+ *
+ * `settings` and `measurement` are optional extras on a session that is good
+ * without them, so one that cannot be read is dropped to absent rather than
+ * taking the whole session with it. Only a schema-6 record can carry them: on
+ * an older one they could not have been written by any build, and are dropped
+ * as well.
  */
 export function migrateSession(raw: unknown): SessionResult | null {
   if (!raw || typeof raw !== "object") return null;
@@ -90,7 +167,8 @@ export function migrateSession(raw: unknown): SessionResult | null {
     r.schemaVersion !== 2 &&
     r.schemaVersion !== 3 &&
     r.schemaVersion !== 4 &&
-    r.schemaVersion !== 5
+    r.schemaVersion !== 5 &&
+    r.schemaVersion !== 6
   ) {
     // Written by a newer build, or not a session at all.
     return null;
@@ -112,6 +190,10 @@ export function migrateSession(raw: unknown): SessionResult | null {
   const pauseCount =
     typeof r.pauseCount === "number" && r.pauseCount >= 0 ? r.pauseCount : 0;
 
+  const fromSchema6 = r.schemaVersion === SESSION_SCHEMA_VERSION;
+  const keepSettings = fromSchema6 && isSessionSettings(r.settings);
+  const keepMeasurement = fromSchema6 && isSessionMeasurement(r.measurement);
+
   const migrated: SessionResult = {
     ...(raw as SessionResult),
     schemaVersion: SESSION_SCHEMA_VERSION,
@@ -121,6 +203,8 @@ export function migrateSession(raw: unknown): SessionResult | null {
     pausedMs,
     pauseCount,
   };
+  if (!keepSettings) delete migrated.settings;
+  if (!keepMeasurement) delete migrated.measurement;
 
   // Idempotence is the property every later migration relies on, so return the
   // input untouched when nothing needed changing rather than a fresh object
@@ -131,7 +215,9 @@ export function migrateSession(raw: unknown): SessionResult | null {
     r.editionVersion === editionVersion &&
     r.editionContentHash === editionContentHash &&
     r.pausedMs === pausedMs &&
-    r.pauseCount === pauseCount;
+    r.pauseCount === pauseCount &&
+    (keepSettings || !Object.hasOwn(r, "settings")) &&
+    (keepMeasurement || !Object.hasOwn(r, "measurement"));
   return unchanged ? (raw as SessionResult) : migrated;
 }
 
